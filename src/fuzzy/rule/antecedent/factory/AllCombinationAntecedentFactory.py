@@ -38,9 +38,6 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
         antecedents = np.random.choice(self.__antecedents, num_rules, replace=False)
         return np.copy(antecedents)
 
-    def copy(self):
-        pass
-
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents) + ", dimension=" + str(self.__dimension) + "]"
 
