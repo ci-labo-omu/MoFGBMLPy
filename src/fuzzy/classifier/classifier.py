@@ -1,4 +1,4 @@
-from src.fuzzy.classifier.classification.AbstractClassification import AbstractClassification
+from src.fuzzy.classifier.classification.abstract_classification import AbstractClassification
 
 
 class Classifier:
@@ -13,7 +13,7 @@ class Classifier:
         return self._classification.classify(michigan_solution_list, pattern)
 
     def copy(self):
-        new_object = Classifier(self._classification)
+        return Classifier(self._classification)
 
     @staticmethod
     def get_rule_length(michigan_solution_list):

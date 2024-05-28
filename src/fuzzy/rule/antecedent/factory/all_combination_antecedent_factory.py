@@ -1,4 +1,4 @@
-from AbstractAntecedentFactory import AbstractAntecedentFactory
+from abstract_antecedent_factory import AbstractAntecedentFactory
 import numpy as np
 
 class AllCombinationAntecedent(AbstractAntecedentFactory):

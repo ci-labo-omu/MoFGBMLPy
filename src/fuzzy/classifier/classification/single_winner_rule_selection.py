@@ -1,4 +1,4 @@
-from AbstractClassification import AbstractClassification
+from src.fuzzy.classifier.classification.abstract_classification import AbstractClassification
 
 
 class SingleWinnerRuleSelection(AbstractClassification):
