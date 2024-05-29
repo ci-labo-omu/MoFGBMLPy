@@ -1,8 +1,10 @@
 import numpy as np
 
-from src.fuzzy.rule.consequent.factory.abstract_learning import  AbstractLearning
+from src.fuzzy.rule.consequent.learning.abstract_learning import  AbstractLearning
 from src.fuzzy.rule.consequent.consequent import Consequent
 from src.fuzzy.rule.consequent.classLabel.class_label_basic import ClassLabelBasic
+from src.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
+
 
 class LearningBasic(AbstractLearning):
     _train_ds = None
@@ -61,7 +63,21 @@ class LearningBasic(AbstractLearning):
             class_label = ClassLabelBasic(consequent_class)
         return class_label
 
-    def calc_rule_weight(self, class_label, confidence, reject_threshold): #TODO
+    def calc_rule_weight(self, class_label, confidence, reject_threshold):
+        zero_weight = RuleWeightBasic(0.0)
+
+        if class_label.is_rejected():
+            return zero_weight
+
+        label_value = class_label.get_class_label_value()
+        sum_confidence = np.sum(confidence)
+        rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
+
+        if rule_weight_val <= reject_threshold:
+            class_label.set_rejected() # TODO: check if it's modified globally or locally only
+            return zero_weight
+
+        return RuleWeightBasic(rule_weight_val)
 
     def __str__(self):
         return f"MoFGBML_Learning [defaultLimit={AbstractLearning._default_reject_threshold}]"

@@ -32,7 +32,7 @@ class ClassLabelMulti(AbstractClassLabel):
     def __str__(self):
         if self.get_class_label_value() is None:
             raise Exception("class label value is None")
-        txt = f"{self.get_class_label_value()[0]:d}"
+        txt = f"{self.get_class_label_value()[0]:2d}"
 
         if self.get_length() > 1:
             for i in range(1, self.get_length()):
