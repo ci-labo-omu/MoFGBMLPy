@@ -1,5 +1,7 @@
 from abstract_antecedent_factory import AbstractAntecedentFactory
+from src.fuzzy.context.context import Context
 import numpy as np
+
 
 class AllCombinationAntecedent(AbstractAntecedentFactory):
     __antecedents = None
@@ -12,7 +14,6 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
     def generate_antecedents(self, fuzzy_sets):
         queue = []
         indices = []
-
 
         # Generate all combination of fuzzy sets indices
         while len(queue) > 0:

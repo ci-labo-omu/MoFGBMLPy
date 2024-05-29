@@ -1,4 +1,5 @@
 import numpy as np
+from src.fuzzy.context.context import Context
 
 
 class Antecedent:
@@ -26,17 +27,20 @@ class Antecedent:
 
         return grade
 
-    def get_compatible_grade_value(self, antecedent_indices, attribute_vector):
+    @staticmethod
+    def get_compatible_grade_value(antecedent_indices, attribute_vector):
         if len(antecedent_indices) != attribute_vector.get_num_dim():
             raise Exception("antecedent_indices and attribute_vector must have the same length")
 
-        grade = self.get_compatible_grade(antecedent_indices, attribute_vector)
+        grade = Antecedent.get_compatible_grade(antecedent_indices, attribute_vector)
         return np.prod(grade)
 
-    def get_rule_length(self, antecedent_indices):
+    @staticmethod
+    def get_rule_length(antecedent_indices):
         return np.count_nonzero(antecedent_indices)
 
-    def copy(self):
+    @staticmethod
+    def copy():
         return Antecedent()
 
     @staticmethod

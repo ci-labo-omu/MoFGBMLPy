@@ -2,6 +2,7 @@ import pytest
 from src.fuzzy.context.context import Context
 from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
 
+
 def test_get_instance():
     ref1 = Context.get_instance()
     ref2 = Context.get_instance()
@@ -20,6 +21,7 @@ def gen_fuzzy_sets_example():
     ]
 
     return [fuzzy_set_1, fuzzy_set_2]
+
 
 def test_set_fuzzy_sets():
     try:
@@ -65,6 +67,7 @@ def test_get_num_dim():
     context.set_fuzzy_sets(fuzzy_sets)
 
     assert context.get_num_dim() == 2
+
 
 def test_clear():
     fuzzy_sets = gen_fuzzy_sets_example()
