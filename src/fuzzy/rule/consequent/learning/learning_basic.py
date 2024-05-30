@@ -12,14 +12,14 @@ class LearningBasic(AbstractLearning):
     def __init__(self, training_dataset):
         self._train_ds = training_dataset
 
-    def learning(self, antecedent, antecedent_indices, reject_threshold=AbstractLearning._default_reject_threshold):
-        confidence = self.calc_confidence(antecedent, antecedent_indices)
+    def learning(self, antecedent, reject_threshold=AbstractLearning._default_reject_threshold):
+        confidence = self.calc_confidence(antecedent)
         class_label = self.calc_class_label(confidence)
         rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
 
         return Consequent(class_label, rule_weight)
 
-    def calc_confidence(self, antecedent, antecedent_indices):
+    def calc_confidence(self, antecedent):
         if antecedent is None:
             raise ValueError('Antecedent cannot be None')
 
@@ -32,7 +32,7 @@ class LearningBasic(AbstractLearning):
             # TODO: Add multithreading
 
             for pattern in self._train_ds.get_patterns():
-                temp = antecedent.get_compatible_grade_value(antecedent_indices, pattern.get_attribute_vector())
+                temp = antecedent.get_compatible_grade_value(pattern.get_attribute_vector())
                 if pattern.get_target_class() == c:
                     part_sum += temp
 

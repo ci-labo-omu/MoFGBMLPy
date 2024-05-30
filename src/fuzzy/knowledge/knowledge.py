@@ -24,7 +24,7 @@ class Context:
         else:
             return self.__fuzzy_sets[dim][fuzzy_set_id]
 
-    def get_fuzzy_get_num(self, dim):
+    def get_fuzzy_set_num(self, dim):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
@@ -35,6 +35,12 @@ class Context:
             raise Exception("You can't overwrite fuzzy sets. You must call clear before doing so")
 
         self.__fuzzy_sets = fuzzy_sets
+
+    def get_fuzzy_sets(self):
+        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+            raise Exception("Context is not yet initialized (no fuzzy set)")
+
+        return self.__fuzzy_sets
 
     def get_membership_value(self, attribute_value, dim, fuzzy_set_id):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:

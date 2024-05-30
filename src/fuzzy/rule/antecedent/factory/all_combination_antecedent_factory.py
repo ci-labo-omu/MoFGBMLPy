@@ -1,5 +1,6 @@
-from abstract_antecedent_factory import AbstractAntecedentFactory
-from src.fuzzy.context.context import Context
+from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
+from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.rule.antecedent.antecedent import Antecedent
 import numpy as np
 
 
@@ -9,7 +10,7 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
 
     def __init__(self):
         self.generate_antecedents(Context.get_instance().get_fuzzy_sets())
-        self.__dimension = Context.get_instance().dimension
+        self.__dimension = Context.get_instance().get_num_dim()
 
     def generate_antecedents(self, fuzzy_sets):
         queue = []
@@ -35,9 +36,10 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
         # Return an antecedent
         if self.__antecedents is None:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
+        antecedents_indices = np.random.choice(self.__antecedents, num_rules, replace=False)
 
-        antecedents = np.random.choice(self.__antecedents, num_rules, replace=False)
-        return np.copy(antecedents)
+        antecedents = np.array([Antecedent(np.copy(indices)) for indices in antecedents_indices], dtype=object)
+        return antecedents
 
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents) + ", dimension=" + str(self.__dimension) + "]"

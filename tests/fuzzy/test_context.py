@@ -1,5 +1,5 @@
 import pytest
-from src.fuzzy.context.context import Context
+from src.fuzzy.knowledge.knowledge import Context
 from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
 
 
@@ -46,7 +46,7 @@ def test_get_fuzzy_set_num():
     context = Context.get_instance()
     context.set_fuzzy_sets(fuzzy_sets)
 
-    assert context.get_fuzzy_get_num(0) == 2 and context.get_fuzzy_get_num(1) == 2
+    assert context.get_fuzzy_set_num(0) == 2 and context.get_fuzzy_set_num(1) == 2
 
 
 @pytest.mark.parametrize(('params', 'expected'), [((0, 0, 0), 0), ((0.4, 0, 0), 1), ((1, 0, 0), 0), ((0.2, 0, 0), 0.5),

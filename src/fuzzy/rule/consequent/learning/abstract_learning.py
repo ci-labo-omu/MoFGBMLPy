@@ -5,7 +5,7 @@ class AbstractLearning(ABC):
     _default_reject_threshold = 0
 
     @abstractmethod
-    def learning(self, antecedent, antecedent_indices, reject_threshold=_default_reject_threshold):
+    def learning(self, antecedent, reject_threshold=_default_reject_threshold):
         pass
 
     @abstractmethod
