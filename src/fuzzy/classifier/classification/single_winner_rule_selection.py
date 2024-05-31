@@ -11,9 +11,9 @@ class SingleWinnerRuleSelection(AbstractClassification):
         winner = michigan_solution_list[0]
 
         for solution in michigan_solution_list:
-            if solution.get_class_label().is_rejected_class_label():
+            if solution.get_class_label().is_rejected():
                 raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
-            value = michigan_solution_list.get_fitness_value(pattern.get_attribute_vector)
+            value = solution.get_fitness_value(pattern.get_attribute_vector())
 
             if value > max:
                 max = value

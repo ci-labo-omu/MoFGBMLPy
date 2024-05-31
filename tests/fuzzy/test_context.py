@@ -38,7 +38,7 @@ def test_get_fuzzy_set():
     context = Context.get_instance()
     context.set_fuzzy_sets(fuzzy_sets)
 
-    assert context.get_fuzzy_set(0) is fuzzy_sets[0] and context.get_fuzzy_set(1) is fuzzy_sets[1]
+    assert context.get_fuzzy_set(0) is fuzzy_sets[0] and context.get_fuzzy_set(1,0) is fuzzy_sets[1][0]
 
 
 def test_get_fuzzy_set_num():

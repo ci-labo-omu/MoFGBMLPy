@@ -3,12 +3,12 @@ from src.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight import AbstractRu
 
 class RuleWeightBasic(AbstractRuleWeight):
     def __init__(self, rule_weight):
-        self.set_rule_weight(rule_weight)
+        self.set_value(rule_weight)
 
     def copy(self):
-        return RuleWeightBasic(self.get_rule_weight())
+        return RuleWeightBasic(self.get_value())
 
     def __str__(self):
-        if self.get_rule_weight() is None:
+        if self.get_value() is None:
             raise ValueError("Rule weight is None")
-        return f"{self.get_rule_weight():.4f}"
+        return f"{self.get_value():.4f}"

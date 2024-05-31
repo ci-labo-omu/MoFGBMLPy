@@ -5,7 +5,7 @@ class Dataset:
     __size = 0
     __n_dim = 0
     __c_num = 0
-    __patterns = []
+    __patterns = None
 
     def __init__(self, size, n_dim, c_num):
         if size <= 0 or n_dim <= 0 or c_num <= 0:
@@ -13,6 +13,7 @@ class Dataset:
         self.__size = size
         self.__n_dim = n_dim
         self.__c_num = c_num
+        self.__patterns = []
 
     def add_pattern(self, pattern):
         self.__patterns.append(pattern)

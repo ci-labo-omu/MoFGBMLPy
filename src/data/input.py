@@ -15,9 +15,9 @@ class Input:
     def input_data_set(file_name):
         params = ExperienceParameter.get_instance()
         if params.get_class_label_type() == ExperienceParameter.ClassLabelType.SINGLE:
-            return Input.input_data_set_multi(file_name)
-        else:
             return Input.input_data_set_basic(file_name)
+        else:
+            return Input.input_data_set_multi(file_name)
 
     @staticmethod
     def input_data_set_multi(file_name):
@@ -56,7 +56,7 @@ class Input:
 
             dataset = Dataset(int(header[0]), int(header[1]), int(header[2]))
 
-            id = 0
+            pattern_id = 0
             for row in reader:
                 vector = np.zeros(dataset.get_n_dim(), dtype=np.float_)
 
@@ -66,8 +66,8 @@ class Input:
                 in_vector = AttributeVector(vector)
                 class_label = ClassLabelBasic(int(row[dataset.get_n_dim()]))
 
-                dataset.add_pattern(Pattern(id, in_vector, class_label))
-                id += 1
+                dataset.add_pattern(Pattern(pattern_id, in_vector, class_label))
+                pattern_id += 1
 
         return dataset
 

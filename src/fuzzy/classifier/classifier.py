@@ -5,7 +5,7 @@ class Classifier:
     _classification = None
 
     def __init__(self, classification):
-        if classification is None or isinstance(classification, AbstractClassification):
+        if classification is None or not isinstance(classification, AbstractClassification):
             raise Exception("Invalid classification method")
         self._classification = classification
 

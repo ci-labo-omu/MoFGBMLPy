@@ -22,13 +22,13 @@ class Antecedent:
             raise Exception("antecedent_indices and attribute_vector must have the same length")
 
         for i in range(attribute_vector.get_num_dim()):
-            val = attribute_vector.get_value(i)
+            val = attribute_vector.get_value_at(i)
             if self.__antecedent_indices[i] < 0 and val < 0:
                 # categorical
                 grade[i] = 1.0 if self.__antecedent_indices[i] == round(val) else 0.0
             elif self.__antecedent_indices[i] > 0 and val >= 0:
                 # numerical
-                grade[i] = self.get_fuzzy_set(i).get_membership_value(val)
+                grade[i] = self.get_fuzzy_set(i, self.__antecedent_indices[i]).get_membership_value(val)
             elif self.__antecedent_indices[i] == 0:
                 # don't care
                 grade[i] = 1.0
@@ -50,8 +50,8 @@ class Antecedent:
     def copy(self):
         return Antecedent(self.__antecedent_indices)
 
-    def get_fuzzy_set(self, dim):
-        return Context.get_instance().get_fuzzy_set(dim, self.__antecedent_indices)
+    def get_fuzzy_set(self, dim, set_id):
+        return Context.get_instance().get_fuzzy_set(dim, set_id)
 
     # def get_fuzzy_sets(antecedent_indices):
     # def to_element(self):

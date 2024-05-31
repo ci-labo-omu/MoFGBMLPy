@@ -15,6 +15,9 @@ class AbstractRule(ABC):
     def get_consequent(self):
         return self._consequent
 
+    def set_consequent(self, consequent):
+        self._consequent = consequent
+
     def get_compatible_grade(self, attribute_vector):
         return self._antecedent.get_compatible_grade(attribute_vector)
 
@@ -37,13 +40,16 @@ class AbstractRule(ABC):
         return self._consequent.get_rule_weight()
 
     def get_rule_weight_value(self):
-        return self._consequent.get_rule_weight_value()
+        return self._consequent.get_rule_weight().get_value()
 
     def set_rule_weight_value(self, rule_weight_value):
         self._consequent.set_rule_weight_value(rule_weight_value)
 
     def set_class_label_value(self, class_label_value):
         self.get_consequent().set_class_label_value(class_label_value)
+
+    def get_rule_length(self):
+        return self.get_antecedent().get_rule_length()
 
     @abstractmethod
     def get_fitness_value(self, attribute_vector):

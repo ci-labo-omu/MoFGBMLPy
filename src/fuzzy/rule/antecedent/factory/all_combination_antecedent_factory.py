@@ -9,11 +9,11 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
     __dimension = None
 
     def __init__(self):
-        self.generate_antecedents(Context.get_instance().get_fuzzy_sets())
         self.__dimension = Context.get_instance().get_num_dim()
+        self.generate_antecedents(Context.get_instance().get_fuzzy_sets())
 
     def generate_antecedents(self, fuzzy_sets):
-        queue = []
+        queue = [[]]
         indices = []
 
         # Generate all combination of fuzzy sets indices
@@ -28,18 +28,24 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
             else:
                 indices.append(buffer)
 
-        self.__antecedents = np.array((len(indices), self.__dimension))
+        self.__antecedents = np.zeros((len(indices), self.__dimension), dtype=int)
         for i in range(len(indices)):
-            self.__antecedents[i] = np.array(indices[i])
+            self.__antecedents[i, :] = np.array(indices[i], dtype=int)
 
     def create(self, num_rules=1):
+        num_rules = min(num_rules, len(self.__antecedents))
         # Return an antecedent
         if self.__antecedents is None:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
-        antecedents_indices = np.random.choice(self.__antecedents, num_rules, replace=False)
+        indices = np.random.choice(list(range(len(self.__antecedents))), num_rules, replace=False)
+        antecedent_objects = np.zeros((num_rules), dtype=object)
 
-        antecedents = np.array([Antecedent(np.copy(indices)) for indices in antecedents_indices], dtype=object)
-        return antecedents
+        for i in range(num_rules):
+            antecedent_objects[i] = Antecedent(np.copy(self.__antecedents[indices[i], :]))
+
+        if num_rules == 1:
+            antecedent_objects = antecedent_objects[0]
+        return antecedent_objects
 
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents) + ", dimension=" + str(self.__dimension) + "]"

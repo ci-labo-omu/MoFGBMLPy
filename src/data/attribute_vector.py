@@ -14,12 +14,12 @@ class AttributeVector:
             raise ValueError("Attribute vector has not been initialized")
         return self.__attribute_vector
 
-    def get_attribute_value_at_index(self, index):
+    def get_value_at(self, index):
         if len(self.__attribute_vector) <= index or index < 0:
             raise IndexError("Index out of bounds")
         return self.__attribute_vector[index]
 
-    def get_num_dimensions(self):
+    def get_num_dim(self):
         return len(self.__attribute_vector)
 
     def __str__(self):

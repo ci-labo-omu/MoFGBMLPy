@@ -10,7 +10,7 @@ class RuleBasic(AbstractRule):
 
     def get_fitness_value(self, attribute_vector):
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)
-        cf = self.get_rule_weight().get_rule_weight_value()
+        cf = self.get_rule_weight().get_value()
         return membership * cf
 
     def __str__(self):

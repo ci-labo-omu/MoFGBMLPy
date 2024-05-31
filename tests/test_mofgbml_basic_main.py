@@ -1,11 +1,14 @@
+from main.consts import Consts
 from src.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
 from src.fuzzy.knowledge.knowledge import Context
 from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
+
+
 def test_main():
     context = Context.get_instance()
 
     fuzzy_sets = []
-    for i in range(103): # nb attributes
+    for i in range(4): # nb attributes of iris
         fuzzy_sets.append([
             FuzzyTermTriangular(0, 0.4, 0.8),
             FuzzyTermTriangular(0.2, 0.6, 1),
@@ -18,8 +21,8 @@ def test_main():
         1,
         2,
         1,
-        "../dataset/yeast_multi/yeast-10-1tra.dat",
-        "../dataset/yeast_multi/yeast-10-1tra.dat",
+        "../dataset/iris/a0_0_iris-10tra.dat",
+        "../dataset/iris/a0_0_iris-10tra.dat",
     ]
 
 

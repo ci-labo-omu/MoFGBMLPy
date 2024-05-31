@@ -14,8 +14,5 @@ class RuleMulti(AbstractRule):
         cf_mean = np.mean(self.get_consequent().get_rule_weight_value())
         return membership * cf_mean
 
-    def get_rule_length(self):
-        return self.get_antecedent().get_rule_length()
-
     def __str__(self):
         return f"Rule_MultiClass [antecedent={self.get_antecedent()}, consequent={self.get_consequent()}]"
