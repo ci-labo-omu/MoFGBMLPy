@@ -21,7 +21,7 @@ from pymoo.core.termination import Termination
 from pymoo.core.sampling import Sampling
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
-from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.knowledge.knowledge import Knowledge
 import random
 import numpy as np
 
@@ -177,7 +177,7 @@ class MoFGBMLBasicMain:
             for i in range(len(X)):
                 indices = X[i, 0].get_antecedent().get_antecedent_indices()
                 for j in range(len(indices)):
-                    num_fuzzy_sets = Context.get_instance().get_fuzzy_set_num(j)
+                    num_fuzzy_sets = Knowledge.get_instance().get_fuzzy_set_num(j)
                     indices[j] = random.randint(0, num_fuzzy_sets - 1)
 
                 X[i, 0].set_consequent(self.__learner.learning(X[i, 0].get_antecedent()))

@@ -1,11 +1,11 @@
 import pytest
-from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
 
 
 def test_get_instance():
-    ref1 = Context.get_instance()
-    ref2 = Context.get_instance()
+    ref1 = Knowledge.get_instance()
+    ref2 = Knowledge.get_instance()
     assert ref1 is ref2
 
 
@@ -26,7 +26,7 @@ def gen_fuzzy_sets_example():
 def test_set_fuzzy_sets():
     try:
         fuzzy_sets = gen_fuzzy_sets_example()
-        context = Context.get_instance()
+        context = Knowledge.get_instance()
         context.set_fuzzy_sets(fuzzy_sets)
         assert True
     except:
@@ -35,7 +35,7 @@ def test_set_fuzzy_sets():
 
 def test_get_fuzzy_set():
     fuzzy_sets = gen_fuzzy_sets_example()
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
     context.set_fuzzy_sets(fuzzy_sets)
 
     assert context.get_fuzzy_set(0) is fuzzy_sets[0] and context.get_fuzzy_set(1,0) is fuzzy_sets[1][0]
@@ -43,7 +43,7 @@ def test_get_fuzzy_set():
 
 def test_get_fuzzy_set_num():
     fuzzy_sets = gen_fuzzy_sets_example()
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
     context.set_fuzzy_sets(fuzzy_sets)
 
     assert context.get_fuzzy_set_num(0) == 2 and context.get_fuzzy_set_num(1) == 2
@@ -53,7 +53,7 @@ def test_get_fuzzy_set_num():
                                                   ((0, 0, 1), 0), ((0.6, 0, 1), 1), ((1, 0, 1), 0), ((0.8, 0, 1), 0.5)])
 def test_get_membership_value(params, expected):
     fuzzy_sets = gen_fuzzy_sets_example()
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
     context.clear()
     context.set_fuzzy_sets(fuzzy_sets)
 
@@ -62,7 +62,7 @@ def test_get_membership_value(params, expected):
 
 def test_get_num_dim():
     fuzzy_sets = gen_fuzzy_sets_example()
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
     context.clear()
     context.set_fuzzy_sets(fuzzy_sets)
 
@@ -71,7 +71,7 @@ def test_get_num_dim():
 
 def test_clear():
     fuzzy_sets = gen_fuzzy_sets_example()
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
     context.clear()
     context.set_fuzzy_sets(fuzzy_sets)
     s1 = context.get_num_dim()

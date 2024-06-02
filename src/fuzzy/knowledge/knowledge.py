@@ -1,19 +1,19 @@
-class Context:
+class Knowledge:
     __instance = None
 
     __dont_care_id = 0
     __fuzzy_sets = []
 
     def __new__(cls, *args, **kwargs):
-        if Context.__instance is None:
-            Context.__instance = super(Context, cls).__new__(cls)
-        return Context.__instance
+        if Knowledge.__instance is None:
+            Knowledge.__instance = super(Knowledge, cls).__new__(cls)
+        return Knowledge.__instance
 
     @staticmethod
     def get_instance():
-        if Context.__instance is None:
-            Context.__new__(Context)
-        return Context.__instance
+        if Knowledge.__instance is None:
+            Knowledge.__new__(Knowledge)
+        return Knowledge.__instance
 
     def get_fuzzy_set(self, dim, fuzzy_set_id=None):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:

@@ -1,5 +1,5 @@
 from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
-from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.rule.antecedent.antecedent import Antecedent
 import numpy as np
 
@@ -9,8 +9,8 @@ class AllCombinationAntecedent(AbstractAntecedentFactory):
     __dimension = None
 
     def __init__(self):
-        self.__dimension = Context.get_instance().get_num_dim()
-        self.generate_antecedents(Context.get_instance().get_fuzzy_sets())
+        self.__dimension = Knowledge.get_instance().get_num_dim()
+        self.generate_antecedents(Knowledge.get_instance().get_fuzzy_sets())
 
     def generate_antecedents(self, fuzzy_sets):
         queue = [[]]

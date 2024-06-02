@@ -1,5 +1,5 @@
 import numpy as np
-from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.knowledge.knowledge import Knowledge
 
 
 class Antecedent:
@@ -51,7 +51,7 @@ class Antecedent:
         return Antecedent(self.__antecedent_indices)
 
     def get_fuzzy_set(self, dim, set_id):
-        return Context.get_instance().get_fuzzy_set(dim, set_id)
+        return Knowledge.get_instance().get_fuzzy_set(dim, set_id)
 
     # def get_fuzzy_sets(antecedent_indices):
     # def to_element(self):

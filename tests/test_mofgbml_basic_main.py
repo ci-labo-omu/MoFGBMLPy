@@ -1,11 +1,11 @@
 from main.consts import Consts
 from src.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
-from src.fuzzy.knowledge.knowledge import Context
+from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
 
 
 def test_main():
-    context = Context.get_instance()
+    context = Knowledge.get_instance()
 
     fuzzy_sets = []
     for i in range(4): # nb attributes of iris
