@@ -1,5 +1,6 @@
+from pymoo.core.repair import Repair
+from pymoo.core.survival import Survival
 from pymoo.visualization.scatter import Scatter
-from sklearn.linear_model._sgd_fast import Classification
 
 from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from gbml.solution.michigan_solution import MichiganSolution
@@ -15,7 +16,7 @@ from src.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 from src.data.dataset_manager import DataSetManager
 import sys
 import os
-from pymoo.core.problem import ElementwiseProblem
+from pymoo.core.problem import Problem
 from pymoo.core.duplicate import ElementwiseDuplicateElimination
 from pymoo.core.selection import Selection
 from pymoo.core.crossover import Crossover
@@ -63,7 +64,7 @@ class MoFGBMLBasicMain:
         # Run the algo
         MoFGBMLBasicMain.hybrid_style_mofgbml(train, test)
 
-    class BasicProblem(ElementwiseProblem):
+    class BasicProblem(Problem):
         __winner_solution_for_each_pattern = None
         __training_ds = None
 
@@ -72,7 +73,7 @@ class MoFGBMLBasicMain:
             __solution_index = None
 
             def __init__(self, max_fitness_value=None, __solution_index=None):
-                __max_fitness_value = max_fitness_value
+                self.__max_fitness_value = max_fitness_value
                 self.__solution_index = __solution_index
 
             def get_max_fitness_value(self):
@@ -82,10 +83,10 @@ class MoFGBMLBasicMain:
                 return self.__solution_index
 
         def __init__(self,
-                     training_dataset,
+                     num_vars_pittsburgh,
                      num_objectives_pittsburgh,
                      num_constraints_pittsburgh,
-                     train,
+                     training_dataset,
                      michigan_solution_builder,
                      classifier):
 
@@ -99,19 +100,20 @@ class MoFGBMLBasicMain:
 
             for i in range(len(X)):
                 out["F"][i][0] = 0
-                out["F"][i][1] = X[i].get_rule_length()
+                out["F"][i][1] = X[i, 0].get_rule_length()
+
+                if X[i, 0].is_rejected_class_label():
+                    out["F"][i][0] = 1  # This rule must be deleted during environmental selection
+                    continue
 
                 for j in range(len(patterns)):
-                    if X[i].get_consequent() is None:
-                        print("TEST", X[i])
-                    fitness_value = X[i].get_fitness_value(patterns[j].get_attribute_vector())
-                    max_fitness_value = self.__winner_solution_for_each_pattern[i].get_max_fitness_value()
+                    fitness_value = X[i, 0].get_fitness_value(patterns[j].get_attribute_vector())
+                    max_fitness_value = self.__winner_solution_for_each_pattern[j].get_max_fitness_value()
                     if max_fitness_value is None or fitness_value > max_fitness_value:
                         self.__winner_solution_for_each_pattern[j] = MoFGBMLBasicMain.BasicProblem.WinnerSolution(fitness_value, i)
 
             for i in range(len(patterns)):
-                out["F"][self.__winner_solution_for_each_pattern[i].get_solution_index()][0] += 1
-
+                out["F"][self.__winner_solution_for_each_pattern[i].get_solution_index()][0] -= 1
 
     class BasicSampling(Sampling):
         __learner = None
@@ -131,6 +133,7 @@ class MoFGBMLBasicMain:
                 if not consequent.get_class_label().is_rejected():
                     new_rule = RuleBasic(antecedent, self.__learner.learning(antecedent))
                     X.append([new_rule])
+
             return np.array(X, dtype=object)
 
     # class BasicSelection(Selection):
@@ -197,7 +200,7 @@ class MoFGBMLBasicMain:
 
     class BasicDuplicateElimination(ElementwiseDuplicateElimination):
         def is_equal(self, a, b):
-            return False #TODO
+            return False
 
     @staticmethod
     def hybrid_style_mofgbml(train, test):
@@ -245,12 +248,12 @@ class MoFGBMLBasicMain:
 
         cl = Classifier(SingleWinnerRuleSelection())
         res.X = [item[0] for item in res.X]
+        non_dominated_solutions = res.pop
 
-        print(res.X)
         for i in range(len(res.X)):
             print(res.X[i].get_class_label().get_class_label_value(), res.X[i].get_rule_weight().get_value())
 
-        cl.classify(res.X, train.get_patterns()[0])
+        print("accuracy", cl.classify(res.X, train.get_patterns()[0]))
 
 
 if __name__ == '__main__':

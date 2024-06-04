@@ -26,7 +26,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         else:
             dc_rate = max((self.__dimension - Consts.ANTECEDENT_NUMBER_NOT_DONT_CARE) / self.__dimension, Consts.DONT_CARE_RT)
 
-        antecedent_indices = np.zeros(self.__dimension, dtype=int)
+        antecedent_indices = np.zeros(self.__dimension, dtype=np.int_)
         knowledge = Knowledge.get_instance()
 
         for dim_i in range(self.__dimension):

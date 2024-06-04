@@ -10,7 +10,7 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
 
     def __init__(self):
         self.__dimension = Knowledge.get_instance().get_num_dim()
-        self.generate_antecedents(Knowledge.get_instance().get_fuzzy_sets())
+        self.generate_antecedents_indices(Knowledge.get_instance().get_fuzzy_sets())
 
     def generate_antecedents_indices(self, fuzzy_sets):
         queue = [[]]
@@ -28,9 +28,9 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             else:
                 indices.append(buffer)
 
-        self.__antecedents_indices = np.zeros((len(indices), self.__dimension), dtype=int)
+        self.__antecedents_indices = np.zeros((len(indices), self.__dimension), dtype=np.int_)
         for i in range(len(indices)):
-            self.__antecedents_indices[i, :] = np.array(indices[i], dtype=int)
+            self.__antecedents_indices[i, :] = np.array(indices[i], dtype=np.int_)
 
     def create(self, num_rules=1):
         num_rules = min(num_rules, len(self.__antecedents_indices))

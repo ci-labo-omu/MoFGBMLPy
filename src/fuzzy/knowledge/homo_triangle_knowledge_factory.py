@@ -17,7 +17,7 @@ class HomoTriangleKnowledgeFactory:
 
         partition[num_partitions] = 1
 
-        for i in range(len(num_partitions)):
+        for i in range(num_partitions):
             if i == 0:  # 1st partition
                 params[i] = np.array([0, 0, 2*partition[i+1]])
             elif i == len(partition)-2:  # last partition
@@ -48,8 +48,8 @@ class HomoTriangleKnowledgeFactory:
 
     @staticmethod
     def create2_3_4_5(num_dims):
-        num_divisions = np.zeros((num_dims, 4))
+        num_divisions = np.zeros((num_dims, 4), dtype=np.int_)
         for i in range(num_dims):
-            num_divisions[i] = np.array([2, 3, 4, 5], dtype=int)
+            num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int_)
 
         HomoTriangleKnowledgeFactory.create(num_divisions)
