@@ -72,3 +72,15 @@ class AbstractSolution(ABC):
 
     def get_attributes(self):
         return self._attributes
+
+    class SolutionBuilderCore(ABC):
+        _bounds = None
+        _num_objectives = None
+        _num_constraints = None
+        _rule_builder = None
+
+        def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
+            self._bounds = bounds
+            self._num_objectives = num_objectives
+            self._num_constraints = num_constraints
+            self._rule_builder = rule_builder

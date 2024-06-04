@@ -1,5 +1,8 @@
 from pymoo.visualization.scatter import Scatter
+from sklearn.linear_model._sgd_fast import Classification
 
+from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from gbml.solution.michigan_solution import MichiganSolution
 from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from src.fuzzy.classifier.classifier import Classifier
 from src.fuzzy.rule.consequent.consequent import Consequent
@@ -28,7 +31,9 @@ import numpy as np
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from src.fuzzy.rule.rule_basic import RuleBasic
 from src.fuzzy.rule.antecedent.antecedent import Antecedent
-from src.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedent
+from src.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from src.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+
 
 class MoFGBMLBasicMain:
     @staticmethod
@@ -76,7 +81,14 @@ class MoFGBMLBasicMain:
             def get_solution_index(self):
                 return self.__solution_index
 
-        def __init__(self, training_dataset):
+        def __init__(self,
+                     training_dataset,
+                     num_objectives_pittsburgh,
+                     num_constraints_pittsburgh,
+                     train,
+                     michigan_solution_builder,
+                     classifier):
+
             super().__init__(n_var=1, n_obj=2)
             self.__training_ds = training_dataset
             self.__winner_solution_for_each_pattern = np.array([MoFGBMLBasicMain.BasicProblem.WinnerSolution()]*training_dataset.get_size(), dtype=object)
@@ -109,7 +121,7 @@ class MoFGBMLBasicMain:
             self.__learner = LearningBasic(training_set)
 
         def _do(self, problem, n_samples, **kwargs):
-            factory = AllCombinationAntecedent()
+            factory = AllCombinationAntecedentFactory()
 
             X = []
             while len(X) < n_samples:
@@ -177,7 +189,7 @@ class MoFGBMLBasicMain:
             for i in range(len(X)):
                 indices = X[i, 0].get_antecedent().get_antecedent_indices()
                 for j in range(len(indices)):
-                    num_fuzzy_sets = Knowledge.get_instance().get_fuzzy_set_num(j)
+                    num_fuzzy_sets = Knowledge.get_instance().get_num_fuzzy_sets(j)
                     indices[j] = random.randint(0, num_fuzzy_sets - 1)
 
                 X[i, 0].set_consequent(self.__learner.learning(X[i, 0].get_antecedent()))
@@ -189,11 +201,39 @@ class MoFGBMLBasicMain:
 
     @staticmethod
     def hybrid_style_mofgbml(train, test):
-        problem = MoFGBMLBasicMain.BasicProblem(train)
+        random.seed(2022)
+        HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_n_dim())
+
+        bounds_Michigan = MichiganSolution.make_bounds()
+
+        num_objectives_michigan = 1
+        num_constraints_michigan = 0
+
+        num_vars_pittsburgh = Consts.INITIATION_RULE_NUM
+        num_objectives_pittsburgh = 2
+        num_constraints_pittsburgh = 0
+
+        rule_builder = RuleBasic.RuleBuilderBasic(HeuristicAntecedentFactory(train), LearningBasic(train))
+        michigan_solution_builder = MichiganSolution.MichiganSolutionBuilder(bounds_Michigan,
+                                                                             num_objectives_michigan,
+                                                                             num_constraints_michigan,
+                                                                             rule_builder)
+
+        classification = SingleWinnerRuleSelection()
+        classifier = Classifier(classification)
+
+        problem = MoFGBMLBasicMain.BasicProblem(num_vars_pittsburgh,
+                                                num_objectives_pittsburgh,
+                                                num_constraints_pittsburgh,
+                                                train,
+                                                michigan_solution_builder,
+                                                classifier)
+
+        crossover_probability = 1
 
         algorithm = NSGA2(pop_size=Consts.POPULATION_SIZE,
                           sampling=MoFGBMLBasicMain.BasicSampling(train),
-                          crossover=MoFGBMLBasicMain.BasicCrossover(2, 1),
+                          crossover=MoFGBMLBasicMain.BasicCrossover(2, 1, crossover_probability),
                           mutation=MoFGBMLBasicMain.BasicMutation(train),
                           eliminate_duplicates=MoFGBMLBasicMain.BasicDuplicateElimination())
 

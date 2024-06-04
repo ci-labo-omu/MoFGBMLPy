@@ -55,4 +55,16 @@ class AbstractRule(ABC):
     def get_fitness_value(self, attribute_vector):
         pass
 
-    # TODO: Add rule builder ?
+    class RuleBuilderCore:
+        _antecedent_factory = None
+        _consequent_factory = None
+
+        def __init__(self, antecedent_factory, consequent_factory):
+            self._antecedent_factory = antecedent_factory
+            self._consequent_factory = consequent_factory
+
+        def create_antecedent(self, num_rules=1):
+            return self._antecedent_factory.create(num_rules)
+
+        def create_consequent(self, antecedent):
+            return self._consequent_factory.learning(antecedent)

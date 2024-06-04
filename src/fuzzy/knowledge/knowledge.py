@@ -24,7 +24,7 @@ class Knowledge:
         else:
             return self.__fuzzy_sets[dim][fuzzy_set_id]
 
-    def get_fuzzy_set_num(self, dim):
+    def get_num_fuzzy_sets(self, dim):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 

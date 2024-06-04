@@ -18,7 +18,7 @@ class Dataset:
     def add_pattern(self, pattern):
         self.__patterns.append(pattern)
 
-    def get_pattern_at(self, index):
+    def get_pattern(self, index):
         return self.__patterns[index]
 
     def get_patterns(self):

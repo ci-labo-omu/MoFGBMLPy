@@ -2,7 +2,7 @@ import numpy as np
 
 from src.gbml.solution.abstract_solution import AbstractSolution
 from src.fuzzy.knowledge.knowledge import Knowledge
-
+from src.gbml.solution.abstract_solution import AbstractSolution
 
 class MichiganSolution(AbstractSolution):
     _bounds = None
@@ -30,7 +30,8 @@ class MichiganSolution(AbstractSolution):
             while self._rule.is_rejected():
                 self.create_rule()
 
-    def make_bounds(self):
+    @staticmethod
+    def make_bounds():
         knowledge = Knowledge.get_instance()
         num_dim = knowledge.get_num_dim()
 
@@ -95,4 +96,16 @@ class MichiganSolution(AbstractSolution):
     def get_compatible_grade_value(self, attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
 
-    # TODO: define builder ?
+    class MichiganSolutionBuilder(AbstractSolution.SolutionBuilderCore):
+        def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
+            super().__init__(bounds, num_objectives, num_constraints, rule_builder)
+
+        def create_michigan_solution(self):
+            bounds = self._bounds
+            if bounds is None:
+                bounds = MichiganSolution.make_bounds()
+
+            solution = MichiganSolution(bounds, self._num_objectives, self._num_constraints, self._rule_builder)
+            # solution.set_attribute(attribute_id, 0) # TODO: check usage in java version
+            # solution.set_attribute(attribute_id_fitness, 0)
+            return solution

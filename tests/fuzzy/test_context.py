@@ -41,12 +41,12 @@ def test_get_fuzzy_set():
     assert context.get_fuzzy_set(0) is fuzzy_sets[0] and context.get_fuzzy_set(1,0) is fuzzy_sets[1][0]
 
 
-def test_get_fuzzy_set_num():
+def test_get_num_fuzzy_sets():
     fuzzy_sets = gen_fuzzy_sets_example()
     context = Knowledge.get_instance()
     context.set_fuzzy_sets(fuzzy_sets)
 
-    assert context.get_fuzzy_set_num(0) == 2 and context.get_fuzzy_set_num(1) == 2
+    assert context.get_num_fuzzy_sets(0) == 2 and context.get_num_fuzzy_sets(1) == 2
 
 
 @pytest.mark.parametrize(('params', 'expected'), [((0, 0, 0), 0), ((0.4, 0, 0), 1), ((1, 0, 0), 0), ((0.2, 0, 0), 0.5),
