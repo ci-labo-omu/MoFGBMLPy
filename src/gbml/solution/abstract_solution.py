@@ -10,7 +10,7 @@ class AbstractSolution(ABC):
 
     def __init__(self, num_vars, num_objectives, num_constraints=0):
         self._attributes = {}
-        self._vars = np.zeros(num_vars, dtype=object)
+        self._vars = []
         self.__objectives = np.zeros(num_objectives, dtype=np.float_)
         self.__constraints = np.zeros(num_constraints, dtype=np.float_)
 

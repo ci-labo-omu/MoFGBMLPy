@@ -77,7 +77,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             remaining_indices = np.random.choice(list(range(self.__training_set.get_size())), num_remaining_indices, replace=False)
             indices = np.concatenate((indices, remaining_indices))
 
-        antecedent_objects = np.array([Antecedent(indices[i]) for i in range(num_rules)], dtype=object)
+        antecedent_objects = np.array([Antecedent(self.select_antecedent_part((indices[i]))) for i in range(num_rules)], dtype=object)
 
         if num_rules == 1:
             antecedent_objects = antecedent_objects[0]

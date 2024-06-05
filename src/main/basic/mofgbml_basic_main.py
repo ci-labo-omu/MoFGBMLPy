@@ -2,6 +2,7 @@ from pymoo.core.repair import Repair
 from pymoo.core.survival import Survival
 from pymoo.visualization.scatter import Scatter
 
+from src.gbml.solution.pittsburgh_solution import PittsburghSolution
 from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from gbml.solution.michigan_solution import MichiganSolution
 from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
@@ -66,7 +67,13 @@ class MoFGBMLBasicMain:
 
     class BasicProblem(Problem):
         __winner_solution_for_each_pattern = None
+        __num_vars_pittsburgh = None
+        __num_objectives_pittsburgh = None
+        __num_constraints_pittsburgh = None
         __training_ds = None
+        __michigan_solution_builder = None
+        __classifier = None
+        __num_vars = 0
 
         class WinnerSolution:
             __max_fitness_value = None
@@ -83,16 +90,32 @@ class MoFGBMLBasicMain:
                 return self.__solution_index
 
         def __init__(self,
-                     num_vars_pittsburgh,
-                     num_objectives_pittsburgh,
-                     num_constraints_pittsburgh,
+                     num_vars,
+                     num_objectives,
+                     num_constraints,
                      training_dataset,
                      michigan_solution_builder,
                      classifier):
 
-            super().__init__(n_var=1, n_obj=2)
+            super().__init__(n_var=num_vars, n_obj=num_objectives)
             self.__training_ds = training_dataset
             self.__winner_solution_for_each_pattern = np.array([MoFGBMLBasicMain.BasicProblem.WinnerSolution()]*training_dataset.get_size(), dtype=object)
+            self.__num_vars = num_vars
+            self.__michigan_solution_builder = michigan_solution_builder
+            self.__classifier = classifier
+
+        def create_solution(self):
+            pittsburgh_solution = PittsburghSolution(self.__num_vars,
+                                          self.__num_objectives_pittsburgh,
+                                          self.__num_constraints_pittsburgh,
+                                          self.__michigan_solution_builder.copy(),
+                                          self.__classifier.copy())
+
+            michigan_solutions = self.__michigan_solution_builder.create_michigan_solution(self.__num_vars)
+            for solution in michigan_solutions:
+                pittsburgh_solution.add_var(solution)
+                
+            return pittsburgh_solution
 
         def _evaluate(self, X, out, *args, **kwargs):
             out["F"] = np.zeros((len(X), 2), dtype=np.float_)
@@ -100,14 +123,14 @@ class MoFGBMLBasicMain:
 
             for i in range(len(X)):
                 out["F"][i][0] = 0
-                out["F"][i][1] = X[i, 0].get_rule_length()
+                out["F"][i][1] = X[i].get_rule_length()
 
                 if X[i, 0].is_rejected_class_label():
                     out["F"][i][0] = 1  # This rule must be deleted during environmental selection
                     continue
 
                 for j in range(len(patterns)):
-                    fitness_value = X[i, 0].get_fitness_value(patterns[j].get_attribute_vector())
+                    fitness_value = X[i].get_fitness_value(patterns[j].get_attribute_vector())
                     max_fitness_value = self.__winner_solution_for_each_pattern[j].get_max_fitness_value()
                     if max_fitness_value is None or fitness_value > max_fitness_value:
                         self.__winner_solution_for_each_pattern[j] = MoFGBMLBasicMain.BasicProblem.WinnerSolution(fitness_value, i)
@@ -123,18 +146,7 @@ class MoFGBMLBasicMain:
             self.__learner = LearningBasic(training_set)
 
         def _do(self, problem, n_samples, **kwargs):
-            factory = AllCombinationAntecedentFactory()
-
-            X = []
-            while len(X) < n_samples:
-                antecedent = factory.create()
-                consequent = self.__learner.learning(antecedent)
-
-                if not consequent.get_class_label().is_rejected():
-                    new_rule = RuleBasic(antecedent, self.__learner.learning(antecedent))
-                    X.append([new_rule])
-
-            return np.array(X, dtype=object)
+            return np.array([problem.create_solution()]*n_samples, dtype=object)
 
     # class BasicSelection(Selection):
     #     def __init__(self, **kwargs) -> None:
@@ -250,10 +262,11 @@ class MoFGBMLBasicMain:
         res.X = [item[0] for item in res.X]
         non_dominated_solutions = res.pop
 
+        print(res.X)
         for i in range(len(res.X)):
             print(res.X[i].get_class_label().get_class_label_value(), res.X[i].get_rule_weight().get_value())
 
-        print("accuracy", cl.classify(res.X, train.get_patterns()[0]))
+        # print(cl.classify(res.X, train.get_patterns()[0]))
 
 
 if __name__ == '__main__':

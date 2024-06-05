@@ -1,8 +1,8 @@
 import numpy as np
 
-from src.gbml.solution.abstract_solution import AbstractSolution
 from src.fuzzy.knowledge.knowledge import Knowledge
 from src.gbml.solution.abstract_solution import AbstractSolution
+
 
 class MichiganSolution(AbstractSolution):
     _bounds = None
@@ -22,12 +22,13 @@ class MichiganSolution(AbstractSolution):
         while is_rejected:
             cnt += 1
             self.create_rule()
+            is_rejected = self._rule.is_rejected_class_label()
             if cnt > 1000:
                 raise Exception("Exceeded maximum number of trials to generate rule")
 
         if michigan_solution is not None:
             self.create_rule(michigan_solution)
-            while self._rule.is_rejected():
+            while self._rule.is_rejected_class_label():
                 self.create_rule()
 
     @staticmethod
@@ -44,24 +45,23 @@ class MichiganSolution(AbstractSolution):
         return self._bounds[index][1]
 
     def set_vars(self, new_vars):
-        for i in range(len(new_vars)):
-            self.set_var(i, new_vars[i])
+        self._vars = new_vars
 
-    def get_var(self, index):
-        return self._vars[index]
+    def get_vars(self):
+        return self._vars
 
     def create_rule(self, michigan_solution=None):
         if michigan_solution is None:
-            antecedent_indices = self._rule_builder.create_antecedent_indices()
-            self.set_vars(antecedent_indices)
+            antecedent = self._rule_builder.create_antecedent()
+            self.set_vars(antecedent)
         else:
-            self.set_vars(self._rule_builder.create_antecedent_indices(michigan_solution))
+            self.set_vars(self._rule_builder.create_antecedent(michigan_solution))  # TODO: Not yet implemented
         self.learning()
 
     def learning(self):
         if self._vars is None:
             raise Exception("Vars is not defined")
-        self._rule = self._rule_builder.create_consequent(self.get_vars_array())
+        self._rule = self._rule_builder.create_consequent(self._vars)
 
     def get_fitness_value(self, in_vector):
         self._rule.get_fitness_value(self.get_vars_array(), in_vector)
@@ -96,16 +96,25 @@ class MichiganSolution(AbstractSolution):
     def get_compatible_grade_value(self, attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
 
+    def copy(self):
+        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), self._rule_builder.copy(), bounds=self._bounds)
+
     class MichiganSolutionBuilder(AbstractSolution.SolutionBuilderCore):
         def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
             super().__init__(bounds, num_objectives, num_constraints, rule_builder)
 
-        def create_michigan_solution(self):
+        def create_michigan_solution(self, num_solutions=1):
+            solutions = []
             bounds = self._bounds
             if bounds is None:
                 bounds = MichiganSolution.make_bounds()
 
-            solution = MichiganSolution(bounds, self._num_objectives, self._num_constraints, self._rule_builder)
-            # solution.set_attribute(attribute_id, 0) # TODO: check usage in java version
-            # solution.set_attribute(attribute_id_fitness, 0)
-            return solution
+            for i in range(num_solutions):
+                solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds))
+                # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version
+                # solutions[i].set_attribute(attribute_id_fitness, 0)
+
+            return solutions
+
+        def copy(self):
+            return MichiganSolution.MichiganSolutionBuilder(self._bounds, self._num_objectives, self._num_constraints, self._rule_builder.copy())

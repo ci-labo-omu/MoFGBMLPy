@@ -23,3 +23,6 @@ class RuleBasic(AbstractRule):
         def create_consequent(self, antecedent):
             consequent = self._consequent_factory.learning(antecedent)
             return RuleBasic(antecedent, consequent)
+
+        def copy(self):
+            return RuleBasic.RuleBuilderBasic(self._antecedent_factory, self._consequent_factory)
