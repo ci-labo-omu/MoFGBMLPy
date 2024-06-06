@@ -126,14 +126,14 @@ class MoFGBMLBasicMain:
                 out["F"][i][1] = X[i].get_rule_length()
 
                 if X[i, 0].is_rejected_class_label():
-                    out["F"][i][0] = 1  # This rule must be deleted during environmental selection
+                    out["F"][i][0] = -1  # This rule must be deleted during environmental selection
                     continue
 
                 for j in range(len(patterns)):
                     fitness_value = X[i].get_fitness_value(patterns[j].get_attribute_vector())
                     max_fitness_value = self.__winner_solution_for_each_pattern[j].get_max_fitness_value()
                     if max_fitness_value is None or fitness_value > max_fitness_value:
-                        self.__winner_solution_for_each_pattern[j] = MoFGBMLBasicMain.BasicProblem.WinnerSolution(fitness_value, i)
+                        self.__winner_solution_for_each_pattern[j] = MoFGBMLBasicMain.BasicProblem.WinnerSolution(-fitness_value, i)
 
             for i in range(len(patterns)):
                 out["F"][self.__winner_solution_for_each_pattern[i].get_solution_index()][0] -= 1

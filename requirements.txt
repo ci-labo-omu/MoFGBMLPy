@@ -4,4 +4,4 @@ matplotlib
 scikit-learn
 pymoo
 pytest
-scikit-fuzzy
+simpful
