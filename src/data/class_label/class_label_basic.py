@@ -1,4 +1,4 @@
-from src.fuzzy.rule.consequent.classLabel.abstract_class_label import AbstractClassLabel
+from data.class_label.abstract_class_label import AbstractClassLabel
 
 
 class ClassLabelBasic(AbstractClassLabel):
@@ -9,12 +9,6 @@ class ClassLabelBasic(AbstractClassLabel):
         if not isinstance(other, ClassLabelBasic):
             return False
         return other.get_class_label_value() == self.get_class_label_value()
-
-    def is_rejected(self):
-        return self._class_label == self.get_rejected_class_label_value()
-
-    def set_rejected(self):
-        self.set_class_label_value(self.get_rejected_class_label_value())
 
     def copy(self):
         return ClassLabelBasic(self.get_class_label_value())

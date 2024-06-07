@@ -1,4 +1,4 @@
-from src.fuzzy.rule.consequent.classLabel.abstract_class_label import AbstractClassLabel
+from data.class_label.abstract_class_label import AbstractClassLabel
 
 
 class ClassLabelMulti(AbstractClassLabel):
@@ -16,15 +16,6 @@ class ClassLabelMulti(AbstractClassLabel):
 
     def get_length(self):
         return len(self.get_class_label_value())
-
-    def is_rejected(self):
-        for label in self.get_class_label_value():
-            if label == self.get_rejected_class_label_value():
-                return True
-        return False
-
-    def set_rejected(self):
-        self._class_label[0] = self.get_rejected_class_label_value()
 
     def copy(self):
         return ClassLabelMulti(self.get_class_label_value())

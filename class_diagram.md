@@ -1,24 +1,80 @@
 ```mermaid
 classDiagram
     note for Dataset "Store a list of patterns"
-    note for DatasetManager "Singleton storing datasets (note: maybe put it \nin a big context/environment class with the other singletons)"
+%%    note for DatasetManager "Singleton storing datasets (note: maybe put it \nin a big context/environment class with the other singletons)"
     note for Input "Methods to load data"
     note for Pattern "One pattern (one data row)"
-
+    
+    ClassLabelBasic --|> AbstractClassLabel
+    ClassLabelMulti --|> AbstractClassLabel
+    
     namespace data {
         class Dataset {
+            -size : int
+            -num_dim : int
+            -num_classes : int
+            -patterns : List<Pattern>
+            
+            +Dataset(int size, int n_dim, int c_num, List~Pattern~ patterns)
+            +get_pattern(int index) Pattern
+            +get_patterns() List<Pattern>
+            +get_num_dim() int
+            +get_num_classes() int
+            +get_size() int
+            +__str__() String
         }
 
-        class DatasetManager {
+        class Input { 
+            +input_data_set(String file_name, bool is_multi_label)$
+            +input_data_set_multi(String file_name)$
+            +input_data_set_basic(String file_name)$
+            +get_train_test_files(String train_file_name, String test_file_name, bool is_multi_label)$
         }
 
-        class Input {
-        }
-
-        class Output {
+        class Output { 
+            +mkdirs(dir_name)$
+            +writeln(file_name, txt, append=False)$
+            +writelns(file_name, lns, append=False)$
         }
 
         class Pattern {
+            -id : int
+            -attribute_vector : List<float>
+            -target_class : ClassLabel
+        
+            +Pattern(pattern_id, attribute_vector, target_class)
+            +get_id() int
+            +get_attributes_vector() List<float>
+            +get_attribute_value(int index) float
+            +get_target_class() ClassLabel
+            +__str__() String
+        }
+        
+%%        class_label
+        class AbstractClassLabel {
+            #class_label : int/List<int>
+            -is_rejected : bool
+            
+            +AbstractClassLabel(int/List~int~ class_label)
+            +get_class_label_value() int/List~int~
+            +set_class_label_value(int/List~int~ class_label)
+            +is_rejected()
+            +set_rejected()
+        }
+        
+        class ClassLabelBasic {
+                ClassLabelBasic(int class_label)
+                __eq__(object other) bool
+                copy() ClassLabelBasic
+                __str__() String
+        }
+        
+        class ClassLabelMulti {
+            ClassLabelBasic(List~int~ class_label)
+            get_length() int
+            __eq__(ClassLabelMulti other) bool
+            copy() ClassLabelMulti
+            __str__() String
         }
     }
 

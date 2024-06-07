@@ -17,4 +17,3 @@ class Output:
             for ln in lns:
                 f.write(ln)
                 f.write('\n')
-

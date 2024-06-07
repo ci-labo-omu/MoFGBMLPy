@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class AbstractClassLabel:
     _class_label = None
-    __rejected_class_label = -1
+    __is_rejected = False
 
     def __init__(self, class_label):
         self._class_label = class_label
@@ -16,5 +16,8 @@ class AbstractClassLabel:
     def set_class_label_value(self, class_label):
         self._class_label = class_label
 
-    def get_rejected_class_label_value(self):
-        return self.__rejected_class_label
+    def is_rejected(self):
+        return self.__is_rejected
+
+    def set_rejected(self):
+        self.__is_rejected = True

@@ -1,4 +1,3 @@
-from pymoo.visualization.scatter import Scatter
 from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
 from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from gbml.solution.michigan_solution import MichiganSolution
@@ -6,7 +5,7 @@ from src.fuzzy.classifier.classification.single_winner_rule_selection import Sin
 from src.fuzzy.classifier.classifier import Classifier
 from src.main.experience_parameter import ExperienceParameter
 from src.data.input import Input
-from src.utility.Output import Output
+from data.output import Output
 from src.main.consts import Consts
 from src.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 from src.data.dataset_manager import DataSetManager

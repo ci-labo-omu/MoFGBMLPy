@@ -2,7 +2,7 @@ import numpy as np
 
 from src.fuzzy.rule.consequent.learning.abstract_learning import  AbstractLearning
 from src.fuzzy.rule.consequent.consequent import Consequent
-from src.fuzzy.rule.consequent.classLabel.class_label_basic import ClassLabelBasic
+from data.class_label.class_label_basic import ClassLabelBasic
 from src.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
 
 
