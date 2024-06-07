@@ -18,7 +18,7 @@ import random
 
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from src.fuzzy.rule.rule_basic import RuleBasic
-from src.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 
 class MoFGBMLBasicMain:

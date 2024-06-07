@@ -82,31 +82,59 @@ classDiagram
     Knowledge --o "*" LinguisticVariable
     FuzzySet --o "*" LinguisticVariable
 
-    namespace simpful {
+    namespace simpful {        
         class LinguisticVariable {
             +get_values(float v) List~float~
         }
 
         class FuzzySet {
+            +get_value(float v) float
         }
     }
 
     SingleWinnerRuleSelection --|> AbstractClassification
     AllCombinationAntecedentFactory --|> AbstractAntecedentFactory
     HeuristicAntecedentFactory --|> AbstractAntecedentFactory
-
+    LinguisticVariableMoFGBML --|> LinguisticVariable
+    
     namespace fuzzy {
     %%    knowledge
         class Knowledge {
-            -fuzzy_sets: List~LinguisticVariable~
-            -fuzzy_sets_lengths: List~int~
+            -fuzzy_sets: List~LinguisticVariableMoFGBML~
+            -instance: Knowledge$ = None
+            
+            -Knowledge()
+            +get_instance()$ : Knowledge
+            +get_num_fuzzy_sets(, int dim)
+            +set_fuzzy_sets(List~FuzzySet~ fuzzy_sets)
+            +get_fuzzy_sets() List~FuzzySet~
+            +get_membership_value(float attribute_value, int dim, int fuzzy_set_index) float
+            +get_num_dim() int
+            +clear()
+            +__str__() String
         }
-
+        
+        class HomoTriangleKnowledgeFactory {
+            make_triangle_knowledge_params(int num_partitions) float[][]$
+            create(int[][] num_divisions, String[] var_names, String[][] fuzzy_set_names)$
+            create2_3_4_5(int num_dims, String[] var_names=None)$
+        }
+        
     %%    fuzzy_term
-        class FuzzySetFactory {
+        class LinguisticVariableMoFGBML {
+            +LinguisticVariableMoFGBML(List~FuzzySet~ FS_list=[], String name=None)
+            +add_fuzzy_set(FuzzySet fuzzy_set)
+            +get_membership_value(int fuzzy_set_index, float x) float
+            +get_length() int
+        }
+        
+        class DontCareMF {
+            _execute(x) float
+            __repr__() String
         }
 
-        class DontCare {
+        class DontCareFuzzySet {
+            DontCareFuzzySet()
         }
 
     %%    rule

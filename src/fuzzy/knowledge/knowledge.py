@@ -1,7 +1,5 @@
 class Knowledge:
     __instance = None
-
-    __dont_care_id = 0
     __fuzzy_sets = []
 
     def __new__(cls, *args, **kwargs):
@@ -15,14 +13,14 @@ class Knowledge:
             Knowledge.__new__(Knowledge)
         return Knowledge.__instance
 
-    def get_fuzzy_set(self, dim, fuzzy_set_id=None):
-        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
-            raise Exception("Context is not yet initialized (no fuzzy set)")
-
-        if fuzzy_set_id is None:
-            return self.__fuzzy_sets[dim]
-        else:
-            return self.__fuzzy_sets[dim][fuzzy_set_id]
+    # def get_fuzzy_set(self, dim, fuzzy_set_id=None):
+    #     if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+    #         raise Exception("Context is not yet initialized (no fuzzy set)")
+    #
+    #     if fuzzy_set_id is None:
+    #         return self.__fuzzy_sets[dim]
+    #     else:
+    #         return self.__fuzzy_sets[dim].get
 
     def get_num_fuzzy_sets(self, dim):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
@@ -45,7 +43,7 @@ class Knowledge:
     def get_membership_value(self, attribute_value, dim, fuzzy_set_id):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
-        return self.__fuzzy_sets[dim][fuzzy_set_id].get_membership_value(attribute_value)
+        return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
 
     def get_num_dim(self):
         if self.__fuzzy_sets is None:
