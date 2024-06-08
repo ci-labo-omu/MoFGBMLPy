@@ -41,7 +41,7 @@ class HomoTriangleKnowledgeFactory:
             for j in range(len(num_divisions[dim_i])):
                 params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(num_divisions[dim_i][j])
                 for div_i in range(num_divisions[dim_i][j]):
-                    new_fuzzy_set = TriangleFuzzySet(a=params[div_i][0], b=params[div_i][1], c=params[div_i][2], term=fuzzy_set_names[dim_i][div_i])
+                    new_fuzzy_set = TriangleFuzzySet(a=params[div_i][0], b=params[div_i][1], c=params[div_i][2], term=fuzzy_set_names[dim_i][j][div_i])
                     current_set.append(new_fuzzy_set)
 
             fuzzy_sets.append(LinguisticVariableMoFGBML(current_set, var_names[dim_i]))
@@ -63,4 +63,5 @@ class HomoTriangleKnowledgeFactory:
 
         if var_names is None:
             var_names = np.array([f"x{i}" for i in range(num_dims)], dtype=str)
+
         HomoTriangleKnowledgeFactory.create(num_divisions, var_names, fuzzy_set_names)

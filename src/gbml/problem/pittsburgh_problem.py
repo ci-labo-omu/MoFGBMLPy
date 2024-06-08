@@ -1,5 +1,8 @@
+import copy
+
 from pymoo.core.problem import Problem
 import numpy as np
+from src.gbml.solution.pittsburgh_solution import PittsburghSolution
 
 
 class PittsburghProblem(Problem):
@@ -34,10 +37,13 @@ class PittsburghProblem(Problem):
                  michigan_solution_builder,
                  classifier):
 
-        super().__init__(n_var=num_vars, n_obj=num_objectives)
+        super().__init__(n_var=1, n_obj=num_objectives)  # 1 var because we consider one solution object
         self.__training_ds = training_dataset
-        self.__winner_solution_for_each_pattern = np.array(
-            [PittsburghProblem.WinnerSolution()] * training_dataset.get_size(), dtype=object)
+
+        self.__winner_solution_for_each_pattern = np.zeros(training_dataset.get_size(), dtype=object)
+        for i in range(training_dataset.get_size()):
+            self.__winner_solution_for_each_pattern[i] = PittsburghProblem.WinnerSolution()
+
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classifier = classifier
@@ -46,8 +52,8 @@ class PittsburghProblem(Problem):
         pittsburgh_solution = PittsburghSolution(self.__num_vars,
                                                  self.__num_objectives_pittsburgh,
                                                  self.__num_constraints_pittsburgh,
-                                                 self.__michigan_solution_builder.copy(),
-                                                 self.__classifier.copy())
+                                                 copy.copy(self.__michigan_solution_builder),
+                                                 copy.copy(self.__classifier))
 
         michigan_solutions = self.__michigan_solution_builder.create_michigan_solution(self.__num_vars)
         for solution in michigan_solutions:
@@ -57,22 +63,7 @@ class PittsburghProblem(Problem):
 
     def _evaluate(self, X, out, *args, **kwargs):
         out["F"] = np.zeros((len(X), 2), dtype=np.float_)
-        patterns = self.__training_ds.get_patterns()
 
         for i in range(len(X)):
-            out["F"][i][0] = 0
-            out["F"][i][1] = X[i].get_rule_length()
-
-            if X[i, 0].is_rejected_class_label():
-                out["F"][i][0] = -1  # This rule must be deleted during environmental selection
-                continue
-
-            for j in range(len(patterns)):
-                fitness_value = X[i].get_fitness_value(patterns[j].get_attribute_vector())
-                max_fitness_value = self.__winner_solution_for_each_pattern[j].get_max_fitness_value()
-                if max_fitness_value is None or fitness_value > max_fitness_value:
-                    self.__winner_solution_for_each_pattern[j] = PittsburghProblem.WinnerSolution(
-                        -fitness_value, i)
-
-        for i in range(len(patterns)):
-            out["F"][self.__winner_solution_for_each_pattern[i].get_solution_index()][0] -= 1
+            out["F"][i][0] = X[i].get_error_rate(self.__training_ds)
+            out["F"][i][1] = X[i].get_num_vars()  # num rules

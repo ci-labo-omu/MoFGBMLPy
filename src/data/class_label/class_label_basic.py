@@ -10,7 +10,7 @@ class ClassLabelBasic(AbstractClassLabel):
             return False
         return other.get_class_label_value() == self.get_class_label_value()
 
-    def copy(self):
+    def __copy__(self):
         return ClassLabelBasic(self.get_class_label_value())
 
     def __str__(self):

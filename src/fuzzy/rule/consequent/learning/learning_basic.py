@@ -23,7 +23,7 @@ class LearningBasic(AbstractLearning):
         if antecedent is None:
             raise ValueError('Antecedent cannot be None')
 
-        num_classes = self._train_ds.get_c_num()
+        num_classes = self._train_ds.get_num_classes()
         confidence = np.zeros(num_classes)
         sum_compatible_grade_for_each_class = np.zeros(num_classes)
 
@@ -32,7 +32,7 @@ class LearningBasic(AbstractLearning):
             # TODO: Add multithreading
 
             for pattern in self._train_ds.get_patterns():
-                temp = antecedent.get_compatible_grade_value(pattern.get_attribute_vector())
+                temp = antecedent.get_compatible_grade_value(pattern.get_attributes_vector())
 
                 if pattern.get_target_class().get_class_label_value() == c:
                     part_sum += temp
@@ -83,8 +83,11 @@ class LearningBasic(AbstractLearning):
 
         return RuleWeightBasic(rule_weight_val)
 
+    def get_training_set(self):
+        return self._train_ds
+
     def __str__(self):
         return f"MoFGBML_Learning [defaultLimit={AbstractLearning._default_reject_threshold}]"
 
-    def copy(self):
+    def __copy__(self):
         return LearningBasic(self._train_ds)

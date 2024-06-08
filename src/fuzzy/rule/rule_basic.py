@@ -5,7 +5,7 @@ class RuleBasic(AbstractRule):
     def __init__(self, antecedent, consequent):
         super().__init__(antecedent, consequent)
 
-    def copy(self):
+    def __copy__(self):
         return RuleBasic(self.get_antecedent(), self.get_consequent())
 
     def get_fitness_value(self, attribute_vector):
@@ -20,9 +20,9 @@ class RuleBasic(AbstractRule):
         def __init__(self, antecedent_factory, consequent_factory):
             super().__init__(antecedent_factory, consequent_factory)
 
-        def create_consequent(self, antecedent):
+        def create(self, antecedent):
             consequent = self._consequent_factory.learning(antecedent)
             return RuleBasic(antecedent, consequent)
 
-        def copy(self):
+        def __copy__(self):
             return RuleBasic.RuleBuilderBasic(self._antecedent_factory, self._consequent_factory)

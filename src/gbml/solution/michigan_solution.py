@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 
 from src.fuzzy.knowledge.knowledge import Knowledge
@@ -36,7 +38,7 @@ class MichiganSolution(AbstractSolution):
         knowledge = Knowledge.get_instance()
         num_dim = knowledge.get_num_dim()
 
-        return np.array([(0, len(knowledge.get_fuzzy_set(dim_i))-1) for dim_i in range(num_dim)], dtype=object)
+        return np.array([(0, knowledge.get_num_fuzzy_sets(dim_i)-1) for dim_i in range(num_dim)], dtype=object)
 
     def get_lower_bound(self, index):
         return self._bounds[index][0]
@@ -61,10 +63,10 @@ class MichiganSolution(AbstractSolution):
     def learning(self):
         if self._vars is None:
             raise Exception("Vars is not defined")
-        self._rule = self._rule_builder.create_consequent(self._vars)
+        self._rule = self._rule_builder.create(self._vars)
 
     def get_fitness_value(self, in_vector):
-        self._rule.get_fitness_value(self.get_vars_array(), in_vector)
+        return self._rule.get_fitness_value(in_vector)
 
     def get_rule_length(self):
         return self._rule.get_rule_length(self.get_vars_array())
@@ -96,8 +98,8 @@ class MichiganSolution(AbstractSolution):
     def get_compatible_grade_value(self, attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
 
-    def copy(self):
-        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), self._rule_builder.copy(), bounds=self._bounds)
+    def __copy__(self):
+        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), copy.copy(self._rule_builder), bounds=self._bounds)
 
     class MichiganSolutionBuilder(AbstractSolution.SolutionBuilderCore):
         def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
@@ -116,5 +118,5 @@ class MichiganSolution(AbstractSolution):
 
             return solutions
 
-        def copy(self):
-            return MichiganSolution.MichiganSolutionBuilder(self._bounds, self._num_objectives, self._num_constraints, self._rule_builder.copy())
+        def __copy__(self):
+            return MichiganSolution.MichiganSolutionBuilder(self._bounds, self._num_objectives, self._num_constraints, copy.copy(self._rule_builder))

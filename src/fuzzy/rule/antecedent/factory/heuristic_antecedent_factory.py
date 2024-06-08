@@ -19,7 +19,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return self.calculate_antecedent_part(pattern)
 
     def calculate_antecedent_part(self, pattern):
-        attribute_array = pattern.get_attribute_array()
+        attribute_array = pattern.get_attributes_vector()
 
         if Consts.IS_DONT_CARE_PROBABILITY:
             dc_rate = Consts.DONT_CARE_RT
@@ -86,5 +86,5 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     def __str__(self):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__dimension) + "]"
 
-    def copy(self):
+    def __copy__(self):
         return HeuristicAntecedentFactory(self.__training_set)

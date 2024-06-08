@@ -1,3 +1,5 @@
+import copy
+
 from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
 from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.rule.antecedent.antecedent import Antecedent
@@ -22,7 +24,7 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             current_dim = len(buffer)
             if current_dim < self.__dimension:
                 for i in range(len(fuzzy_sets[current_dim])):
-                    tmp = buffer.copy()
+                    tmp = copy.copy(buffer)
                     tmp.append(i)
                     queue.append(tmp)
             else:
@@ -51,5 +53,5 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
             self.__dimension) + "]"
 
-    def copy(self):
+    def __copy__(self):
         return AllCombinationAntecedentFactory()

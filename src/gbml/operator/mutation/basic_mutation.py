@@ -1,5 +1,9 @@
 from pymoo.core.mutation import Mutation
 
+from fuzzy.knowledge.knowledge import Knowledge
+from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+import random
+
 
 class BasicMutation(Mutation):
     __learner = None

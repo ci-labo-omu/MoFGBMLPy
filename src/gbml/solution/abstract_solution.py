@@ -73,6 +73,12 @@ class AbstractSolution(ABC):
     def get_attributes(self):
         return self._attributes
 
+    def clear_attributes(self):
+        self._attributes = {}
+
+    def clear_vars(self):
+        self._vars = []
+
     class SolutionBuilderCore(ABC):
         _bounds = None
         _num_objectives = None

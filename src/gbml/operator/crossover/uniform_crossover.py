@@ -1,3 +1,5 @@
+import copy
+
 from pymoo.core.crossover import Crossover
 
 
@@ -26,7 +28,7 @@ class UniformCrossover(Crossover):
                 Y[0, k, 0] = RuleBasic(Antecedent(child_antecedent_indices), None)
             else:
                 if random.random() < 0.5:
-                    Y[0, k, 0] = a.copy()
+                    Y[0, k, 0] = copy.copy(a)
                 else:
-                    Y[0, k, 0] = b.copy()
+                    Y[0, k, 0] = copy.copy(b)
         return Y

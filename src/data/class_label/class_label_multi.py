@@ -17,7 +17,7 @@ class ClassLabelMulti(AbstractClassLabel):
     def get_length(self):
         return len(self.get_class_label_value())
 
-    def copy(self):
+    def __copy__(self):
         return ClassLabelMulti(self.get_class_label_value())
 
     def __str__(self):

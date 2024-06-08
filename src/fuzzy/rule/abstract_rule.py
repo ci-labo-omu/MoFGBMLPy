@@ -66,5 +66,5 @@ class AbstractRule(ABC):
         def create_antecedent(self, num_rules=1):
             return self._antecedent_factory.create(num_rules)
 
-        def create_consequent(self, antecedent):
+        def create(self, antecedent):
             return self._consequent_factory.learning(antecedent)

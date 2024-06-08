@@ -18,17 +18,19 @@ class Antecedent:
         # compute membership value
         grade = np.zeros(self.get_antecedent_length())
 
-        if self.get_antecedent_length() != attribute_vector.get_num_dim():
+        if self.get_antecedent_length() != len(attribute_vector):
             raise Exception("antecedent_indices and attribute_vector must have the same length")
 
-        for i in range(attribute_vector.get_num_dim()):
-            val = attribute_vector.get_value_at(i)
+        knowledge = Knowledge.get_instance()
+
+        for i in range(len(attribute_vector)):
+            val = attribute_vector[i]
             if self.__antecedent_indices[i] < 0 and val < 0:
                 # categorical
                 grade[i] = 1.0 if self.__antecedent_indices[i] == round(val) else 0.0
             elif self.__antecedent_indices[i] > 0 and val >= 0:
                 # numerical
-                grade[i] = self.get_fuzzy_set(i, self.__antecedent_indices[i]).get_membership_value(val)
+                grade[i] = knowledge.get_membership_value(val, i, self.__antecedent_indices[i])
             elif self.__antecedent_indices[i] == 0:
                 # don't care
                 grade[i] = 1.0
@@ -38,20 +40,11 @@ class Antecedent:
         return grade
 
     def get_compatible_grade_value(self, attribute_vector):
-        if self.get_antecedent_length() != attribute_vector.get_num_dim():
-            raise Exception("antecedent_indices and attribute_vector must have the same length")
-
         grade = self.get_compatible_grade(attribute_vector)
         return np.prod(grade)
 
     def get_rule_length(self):
         return np.count_nonzero(self.__antecedent_indices)
 
-    def copy(self):
+    def __copy__(self):
         return Antecedent(self.__antecedent_indices)
-
-    def get_fuzzy_set(self, dim, set_id):
-        return Knowledge.get_instance().get_fuzzy_set(dim, set_id)
-
-    # def get_fuzzy_sets(antecedent_indices):
-    # def to_element(self):

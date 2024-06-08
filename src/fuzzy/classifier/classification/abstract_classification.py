@@ -7,5 +7,5 @@ class AbstractClassification(ABC):
         pass
 
     @abstractmethod
-    def copy(self):
+    def __copy__(self):
         pass

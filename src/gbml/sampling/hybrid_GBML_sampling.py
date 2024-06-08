@@ -1,5 +1,8 @@
 from pymoo.core.sampling import Sampling
 
+from fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+import numpy as np
+
 
 class HybridGBMLSampling(Sampling):
     __learner = None
@@ -9,4 +12,7 @@ class HybridGBMLSampling(Sampling):
         self.__learner = LearningBasic(training_set)
 
     def _do(self, problem, n_samples, **kwargs):
-        return np.array([problem.create_solution()] * n_samples, dtype=object)
+        initial_population = np.zeros(n_samples, dtype=object)
+        for i in range(n_samples):
+            initial_population[i] = problem.create_solution()
+        return initial_population

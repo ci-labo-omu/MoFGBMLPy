@@ -1,3 +1,6 @@
+import copy
+
+
 class Consequent:
     _class_label = None
     _rule_weight = None
@@ -30,8 +33,8 @@ class Consequent:
     def set_rule_weight(self, rule_weight):
         self._rule_weight = rule_weight
 
-    def copy(self):
-        return Consequent(self._class_label.copy(), self._rule_weight.copy())
+    def __copy__(self):
+        return Consequent(copy.copy(self._class_label), copy.copy(self._rule_weight))
 
     def __str__(self):
         return f"class:[{self._class_label}]: weight:[{self._rule_weight}]"

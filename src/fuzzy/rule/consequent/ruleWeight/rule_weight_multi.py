@@ -5,7 +5,7 @@ class RuleWeightMulti(AbstractRuleWeight):
     def __init__(self, rule_weight):
         self.set_value(rule_weight)
 
-    def copy(self):
+    def __copy__(self):
         return RuleWeightMulti(self.get_value())
 
     def __str__(self):

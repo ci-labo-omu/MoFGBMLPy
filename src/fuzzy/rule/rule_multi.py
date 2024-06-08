@@ -6,7 +6,7 @@ class RuleMulti(AbstractRule):
     def __init__(self, antecedent, consequent):
         super().__init__(antecedent, consequent)
 
-    def copy(self):
+    def __copy__(self):
         return RuleMulti(self.get_antecedent(), self.get_consequent())
 
     def get_fitness_value(self, attribute_vector):

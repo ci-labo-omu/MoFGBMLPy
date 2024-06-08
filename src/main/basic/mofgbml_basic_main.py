@@ -1,16 +1,17 @@
+from gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
 from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from gbml.solution.michigan_solution import MichiganSolution
 from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from src.fuzzy.classifier.classifier import Classifier
-from src.main.experience_parameter import ExperienceParameter
 from src.data.input import Input
 from data.output import Output
 from src.main.consts import Consts
 from src.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
-from src.data.dataset_manager import DataSetManager
 import sys
 import os
+from pymoo.visualization.scatter import Scatter
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
@@ -19,6 +20,12 @@ import random
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from src.fuzzy.rule.rule_basic import RuleBasic
 from fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+
+from src.gbml.problem.pittsburgh_problem import PittsburghProblem
+from src.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
+from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
+from src.gbml.operator.mutation.basic_mutation import BasicMutation
+from gbml.BasicDuplicateElimination import BasicDuplicateElimination
 
 
 class MoFGBMLBasicMain:
@@ -40,11 +47,7 @@ class MoFGBMLBasicMain:
         Output.writeln(file_name, str(MoFGBMLBasicArgs()), True)
 
         # Load dataset
-        ExperienceParameter.get_instance().set_class_label_type(ExperienceParameter.ClassLabelType.SINGLE)
-        Input.load_train_test_files(MoFGBMLBasicArgs.get_train_file(), MoFGBMLBasicArgs.get_test_file())
-        manager = DataSetManager.get_instance()
-        test = manager.get_tests()[0]
-        train = manager.get_trains()[0]
+        train, test = Input.get_train_test_files(MoFGBMLBasicArgs.get_train_file(), MoFGBMLBasicArgs.get_test_file(), False)
 
         # Run the algo
         MoFGBMLBasicMain.hybrid_style_mofgbml(train, test)
@@ -53,7 +56,7 @@ class MoFGBMLBasicMain:
     @staticmethod
     def hybrid_style_mofgbml(train, test):
         random.seed(2022)
-        HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_n_dim())
+        HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
 
         bounds_Michigan = MichiganSolution.make_bounds()
 
@@ -73,7 +76,7 @@ class MoFGBMLBasicMain:
         classification = SingleWinnerRuleSelection()
         classifier = Classifier(classification)
 
-        problem = MoFGBMLBasicMain.BasicProblem(num_vars_pittsburgh,
+        problem = PittsburghProblem(num_vars_pittsburgh,
                                                 num_objectives_pittsburgh,
                                                 num_constraints_pittsburgh,
                                                 train,
@@ -83,16 +86,21 @@ class MoFGBMLBasicMain:
         crossover_probability = 1
 
         algorithm = NSGA2(pop_size=Consts.POPULATION_SIZE,
-                          sampling=MoFGBMLBasicMain.BasicSampling(train),
-                          crossover=UniformCrossover(2, 1, crossover_probability),
-                          mutation=MoFGBMLBasicMain.BasicMutation(train),
-                          eliminate_duplicates=MoFGBMLBasicMain.BasicDuplicateElimination())
+                          sampling=HybridGBMLSampling(train),
+                          crossover=PittsburghCrossover(crossover_probability),
+                          mutation=PittsburghMutation(train),
+                          eliminate_duplicates=BasicDuplicateElimination())
 
         res = minimize(problem,
                        algorithm,
                        ('n_gen', 10),
                        seed=1,
                        verbose=True)
+
+        plot = Scatter()
+        plot.add(problem.pareto_front(), plot_type="line", color="black", alpha=0.7)
+        plot.add(res.F, color="red")
+        plot.show()
 
         cl = Classifier(SingleWinnerRuleSelection())
         res.X = [item[0] for item in res.X]

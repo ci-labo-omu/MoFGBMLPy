@@ -12,7 +12,7 @@ class Classifier:
     def classify(self, michigan_solution_list, pattern):
         return self._classification.classify(michigan_solution_list, pattern)
 
-    def copy(self):
+    def __copy__(self):
         return Classifier(self._classification)
 
     @staticmethod
