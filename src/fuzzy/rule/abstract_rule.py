@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from fuzzy.knowledge.knowledge import Knowledge
 from fuzzy.rule.antecedent.antecedent import Antecedent
 
 
@@ -60,19 +61,24 @@ class AbstractRule(ABC):
     class RuleBuilderCore:
         _antecedent_factory = None
         _consequent_factory = None
+        _knowledge = None
 
-        def __init__(self, antecedent_factory, consequent_factory):
+        def __init__(self, antecedent_factory, consequent_factory, knowledge):
             self._antecedent_factory = antecedent_factory
             self._consequent_factory = consequent_factory
+            self._knowledge = knowledge
 
-        def create_antecedent(self, num_rules=1):
+        def create_antecedent(self, num_rules=None):
             return self._antecedent_factory.create(num_rules)
 
-        def create_antecedent_indices(self, num_rules=1):
+        def create_antecedent_indices(self, num_rules=None):
             return self._antecedent_factory.create_antecedent_indices(num_rules)
 
         def create_antecedent_from_indices(self, antecedent_indices):
-            return Antecedent(antecedent_indices)
+            return Antecedent(antecedent_indices, self._knowledge)
 
         def create(self, antecedent):
             return self._consequent_factory.learning(antecedent)
+
+        def get_knowledge(self):
+            return self._knowledge

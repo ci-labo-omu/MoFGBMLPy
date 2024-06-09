@@ -34,8 +34,7 @@ class MichiganSolution(AbstractSolution):
                 self.create_rule()
 
     @staticmethod
-    def make_bounds():
-        knowledge = Knowledge.get_instance()
+    def make_bounds(knowledge):
         num_dim = knowledge.get_num_dim()
 
         return np.array([(0, knowledge.get_num_fuzzy_sets(dim_i)-1) for dim_i in range(num_dim)], dtype=object)
@@ -62,13 +61,13 @@ class MichiganSolution(AbstractSolution):
         if self._vars is None:
             raise Exception("Vars is not defined")
 
-        if self._rule is None:
-            antecedent_object = self._rule_builder.create.create_antecedent_from_indices(self._vars)
-
+        if self._rule is None or self._rule.get_antecedent() is None:
+            antecedent_object = self._rule_builder.create_antecedent_from_indices(self._vars)
+            self._rule = self._rule_builder.create(antecedent_object)
         else:
-            antecedent_object =
-
-        self._rule = self._rule_builder.create(self._vars)
+            antecedent_object = self._rule.get_antecedent()
+            antecedent_object.set_antecedent_indices(self._vars)
+            self._rule.set_consequent(self._rule_builder.create(antecedent_object))
 
     def get_fitness_value(self, in_vector):
         return self._rule.get_fitness_value(in_vector)
@@ -114,7 +113,7 @@ class MichiganSolution(AbstractSolution):
             solutions = []
             bounds = self._bounds
             if bounds is None:
-                bounds = MichiganSolution.make_bounds()
+                bounds = MichiganSolution.make_bounds(self._rule_builder.get_knowledge())
 
             for i in range(num_solutions):
                 solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds))

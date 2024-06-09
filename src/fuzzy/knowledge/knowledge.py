@@ -1,17 +1,8 @@
 class Knowledge:
-    __instance = None
-    __fuzzy_sets = []
+    __fuzzy_sets = None
 
-    def __new__(cls, *args, **kwargs):
-        if Knowledge.__instance is None:
-            Knowledge.__instance = super(Knowledge, cls).__new__(cls)
-        return Knowledge.__instance
-
-    @staticmethod
-    def get_instance():
-        if Knowledge.__instance is None:
-            Knowledge.__new__(Knowledge)
-        return Knowledge.__instance
+    def __init__(self):
+        self.__fuzzy_sets = []
 
     # def get_fuzzy_set(self, dim, fuzzy_set_id=None):
     #     if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
@@ -56,6 +47,5 @@ class Knowledge:
     def __str__(self):
         txt = ""
         for i in range(self.get_num_dim()):
-            for item in self.__fuzzy_sets[i]:
-                txt = f"{txt}{str(item)}\n"
+            txt = f"{txt}{str(self.__fuzzy_sets[i])}\n"
         return txt

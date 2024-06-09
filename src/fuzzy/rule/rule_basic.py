@@ -18,8 +18,8 @@ class RuleBasic(AbstractRule):
         return f"Rule_Basic [antecedent={self.get_antecedent()}, consequent={self.get_consequent()}]"
 
     class RuleBuilderBasic(AbstractRule.RuleBuilderCore):
-        def __init__(self, antecedent_factory, consequent_factory):
-            super().__init__(antecedent_factory, consequent_factory)
+        def __init__(self, antecedent_factory, consequent_factory, knowledge):
+            super().__init__(antecedent_factory, consequent_factory, knowledge)
 
         def create(self, antecedent):
             consequent = self._consequent_factory.learning(antecedent)
@@ -29,4 +29,4 @@ class RuleBasic(AbstractRule):
             return self._consequent_factory.learning(antecedent)
 
         def __copy__(self):
-            return RuleBasic.RuleBuilderBasic(self._antecedent_factory, self._consequent_factory)
+            return RuleBasic.RuleBuilderBasic(self._antecedent_factory, self._consequent_factory, self._knowledge)

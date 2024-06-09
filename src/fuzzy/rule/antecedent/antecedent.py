@@ -4,9 +4,11 @@ from src.fuzzy.knowledge.knowledge import Knowledge
 
 class Antecedent:
     __antecedent_indices = None
+    __knowledge = None
 
-    def __init__(self, antecedent_indices):
+    def __init__(self, antecedent_indices, knowledge):
         self.__antecedent_indices = antecedent_indices
+        self.__knowledge = knowledge
 
     def get_antecedent_length(self):
         return len(self.__antecedent_indices)
@@ -24,8 +26,6 @@ class Antecedent:
         if self.get_antecedent_length() != len(attribute_vector):
             raise Exception("antecedent_indices and attribute_vector must have the same length")
 
-        knowledge = Knowledge.get_instance()
-
         for i in range(len(attribute_vector)):
             val = attribute_vector[i]
             if self.__antecedent_indices[i] < 0 and val < 0:
@@ -33,7 +33,7 @@ class Antecedent:
                 grade[i] = 1.0 if self.__antecedent_indices[i] == round(val) else 0.0
             elif self.__antecedent_indices[i] > 0 and val >= 0:
                 # numerical
-                grade[i] = knowledge.get_membership_value(val, i, self.__antecedent_indices[i])
+                grade[i] = self.__knowledge.get_membership_value(val, i, self.__antecedent_indices[i])
             elif self.__antecedent_indices[i] == 0:
                 # don't care
                 grade[i] = 1.0
@@ -50,4 +50,4 @@ class Antecedent:
         return np.count_nonzero(self.__antecedent_indices)
 
     def __copy__(self):
-        return Antecedent(self.__antecedent_indices)
+        return Antecedent(self.__antecedent_indices, knowledge=self.__knowledge)

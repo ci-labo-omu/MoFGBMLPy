@@ -1,3 +1,4 @@
+from fuzzy.knowledge.knowledge import Knowledge
 from gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
@@ -56,9 +57,8 @@ class MoFGBMLBasicMain:
     @staticmethod
     def hybrid_style_mofgbml(train, test):
         random.seed(2022)
-        HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
-
-        bounds_Michigan = MichiganSolution.make_bounds()
+        knowledge = HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
+        bounds_Michigan = MichiganSolution.make_bounds(knowledge)
 
         num_objectives_michigan = 1
         num_constraints_michigan = 0
@@ -67,7 +67,7 @@ class MoFGBMLBasicMain:
         num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
-        rule_builder = RuleBasic.RuleBuilderBasic(HeuristicAntecedentFactory(train), LearningBasic(train))
+        rule_builder = RuleBasic.RuleBuilderBasic(HeuristicAntecedentFactory(train, knowledge), LearningBasic(train), knowledge)
         michigan_solution_builder = MichiganSolution.MichiganSolutionBuilder(bounds_Michigan,
                                                                              num_objectives_michigan,
                                                                              num_constraints_michigan,

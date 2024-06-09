@@ -31,9 +31,16 @@ class PittsburghMutation(Mutation):
                     break  # Only one possible value so we can't change it
 
                 current_michigan_solution = X[0][i].get_var(michigan_sol_i)
-                print(current_michigan_solution.get_vars())
-                current_fuzzy_set_id = current_michigan_solution.get_var(dim)
+                current_fuzzy_set_id = current_michigan_solution.get_var(mutated_dim)
                 new_fuzzy_set_id = random.randint(0, num_candidate_values - 2)
+
+                if num_candidate_values > 1:
+                    print(f"num candidates values = {num_candidate_values}")
+                    print(f"dim = {dim} and mutated dim = {mutated_dim}")
+                    for j in range(dim):
+                        print(f"{j} : {knowledge.get_num_fuzzy_sets(j)}")
+
+
 
                 # Prevent the value from staying the same
                 if new_fuzzy_set_id >= current_fuzzy_set_id:

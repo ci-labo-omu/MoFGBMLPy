@@ -9,10 +9,12 @@ import random
 class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     __dimension = None
     __training_set = None
+    __knowledge = None
 
-    def __init__(self, training_set):
-        self.__dimension = Knowledge.get_instance().get_num_dim()
+    def __init__(self, training_set, knowledge):
+        self.__dimension = knowledge.get_num_dim()
         self.__training_set = training_set
+        self.__knowledge = knowledge
 
     def select_antecedent_part(self, index):
         pattern = self.__training_set.get_pattern(index)
@@ -27,7 +29,6 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             dc_rate = max((self.__dimension - Consts.ANTECEDENT_NUMBER_NOT_DONT_CARE) / self.__dimension, Consts.DONT_CARE_RT)
 
         antecedent_indices = np.zeros(self.__dimension, dtype=np.int_)
-        knowledge = Knowledge.get_instance()
 
         for dim_i in range(self.__dimension):
             # DC
@@ -42,7 +43,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                 continue
 
             # Numerical (get a random fuzzy set index using the membership value)
-            num_fuzzy_sets_not_dc = knowledge.get_num_fuzzy_sets(dim_i)-1
+            num_fuzzy_sets_not_dc = self.__knowledge.get_num_fuzzy_sets(dim_i)-1
             if num_fuzzy_sets_not_dc < 1:
                 antecedent_indices[dim_i] = 0  # don't care
                 continue
@@ -50,7 +51,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             mb_values_inc_sums = np.zeros(num_fuzzy_sets_not_dc, dtype=np.float_)
             sum_mb_values = 0
             for h in range(num_fuzzy_sets_not_dc):
-                sum_mb_values += knowledge.get_membership_value(attribute_array[dim_i], dim_i, h+1)
+                sum_mb_values += self.__knowledge.get_membership_value(attribute_array[dim_i], dim_i, h+1)
                 mb_values_inc_sums[h] = sum_mb_values
 
             arrow = random.random() * sum_mb_values

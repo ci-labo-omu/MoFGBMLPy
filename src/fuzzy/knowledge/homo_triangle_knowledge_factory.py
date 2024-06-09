@@ -33,6 +33,7 @@ class HomoTriangleKnowledgeFactory:
 
     @staticmethod
     def create(num_divisions, var_names, fuzzy_set_names):
+        knowledge = Knowledge()
         fuzzy_sets = []
 
         for dim_i in range(len(num_divisions)):
@@ -46,7 +47,8 @@ class HomoTriangleKnowledgeFactory:
 
             fuzzy_sets.append(LinguisticVariableMoFGBML(current_set, var_names[dim_i]))
 
-        Knowledge.get_instance().set_fuzzy_sets(fuzzy_sets)
+        knowledge.set_fuzzy_sets(fuzzy_sets)
+        return knowledge
 
     @staticmethod
     def create2_3_4_5(num_dims, var_names=None):
@@ -64,4 +66,4 @@ class HomoTriangleKnowledgeFactory:
         if var_names is None:
             var_names = np.array([f"x{i}" for i in range(num_dims)], dtype=str)
 
-        HomoTriangleKnowledgeFactory.create(num_divisions, var_names, fuzzy_set_names)
+        return HomoTriangleKnowledgeFactory.create(num_divisions, var_names, fuzzy_set_names)
