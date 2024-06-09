@@ -35,12 +35,8 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             self.__antecedents_indices[i, :] = np.array(indices[i], dtype=np.int_)
 
     def create(self, num_rules=1):
-        num_rules = min(num_rules, len(self.__antecedents_indices))
-        # Return an antecedent
-        if self.__antecedents_indices is None:
-            raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
-        indices = np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
         antecedent_objects = np.zeros(num_rules, dtype=object)
+        indices = self.create_antecedent_indices(num_rules)
 
         for i in range(num_rules):
             antecedent_objects[i] = Antecedent(np.copy(self.__antecedents_indices[indices[i], :]))
@@ -48,6 +44,13 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         if num_rules == 1:
             antecedent_objects = antecedent_objects[0]
         return antecedent_objects
+
+    def create_antecedent_indices(self, num_rules=1):
+        num_rules = min(num_rules, len(self.__antecedents_indices))
+        # Return an antecedent
+        if self.__antecedents_indices is None:
+            raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
+        return np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
 
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(

@@ -3,6 +3,7 @@ import copy
 from pymoo.core.mutation import Mutation
 
 from fuzzy.knowledge.knowledge import Knowledge
+from gbml.solution import michigan_solution
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import random
 
@@ -30,6 +31,7 @@ class PittsburghMutation(Mutation):
                     break  # Only one possible value so we can't change it
 
                 current_michigan_solution = X[0][i].get_var(michigan_sol_i)
+                print(current_michigan_solution.get_vars())
                 current_fuzzy_set_id = current_michigan_solution.get_var(dim)
                 new_fuzzy_set_id = random.randint(0, num_candidate_values - 2)
 

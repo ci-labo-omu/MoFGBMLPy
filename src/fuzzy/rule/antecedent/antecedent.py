@@ -14,6 +14,9 @@ class Antecedent:
     def get_antecedent_indices(self):
         return self.__antecedent_indices
 
+    def set_antecedent_indices(self, new_indices):
+        self.__antecedent_indices = new_indices
+
     def get_compatible_grade(self, attribute_vector):
         # compute membership value
         grade = np.zeros(self.get_antecedent_length())
@@ -43,7 +46,7 @@ class Antecedent:
         grade = self.get_compatible_grade(attribute_vector)
         return np.prod(grade)
 
-    def get_rule_length(self):
+    def length(self):
         return np.count_nonzero(self.__antecedent_indices)
 
     def __copy__(self):

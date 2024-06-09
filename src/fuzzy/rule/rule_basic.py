@@ -1,6 +1,7 @@
 from src.fuzzy.rule.abstract_rule import AbstractRule
 from src.fuzzy.rule.antecedent.antecedent import Antecedent
 
+
 class RuleBasic(AbstractRule):
     def __init__(self, antecedent, consequent):
         super().__init__(antecedent, consequent)
@@ -23,6 +24,9 @@ class RuleBasic(AbstractRule):
         def create(self, antecedent):
             consequent = self._consequent_factory.learning(antecedent)
             return RuleBasic(antecedent, consequent)
+
+        def create_consequent(self, antecedent):
+            return self._consequent_factory.learning(antecedent)
 
         def __copy__(self):
             return RuleBasic.RuleBuilderBasic(self._antecedent_factory, self._consequent_factory)

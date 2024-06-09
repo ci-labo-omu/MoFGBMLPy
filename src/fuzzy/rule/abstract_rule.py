@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from fuzzy.rule.antecedent.antecedent import Antecedent
+
 
 class AbstractRule(ABC):
     _antecedent = None
@@ -65,6 +67,12 @@ class AbstractRule(ABC):
 
         def create_antecedent(self, num_rules=1):
             return self._antecedent_factory.create(num_rules)
+
+        def create_antecedent_indices(self, num_rules=1):
+            return self._antecedent_factory.create_antecedent_indices(num_rules)
+
+        def create_antecedent_from_indices(self, antecedent_indices):
+            return Antecedent(antecedent_indices)
 
         def create(self, antecedent):
             return self._consequent_factory.learning(antecedent)

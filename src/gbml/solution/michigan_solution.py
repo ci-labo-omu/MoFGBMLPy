@@ -49,20 +49,25 @@ class MichiganSolution(AbstractSolution):
     def set_vars(self, new_vars):
         self._vars = new_vars
 
-    def get_vars(self):
-        return self._vars
-
     def create_rule(self, michigan_solution=None):
         if michigan_solution is None:
-            antecedent = self._rule_builder.create_antecedent()
-            self.set_vars(antecedent)
+            antecedent_indices = self._rule_builder.create_antecedent_indices()
+            self.set_vars(antecedent_indices)
         else:
-            self.set_vars(self._rule_builder.create_antecedent(michigan_solution))  # TODO: Not yet implemented
+            raise Exception("Not yet implemented")
+            # self.set_vars(self._rule_builder.create_antecedent_indices(michigan_solution))  # TODO: Not yet implemented
         self.learning()
 
     def learning(self):
         if self._vars is None:
             raise Exception("Vars is not defined")
+
+        if self._rule is None:
+            antecedent_object = self._rule_builder.create.create_antecedent_from_indices(self._vars)
+
+        else:
+            antecedent_object =
+
         self._rule = self._rule_builder.create(self._vars)
 
     def get_fitness_value(self, in_vector):
