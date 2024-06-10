@@ -1,8 +1,8 @@
 import numpy as np
 
-from fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
-from fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
-from fuzzy.knowledge.knowledge import Knowledge
+from src.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
+from src.fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
+from src.fuzzy.knowledge.knowledge import Knowledge
 from simpful import TriangleFuzzySet
 
 

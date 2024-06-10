@@ -12,8 +12,8 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     __knowledge = None
 
     def __init__(self, knowledge):
-        self.__dimension = Knowledge.get_instance().get_num_dim()
-        self.generate_antecedents_indices(Knowledge.get_instance().get_fuzzy_sets())
+        self.__dimension = knowledge.get_num_dim()
+        self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
         self.__knowledge = knowledge
 
     def generate_antecedents_indices(self, fuzzy_sets):

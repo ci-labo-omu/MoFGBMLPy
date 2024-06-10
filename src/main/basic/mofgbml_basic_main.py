@@ -1,13 +1,13 @@
-from fuzzy.knowledge.knowledge import Knowledge
-from gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
-from gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
+from src.fuzzy.knowledge.knowledge import Knowledge
+from src.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from src.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
-from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
-from gbml.solution.michigan_solution import MichiganSolution
+from src.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from src.gbml.solution.michigan_solution import MichiganSolution
 from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from src.fuzzy.classifier.classifier import Classifier
 from src.data.input import Input
-from data.output import Output
+from src.data.output import Output
 from src.main.consts import Consts
 from src.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 import sys
@@ -20,13 +20,13 @@ import random
 
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from src.fuzzy.rule.rule_basic import RuleBasic
-from fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from src.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 from src.gbml.problem.pittsburgh_problem import PittsburghProblem
 from src.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
 from src.gbml.operator.mutation.basic_mutation import BasicMutation
-from gbml.BasicDuplicateElimination import BasicDuplicateElimination
+from src.gbml.BasicDuplicateElimination import BasicDuplicateElimination
 
 
 class MoFGBMLBasicMain:
@@ -88,12 +88,12 @@ class MoFGBMLBasicMain:
         algorithm = NSGA2(pop_size=Consts.POPULATION_SIZE,
                           sampling=HybridGBMLSampling(train),
                           crossover=PittsburghCrossover(crossover_probability),
-                          mutation=PittsburghMutation(train),
+                          mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=BasicDuplicateElimination())
 
         res = minimize(problem,
                        algorithm,
-                       ('n_gen', 10),
+                       ('n_gen', 5),  #TODO: change as it is in the Java version
                        seed=1,
                        verbose=True)
 

@@ -4,7 +4,9 @@ from pymoo.core.crossover import Crossover
 import numpy as np
 import random
 
-from main.consts import Consts
+from src.main.consts import Consts
+import time
+import concurrent.futures
 
 
 class PittsburghCrossover(Crossover):
@@ -50,10 +52,31 @@ class PittsburghCrossover(Crossover):
                     raise Exception("No more rules can be added. The Consts parameters might be invalid")
         return num_rules_from_p1, num_rules_from_p2
 
+    # def do_single_crossover(self, parent1, parent2, n_var):
+    #     p1 = parents[0]
+    #     p2 = parents[1]
+    #
+    #     offspring = copy.copy(p1)
+    #     offspring.clear_vars()
+    #     offspring.clear_attributes()
+    #
+    #     num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(),
+    #                                                                            n_var)
+    #     rules_idx_from_p1 = np.random.choice(list(range(p1.get_num_vars())), num_rules_from_p1, replace=False)
+    #     rules_idx_from_p2 = np.random.choice(list(range(p2.get_num_vars())), num_rules_from_p2, replace=False)
+    #
+    #     for rule_idx in rules_idx_from_p1:
+    #         offspring.add_var(copy.copy(p1.get_var(rule_idx)))
+    #     for rule_idx in rules_idx_from_p2:
+    #         offspring.add_var(copy.copy(p2.get_var(rule_idx)))
+    #     return offspring
+
     def _do(self, problem, X, **kwargs):
         n_parents, n_matings = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
-        # we don't have to compute random() < prob since it's done in the parent class do method
+
+        start = time.time()
+
         for i in range(n_matings):
             p1 = X[0][i]
             p2 = X[1][i]
@@ -71,4 +94,5 @@ class PittsburghCrossover(Crossover):
             for rule_idx in rules_idx_from_p2:
                 Y[0,i,0].add_var(copy.copy(p2.get_var(rule_idx)))
 
+        elapsed = time.time() - start  # 11.96s
         return Y

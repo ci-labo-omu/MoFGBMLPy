@@ -1,5 +1,5 @@
 from src.main.consts import Consts
-from data.output import Output
+from src.data.output import Output
 import os
 
 

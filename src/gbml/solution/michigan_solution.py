@@ -1,4 +1,5 @@
 import copy
+import time
 
 import numpy as np
 
@@ -13,11 +14,16 @@ class MichiganSolution(AbstractSolution):
 
     def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, michigan_solution=None):
         if bounds is None:
-            bounds = MichiganSolution.make_bounds()
+            bounds = MichiganSolution.make_bounds(knowledge=rule_builder.get_knowledge())
 
-        super().__init__(len(bounds), num_objectives, num_constraints)
         self._bounds = bounds
         self._rule_builder = rule_builder
+
+        super().__init__(len(bounds), num_objectives, num_constraints)
+
+        if michigan_solution is not None:
+            self._rule = copy.copy(michigan_solution.get_rule())
+            return
 
         cnt = 0
         is_rejected = True
@@ -27,11 +33,6 @@ class MichiganSolution(AbstractSolution):
             is_rejected = self._rule.is_rejected_class_label()
             if cnt > 1000:
                 raise Exception("Exceeded maximum number of trials to generate rule")
-
-        if michigan_solution is not None:
-            self.create_rule(michigan_solution)
-            while self._rule.is_rejected_class_label():
-                self.create_rule()
 
     @staticmethod
     def make_bounds(knowledge):
@@ -67,7 +68,7 @@ class MichiganSolution(AbstractSolution):
         else:
             antecedent_object = self._rule.get_antecedent()
             antecedent_object.set_antecedent_indices(self._vars)
-            self._rule.set_consequent(self._rule_builder.create(antecedent_object))
+            self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object))
 
     def get_fitness_value(self, in_vector):
         return self._rule.get_fitness_value(in_vector)
@@ -103,13 +104,14 @@ class MichiganSolution(AbstractSolution):
         return self._rule.get_compatible_grade_value(attribute_vector)
 
     def __copy__(self):
-        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), copy.copy(self._rule_builder), bounds=self._bounds)
+        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), copy.copy(self._rule_builder), michigan_solution=self)
 
     class MichiganSolutionBuilder(AbstractSolution.SolutionBuilderCore):
         def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
             super().__init__(bounds, num_objectives, num_constraints, rule_builder)
 
         def create_michigan_solution(self, num_solutions=1):
+            start = time.time()
             solutions = []
             bounds = self._bounds
             if bounds is None:
@@ -119,6 +121,9 @@ class MichiganSolution(AbstractSolution):
                 solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds))
                 # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version
                 # solutions[i].set_attribute(attribute_id_fitness, 0)
+
+            elapsed = time.time() - start
+            print(elapsed) # approx 0.1
 
             return solutions
 

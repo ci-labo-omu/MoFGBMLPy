@@ -1,4 +1,4 @@
-from main.consts import Consts
+from src.main.consts import Consts
 from src.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
 from src.fuzzy.knowledge.knowledge import Knowledge
 from simpful.fuzzy_sets import TriangleFuzzySet

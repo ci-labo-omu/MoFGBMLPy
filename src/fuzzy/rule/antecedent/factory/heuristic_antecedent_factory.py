@@ -1,4 +1,4 @@
-from main.consts import Consts
+from src.main.consts import Consts
 from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
 from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.rule.antecedent.antecedent import Antecedent

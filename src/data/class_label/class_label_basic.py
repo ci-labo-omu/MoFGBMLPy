@@ -1,4 +1,4 @@
-from data.class_label.abstract_class_label import AbstractClassLabel
+from src.data.class_label.abstract_class_label import AbstractClassLabel
 
 
 class ClassLabelBasic(AbstractClassLabel):

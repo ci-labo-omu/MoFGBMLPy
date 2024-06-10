@@ -1,8 +1,8 @@
 from pymoo.core.sampling import Sampling
 
-from fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import numpy as np
-
+import time
 
 class HybridGBMLSampling(Sampling):
     __learner = None

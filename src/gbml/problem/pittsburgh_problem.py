@@ -3,7 +3,7 @@ import copy
 from pymoo.core.problem import Problem
 import numpy as np
 from src.gbml.solution.pittsburgh_solution import PittsburghSolution
-
+import time
 
 class PittsburghProblem(Problem):
     __winner_solution_for_each_pattern = None
@@ -55,15 +55,24 @@ class PittsburghProblem(Problem):
                                                  copy.copy(self.__michigan_solution_builder),
                                                  copy.copy(self.__classifier))
 
+
         michigan_solutions = self.__michigan_solution_builder.create_michigan_solution(self.__num_vars)
         for solution in michigan_solutions:
             pittsburgh_solution.add_var(solution)
 
         return pittsburgh_solution
 
-    def _evaluate(self, X, out, *args, **kwargs):
-        out["F"] = np.zeros((len(X), 2), dtype=np.float_)
+    # def __evaluate_one(self, solution):
+    #     print(type(solution))
+    #     return [solution.get_error_rate(self.__training_ds), solution.get_num_vars()]
 
+    def _evaluate(self, X, out, *args, **kwargs):
+        # vfunc = np.vectorize(self.__evaluate_one)
+        # out["F"] = vfunc(X)
+        #
+        # print(out["F"])
+
+        out["F"] = np.zeros((len(X), 2), dtype=np.float_)
         for i in range(len(X)):
             out["F"][i][0] = X[i].get_error_rate(self.__training_ds)
             out["F"][i][1] = X[i].get_num_vars()  # num rules

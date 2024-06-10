@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 
 from src.gbml.solution.abstract_solution import AbstractSolution
@@ -40,6 +42,7 @@ class PittsburghSolution(AbstractSolution):
 
     def get_error_rate(self, training_set):
         num_errors = 0
+
         for pattern in training_set.get_patterns():
             winner_solution = self.classify(pattern)
 
@@ -49,5 +52,4 @@ class PittsburghSolution(AbstractSolution):
 
             if pattern.get_target_class() != winner_solution.get_class_label():
                 num_errors += 1
-
         return num_errors / training_set.get_size()

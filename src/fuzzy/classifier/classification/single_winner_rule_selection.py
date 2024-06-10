@@ -1,3 +1,5 @@
+import time
+
 from src.fuzzy.classifier.classification.abstract_classification import AbstractClassification
 
 
