@@ -23,6 +23,7 @@ class MichiganSolution(AbstractSolution):
 
         if michigan_solution is not None:
             self._rule = copy.copy(michigan_solution.get_rule())
+            self.set_vars(self._rule.get_antecedent().get_antecedent_indices())
             return
 
         cnt = 0

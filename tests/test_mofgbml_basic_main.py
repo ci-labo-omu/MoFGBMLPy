@@ -11,8 +11,8 @@ def test_main():
         1,
         2,
         1,
-        "../dataset/iris/a0_0_iris-10tra.dat",
-        "../dataset/iris/a0_0_iris-10tra.dat",
+        "dataset/iris/a0_0_iris-10tra.dat",
+        "dataset/iris/a0_0_iris-10tra.dat",
     ]
 
     MoFGBMLBasicMain.main(args)
