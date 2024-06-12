@@ -3,6 +3,8 @@ from pymoo.core.sampling import Sampling
 from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import numpy as np
 import time
+import concurrent.futures
+
 
 class HybridGBMLSampling(Sampling):
     __learner = None
@@ -13,6 +15,11 @@ class HybridGBMLSampling(Sampling):
 
     def _do(self, problem, n_samples, **kwargs):
         initial_population = np.zeros(n_samples, dtype=object)
-        for i in range(n_samples):
-            initial_population[i] = [problem.create_solution()]
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            tasks = {executor.submit(problem.create_solution): _ for _ in range(n_samples)}
+            i = 0
+            for task in tasks:
+                initial_population[i] = [task.result()]
+                i += 1
+
         return initial_population

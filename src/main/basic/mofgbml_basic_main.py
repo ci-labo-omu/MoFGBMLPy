@@ -1,3 +1,5 @@
+from pymoo.termination import get_termination
+
 from src.fuzzy.knowledge.knowledge import Knowledge
 from src.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from src.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
@@ -93,7 +95,8 @@ class MoFGBMLBasicMain:
 
         res = minimize(problem,
                        algorithm,
-                       ('n_gen', 5),  #TODO: change as it is in the Java version
+                       get_termination("n_eval", 1000),
+                       get_termination("n_eval", Consts.TERMINATE_EVALUATION),
                        seed=1,
                        verbose=True)
 
@@ -105,10 +108,7 @@ class MoFGBMLBasicMain:
         cl = Classifier(SingleWinnerRuleSelection())
         res.X = [item[0] for item in res.X]
         non_dominated_solutions = res.pop
-
-        print(res.X)
-        for i in range(len(res.X)):
-            print(res.X[i].get_class_label().get_class_label_value(), res.X[i].get_rule_weight().get_value())
+        archive_population = res.archive
 
         # print(cl.classify(res.X, train.get_patterns()[0]))
 
