@@ -72,20 +72,20 @@ class PittsburghCrossover(Crossover):
     #     return offspring
 
     def _do(self, problem, X, **kwargs):
-        n_parents, n_matings = X.shape
+        _, n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
         start = time.time()
 
         for i in range(n_matings):
-            p1 = X[0][i]
-            p2 = X[1][i]
+            p1 = X[0,i,0]
+            p2 = X[1,i,0]
 
-            Y[0,i,0] = copy.copy(p1)
+            Y[0,i] = copy.copy(p1)
             Y[0,i,0].clear_vars()
             Y[0,i,0].clear_attributes()
 
-            num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), problem.n_var)
+            num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), n_var)
             rules_idx_from_p1 = np.random.choice(list(range(p1.get_num_vars())), num_rules_from_p1, replace=False)
             rules_idx_from_p2 = np.random.choice(list(range(p2.get_num_vars())), num_rules_from_p2, replace=False)
 

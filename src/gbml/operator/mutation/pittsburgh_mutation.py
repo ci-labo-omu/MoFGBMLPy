@@ -34,7 +34,7 @@ class PittsburghMutation(Mutation):
                     break  # Only one possible value so we can't change it
 
                 current_michigan_solution = X[0][i].get_var(michigan_sol_i)
-                print(mutated_dim, current_michigan_solution.get_num_vars(), current_michigan_solution)
+                # print(mutated_dim, current_michigan_solution.get_num_vars(), current_michigan_solution)
                 current_fuzzy_set_id = current_michigan_solution.get_var(mutated_dim)
                 new_fuzzy_set_id = random.randint(0, num_candidate_values - 2)
 
@@ -50,6 +50,6 @@ class PittsburghMutation(Mutation):
                     X[0][i].set_var(michigan_sol_i, new_michigan_solution)
 
         elapsed = time.time() - start  # 15s
-        print(elapsed)
+        # print(elapsed)
 
         return X

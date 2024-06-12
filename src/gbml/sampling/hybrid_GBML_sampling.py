@@ -14,5 +14,5 @@ class HybridGBMLSampling(Sampling):
     def _do(self, problem, n_samples, **kwargs):
         initial_population = np.zeros(n_samples, dtype=object)
         for i in range(n_samples):
-            initial_population[i] = problem.create_solution()
+            initial_population[i] = [problem.create_solution()]
         return initial_population

@@ -74,5 +74,5 @@ class PittsburghProblem(Problem):
 
         out["F"] = np.zeros((len(X), 2), dtype=np.float_)
         for i in range(len(X)):
-            out["F"][i][0] = X[i].get_error_rate(self.__training_ds)
-            out["F"][i][1] = X[i].get_num_vars()  # num rules
+            out["F"][i][0] = X[i, 0].get_error_rate(self.__training_ds)
+            out["F"][i][1] = X[i, 0].get_num_vars()  # num rules

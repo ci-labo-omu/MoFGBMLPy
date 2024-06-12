@@ -124,7 +124,7 @@ class MichiganSolution(AbstractSolution):
                 # solutions[i].set_attribute(attribute_id_fitness, 0)
 
             elapsed = time.time() - start
-            print(elapsed) # approx 0.1
+            # print(elapsed) # approx 0.1
 
             return solutions
 
