@@ -2,6 +2,7 @@ from enum import IntEnum
 
 
 class ExperienceParameter:
+    # TODO check class usage
     class ClassLabelType(IntEnum):
         SINGLE = 0
         MULTI = 1

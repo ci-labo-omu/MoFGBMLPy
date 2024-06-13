@@ -10,7 +10,7 @@ class Antecedent:
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge
 
-    def get_antecedent_length(self):
+    def get_array_size(self):
         return len(self.__antecedent_indices)
 
     def get_antecedent_indices(self):
@@ -21,9 +21,9 @@ class Antecedent:
 
     def get_compatible_grade(self, attribute_vector):
         # compute membership value
-        grade = np.zeros(self.get_antecedent_length())
+        grade = np.zeros(self.get_array_size())
 
-        if self.get_antecedent_length() != len(attribute_vector):
+        if self.get_array_size() != len(attribute_vector):
             raise Exception("antecedent_indices and attribute_vector must have the same length")
 
         for i in range(len(attribute_vector)):
@@ -46,7 +46,7 @@ class Antecedent:
         grade = self.get_compatible_grade(attribute_vector)
         return np.prod(grade)
 
-    def length(self):
+    def get_length(self):
         return np.count_nonzero(self.__antecedent_indices)
 
     def __copy__(self):

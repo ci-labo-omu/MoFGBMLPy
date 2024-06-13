@@ -75,7 +75,7 @@ class MichiganSolution(AbstractSolution):
         return self._rule.get_fitness_value(in_vector)
 
     def get_rule_length(self):
-        return self._rule.get_rule_length(self.get_vars_array())
+        return self._rule.get_rule_length()
 
     def get_class_label(self):
         return self._rule.get_class_label()
@@ -106,6 +106,14 @@ class MichiganSolution(AbstractSolution):
 
     def __copy__(self):
         return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), copy.copy(self._rule_builder), michigan_solution=self)
+
+    def compute_coverage(self):
+        coverage = 1
+        dim_i = 0
+        for fuzzy_set_id in self._vars:
+            coverage *= self._rule_builder.get_knowledge().get_support(dim_i, fuzzy_set_id)
+            dim_i += 1
+        return coverage
 
     class MichiganSolutionBuilder(AbstractSolution.SolutionBuilderCore):
         def __init__(self, bounds, num_objectives, num_constraints, rule_builder):

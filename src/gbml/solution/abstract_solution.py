@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 import numpy as np
 
 
@@ -78,6 +78,10 @@ class AbstractSolution(ABC):
 
     def clear_vars(self):
         self._vars = []
+
+    @abstractmethod
+    def compute_coverage(self):
+        pass
 
     class SolutionBuilderCore(ABC):
         _bounds = None

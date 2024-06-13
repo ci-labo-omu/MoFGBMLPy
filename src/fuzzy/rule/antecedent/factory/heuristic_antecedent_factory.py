@@ -1,4 +1,3 @@
-from src.main.consts import Consts
 from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
 from src.fuzzy.knowledge.knowledge import Knowledge
 from src.fuzzy.rule.antecedent.antecedent import Antecedent
@@ -10,11 +9,17 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     __dimension = None
     __training_set = None
     __knowledge = None
+    __is_dc_probability = None
+    __dc_rate = None
+    __antecedent_num_not_dont_care = None
 
-    def __init__(self, training_set, knowledge):
+    def __init__(self, training_set, knowledge, is_dc_probability, dc_rate, antecedent_num_not_dont_care):
         self.__dimension = knowledge.get_num_dim()
         self.__training_set = training_set
         self.__knowledge = knowledge
+        self.__is_dc_probability = is_dc_probability
+        self.__dc_rate = dc_rate
+        self.__antecedent_num_not_dont_care = antecedent_num_not_dont_care
 
     def select_antecedent_part(self, index):
         pattern = self.__training_set.get_pattern(index)
@@ -23,10 +28,10 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     def calculate_antecedent_part(self, pattern):
         attribute_array = pattern.get_attributes_vector()
 
-        if Consts.IS_DONT_CARE_PROBABILITY:
-            dc_rate = Consts.DONT_CARE_RT
+        if self.__is_dc_probability:
+            dc_rate = self.__dc_rate
         else:
-            dc_rate = max((self.__dimension - Consts.ANTECEDENT_NUMBER_NOT_DONT_CARE) / self.__dimension, Consts.DONT_CARE_RT)
+            dc_rate = max((self.__dimension - self.__antecedent_num_not_dont_care) / self.__dimension, self.__dc_rate)
 
         antecedent_indices = np.zeros(self.__dimension, dtype=np.int_)
 
@@ -92,4 +97,4 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__dimension) + "]"
 
     def __copy__(self):
-        return HeuristicAntecedentFactory(self.__training_set)
+        return HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_num_not_dont_care)

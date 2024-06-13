@@ -40,16 +40,14 @@ class PittsburghSolution(AbstractSolution):
     def classify(self, pattern):
         return self.__classifier.classify(self.get_vars(), pattern)
 
-    def get_error_rate(self, training_set):
-        num_errors = 0
+    def get_error_rate(self, dataset):
+        return self.__classifier.get_error_rate(self.get_vars(), dataset)
 
-        for pattern in training_set.get_patterns():
-            winner_solution = self.classify(pattern)
+    def compute_coverage(self):
+        coverage = 0
+        for michigan_solution in self._vars:
+            coverage += michigan_solution.compute_coverage()
+        return coverage
 
-            if winner_solution is None:
-                num_errors += 1
-                continue
-
-            if pattern.get_target_class() != winner_solution.get_class_label():
-                num_errors += 1
-        return num_errors / training_set.get_size()
+    def get_total_rule_weight(self):
+        return self.__classifier.get_rule_length(self._vars)

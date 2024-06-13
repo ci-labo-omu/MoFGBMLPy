@@ -52,7 +52,7 @@ class AbstractRule(ABC):
         self.get_consequent().set_class_label_value(class_label_value)
 
     def get_rule_length(self):
-        return self.get_antecedent().get_rule_length()
+        return self.get_antecedent().get_length()
 
     @abstractmethod
     def get_fitness_value(self, attribute_vector):

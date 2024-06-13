@@ -2,7 +2,6 @@ from src.data.dataset import Dataset
 from src.data.pattern import Pattern
 from src.data.class_label.class_label_multi import ClassLabelMulti
 from src.data.class_label.class_label_basic import ClassLabelBasic
-from src.main.consts import Consts
 import numpy as np
 import csv
 
@@ -73,15 +72,18 @@ class Input:
         return dataset
 
     @staticmethod
-    def get_train_test_files(train_file_name, test_file_name, is_multi_label):
+    def get_train_test_files(arguments):
+        train_file_name = arguments.get("TRAIN_FILE")
+        test_file_name = arguments.get("TEST_FILE")
+        is_multi_label = arguments.get("IS_MULTI_LABEL")
         # manager = DataSetManager.get_instance()
 
         training_data = Input.input_data_set(train_file_name, is_multi_label)
         # manager.add_train(training_data)
 
-        Consts.DATA_SIZE = training_data.get_size()  # TODO: check if it's really changed
-        Consts.ATTRIBUTE_NUMBER = training_data.get_num_dim()
-        Consts.CLASS_LABEL_NUMBER = training_data.get_num_classes()
+        arguments.set("DATA_SIZE", training_data.get_size())
+        arguments.set("ATTRIBUTE_NUMBER", training_data.get_num_dim())
+        arguments.set("CLASS_LABEL_NUMBER", training_data.get_num_classes())
 
         test_data = Input.input_data_set(test_file_name, is_multi_label)
         # manager.add_test(test_data)

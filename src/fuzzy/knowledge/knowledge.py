@@ -104,6 +104,9 @@ class Knowledge:
 
         fig.show()
 
+    def get_support(self, dim, fuzzy_set_id):
+        return self.get_fuzzy_variable(dim).get_support(fuzzy_set_id)
+
     def __str__(self):
         txt = ""
         for i in range(self.get_num_dim()):

@@ -4,23 +4,27 @@ from pymoo.core.crossover import Crossover
 import numpy as np
 import random
 
-from src.main.consts import Consts
 import time
 import concurrent.futures
 
 
 class PittsburghCrossover(Crossover):
-    def __init__(self, prob=0.9):
+    __min_num_rules = None
+    __max_num_rules = None
+
+    def __init__(self, min_num_rules, max_num_rules, prob=0.9):
         super().__init__(2, 1, prob)
+        self.__min_num_rules = min_num_rules
+        self.__max_num_rules = max_num_rules
 
     def get_num_rules_from_parents(self, num_rules_p1, num_rules_p2, n_vars):
         num_rules_from_p1 = random.randint(0, num_rules_p1 - 1)
         num_rules_from_p2 = random.randint(0, num_rules_p2 - 1)
         sum_num_rules = num_rules_from_p1 + num_rules_from_p2
 
-        if sum_num_rules > Consts.MAX_RULE_NUM:
+        if sum_num_rules > self.__max_num_rules:
             # Remove rules excess
-            num_deletions = sum_num_rules - Consts.MAX_RULE_NUM
+            num_deletions = sum_num_rules - self.__max_num_rules
             for j in range(num_deletions):
                 if num_rules_from_p1 > 0 and num_rules_from_p2 > 0:
                     if random.random() < 0.5:
@@ -32,11 +36,11 @@ class PittsburghCrossover(Crossover):
                 elif num_rules_from_p2 == 0 and num_rules_from_p1 > 0:
                     num_rules_from_p1 -= 1
                 else:
-                    raise Exception("No more rules can be deleted. The Consts parameters might be invalid")
-        elif sum_num_rules < Consts.MIN_RULE_NUM:
+                    raise Exception("No more rules can be deleted.")
+        elif sum_num_rules < self.__min_num_rules:
             # Add missing rules
-            num_additions = Consts.MIN_RULE_NUM - sum_num_rules
-            max_per_parent = min(Consts.MAX_RULE_NUM, n_vars)
+            num_additions = self.__min_num_rules - sum_num_rules
+            max_per_parent = min(self.__max_num_rules, n_vars)
 
             for j in range(num_additions):
                 if num_rules_from_p1 < max_per_parent and num_rules_from_p2 < max_per_parent:
@@ -49,7 +53,7 @@ class PittsburghCrossover(Crossover):
                 elif num_rules_from_p2 == max_per_parent and num_rules_from_p1 > max_per_parent:
                     num_rules_from_p1 += 1
                 else:
-                    raise Exception("No more rules can be added. The Consts parameters might be invalid")
+                    raise Exception("No more rules can be added")
         return num_rules_from_p1, num_rules_from_p2
 
     # def do_single_crossover(self, parent1, parent2, n_var):

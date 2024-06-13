@@ -1,4 +1,5 @@
 import os
+import csv
 
 
 class Output:
@@ -17,3 +18,12 @@ class Output:
             for ln in lns:
                 f.write(ln)
                 f.write('\n')
+
+    @staticmethod
+    def save_results(results_data, path):
+        fields = list(results_data[0].keys())
+
+        with open(path, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(results_data)

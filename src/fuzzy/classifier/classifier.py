@@ -22,6 +22,19 @@ class Classifier:
             length += item.get_rule_length()
         return length
 
+    def get_error_rate(self, michigan_solution_list, dataset):
+        num_errors = 0
+        for pattern in dataset.get_patterns():
+            winner_solution = self.classify(michigan_solution_list, pattern)
+
+            if winner_solution is None:
+                num_errors += 1
+                continue
+
+            if pattern.get_target_class() != winner_solution.get_class_label():
+                num_errors += 1
+        return num_errors / dataset.get_size()
+
     @staticmethod
     def get_rule_num(michigan_solution_list):
         return len(michigan_solution_list)

@@ -1,4 +1,3 @@
-from src.main.consts import Consts
 from src.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
 from src.fuzzy.knowledge.knowledge import Knowledge
 from simpful.fuzzy_sets import TriangleFuzzySet
@@ -7,7 +6,7 @@ from src.fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableM
 
 def test_main():
     args = [
-        "__data_name",
+        "iris",
         1,
         2,
         1,

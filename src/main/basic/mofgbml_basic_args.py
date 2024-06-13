@@ -1,43 +1,29 @@
-from src.main.consts import Consts
+from src.main.arguments import Arguments
 from src.data.output import Output
 import os
 
 
-class MoFGBMLBasicArgs:
-    __data_name = None
-    __algorithm_id = None
-    __experiment_id = None
-    __num_parallel_cores = None
-    __train_file = None
-    __test_file = None
+class MoFGBMLBasicArgs(Arguments):
 
-    @staticmethod
-    def load(args):
+    def load(self, args):
         if len(args) < 6:
             raise Exception("Not enough arguments (6 were expected)")
 
-        MoFGBMLBasicArgs.__data_name = args[0]
+        self.set("DATA_NAME", args[0])
+        self.set("ALGORITHM_ID", args[1])
+        self.set("ALGORITHM_ID_DIR", str(os.path.join(self.get("ROOT_FOLDER"), str(self.get("ALGORITHM_ID")))))
 
-        MoFGBMLBasicArgs.__algorithm_id = args[1]
-        Consts.ALGORITHM_ID_DIR = str(os.path.join(Consts.ROOTFOLDER, str(MoFGBMLBasicArgs.__algorithm_id)))
-        Output.mkdirs(Consts.ALGORITHM_ID_DIR)
+        Output.mkdirs(self.get("ALGORITHM_ID_DIR"))
 
-        MoFGBMLBasicArgs.__experiment_id = args[2]
-        Consts.EXPERIMENT_ID_DIR = str(os.path.join(Consts.ALGORITHM_ID_DIR, MoFGBMLBasicArgs.__data_name, str(MoFGBMLBasicArgs.__experiment_id)))
-        Output.mkdirs(Consts.EXPERIMENT_ID_DIR)
+        self.set("EXPERIMENT_ID", args[2])
+        self.set("EXPERIMENT_ID_DIR",
+                 str(os.path.join(
+                     self.get("ALGORITHM_ID_DIR"),
+                     self.get("DATA_NAME"),
+                     str(self.get("EXPERIMENT_ID")))))
+        Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
 
-        MoFGBMLBasicArgs.__num_parallel_cores = int(args[3])
-        MoFGBMLBasicArgs.__train_file = args[4]
-        MoFGBMLBasicArgs.__test_file = args[5]
-
-    @staticmethod
-    def get_train_file():
-        return MoFGBMLBasicArgs.__train_file
-
-    @staticmethod
-    def get_test_file():
-        return MoFGBMLBasicArgs.__test_file
-
-    def __str__(self):
-        # TODO
-        return "not yet implemented"
+        self.set("NUM_PARALLEL_CORES", int(args[3]))
+        self.set("TRAIN_FILE", args[4])
+        self.set("TEST_FILE", args[5])
+        self.set("IS_MULTI_LABEL", False)

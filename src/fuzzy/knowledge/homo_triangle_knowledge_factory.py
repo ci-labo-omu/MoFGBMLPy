@@ -35,17 +35,24 @@ class HomoTriangleKnowledgeFactory:
     def create(num_divisions, var_names, fuzzy_set_names):
         knowledge = Knowledge()
         fuzzy_sets = []
-
+        #TODO: use numpy
         for dim_i in range(len(num_divisions)):
+            current_support_values = [1]
             current_set = [DontCareFuzzySet()]
-
             for j in range(len(num_divisions[dim_i])):
                 params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(num_divisions[dim_i][j])
                 for div_i in range(num_divisions[dim_i][j]):
                     new_fuzzy_set = TriangleFuzzySet(a=params[div_i][0], b=params[div_i][1], c=params[div_i][2], term=fuzzy_set_names[dim_i][j][div_i])
                     current_set.append(new_fuzzy_set)
 
-            fuzzy_sets.append(LinguisticVariableMoFGBML(current_set, var_names[dim_i]))
+                    if div_i == 0 or num_divisions[dim_i][j] <= 1: # DC or one division
+                        current_support_values.append(1)
+                    elif div_i == 1 or div_i == num_divisions[dim_i][j] - 1:
+                        current_support_values.append(1 / (num_divisions[dim_i][j] - 1))
+                    else:
+                        current_support_values.append(2 / (num_divisions[dim_i][j] - 1))
+
+            fuzzy_sets.append(LinguisticVariableMoFGBML(current_set, var_names[dim_i], current_support_values))
 
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge
@@ -57,10 +64,10 @@ class HomoTriangleKnowledgeFactory:
         for i in range(num_dims):
             num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int_)
             fuzzy_set_names[i] = np.array([
-                ["low", "high"],
-                ["low", "medium", "high"],
-                ["low", "low_medium", "high_medium", "high"],
-                ["very_low", "low", "medium", "high", "very_high"]],
+                ["low_2", "high_2"],
+                ["low_3", "medium_3", "high_3"],
+                ["low_4", "low_medium_4", "high_medium_4", "high_4"],
+                ["very_low_5", "low_5", "medium_5", "high_5", "very_high_5"]],
                 dtype=list)
 
         if var_names is None:
