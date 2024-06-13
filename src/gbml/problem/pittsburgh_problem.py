@@ -56,7 +56,7 @@ class PittsburghProblem(Problem):
                                                  copy.copy(self.__classifier))
 
 
-        michigan_solutions = self.__michigan_solution_builder.create_michigan_solution(self.__num_vars)
+        michigan_solutions = self.__michigan_solution_builder.create(self.__num_vars)
         for solution in michigan_solutions:
             pittsburgh_solution.add_var(solution)
 

@@ -100,3 +100,6 @@ class PittsburghCrossover(Crossover):
 
         elapsed = time.time() - start  # 11.96s
         return Y
+
+    def execute(self, problem, X, **kwargs):
+        return self._do(problem, X, **kwargs)

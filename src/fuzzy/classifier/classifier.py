@@ -24,16 +24,19 @@ class Classifier:
 
     def get_error_rate(self, michigan_solution_list, dataset):
         num_errors = 0
+        errored_patterns = []
         for pattern in dataset.get_patterns():
             winner_solution = self.classify(michigan_solution_list, pattern)
 
             if winner_solution is None:
                 num_errors += 1
+                errored_patterns.append(pattern)
                 continue
 
             if pattern.get_target_class() != winner_solution.get_class_label():
                 num_errors += 1
-        return num_errors / dataset.get_size()
+                errored_patterns.append(pattern)
+        return num_errors / dataset.get_size(), errored_patterns
 
     @staticmethod
     def get_rule_num(michigan_solution_list):

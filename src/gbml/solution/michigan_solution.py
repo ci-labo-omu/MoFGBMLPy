@@ -12,7 +12,7 @@ class MichiganSolution(AbstractSolution):
     _rule = None
     _rule_builder = None
 
-    def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, michigan_solution=None):
+    def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, michigan_solution=None, pattern=None):
         if bounds is None:
             bounds = MichiganSolution.make_bounds(knowledge=rule_builder.get_knowledge())
 
@@ -30,7 +30,7 @@ class MichiganSolution(AbstractSolution):
         is_rejected = True
         while is_rejected:
             cnt += 1
-            self.create_rule()
+            self.create_rule(pattern=pattern)
             is_rejected = self._rule.is_rejected_class_label()
             if cnt > 1000:
                 raise Exception("Exceeded maximum number of trials to generate rule")
@@ -50,9 +50,10 @@ class MichiganSolution(AbstractSolution):
     def set_vars(self, new_vars):
         self._vars = new_vars
 
-    def create_rule(self, michigan_solution=None):
+    def create_rule(self, michigan_solution=None, pattern=None):
         if michigan_solution is None:
-            antecedent_indices = self._rule_builder.create_antecedent_indices()
+            #TODO
+            antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern)
             self.set_vars(antecedent_indices)
         else:
             raise Exception("Not yet implemented")
@@ -119,7 +120,7 @@ class MichiganSolution(AbstractSolution):
         def __init__(self, bounds, num_objectives, num_constraints, rule_builder):
             super().__init__(bounds, num_objectives, num_constraints, rule_builder)
 
-        def create_michigan_solution(self, num_solutions=1):
+        def create(self, num_solutions=1, pattern=None):
             start = time.time()
             solutions = []
             bounds = self._bounds
@@ -127,7 +128,7 @@ class MichiganSolution(AbstractSolution):
                 bounds = MichiganSolution.make_bounds(self._rule_builder.get_knowledge())
 
             for i in range(num_solutions):
-                solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds))
+                solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds, pattern=pattern))
                 # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version
                 # solutions[i].set_attribute(attribute_id_fitness, 0)
 

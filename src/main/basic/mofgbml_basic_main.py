@@ -2,10 +2,8 @@ import numpy as np
 from pymoo.termination import get_termination
 from pymoo.util.archive import Archive, MultiObjectiveArchive
 
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from src.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from src.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
-from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
 from src.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from src.gbml.solution.michigan_solution import MichiganSolution
 from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
@@ -27,9 +25,8 @@ from src.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnow
 
 from src.gbml.problem.pittsburgh_problem import PittsburghProblem
 from src.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from src.gbml.operator.crossover.uniform_crossover import UniformCrossover
-from src.gbml.operator.mutation.basic_mutation import BasicMutation
 from src.gbml.BasicDuplicateElimination import BasicDuplicateElimination
+
 
 class MoFGBMLBasicMain:
     @staticmethod
@@ -95,7 +92,7 @@ class MoFGBMLBasicMain:
 
         algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(train),
-                          crossover=PittsburghCrossover(crossover_probability,
+                          crossover=HybridGBMLCrossover(crossover_probability,
                                                         args.get("MIN_NUM_RULES"),
                                                         args.get("MAX_NUM_RULES")),
                           mutation=PittsburghMutation(train, knowledge),

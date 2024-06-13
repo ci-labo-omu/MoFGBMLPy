@@ -10,13 +10,14 @@ from src.gbml.solution.abstract_solution import AbstractSolution
 class PittsburghSolution(AbstractSolution):
     __classifier = None
     __michigan_solution_builder = None
+    __errored_patterns = None
 
     def __init__(self, num_vars, num_objectives, num_constraints, michigan_solution_builder, classifier):
         super().__init__(num_vars, num_objectives, num_constraints)
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classifier = classifier
 
-        self._vars = michigan_solution_builder.create_michigan_solution(num_vars)
+        self._vars = michigan_solution_builder.create(num_vars)
 
     def get_michigan_solution_builder(self):
         return self.__michigan_solution_builder
@@ -41,7 +42,11 @@ class PittsburghSolution(AbstractSolution):
         return self.__classifier.classify(self.get_vars(), pattern)
 
     def get_error_rate(self, dataset):
-        return self.__classifier.get_error_rate(self.get_vars(), dataset)
+        error_rate, self.__errored_patterns = self.__classifier.get_error_rate(self.get_vars(), dataset)
+        return error_rate
+
+    def get_errored_patterns(self):
+        return self.__errored_patterns
 
     def compute_coverage(self):
         coverage = 0
