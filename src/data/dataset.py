@@ -1,4 +1,4 @@
-from src.data.pattern import Pattern
+from data.pattern import Pattern
 import numpy as np
 
 

@@ -1,6 +1,6 @@
 import pytest
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
+from fuzzy.knowledge.knowledge import Knowledge
+from fuzzy.fuzzy_term.fuzzy_term_triangular import FuzzyTermTriangular
 
 
 def gen_fuzzy_sets_example():

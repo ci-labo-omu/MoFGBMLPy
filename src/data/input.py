@@ -1,7 +1,7 @@
-from src.data.dataset import Dataset
-from src.data.pattern import Pattern
-from src.data.class_label.class_label_multi import ClassLabelMulti
-from src.data.class_label.class_label_basic import ClassLabelBasic
+from data.dataset import Dataset
+from data.pattern import Pattern
+from data.class_label.class_label_multi import ClassLabelMulti
+from data.class_label.class_label_basic import ClassLabelBasic
 import numpy as np
 import csv
 
@@ -40,6 +40,8 @@ class Input:
 
                 patterns.append(Pattern(pattern_id, in_vector, class_labels))
                 pattern_id += 1
+
+            patterns = np.array(patterns, dtype=object)
             dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset
@@ -67,6 +69,7 @@ class Input:
                 patterns.append(Pattern(pattern_id, in_vector, class_label))
                 pattern_id += 1
 
+        patterns = np.array(patterns, dtype=object)
         dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset

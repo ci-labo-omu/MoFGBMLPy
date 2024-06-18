@@ -1,5 +1,5 @@
-from src.fuzzy.rule.abstract_rule import AbstractRule
-from src.fuzzy.rule.antecedent.antecedent import Antecedent
+from fuzzy.rule.abstract_rule import AbstractRule
+from fuzzy.rule.antecedent.antecedent import Antecedent
 
 
 class RuleBasic(AbstractRule):

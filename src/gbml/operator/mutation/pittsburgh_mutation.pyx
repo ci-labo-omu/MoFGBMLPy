@@ -3,9 +3,9 @@ import time
 
 from pymoo.core.mutation import Mutation
 
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.gbml.solution import michigan_solution
-from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from fuzzy.knowledge.knowledge import Knowledge
+from gbml.solution import michigan_solution
+from fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import random
 
 
@@ -22,7 +22,6 @@ class PittsburghMutation(Mutation):
 
     def _do(self, problem, X, **kwargs):
         # for each individual
-        start = time.time()
         dim = self.__learner.get_training_set().get_num_dim()
 
         for i in range(len(X[0])):
@@ -49,7 +48,5 @@ class PittsburghMutation(Mutation):
                 if not new_michigan_solution.get_consequent().is_rejected():
                     X[0][i].set_var(michigan_sol_i, new_michigan_solution)
 
-        elapsed = time.time() - start  # 15s
-        # print(elapsed)
 
         return X

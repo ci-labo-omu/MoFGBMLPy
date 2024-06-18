@@ -1,5 +1,5 @@
-from src.main.arguments import Arguments
-from src.data.output import Output
+from main.arguments import Arguments
+from data.output import Output
 import os
 
 

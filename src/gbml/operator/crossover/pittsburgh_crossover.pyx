@@ -86,19 +86,23 @@ class PittsburghCrossover(Crossover):
             p2 = X[1,i,0]
 
             Y[0,i] = copy.copy(p1)
-            Y[0,i,0].clear_vars()
+            # Y[0,i,0].clear_vars()
             Y[0,i,0].clear_attributes()
 
             num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), n_var)
             rules_idx_from_p1 = np.random.choice(list(range(p1.get_num_vars())), num_rules_from_p1, replace=False)
             rules_idx_from_p2 = np.random.choice(list(range(p2.get_num_vars())), num_rules_from_p2, replace=False)
 
+            new_vars = np.empty(num_rules_from_p1 + num_rules_from_p2, dtype=object)
+            j = 0
             for rule_idx in rules_idx_from_p1:
-                Y[0,i,0].add_var(copy.copy(p1.get_var(rule_idx)))
+                new_vars[j] = copy.copy(p1.get_var(rule_idx))
+                j += 1
             for rule_idx in rules_idx_from_p2:
-                Y[0,i,0].add_var(copy.copy(p2.get_var(rule_idx)))
+                new_vars[j] = copy.copy(p2.get_var(rule_idx))
+                j += 1
 
-        elapsed = time.time() - start  # 11.96s
+            Y[0, i, 0].set_vars(new_vars)
         return Y
 
     def execute(self, problem, X, **kwargs):

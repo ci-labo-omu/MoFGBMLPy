@@ -1,4 +1,4 @@
-from src.fuzzy.rule.abstract_rule import AbstractRule
+from fuzzy.rule.abstract_rule import AbstractRule
 import numpy as np
 
 

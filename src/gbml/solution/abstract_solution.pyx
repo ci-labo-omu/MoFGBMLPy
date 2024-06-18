@@ -44,6 +44,9 @@ class AbstractSolution(ABC):
     def set_var(self, index, value):
         self._vars[index] = value
 
+    def set_vars(self, new_vars):
+        self._vars = new_vars
+
     def get_constraint(self, index):
         return self.__constraints[index]
 
@@ -94,3 +97,6 @@ class AbstractSolution(ABC):
             self._num_objectives = num_objectives
             self._num_constraints = num_constraints
             self._rule_builder = rule_builder
+
+        def get_rule_builder(self):
+            return self._rule_builder

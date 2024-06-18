@@ -1,16 +1,19 @@
+import time
+
 import numpy as np
 from pymoo.termination import get_termination
 from pymoo.util.archive import Archive, MultiObjectiveArchive
 
-from src.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
-from src.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
-from src.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
-from src.gbml.solution.michigan_solution import MichiganSolution
-from src.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from src.fuzzy.classifier.classifier import Classifier
-from src.data.input import Input
-from src.data.output import Output
-from src.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
+from gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
+from gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
+from fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from gbml.solution.michigan_solution import MichiganSolution
+from fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
+from fuzzy.classifier.classifier import Classifier
+from data.input import Input
+from data.output import Output
+from main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 import sys
 import os
 from pymoo.visualization.scatter import Scatter
@@ -19,13 +22,13 @@ from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
 import random
 
-from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from src.fuzzy.rule.rule_basic import RuleBasic
-from src.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from fuzzy.rule.rule_basic import RuleBasic
+from fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
-from src.gbml.problem.pittsburgh_problem import PittsburghProblem
-from src.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from src.gbml.BasicDuplicateElimination import BasicDuplicateElimination
+from gbml.problem.pittsburgh_problem import PittsburghProblem
+from gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
+from gbml.BasicDuplicateElimination import BasicDuplicateElimination
 
 
 class MoFGBMLBasicMain:
@@ -92,12 +95,15 @@ class MoFGBMLBasicMain:
 
         algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(train),
-                          crossover=HybridGBMLCrossover(crossover_probability,
-                                                        args.get("MIN_NUM_RULES"),
+                          crossover=PittsburghCrossover(args.get("MIN_NUM_RULES"),
                                                         args.get("MAX_NUM_RULES")),
+                          # crossover=HybridGBMLCrossover(crossover_probability,
+                          #                               args.get("MIN_NUM_RULES"),
+                          #                               args.get("MAX_NUM_RULES")),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=BasicDuplicateElimination(),
                           archive=MultiObjectiveArchive(duplicate_elimination=BasicDuplicateElimination(), max_size=None, truncate_size=None))
+
 
         res = minimize(problem,
                        algorithm,

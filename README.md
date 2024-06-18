@@ -6,3 +6,5 @@
 2. Create a virtual environment: `python -m venv .venv`
 3. Activate this environment: `source .venv/bin/activate` (or `".venv/Scripts/activate.bat"` on Windows)
 4. Install the dependencies: `python -m pip install -r requirements.txt`
+
+`python setup.py build_ext --inplace`

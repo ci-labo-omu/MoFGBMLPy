@@ -19,7 +19,6 @@ class HybridGBMLCrossover(Crossover):
 
     def _do(self, problem, X, **kwargs):
         _, n_matings, n_var = X.shape
-        start = time.time()
 
         michigan_crossover_mask = np.empty(n_matings, dtype=np.bool_)
 
@@ -34,5 +33,4 @@ class HybridGBMLCrossover(Crossover):
         Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, michigan_crossover_mask], **kwargs)
         Y = np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
 
-        elapsed = time.time() - start  # 11.96s
         return Y

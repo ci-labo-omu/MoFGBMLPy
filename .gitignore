@@ -163,3 +163,5 @@ dataset
 pymoo
 prof
 results
+src/**/*.pyd
+src/**/*.c

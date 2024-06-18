@@ -1,4 +1,4 @@
-from src.data.input import Input
+from data.input import Input
 
 import os
 

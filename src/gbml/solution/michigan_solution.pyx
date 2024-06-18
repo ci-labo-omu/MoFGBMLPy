@@ -3,8 +3,8 @@ import time
 
 import numpy as np
 
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.gbml.solution.abstract_solution import AbstractSolution
+from fuzzy.knowledge.knowledge import Knowledge
+from gbml.solution.abstract_solution import AbstractSolution
 
 
 class MichiganSolution(AbstractSolution):
@@ -47,12 +47,8 @@ class MichiganSolution(AbstractSolution):
     def get_upper_bound(self, index):
         return self._bounds[index][1]
 
-    def set_vars(self, new_vars):
-        self._vars = new_vars
-
     def create_rule(self, michigan_solution=None, pattern=None):
         if michigan_solution is None:
-            #TODO
             antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern)
             self.set_vars(antecedent_indices)
         else:
@@ -121,19 +117,18 @@ class MichiganSolution(AbstractSolution):
             super().__init__(bounds, num_objectives, num_constraints, rule_builder)
 
         def create(self, num_solutions=1, pattern=None):
-            start = time.time()
-            solutions = []
+            solutions = np.empty(num_solutions, dtype=object)
             bounds = self._bounds
             if bounds is None:
                 bounds = MichiganSolution.make_bounds(self._rule_builder.get_knowledge())
 
+
+            # Try using generator to speed up the process with numpy.fromiter
             for i in range(num_solutions):
-                solutions.append(MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds, pattern=pattern))
+                solutions[i] = MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds, pattern=pattern)
                 # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version
                 # solutions[i].set_attribute(attribute_id_fitness, 0)
 
-            elapsed = time.time() - start
-            # print(elapsed) # approx 0.1
 
             return solutions
 

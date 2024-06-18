@@ -2,9 +2,9 @@ import time
 
 import numpy as np
 
-from src.gbml.solution.abstract_solution import AbstractSolution
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.gbml.solution.abstract_solution import AbstractSolution
+from gbml.solution.abstract_solution import AbstractSolution
+from fuzzy.knowledge.knowledge import Knowledge
+from gbml.solution.abstract_solution import AbstractSolution
 
 
 class PittsburghSolution(AbstractSolution):
@@ -24,9 +24,6 @@ class PittsburghSolution(AbstractSolution):
 
     def remove_var(self, index):
         del self._vars[index]
-
-    def add_var(self, value):
-        self._vars.append(value)
 
     def clear_vars(self):
         self._vars = []

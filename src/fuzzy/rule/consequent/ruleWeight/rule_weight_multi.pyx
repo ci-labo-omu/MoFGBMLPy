@@ -1,4 +1,4 @@
-from src.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight import AbstractRuleWeight
+from fuzzy.rule.consequent.ruleWeight.abstract_rule_weight import AbstractRuleWeight
 
 
 class RuleWeightMulti(AbstractRuleWeight):

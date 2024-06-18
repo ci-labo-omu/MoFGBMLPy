@@ -1,7 +1,7 @@
-from src.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
-from src.fuzzy.knowledge.knowledge import Knowledge
+from main.basic.mofgbml_basic_main import MoFGBMLBasicMain
+from fuzzy.knowledge.knowledge import Knowledge
 from simpful.fuzzy_sets import TriangleFuzzySet
-from src.fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
+from fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
 
 
 def test_main():

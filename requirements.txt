@@ -5,3 +5,4 @@ scikit-learn
 pymoo
 pytest
 simpful
+cython

@@ -1,8 +1,8 @@
 import copy
 
-from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.fuzzy.rule.antecedent.antecedent import Antecedent
+from fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
+from fuzzy.knowledge.knowledge import Knowledge
+from fuzzy.rule.antecedent.antecedent import Antecedent
 import numpy as np
 
 

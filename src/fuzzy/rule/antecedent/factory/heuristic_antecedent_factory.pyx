@@ -1,6 +1,6 @@
-from src.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.fuzzy.rule.antecedent.antecedent import Antecedent
+from fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
+from fuzzy.knowledge.knowledge import Knowledge
+from fuzzy.rule.antecedent.antecedent import Antecedent
 import numpy as np
 import random
 
@@ -71,11 +71,16 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     def create(self, num_rules=None):
         indices = self.create_antecedent_indices(num_rules)
 
-        antecedent_objects = np.array([Antecedent(self.select_antecedent_part((indices[i]))) for i in range(num_rules)], dtype=object)
+        antecedent_objects = np.array([Antecedent(self.select_antecedent_part((indices[i])), self.__knowledge) for i in range(num_rules)], dtype=object)
 
         if num_rules == 1:
             antecedent_objects = antecedent_objects[0]
         return antecedent_objects
+
+    def create_antecedent_indices_from_pattern(self, pattern=None):
+        if pattern is None:
+            raise Exception("Pattern cannot be None")
+        return self.calculate_antecedent_part(pattern)
 
     def create_antecedent_indices(self, num_rules=None):
         data_size = self.__training_set.get_size()

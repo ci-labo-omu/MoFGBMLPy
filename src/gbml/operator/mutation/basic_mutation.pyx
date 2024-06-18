@@ -1,7 +1,7 @@
 from pymoo.core.mutation import Mutation
 
-from src.fuzzy.knowledge.knowledge import Knowledge
-from src.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from fuzzy.knowledge.knowledge import Knowledge
+from fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import random
 
 

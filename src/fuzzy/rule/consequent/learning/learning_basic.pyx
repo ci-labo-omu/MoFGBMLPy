@@ -1,9 +1,9 @@
 import numpy as np
 
-from src.fuzzy.rule.consequent.learning.abstract_learning import  AbstractLearning
-from src.fuzzy.rule.consequent.consequent import Consequent
-from src.data.class_label.class_label_basic import ClassLabelBasic
-from src.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
+from fuzzy.rule.consequent.learning.abstract_learning import  AbstractLearning
+from fuzzy.rule.consequent.consequent import Consequent
+from data.class_label.class_label_basic import ClassLabelBasic
+from fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
 
 
 class LearningBasic(AbstractLearning):
@@ -27,19 +27,22 @@ class LearningBasic(AbstractLearning):
         confidence = np.zeros(num_classes)
         sum_compatible_grade_for_each_class = np.zeros(num_classes)
 
+        compatible_grades = np.zeros(self._train_ds.get_size(), dtype=int)
+
+        patterns = self._train_ds.get_patterns()
+        for i in range(self._train_ds.get_size()):
+            compatible_grades[i] = antecedent.get_compatible_grade_value(patterns[i].get_attributes_vector())
+
+        all_sum = 0
         for c in range(num_classes):
             part_sum = 0
             # TODO: Add multithreading
-
-            for pattern in self._train_ds.get_patterns():
-                temp = antecedent.get_compatible_grade_value(pattern.get_attributes_vector())
-
-                if pattern.get_target_class().get_class_label_value() == c:
-                    part_sum += temp
+            for i in range(self._train_ds.get_size()):
+                if patterns[i].get_target_class().get_class_label_value() == c:
+                    part_sum += compatible_grades[i]
 
             sum_compatible_grade_for_each_class[c] = part_sum
-
-        all_sum = np.sum(sum_compatible_grade_for_each_class)
+            all_sum += part_sum
 
         if all_sum != 0:
             confidence = sum_compatible_grade_for_each_class/all_sum

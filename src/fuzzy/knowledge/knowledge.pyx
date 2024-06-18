@@ -4,9 +4,7 @@ from matplotlib import pyplot as plt
 from simpful import LinguisticVariable
 
 
-class Knowledge:
-    __fuzzy_sets = None
-
+cdef class Knowledge:
     def __init__(self):
         self.__fuzzy_sets = []
 

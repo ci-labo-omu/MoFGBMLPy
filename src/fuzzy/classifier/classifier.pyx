@@ -1,4 +1,4 @@
-from src.fuzzy.classifier.classification.abstract_classification import AbstractClassification
+from fuzzy.classifier.classification.abstract_classification import AbstractClassification
 
 
 class Classifier:
