@@ -4,6 +4,12 @@ from Cython.Build import cythonize
 from setuptools.extension import Extension
 import numpy
 import os
+import sys
+
+if sys.platform.startswith("win"):
+    openmp_arg = '/openmp'
+else:
+    openmp_arg = '-fopenmp'
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -24,7 +30,10 @@ for root, dirs, files in os.walk('src'):
             path = os.path.join(root, file)
             path_without_extension = path.join(path.split(".")[:-1])
             name = ".".join(path_without_extension.split(os.sep)[1:])
-            cython_files.append(Extension(name, [path]))
+            cython_files.append(Extension(name,
+                                          [path],
+                                          extra_compile_args=[openmp_arg],
+                                          extra_link_args=[openmp_arg]))
 
 # print(cython_files)
 
@@ -39,7 +48,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/RobinMeneustOMU/MoFGBML_Python",  # Optional
     author="Robin Meneust",
-    author_email="sc24209@st.omu.ac.jp",
+    author_email="sc24209q@st.omu.ac.jp",
     # classifiers=[  # Optional
     #     # How mature is this project? Common values are
     #     #   3 - Alpha

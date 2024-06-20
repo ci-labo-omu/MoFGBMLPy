@@ -9,8 +9,11 @@ class ClassLabelMulti(AbstractClassLabel):
         if not isinstance(other, ClassLabelMulti) or self.get_length() != other.get_length():
             return False
 
+        label = self.get_class_label_value()
+        other_label = other.get_class_label_value()
+
         for i in range(self.get_length()):
-            if self.get_class_label_value()[i] != other.get_class_label_value()[i]:
+            if label[i] != other_label[i]:
                 return False
         return True
 

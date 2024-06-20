@@ -5,6 +5,7 @@ import numpy as np
 
 from fuzzy.knowledge.knowledge import Knowledge
 from gbml.solution.abstract_solution import AbstractSolution
+cimport numpy as cnp
 
 
 class MichiganSolution(AbstractSolution):
@@ -117,13 +118,14 @@ class MichiganSolution(AbstractSolution):
             super().__init__(bounds, num_objectives, num_constraints, rule_builder)
 
         def create(self, num_solutions=1, pattern=None):
-            solutions = np.empty(num_solutions, dtype=object)
+            cdef cnp.ndarray[object, ndim=1] solutions = np.empty(num_solutions, dtype=object)
+            cdef int i
             bounds = self._bounds
+
             if bounds is None:
                 bounds = MichiganSolution.make_bounds(self._rule_builder.get_knowledge())
 
 
-            # Try using generator to speed up the process with numpy.fromiter
             for i in range(num_solutions):
                 solutions[i] = MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder, bounds, pattern=pattern)
                 # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version

@@ -45,8 +45,27 @@ cdef class Antecedent:
         return grade
 
     cpdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
-        cdef cnp.ndarray[double, ndim=1] grade = self.get_compatible_grade(attribute_vector)
-        return np.prod(grade)
+        cdef int i
+        cdef int size = self.get_array_size()
+        cdef float grade_value = 1
+
+        if size != attribute_vector.size:
+            raise ValueError("antecedent_indices and attribute_vector must have the same length")
+
+        for i in range(size):
+            val = attribute_vector[i]
+            if self.__antecedent_indices[i] < 0 and val < 0:
+                # categorical
+                grade_value *= 1.0 if self.__antecedent_indices[i] == round(val) else 0.0
+            elif self.__antecedent_indices[i] > 0 and val >= 0:
+                # numerical
+                grade_value *= self.__knowledge.get_membership_value(val, i, self.__antecedent_indices[i])
+            elif self.__antecedent_indices[i] == 0:
+                continue
+            else:
+                raise ValueError("Illegal argument")
+
+        return grade_value
 
     cpdef int get_length(self):
         return np.count_nonzero(self.__antecedent_indices)

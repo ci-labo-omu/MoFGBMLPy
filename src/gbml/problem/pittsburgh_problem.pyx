@@ -2,6 +2,7 @@ import copy
 
 from pymoo.core.problem import Problem
 import numpy as np
+cimport numpy as cnp
 from gbml.solution.pittsburgh_solution import PittsburghSolution
 import time
 
@@ -35,9 +36,6 @@ class PittsburghProblem(Problem):
                                                  copy.copy(self.__michigan_solution_builder),
                                                  copy.copy(self.__classifier))
 
-        michigan_solutions = self.__michigan_solution_builder.create(self.__num_vars)
-        pittsburgh_solution.set_vars(michigan_solutions)
-
         return pittsburgh_solution
 
     # def __evaluate_one(self, solution):
@@ -65,8 +63,10 @@ class PittsburghProblem(Problem):
         #
         # print(out["F"])
 
-        out["F"] = np.zeros((len(X), 2), dtype=np.float_)
+        cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), 2), dtype=np.float_)
 
         for i in range(len(X)):
-            out["F"][i][0] = X[i, 0].get_error_rate(self.__training_ds)
-            out["F"][i][1] = X[i, 0].get_num_vars()  # num rules
+            eval_values[i][0] = X[i, 0].get_error_rate(self.__training_ds)
+            eval_values[i][1] = X[i, 0].get_num_vars()  # num rules
+
+        out["F"] = eval_values

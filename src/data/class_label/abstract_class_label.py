@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractClassLabel:
+class AbstractClassLabel(ABC):
     _class_label = None
     __is_rejected = False
 
