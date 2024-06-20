@@ -1,16 +1,19 @@
-cdef class Knowledge:
-    cdef object __fuzzy_sets
+import math
 
-    # cdef get_fuzzy_variable(self, dim)
-    # cdef get_fuzzy_set(self, dim, fuzzy_set_id)
-    # cdef get_num_fuzzy_sets(self, dim)
-    # cdef set_fuzzy_sets(self, fuzzy_sets)
-    # cdef get_fuzzy_sets(self)
-    # cdef get_membership_value(self, attribute_value, dim, fuzzy_set_id)
-    # cdef get_num_dim(self)
-    # cdef plot_one_fuzzy_set(self, dim_i, fuzzy_set_id)
-    # cdef draw_one_fuzzy_set(self, dim_i, fuzzy_set_id, ax)
-    # cdef plot_one_dim_unique_graph(self, dim_i)
-    # cdef plot_one_dim_separate_graphs(self, dim_i)
-    # cdef plot_all_dim(self)
-    # cdef get_support(self, dim, fuzzy_set_id)
+from matplotlib import pyplot as plt
+cimport numpy as cnp
+from fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
+from simpful import LinguisticVariable
+
+cdef class Knowledge:
+    cdef public object __fuzzy_sets
+
+    cpdef object get_fuzzy_variable(self, int dim)
+    cpdef object get_fuzzy_set(self, int dim, int fuzzy_set_id)
+    cpdef int get_num_fuzzy_sets(self, int dim)
+    cpdef void set_fuzzy_sets(self, cnp.ndarray[object, ndim=1] fuzzy_sets)
+    cpdef cnp.ndarray[object, ndim=1] get_fuzzy_sets(self)
+    cpdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id)
+    cpdef int get_num_dim(self)
+    cpdef void clear(self)
+    cpdef float get_support(self, int dim, int fuzzy_set_id)

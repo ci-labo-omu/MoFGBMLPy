@@ -1,5 +1,6 @@
 from simpful.simpful import LinguisticVariable
-
+import numpy as np
+cimport numpy as cnp
 
 class LinguisticVariableMoFGBML(LinguisticVariable):
     __support_values = None
@@ -33,4 +34,4 @@ class LinguisticVariableMoFGBML(LinguisticVariable):
         return self._FSlist[fuzzy_set_index]
 
     def get_support(self, fuzzy_set_id):
-        return self.__support_values[fuzzy_set_id]  # TODO
+        return self.__support_values[fuzzy_set_id]

@@ -1,51 +1,54 @@
 import math
 
 from matplotlib import pyplot as plt
+cimport numpy as cnp
+from fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
 from simpful import LinguisticVariable
 
-
 cdef class Knowledge:
+    cdef public object __fuzzy_sets
+
     def __init__(self):
         self.__fuzzy_sets = []
 
-    def get_fuzzy_variable(self, dim):
+    cpdef object get_fuzzy_variable(self, int dim):
         return self.__fuzzy_sets[dim]
 
-    def get_fuzzy_set(self, dim, fuzzy_set_id):
+    cpdef object get_fuzzy_set(self, int dim, int fuzzy_set_id):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets[dim].get_fuzzy_set(fuzzy_set_id)
 
-    def get_num_fuzzy_sets(self, dim):
+    cpdef int get_num_fuzzy_sets(self, int dim):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets[dim].get_length()
 
-    def set_fuzzy_sets(self, fuzzy_sets):
+    cpdef void set_fuzzy_sets(self, cnp.ndarray[object, ndim=1] fuzzy_sets):
         if self.__fuzzy_sets is not None and len(self.__fuzzy_sets) != 0:
             raise Exception("You can't overwrite fuzzy sets. You must call clear before doing so")
 
         self.__fuzzy_sets = fuzzy_sets
 
-    def get_fuzzy_sets(self):
+    cpdef cnp.ndarray[object, ndim=1] get_fuzzy_sets(self):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets
 
-    def get_membership_value(self, attribute_value, dim, fuzzy_set_id):
+    cpdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
             raise Exception("Context is not yet initialized (no fuzzy set)")
         return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
 
-    def get_num_dim(self):
+    cpdef int get_num_dim(self):
         if self.__fuzzy_sets is None:
             return 0
         return len(self.__fuzzy_sets)
 
-    def clear(self):
+    cpdef void clear(self):
         self.__fuzzy_sets = []
 
     def plot_one_fuzzy_set(self, dim_i, fuzzy_set_id):
@@ -102,7 +105,7 @@ cdef class Knowledge:
 
         fig.show()
 
-    def get_support(self, dim, fuzzy_set_id):
+    cpdef float get_support(self, int dim, int fuzzy_set_id):
         return self.get_fuzzy_variable(dim).get_support(fuzzy_set_id)
 
     def __str__(self):

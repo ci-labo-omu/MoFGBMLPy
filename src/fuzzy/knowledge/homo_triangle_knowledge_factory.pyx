@@ -4,15 +4,22 @@ from fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
 from fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
 from fuzzy.knowledge.knowledge import Knowledge
 from simpful import TriangleFuzzySet
+cimport numpy as cnp
+from fuzzy.knowledge.knowledge cimport Knowledge
 
-
-class HomoTriangleKnowledgeFactory:
+cdef class HomoTriangleKnowledgeFactory:
     @staticmethod
     def make_triangle_knowledge_params(num_partitions):
+        cdef int i
+        cdef double left
+        cdef double center
+        cdef double right
+        cdef cnp.ndarray[double, ndim=2] params
+        cdef cnp.ndarray[double, ndim=1] partition
+
         params = np.zeros((num_partitions, 3))
         partition = np.zeros(num_partitions+1)  # e.g.: K = 5: 0, 1/8, 3/8, 5/8, 7/8, 1
 
-        # TODO: as in the Java version we should save this values so that we don't recompute them if needed
         for i in range(1, num_partitions):
             partition[i] = (2*i-1) / ((num_partitions-1) * 2)
 
@@ -21,9 +28,9 @@ class HomoTriangleKnowledgeFactory:
         for i in range(num_partitions):
             if i == 0:  # 1st partition
                 params[i] = np.array([0, 0, 2*partition[i+1]])
-            elif i == len(partition)-2:  # last partition
+            elif i == partition.size-2:  # last partition
                 params[i] = np.array([2*partition[i]-1, 1, 1])
-            elif i>0 and i<len(partition)-2:  # If the index is valid
+            elif i>0 and i<partition.size-2:  # If the index is valid
                 left = partition[i]*3/2 - partition[i+1]/2
                 center = (partition[i] + partition[i + 1]) / 2
                 right = partition[i+1]*3/2 - partition[i]/2
@@ -33,8 +40,10 @@ class HomoTriangleKnowledgeFactory:
 
     @staticmethod
     def create(num_divisions, var_names, fuzzy_set_names):
+        cdef Knowledge knowledge
+
         knowledge = Knowledge()
-        fuzzy_sets = []
+        fuzzy_sets = np.empty(len(num_divisions), dtype=object)
         #TODO: use numpy
         for dim_i in range(len(num_divisions)):
             current_support_values = [1]
@@ -52,7 +61,7 @@ class HomoTriangleKnowledgeFactory:
                     else:
                         current_support_values.append(2 / (num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets.append(LinguisticVariableMoFGBML(current_set, var_names[dim_i], current_support_values))
+            fuzzy_sets[dim_i] = LinguisticVariableMoFGBML(current_set, var_names[dim_i], current_support_values)
 
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge

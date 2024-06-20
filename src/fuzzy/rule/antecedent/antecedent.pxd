@@ -2,8 +2,8 @@ from fuzzy.knowledge.knowledge cimport Knowledge
 cimport numpy as cnp
 
 cdef class Antecedent:
-    cdef cnp.ndarray[int, ndim=1] __antecedent_indices
-    cdef Knowledge __knowledge
+    cdef public Knowledge __knowledge
+
     cpdef int get_array_size(self)
     cpdef cnp.ndarray[int, ndim=1] get_antecedent_indices(self)
     cpdef void set_antecedent_indices(self, cnp.ndarray[int, ndim=1] new_indices)

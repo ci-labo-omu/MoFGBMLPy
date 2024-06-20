@@ -4,6 +4,9 @@ cimport cython
 cimport numpy as cnp
 
 cdef class Antecedent:
+    cdef public object __antecedent_indices
+    cdef public Knowledge __knowledge
+
     def __init__(self, cnp.ndarray[int, ndim=1] antecedent_indices, Knowledge knowledge):
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge
@@ -17,10 +20,10 @@ cdef class Antecedent:
     cpdef void set_antecedent_indices(self, cnp.ndarray[int, ndim=1] new_indices):
         self.__antecedent_indices = new_indices
 
-    cpdef cnp.ndarray[float, ndim=1] get_compatible_grade(self, cnp.ndarray[float, ndim=1] attribute_vector):
+    cpdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector):
         cdef int i
         cdef int size = self.get_array_size()
-        cdef cnp.ndarray[float, ndim=1] grade = np.zeros(size, dtype=np.float64)
+        cdef cnp.ndarray[double, ndim=1] grade = np.zeros(size, dtype=np.float_)
 
         if size != attribute_vector.size:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
@@ -41,8 +44,8 @@ cdef class Antecedent:
 
         return grade
 
-    cpdef float get_compatible_grade_value(self, cnp.ndarray[float, ndim=1] attribute_vector):
-        cdef cnp.ndarray[float, ndim=1] grade = self.get_compatible_grade(attribute_vector)
+    cpdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+        cdef cnp.ndarray[double, ndim=1] grade = self.get_compatible_grade(attribute_vector)
         return np.prod(grade)
 
     cpdef int get_length(self):
