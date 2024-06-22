@@ -8,3 +8,5 @@
 4. Install the dependencies: `python -m pip install -r requirements.txt`
 
 `python setup.py build_ext --inplace`
+
+Note pymoo is not yet compatible with numpy 2.0.0, so we use the previous version instead

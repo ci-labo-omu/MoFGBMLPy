@@ -1,9 +1,5 @@
-import math
-
-from matplotlib import pyplot as plt
-
-from data.input import Input
-from fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from mofgbmlpy.data.input import Input
+from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 
 def test_create2_3_4_5_plot():

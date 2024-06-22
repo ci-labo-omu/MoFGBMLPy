@@ -1,8 +1,8 @@
-numpy
+numpy<2.0.0
 jupyter
-matplotlib
+matplotlib<3.9
 scikit-learn
 pymoo
 pytest
 simpful
-cython
+Cython

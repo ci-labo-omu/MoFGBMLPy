@@ -33,13 +33,15 @@ for root, dirs, files in os.walk('src'):
             cython_files.append(Extension(name,
                                           [path],
                                           extra_compile_args=[openmp_arg],
-                                          extra_link_args=[openmp_arg]))
+                                          define_macros=[("CYTHON_TRACE", "1")]))
+
 
 # print(cython_files)
 
 setup(
     ext_modules=cythonize(
-        cython_files, compiler_directives={"language_level": "3", "profile": True}
+        cython_files,
+        compiler_directives={"language_level": "3", "profile": True, "binding": True, "linetrace": True}
     ),
     name="mofgbml-python",
     version="1.0.0",
