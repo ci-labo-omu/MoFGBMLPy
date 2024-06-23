@@ -1,13 +1,12 @@
-from abc import ABC, abstractmethod
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 
 
-class AbstractLearning(ABC):
-    _default_reject_threshold = 0
 
-    @abstractmethod
-    def learning(self, antecedent, reject_threshold=_default_reject_threshold):
-        pass
+cdef class AbstractLearning:
+    cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
+        Exception("This class is abstract")
 
-    @abstractmethod
+
     def __copy__(self):
-        pass
+        Exception("This class is abstract")

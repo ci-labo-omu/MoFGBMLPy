@@ -1,9 +1,10 @@
-from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight import AbstractRuleWeight
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
+cimport numpy as cnp
 
 
-class RuleWeightMulti(AbstractRuleWeight):
-    def __init__(self, rule_weight):
-        self.set_value(rule_weight)
+cdef class RuleWeightMulti(AbstractRuleWeight):
+    def __init__(self, cnp.ndarray[double, ndim=1] rule_weight):
+        self.__rule_weight = rule_weight
 
     def __copy__(self):
         return RuleWeightMulti(self.get_value())
@@ -20,8 +21,14 @@ class RuleWeightMulti(AbstractRuleWeight):
 
         return txt
 
-    def get_rule_weight_at(self, index):
+    cpdef get_rule_weight_at(self, int index):
         return self.get_value()[index]
 
-    def get_length(self):
-        return len(self.get_value())
+    cpdef int get_length(self):
+        return self.get_value().size
+
+    cpdef object get_value(self):
+        return self.__rule_weight
+
+    cpdef void set_value(self, object rule_weight):
+        self.__rule_weight = rule_weight

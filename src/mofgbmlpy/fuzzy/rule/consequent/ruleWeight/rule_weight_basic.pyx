@@ -1,9 +1,9 @@
-from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight import AbstractRuleWeight
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 
 
-class RuleWeightBasic(AbstractRuleWeight):
-    def __init__(self, rule_weight):
-        self.set_value(rule_weight)
+cdef class RuleWeightBasic(AbstractRuleWeight):
+    def __init__(self, double rule_weight):
+        self.__rule_weight = rule_weight
 
     def __copy__(self):
         return RuleWeightBasic(self.get_value())
@@ -12,3 +12,9 @@ class RuleWeightBasic(AbstractRuleWeight):
         if self.get_value() is None:
             raise ValueError("Rule weight is None")
         return f"{self.get_value():.4f}"
+
+    cpdef object get_value(self):
+        return self.__rule_weight
+
+    cpdef void set_value(self, object rule_weight):
+        self.__rule_weight = rule_weight

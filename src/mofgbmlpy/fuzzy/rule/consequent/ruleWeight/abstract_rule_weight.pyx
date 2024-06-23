@@ -1,11 +1,10 @@
-from abc import ABC
+cimport numpy as cnp
 
+from mofgbmlpy.utility.fused_types cimport double_or_double_array
 
-class AbstractRuleWeight(ABC):
-    _rule_weight = None
+cdef class AbstractRuleWeight:
+    cpdef object get_value(self):
+        raise Exception("AbstractRuleWeight is abstract")
 
-    def get_value(self):
-        return self._rule_weight
-
-    def set_value(self, rule_weight):
-        self._rule_weight = rule_weight
+    cpdef void set_value(self, object rule_weight):
+        raise Exception("AbstractRuleWeight is abstract")

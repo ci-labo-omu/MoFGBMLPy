@@ -14,4 +14,4 @@ cdef class Knowledge:
     cpdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id)
     cpdef int get_num_dim(self)
     cpdef void clear(self)
-    cpdef float get_support(self, int dim, int fuzzy_set_id)
+    cpdef double get_support(self, int dim, int fuzzy_set_id)
