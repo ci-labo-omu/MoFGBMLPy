@@ -1,6 +1,5 @@
 import pytest
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from simpful.fuzzy_sets import FuzzyTermTriangular
 
 #
 # def gen_fuzzy_sets_example():

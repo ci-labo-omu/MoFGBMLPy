@@ -9,6 +9,8 @@ class RuleBasic(AbstractRule):
         return RuleBasic(self.get_antecedent(), self.get_consequent())
 
     def get_fitness_value(self, attribute_vector):
+        cdef double membership
+        cdef double cf
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)
         cf = self.get_rule_weight().get_value()
         return membership * cf

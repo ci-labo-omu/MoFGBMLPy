@@ -8,8 +8,6 @@ if new_path not in sys.path:
     sys.path.append(new_path)
 
 from src.mofgbmlpy.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
-from src.mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from simpful.fuzzy_sets import TriangleFuzzySet
 from src.mofgbmlpy.data.output import Output
 
 def main():

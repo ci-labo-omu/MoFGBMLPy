@@ -4,5 +4,4 @@ matplotlib<3.9
 scikit-learn
 pymoo
 pytest
-simpful
 Cython

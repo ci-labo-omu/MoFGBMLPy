@@ -1,6 +1,4 @@
 from mofgbmlpy.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
-from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from simpful.fuzzy_sets import TriangleFuzzySet
 
 
 def test_main():

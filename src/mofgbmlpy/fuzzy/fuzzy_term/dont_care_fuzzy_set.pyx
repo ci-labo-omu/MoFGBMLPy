@@ -1,15 +1,7 @@
-from simpful.fuzzy_sets import FuzzySet
-from simpful.fuzzy_sets import MF_object
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.dont_care_mf import DontCareMF
 
-
-class DontCareFuzzySet(FuzzySet):
-    class DontCareMF(MF_object):
-        def _execute(self, _):
-            return 1.0
-
-        def __repr__(self):
-            return "<Dont Care MF>"
-
+cdef class DontCareFuzzySet(FuzzySet):
     def __init__(self):
-        dont_care_mf = DontCareFuzzySet.DontCareMF()
+        dont_care_mf = DontCareMF()
         super().__init__(function=dont_care_mf, term="DC")

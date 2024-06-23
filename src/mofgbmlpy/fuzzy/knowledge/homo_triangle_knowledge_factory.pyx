@@ -1,11 +1,11 @@
 import numpy as np
 
 from mofgbmlpy.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
-from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
+from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from simpful import TriangleFuzzySet
 cimport numpy as cnp
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
+from mofgbmlpy.fuzzy.fuzzy_term.triangular_fuzzy_set import TriangularFuzzySet
 
 cdef class HomoTriangleKnowledgeFactory:
     @staticmethod
@@ -51,7 +51,7 @@ cdef class HomoTriangleKnowledgeFactory:
             for j in range(len(num_divisions[dim_i])):
                 params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(num_divisions[dim_i][j])
                 for div_i in range(num_divisions[dim_i][j]):
-                    new_fuzzy_set = TriangleFuzzySet(a=params[div_i][0], b=params[div_i][1], c=params[div_i][2], term=fuzzy_set_names[dim_i][j][div_i])
+                    new_fuzzy_set = TriangularFuzzySet(left=params[div_i][0], center=params[div_i][1], right=params[div_i][2], term=fuzzy_set_names[dim_i][j][div_i])
                     current_set.append(new_fuzzy_set)
 
                     if div_i == 0 or num_divisions[dim_i][j] <= 1: # DC or one division
@@ -61,7 +61,7 @@ cdef class HomoTriangleKnowledgeFactory:
                     else:
                         current_support_values.append(2 / (num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets[dim_i] = LinguisticVariableMoFGBML(current_set, var_names[dim_i], current_support_values)
+            fuzzy_sets[dim_i] = LinguisticVariable(current_set, var_names[dim_i], current_support_values)
 
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge

@@ -2,7 +2,6 @@ import math
 
 from matplotlib import pyplot as plt
 cimport numpy as cnp
-from simpful import LinguisticVariable
 
 cdef class Knowledge:
     cdef public object __fuzzy_sets

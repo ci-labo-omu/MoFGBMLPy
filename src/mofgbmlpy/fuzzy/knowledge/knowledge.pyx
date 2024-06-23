@@ -2,8 +2,7 @@ import math
 
 from matplotlib import pyplot as plt
 cimport numpy as cnp
-# from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable_mofgbml import LinguisticVariableMoFGBML
-from simpful import LinguisticVariable
+from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
 
 cdef class Knowledge:
     # cdef public object __fuzzy_sets
