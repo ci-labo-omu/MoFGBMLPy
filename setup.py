@@ -32,8 +32,7 @@ for root, dirs, files in os.walk('src'):
             name = ".".join(path_without_extension.split(os.sep)[1:])
             cython_files.append(Extension(name,
                                           [path],
-                                          extra_compile_args=[openmp_arg],
-                                          define_macros=[("CYTHON_TRACE", "1")]))
+                                          extra_compile_args=[openmp_arg]))
 
 
 # print(cython_files)
@@ -41,7 +40,7 @@ for root, dirs, files in os.walk('src'):
 setup(
     ext_modules=cythonize(
         cython_files,
-        compiler_directives={"language_level": "3", "profile": True, "binding": True, "linetrace": True}
+        compiler_directives={"language_level": "3", "profile": True},
     ),
     name="mofgbml-python",
     version="1.0.0",

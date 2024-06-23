@@ -47,7 +47,9 @@ cdef class Antecedent:
     cpdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
         cdef int i
         cdef int size = self.get_array_size()
-        cdef float grade_value = 1
+        cdef double grade_value = 1
+        cdef double val
+        cdef int[:] antecedent_indices
 
         if size != attribute_vector.size:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")

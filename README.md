@@ -9,4 +9,19 @@
 
 `python setup.py build_ext --inplace`
 
-Note pymoo is not yet compatible with numpy 2.0.0, so we use the previous version instead
+### Note
+- pymoo is not yet compatible with numpy 2.0.0, so we use the previous version instead
+- Profiler for Cython only works for Python<3.12
+
+
+### Profiling
+
+#### Automatically
+
+Run `python profiler.py`
+
+#### Manually
+
+1. Generate a pstats profiler resutls file
+2. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
+3. `dot Profile.dot -Tpng -o Profile.png`

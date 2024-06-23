@@ -165,3 +165,5 @@ prof
 results
 src/**/*.pyd
 src/**/*.c
+**/*.pstat
+profiler_results
