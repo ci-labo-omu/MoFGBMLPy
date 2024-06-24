@@ -70,33 +70,40 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
     def create(self, num_rules=None):
         indices = self.create_antecedent_indices(num_rules)
-
         antecedent_objects = np.array([Antecedent(self.select_antecedent_part((indices[i])), self.__knowledge) for i in range(num_rules)], dtype=object)
 
-        if num_rules == 1:
-            antecedent_objects = antecedent_objects[0]
         return antecedent_objects
 
     def create_antecedent_indices_from_pattern(self, pattern=None):
         if pattern is None:
             raise Exception("Pattern cannot be None")
-        return self.calculate_antecedent_part(pattern)
+        return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 
     def create_antecedent_indices(self, num_rules=None):
         data_size = self.__training_set.get_size()
         if num_rules is None:
             pattern_index = random.randint(0, data_size - 1)
-            return self.select_antecedent_part(pattern_index)
+            return np.array([self.select_antecedent_part(pattern_index)], dtype=int)
 
         if num_rules <= self.__training_set.get_size():
-            return np.random.choice(list(range(self.__training_set.get_size())), num_rules, replace=False)
+            pattern_indices = np.random.choice(list(range(self.__training_set.get_size())), num_rules, replace=False)
+            # print(result.shape, result)
+            if len(pattern_indices.shape) == 1:
+                pattern_indices = np.array([pattern_indices], dtype=int)
+
         else:
-            indices = [i for i in range(data_size)] * (num_rules // data_size)
+            # TODO: this function seems invalid (indices is maybe an array of copies and the concatenation is maybe between incompatible types (int and array)
+            pattern_indices = [i for i in range(data_size)] * (num_rules // data_size)
 
             num_remaining_indices = num_rules % data_size
             remaining_indices = np.random.choice(list(range(self.__training_set.get_size())), num_remaining_indices,
                                                  replace=False)
-            return np.concatenate((indices, remaining_indices))
+            pattern_indices = np.concatenate((pattern_indices, remaining_indices))
+
+        new_antecedent_indices = np.empty((num_rules, self.__dimension), dtype=int)
+        for i in range(num_rules):
+            new_antecedent_indices[i] = self.select_antecedent_part(pattern_indices[i])
+        return new_antecedent_indices
 
     def __str__(self):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__dimension) + "]"

@@ -2,6 +2,7 @@ import numpy as np
 from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
 
+from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
@@ -10,6 +11,7 @@ from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection impo
 from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
+from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 import sys
 import os
@@ -66,14 +68,14 @@ class MoFGBMLBasicMain:
         num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
-        rule_builder = RuleBasic.RuleBuilderBasic(HeuristicAntecedentFactory(train,
+        rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
                                                                              knowledge,
                                                                              args.get("IS_DONT_CARE_PROBABILITY"),
                                                                              args.get("DONT_CARE_RT"),
                                                                              args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
                                                   LearningBasic(train),
                                                   knowledge)
-        michigan_solution_builder = MichiganSolution.MichiganSolutionBuilder(bounds_michigan,
+        michigan_solution_builder = MichiganSolutionBuilder(bounds_michigan,
                                                                              num_objectives_michigan,
                                                                              num_constraints_michigan,
                                                                              rule_builder)

@@ -1,15 +1,17 @@
+from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classifier.classification.abstract_classification import AbstractClassification
+from mofgbmlpy.gbml.solution.abstract_solution import AbstractSolution
+from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 
+cimport numpy as cnp
 
-class Classifier:
-    _classification = None
-
+cdef class Classifier:
     def __init__(self, classification):
         if classification is None or not isinstance(classification, AbstractClassification):
             raise Exception("Invalid classification method")
         self._classification = classification
 
-    def classify(self, michigan_solution_list, pattern):
+    cdef AbstractSolution classify(self, cnp.ndarray[object, ndim=1] michigan_solution_list, Pattern pattern):
         return self._classification.classify(michigan_solution_list, pattern)
 
     def __copy__(self):
@@ -22,7 +24,7 @@ class Classifier:
             length += item.get_rule_length()
         return length
 
-    def get_error_rate(self, michigan_solution_list, dataset):
+    cdef object get_error_rate(self, cnp.ndarray[object, ndim=1] michigan_solution_list, dataset):
         num_errors = 0
         errored_patterns = []
         for pattern in dataset.get_patterns():

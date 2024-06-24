@@ -44,7 +44,7 @@ cdef class Antecedent:
 
         return grade
 
-    cpdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
         cdef int i
         cdef int size = self.get_array_size()
         cdef double grade_value = 1

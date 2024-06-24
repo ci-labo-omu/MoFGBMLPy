@@ -1,11 +1,10 @@
-from abc import abstractmethod, ABC
+cimport numpy as cnp
+from mofgbmlpy.data.pattern cimport Pattern
 
 
-class AbstractClassification(ABC):
-    @abstractmethod
-    def classify(self, michigan_solution_list, pattern):
-        pass
+cdef class AbstractClassification:
+    cpdef classify(self, cnp.ndarray[object, ndim=1] michigan_solution_list, Pattern pattern):
+        raise Exception("AbstractClassification is abstract")
 
-    @abstractmethod
     def __copy__(self):
-        pass
+        raise Exception("AbstractClassification is abstract")

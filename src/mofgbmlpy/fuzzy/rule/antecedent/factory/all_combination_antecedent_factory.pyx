@@ -42,8 +42,6 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         for i in range(num_rules):
             antecedent_objects[i] = Antecedent(np.copy(self.__antecedents_indices[indices[i], :]), self.__knowledge)
 
-        if num_rules == 1:
-            antecedent_objects = antecedent_objects[0]
         return antecedent_objects
 
     def create_antecedent_indices(self, num_rules=1):

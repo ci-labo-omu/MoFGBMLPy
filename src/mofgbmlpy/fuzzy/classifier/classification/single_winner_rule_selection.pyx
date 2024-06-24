@@ -1,10 +1,12 @@
 import time
 
-from mofgbmlpy.fuzzy.classifier.classification.abstract_classification import AbstractClassification
+from mofgbmlpy.data.pattern cimport Pattern
+from mofgbmlpy.fuzzy.classifier.classification.abstract_classification cimport AbstractClassification
+from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+cimport numpy as cnp
 
-
-class SingleWinnerRuleSelection(AbstractClassification):
-    def classify(self, michigan_solution_list, pattern):
+cdef class SingleWinnerRuleSelection(AbstractClassification):
+    cpdef MichiganSolution classify(self, cnp.ndarray[object, ndim=1] michigan_solution_list, Pattern pattern):
         if len(michigan_solution_list) < 1:
             raise Exception("argument [michigan_solution_list] must contain at list 1 item")
 
