@@ -88,3 +88,6 @@ cdef class Antecedent:
 
     def __copy__(self):
         return Antecedent(self.__antecedent_indices, knowledge=self.__knowledge)
+
+    def __eq__(self, other):
+        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()

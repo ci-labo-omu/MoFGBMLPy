@@ -25,3 +25,5 @@ cdef class ClassLabelBasic(AbstractClassLabel):
 
     cpdef void set_class_label_value(self, object class_label):
         self.__class_label = class_label
+
+

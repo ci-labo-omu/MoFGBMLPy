@@ -46,9 +46,10 @@ cdef class Knowledge:
         return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
 
     cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
-        if self.__fuzzy_sets is None or self.__fuzzy_sets.size == 0:
+        cdef cnp.ndarray[object, ndim=1] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None or fuzzy_sets.size == 0:
             return -1
-        return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
+        return fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
 
     cpdef int  get_num_dim(self):
         if self.__fuzzy_sets is None:

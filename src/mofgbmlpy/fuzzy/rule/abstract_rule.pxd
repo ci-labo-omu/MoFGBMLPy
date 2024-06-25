@@ -28,4 +28,4 @@ cdef class AbstractRule:
     cdef set_rule_weight_value(self, object rule_weight_value)
     cdef set_class_label_value(self, object class_label_value)
     cpdef int get_rule_length(self)
-    cdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector)
+    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector)

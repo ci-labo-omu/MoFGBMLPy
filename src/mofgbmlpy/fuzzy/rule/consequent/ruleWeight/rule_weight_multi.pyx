@@ -1,3 +1,5 @@
+import numpy as np
+
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 cimport numpy as cnp
 
@@ -33,3 +35,6 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
 
     cpdef void set_value(self, object rule_weight):
         self.__rule_weight = rule_weight
+
+    def __eq__(self, other):
+        return np.array_equal(self.__rule_weight, other.get_value())

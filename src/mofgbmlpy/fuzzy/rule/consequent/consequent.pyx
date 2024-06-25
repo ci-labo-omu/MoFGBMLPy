@@ -40,3 +40,6 @@ cdef class Consequent:
 
     def __str__(self):
         return f"class:[{self._class_label}]: weight:[{self._rule_weight}]"
+
+    def __eq__(self, other):
+        return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()

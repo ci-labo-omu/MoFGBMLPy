@@ -11,8 +11,9 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         cdef double max
         cdef MichiganSolution winner
         cdef double value
+        cdef MichiganSolution solution
 
-        if len(michigan_solution_list) < 1:
+        if michigan_solution_list.size < 1:
             raise Exception("argument [michigan_solution_list] must contain at least 1 item")
 
         can_classify = False

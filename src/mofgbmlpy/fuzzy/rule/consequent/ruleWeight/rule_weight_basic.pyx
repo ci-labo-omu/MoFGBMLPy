@@ -19,3 +19,6 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
 
     cpdef void set_value(self, object rule_weight):
         self.__rule_weight = rule_weight
+
+    def __eq__(self, other):
+        return self.__rule_weight == other.get_value()

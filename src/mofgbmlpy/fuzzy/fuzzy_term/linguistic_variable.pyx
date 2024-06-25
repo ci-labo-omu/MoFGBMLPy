@@ -17,15 +17,11 @@ cdef class LinguisticVariable:
         self.__concept = str(name)
         self.__domain = [0, 1]
 
-    cpdef void add_fuzzy_set(self, FuzzySet fuzzy_set, double support_value):
-        self.__fuzzy_sets.append(fuzzy_set)
-        self.__support_values.append(support_value)
-
     cpdef str get_concept(self):
         return self.__concept
 
     cpdef double get_membership_value(self, int fuzzy_set_index, double x):
-        if fuzzy_set_index > len(self.__fuzzy_sets):
+        if fuzzy_set_index > self.__fuzzy_sets.size:
             # with cython.gil:
             raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         return self.__fuzzy_sets[fuzzy_set_index].get_membership_value(x)

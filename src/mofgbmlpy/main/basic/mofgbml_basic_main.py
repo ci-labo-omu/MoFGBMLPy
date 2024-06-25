@@ -28,6 +28,8 @@ from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriang
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from mofgbmlpy.gbml.BasicDuplicateElimination import BasicDuplicateElimination
+from pyrecorder.recorder import Recorder
+from pyrecorder.writers.video import Video
 
 
 class MoFGBMLBasicMain:
@@ -69,26 +71,26 @@ class MoFGBMLBasicMain:
         num_constraints_pittsburgh = 0
 
         rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
-                                                                             knowledge,
-                                                                             args.get("IS_DONT_CARE_PROBABILITY"),
-                                                                             args.get("DONT_CARE_RT"),
-                                                                             args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
-                                                  LearningBasic(train),
-                                                  knowledge)
+                                                                   knowledge,
+                                                                   args.get("IS_DONT_CARE_PROBABILITY"),
+                                                                   args.get("DONT_CARE_RT"),
+                                                                   args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+                                        LearningBasic(train),
+                                        knowledge)
         michigan_solution_builder = MichiganSolutionBuilder(bounds_michigan,
-                                                                             num_objectives_michigan,
-                                                                             num_constraints_michigan,
-                                                                             rule_builder)
+                                                            num_objectives_michigan,
+                                                            num_constraints_michigan,
+                                                            rule_builder)
 
         classification = SingleWinnerRuleSelection()
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,
-                                                num_objectives_pittsburgh,
-                                                num_constraints_pittsburgh,
-                                                train,
-                                                michigan_solution_builder,
-                                                classifier)
+                                    num_objectives_pittsburgh,
+                                    num_constraints_pittsburgh,
+                                    train,
+                                    michigan_solution_builder,
+                                    classifier)
 
         crossover_probability = 1
 
@@ -101,15 +103,16 @@ class MoFGBMLBasicMain:
                           #                               args.get("MAX_NUM_RULES")),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=BasicDuplicateElimination(),
-                          archive=MultiObjectiveArchive(duplicate_elimination=BasicDuplicateElimination(), max_size=None, truncate_size=None))
-
+                          archive=MultiObjectiveArchive(duplicate_elimination=BasicDuplicateElimination(),
+                                                        max_size=None, truncate_size=None))
 
         res = minimize(problem,
                        algorithm,
                        termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
                        # get_termination("n_eval", args.get("TERMINATE_EVALUATION"),
                        seed=1,
-                       verbose=True)
+                       verbose=True,
+                       save_history=True)
 
         plot = Scatter()
         plot.add(problem.pareto_front(), plot_type="line", color="black", alpha=0.7)
@@ -119,6 +122,17 @@ class MoFGBMLBasicMain:
         non_dominated_solutions = res.pop
         archive_population = res.archive
         exec_time = res.exec_time
+
+        with Recorder(Video("ga.mp4")) as rec:
+            # for each algorithm object in the history
+            for entry in res.history:
+                sc = Scatter(title=("Gen %s" % entry.n_gen))
+                sc.add(entry.pop.get("F"))
+                sc.do()
+
+                # finally record the current visualization to the video
+                rec.record()
+
 
         results_data = MoFGBMLBasicMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'results.csv')))

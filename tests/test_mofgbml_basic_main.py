@@ -8,7 +8,7 @@ def test_main():
         2,
         1,
         "../dataset/iris/a0_0_iris-10tra.dat",
-        "../dataset/iris/a0_0_iris-10tra.dat",
+        "../dataset/iris/a0_0_iris-10tst.dat",
     ]
 
     MoFGBMLBasicMain.main(args)

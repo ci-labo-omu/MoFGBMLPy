@@ -55,5 +55,8 @@ cdef class AbstractRule:
     cpdef int get_rule_length(self):
         return self.get_antecedent().get_length()
 
-    cdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
         Exception("AbstractRule is abstract")
+
+    def __eq__(self, other):
+        return self._antecedent == other.get_antecedent() and self._consequent == other.get_consequent()

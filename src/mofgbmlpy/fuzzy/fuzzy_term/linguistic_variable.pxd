@@ -9,7 +9,6 @@ cdef class LinguisticVariable:
     cdef str __concept
     cdef object __domain
 
-    cpdef void add_fuzzy_set(self, FuzzySet fuzzy_set, double support_value)
     cpdef str get_concept(self)
     cpdef double get_membership_value(self, int fuzzy_set_index, double x)
     cpdef int get_length(self)
