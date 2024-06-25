@@ -1,5 +1,5 @@
 import numpy as np
-
+import cython
 cimport numpy as cnp
 
 from mofgbmlpy.data.dataset cimport Dataset

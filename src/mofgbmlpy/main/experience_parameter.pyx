@@ -1,3 +1,4 @@
+import cython
 from enum import IntEnum
 
 
@@ -34,6 +35,7 @@ class ExperienceParameter:
     def set_class_label_type(self, new_value):
         int_value = int(new_value)
         if int_value < 0 or int_value > 1:
+            # with cython.gil:
             raise ValueError("Value must be between 0 and 1")
         self._class_label_type = new_value
 

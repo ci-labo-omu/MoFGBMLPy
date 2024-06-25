@@ -1,7 +1,7 @@
 from copy import deepcopy
 import numpy as np
 cimport numpy as cnp
-
+import cython
 
 cdef class Pattern:
     # cdef int __id
@@ -10,10 +10,13 @@ cdef class Pattern:
 
     def __init__(self, pattern_id, attribute_vector, target_class):
         if pattern_id < 0:
+            # with cython.gil:
             raise ValueError('id must be positive')
         elif attribute_vector is None:
+            # with cython.gil:
             raise ValueError('attribute_vector must not be None')
         elif target_class is None:
+            # with cython.gil:
             raise ValueError('target_class must not be None')
 
         self.__id = pattern_id

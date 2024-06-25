@@ -1,5 +1,5 @@
 import numpy as np
-
+import cython
 from mofgbmlpy.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge

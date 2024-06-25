@@ -1,3 +1,4 @@
+import cython
 from mofgbmlpy.main.arguments import Arguments
 from mofgbmlpy.data.output import Output
 import os
@@ -7,6 +8,7 @@ class MoFGBMLBasicArgs(Arguments):
 
     def load(self, args):
         if len(args) < 6:
+            # with cython.gil:
             raise Exception("Not enough arguments (6 were expected)")
 
         self.set("DATA_NAME", args[0])

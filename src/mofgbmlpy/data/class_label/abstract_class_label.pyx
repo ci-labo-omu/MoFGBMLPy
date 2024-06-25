@@ -1,14 +1,16 @@
 cimport numpy as cnp
-
+import cython
 
 cdef class AbstractClassLabel:
     def __init__(self):
         self.__is_rejected = False
 
     cpdef object get_class_label_value(self):
+        # with cython.gil:
         raise Exception("AbstractClassLabel is abstract")
 
     cpdef void set_class_label_value(self, object class_label):
+        # with cython.gil:
         raise Exception("AbstractClassLabel is abstract")
 
     cpdef cnp.npy_bool is_rejected(self):

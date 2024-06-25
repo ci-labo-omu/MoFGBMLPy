@@ -23,6 +23,7 @@ cdef class LearningBasic(AbstractLearning):
 
     cdef cnp.ndarray[double, ndim=1] calc_confidence(self, Antecedent antecedent):
         if antecedent is None:
+            # with cython.gil:
             raise ValueError('Antecedent cannot be None')
 
         cdef int num_classes = self._train_ds.get_num_classes()

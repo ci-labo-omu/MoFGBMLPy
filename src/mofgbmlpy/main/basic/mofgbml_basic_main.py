@@ -106,7 +106,7 @@ class MoFGBMLBasicMain:
 
         res = minimize(problem,
                        algorithm,
-                       termination=get_termination("n_eval", 500),
+                       termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
                        # get_termination("n_eval", args.get("TERMINATE_EVALUATION"),
                        seed=1,
                        verbose=True)

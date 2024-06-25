@@ -13,34 +13,44 @@ cdef class Knowledge:
 
     cpdef object get_fuzzy_set(self, int dim, int fuzzy_set_id):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+            # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets[dim].get_fuzzy_set(fuzzy_set_id)
 
     cpdef int get_num_fuzzy_sets(self, int dim):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+            # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets[dim].get_length()
 
     cpdef void set_fuzzy_sets(self, cnp.ndarray[object, ndim=1] fuzzy_sets):
         if self.__fuzzy_sets is not None and len(self.__fuzzy_sets) != 0:
+            # with cython.gil:
             raise Exception("You can't overwrite fuzzy sets. You must call clear before doing so")
 
         self.__fuzzy_sets = fuzzy_sets
 
     cpdef cnp.ndarray[object, ndim=1] get_fuzzy_sets(self):
         if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+            # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
         return self.__fuzzy_sets
 
-    cpdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
-        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+    cpdef double get_membership_value_py(self, double attribute_value, int dim, int fuzzy_set_id):
+        if self.__fuzzy_sets is None or self.__fuzzy_sets.size == 0:
+            # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
         return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
 
-    cpdef int get_num_dim(self):
+    cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
+        if self.__fuzzy_sets is None or self.__fuzzy_sets.size == 0:
+            return -1
+        return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
+
+    cpdef int  get_num_dim(self):
         if self.__fuzzy_sets is None:
             return 0
         return len(self.__fuzzy_sets)
@@ -102,7 +112,7 @@ cdef class Knowledge:
     #
     #     fig.show()
 
-    cpdef double get_support(self, int dim, int fuzzy_set_id):
+    cpdef double get_support(self, int  dim, int  fuzzy_set_id):
         return self.get_fuzzy_variable(dim).get_support(fuzzy_set_id)
 
     def __str__(self):

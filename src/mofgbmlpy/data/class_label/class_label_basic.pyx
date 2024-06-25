@@ -1,4 +1,5 @@
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+import cython
 
 
 cdef class ClassLabelBasic(AbstractClassLabel):

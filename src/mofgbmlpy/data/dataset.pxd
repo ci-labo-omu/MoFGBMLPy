@@ -1,5 +1,6 @@
 from mofgbmlpy.data.pattern cimport Pattern
 cimport numpy as cnp
+import cython
 
 
 cdef class Dataset:

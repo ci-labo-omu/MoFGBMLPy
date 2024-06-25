@@ -5,7 +5,7 @@ import numpy as np
 cimport numpy as cnp
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 import time
-
+import cython
 
 class PittsburghProblem(Problem):
     __num_vars = 0

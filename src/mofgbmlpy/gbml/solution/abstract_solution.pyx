@@ -64,7 +64,7 @@ cdef class AbstractSolution:
     def __eq__(self, other):
         if not isinstance(other, AbstractSolution):
             return False
-        return self.get_vars().__eq__(other.get_vars())
+        return np.array_equal(self.get_vars(), other.get_vars())
 
     def __hash__(self):
         return hash(self._vars)
@@ -79,4 +79,5 @@ cdef class AbstractSolution:
         self._vars = []
 
     cpdef double compute_coverage(self):
+        # with cython.gil:
         raise Exception("AbstractSolution is abstract")

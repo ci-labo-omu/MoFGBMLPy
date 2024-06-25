@@ -73,7 +73,8 @@
 #                 rules_parents = selection.do(parent.get_vars())
 #
 #             #TODO
-#             raise Exception("Not yet implemented")
+#             with cython.gil:
+#                 raise Exception("Not yet implemented")
 #
 #             # Y[0, i] = copy.copy(p1)
 #             # Y[0, i, 0].clear_vars()

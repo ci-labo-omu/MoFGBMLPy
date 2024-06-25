@@ -8,8 +8,10 @@ cdef class TriangularMF(AbstractMF):
         self.__right = right
 
         if left > center:
+            # with cython.gil:
             raise Exception(f"Error in triangular membership function: left={left:.2f} should be <= center={center:.2f}")
         elif center > right:
+            # with cython.gil:
             raise Exception(f"Error in triangular membership function: center={center:.2f} should be <= right={right:.2f}")
 
     cpdef double get_value(self, double x):

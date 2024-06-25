@@ -1,5 +1,6 @@
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 cimport numpy as cnp
+import cython
 
 
 cdef class RuleWeightMulti(AbstractRuleWeight):

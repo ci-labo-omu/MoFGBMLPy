@@ -1,6 +1,7 @@
 import numpy as np
 cimport numpy as cnp
 from mofgbmlpy.data.pattern cimport Pattern
+import cython
 
 cdef class Dataset:
     # cdef int __size
@@ -10,6 +11,7 @@ cdef class Dataset:
 
     def __init__(self, size, n_dim, c_num, patterns):
         if size <= 0 or n_dim <= 0 or c_num <= 0:
+            # with cython.gil:
             raise ValueError("Incorrect input data set information")
         self.__size = size
         self.__num_dim = n_dim

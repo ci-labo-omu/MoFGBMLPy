@@ -36,6 +36,7 @@ class PittsburghCrossover(Crossover):
                 elif num_rules_from_p2 == 0 and num_rules_from_p1 > 0:
                     num_rules_from_p1 -= 1
                 else:
+                    # with cython.gil:
                     raise Exception("No more rules can be deleted.")
         elif sum_num_rules < self.__min_num_rules:
             # Add missing rules
@@ -53,6 +54,7 @@ class PittsburghCrossover(Crossover):
                 elif num_rules_from_p2 == max_per_parent and num_rules_from_p1 > max_per_parent:
                     num_rules_from_p1 += 1
                 else:
+                    # with cython.gil:
                     raise Exception("No more rules can be added")
         return num_rules_from_p1, num_rules_from_p2
 

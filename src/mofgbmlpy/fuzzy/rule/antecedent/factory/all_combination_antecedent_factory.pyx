@@ -48,6 +48,7 @@ class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         num_rules = min(num_rules, len(self.__antecedents_indices))
         # Return an antecedent
         if self.__antecedents_indices is None:
+            # with cython.gil:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
         return np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
 

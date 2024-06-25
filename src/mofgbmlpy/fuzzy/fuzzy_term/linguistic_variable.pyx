@@ -9,6 +9,7 @@ cdef class LinguisticVariable:
             fuzzy_sets = []
             support_values = []
         elif support_values is None:
+            # with cython.gil:
             raise TypeError('Support value cannot be None if fuzzy_sets is not None and not empty')
 
         self.__support_values = support_values
@@ -25,6 +26,7 @@ cdef class LinguisticVariable:
 
     cpdef double get_membership_value(self, int fuzzy_set_index, double x):
         if fuzzy_set_index > len(self.__fuzzy_sets):
+            # with cython.gil:
             raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         return self.__fuzzy_sets[fuzzy_set_index].get_membership_value(x)
 

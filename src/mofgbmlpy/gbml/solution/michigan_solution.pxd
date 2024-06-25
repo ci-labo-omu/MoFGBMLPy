@@ -1,7 +1,7 @@
 import copy
 
 import numpy as np
-
+import cython
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore

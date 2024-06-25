@@ -2,12 +2,15 @@ from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classifier.classification.abstract_classification import AbstractClassification
 from mofgbmlpy.gbml.solution.abstract_solution import AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
+import cython
+
 
 cimport numpy as cnp
 
 cdef class Classifier:
     def __init__(self, classification):
         if classification is None or not isinstance(classification, AbstractClassification):
+            # with cython.gil:
             raise Exception("Invalid classification method")
         self._classification = classification
 

@@ -7,6 +7,8 @@ from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
+import cython
+
 
 cdef class AbstractRule:
     cdef Antecedent _antecedent

@@ -10,7 +10,7 @@ class Arguments(ABC):
         # Experimental Settings
         self.__values["POPULATION_SIZE"] = 60
         self.__values["OFFSPRING_POPULATION_SIZE"] = 60
-        self.__values["TERMINATE_GENERATION"] = 5000
+        self.__values["TERMINATE_GENERATION"] = 500
         self.__values["TERMINATE_EVALUATION"] = 300000
         self.__values["OUTPUT_FREQUENCY"] = 6000
 

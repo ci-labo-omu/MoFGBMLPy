@@ -3,6 +3,7 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 import numpy as np
 import random
+import cython
 
 
 class HeuristicAntecedentFactory(AbstractAntecedentFactory):
@@ -56,7 +57,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             mb_values_inc_sums = np.zeros(num_fuzzy_sets_not_dc, dtype=np.float64)
             sum_mb_values = 0
             for h in range(num_fuzzy_sets_not_dc):
-                sum_mb_values += self.__knowledge.get_membership_value(attribute_array[dim_i], dim_i, h+1)
+                sum_mb_values += self.__knowledge.get_membership_value_py(attribute_array[dim_i], dim_i, h+1)
                 mb_values_inc_sums[h] = sum_mb_values
 
             arrow = random.random() * sum_mb_values
@@ -76,6 +77,7 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
     def create_antecedent_indices_from_pattern(self, pattern=None):
         if pattern is None:
+            # with cython.gil:
             raise Exception("Pattern cannot be None")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 

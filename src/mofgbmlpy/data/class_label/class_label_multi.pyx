@@ -1,5 +1,6 @@
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 cimport numpy as cnp
+import cython
 
 
 cdef class ClassLabelMulti(AbstractClassLabel):
@@ -28,6 +29,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
 
     def __str__(self):
         if self.get_class_label_value() is None:
+            # with cython.gil:
             raise Exception("class label value is None")
         cdef cnp.ndarray[int, ndim=1] label_value = self.get_class_label_value()
         txt = f"{self.label_value[0]:2d}"

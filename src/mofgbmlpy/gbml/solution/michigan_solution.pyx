@@ -35,6 +35,7 @@ cdef class MichiganSolution(AbstractSolution):
             self.create_rule(pattern=pattern, michigan_solution=None)
             is_rejected = self._rule.is_rejected_class_label()
             if cnt > 1000:
+                # with cython.gil:
                 raise Exception("Exceeded maximum number of trials to generate rule")
 
 
@@ -56,12 +57,14 @@ cdef class MichiganSolution(AbstractSolution):
             antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern, num_rules=1)[0]
             self.set_vars(antecedent_indices)
         else:
+            # with cython.gil:
             raise Exception("Not yet implemented")
             # self.set_vars(self._rule_builder.create_antecedent_indices(michigan_solution))  # TODO: Not yet implemented
         self.learning()
 
     cpdef void learning(self):
         if self._vars is None:
+            # with cython.gil:
             raise Exception("Vars is not defined")
 
         if self._rule is None or self._rule.get_antecedent() is None:

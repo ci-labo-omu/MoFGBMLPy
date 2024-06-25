@@ -1,7 +1,7 @@
 import numpy as np
 cimport numpy as cnp
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
-
+import cython
 
 cdef class LinguisticVariable:
     cdef object __support_values

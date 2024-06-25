@@ -1,5 +1,5 @@
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
-
+import cython
 
 cdef class TriangularMF(AbstractMF):
     cdef double __left

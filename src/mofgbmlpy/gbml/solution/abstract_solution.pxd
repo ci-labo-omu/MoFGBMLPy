@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 cimport numpy as cnp
+import cython
 
 
 cdef class AbstractSolution:
@@ -14,7 +15,7 @@ cdef class AbstractSolution:
     cpdef cnp.ndarray[double, ndim=1] get_constraints(self)
     cpdef void set_attribute(self, int id, object value)
     cpdef object get_attribute(self, int id)
-    cpdef cnp.npy_bool has_attribute(self, int id)
+    cpdef cnp.npy_bool has_attribute(self, int  id)
     cpdef void set_objective(self, int index, double value)
     cpdef double get_objective(self, int index)
     cpdef object get_var(self, int index)
