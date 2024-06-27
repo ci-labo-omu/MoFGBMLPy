@@ -167,3 +167,4 @@ src/**/*.pyd
 src/**/*.c
 **/*.pstat
 profiler_results
+**/*.mp4
