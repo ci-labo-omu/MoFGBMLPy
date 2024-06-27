@@ -92,8 +92,8 @@ class PittsburghProblem(Problem):
             k = 0
             r = num_vars
             for j in range(num_vars):
-                if r == 1:
-                    break # Only one solution # TODO: check if this is valid (not in the Java version but issue with AllCombinationsFactory
+                # if r == 1:
+                #     break # Only one solution
                 # print(j, num_vars, sol.get_var(k).get_num_wins())
                 if sol.get_var(k).get_num_wins() < 1:
                     sol.remove_var(k)
