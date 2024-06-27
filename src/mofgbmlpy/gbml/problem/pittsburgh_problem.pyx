@@ -29,13 +29,15 @@ class PittsburghProblem(Problem):
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classifier = classifier
+        self.__num_objectives = num_objectives
+        self.____num_constraints = num_constraints
 
     def create_solution(self):
         pittsburgh_solution = PittsburghSolution(self.__num_vars,
                                                  self.__num_objectives,
                                                  self.__num_constraints,
-                                                 copy.copy(self.__michigan_solution_builder),
-                                                 copy.copy(self.__classifier))
+                                                 copy.deepcopy(self.__michigan_solution_builder),
+                                                 copy.deepcopy(self.__classifier))
 
         return pittsburgh_solution
 
@@ -68,40 +70,18 @@ class PittsburghProblem(Problem):
         cdef int i
 
         for i in range(len(X)):
+            # training error rate
             eval_values[i][0] = X[i, 0].get_error_rate(self.__training_ds)
-            eval_values[i][1] = X[i, 0].get_num_vars()  # num rules
+            X[i, 0].set_objective(0, eval_values[i][0])
+
+            # num rules
+            eval_values[i][1] = X[i, 0].get_num_vars()
+            X[i, 0].set_objective(1, eval_values[i][1])
 
         out["F"] = eval_values
 
-    @staticmethod
-    def remove_no_winner_michigan_solution(individuals):
-        # new_pop = []
 
-        for i in range(len(individuals)):
-            sol = individuals[i].X[0]
-            num_vars = sol.get_num_vars()
-
-            k = 0
-            for j in range(num_vars):
-                if sol.get_var(k).get_num_wins() < 1:
-                    sol.remove_var(k)
-                else:
-                    k += 1
-
-            if sol.get_num_vars() == 0:
-                raise Exception("No michigan solution is remaining")
-
-            # if sol.get_num_vars() != 0:
-            #     new_pop.append(individuals[i])
-        #
-        # print(len(new_pop))
-        # for x in new_pop:
-        #     print("\t", x.X[0].get_num_vars())
-
-        # return Population(new_pop)
-        return individuals
-
-    def remove_no_winner_michigan_solution2(self, solutions):
+    def remove_no_winner_michigan_solution(self, solutions):
         for i in range(len(solutions)):
             sol = solutions[i][0]
             num_vars = sol.get_num_vars()

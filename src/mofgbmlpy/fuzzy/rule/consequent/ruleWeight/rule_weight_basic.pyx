@@ -5,8 +5,10 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
     def __init__(self, double rule_weight):
         self.__rule_weight = rule_weight
 
-    def __copy__(self):
-        return RuleWeightBasic(self.get_value())
+    def __deepcopy__(self, memo={}):
+        new_object = RuleWeightBasic(self.get_value())
+        memo[id(self)] = new_object
+        return new_object
 
     def __str__(self):
         if self.get_value() is None:

@@ -95,5 +95,8 @@ cdef class LearningBasic(AbstractLearning):
     def __str__(self):
         return f"MoFGBML_Learning [defaultLimit={AbstractLearning._default_reject_threshold}]"
 
-    def __copy__(self):
-        return LearningBasic(self._train_ds)
+    def __deepcopy__(self, memo={}):
+        new_object = LearningBasic(self._train_ds)
+
+        memo[id(self)] = new_object
+        return new_object

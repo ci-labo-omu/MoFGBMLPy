@@ -41,7 +41,7 @@ class PittsburghMutation(Mutation):
                 if new_fuzzy_set_id >= current_fuzzy_set_id:
                     new_fuzzy_set_id += 1
 
-                new_michigan_solution = copy.copy(current_michigan_solution)
+                new_michigan_solution = copy.deepcopy(current_michigan_solution)
                 new_michigan_solution.set_var(mutated_dim, new_fuzzy_set_id)
                 new_michigan_solution.learning()
 

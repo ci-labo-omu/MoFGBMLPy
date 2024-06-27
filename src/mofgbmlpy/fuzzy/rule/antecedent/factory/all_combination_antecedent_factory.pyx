@@ -92,5 +92,8 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
             self.__dimension) + "]"
 
-    def __copy__(self):
-        return AllCombinationAntecedentFactory(self.__knowledge)
+    def __deepcopy__(self, memo={}):
+        new_object = AllCombinationAntecedentFactory(self.__knowledge)
+
+        memo[id(self)] = new_object
+        return new_object

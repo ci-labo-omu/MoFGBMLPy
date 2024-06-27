@@ -5,14 +5,14 @@ import cython
 
 
 cdef class AbstractSolution:
-    cdef object __objectives
+    cdef double[:] _objectives
     cdef object _vars
     cdef object __constraints
     cdef object _attributes
 
-    cpdef cnp.ndarray[double, ndim=1] get_objectives(self)
+    cpdef double[:] get_objectives(self)
     cpdef object get_vars(self)
-    cpdef cnp.ndarray[double, ndim=1] get_constraints(self)
+    cpdef double[:] get_constraints(self)
     cpdef void set_attribute(self, int id, object value)
     cpdef object get_attribute(self, int id)
     cpdef cnp.npy_bool has_attribute(self, int  id)

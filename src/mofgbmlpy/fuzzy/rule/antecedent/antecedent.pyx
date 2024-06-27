@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 cimport cython
@@ -86,11 +88,22 @@ cdef class Antecedent:
     cpdef int get_length(self):
         return np.count_nonzero(self.__antecedent_indices)
 
-    def __copy__(self):
-        return Antecedent(self.__antecedent_indices, knowledge=self.__knowledge)
+    def __deepcopy__(self, memo={}):
+        cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
+        cdef int i
+
+        for i in range(antecedent_indices_copy.size):
+            antecedent_indices_copy[i] = self.__antecedent_indices[i]
+
+        new_antecedent =  Antecedent(antecedent_indices_copy, knowledge=self.__knowledge)
+        memo[id(self)] = new_antecedent
+        return new_antecedent
 
     def __eq__(self, other):
         return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
 
-    def __str__(self):
-        return f"{self.__antecedent_indices}"
+    def __repr__(self):
+        txt = "["
+        for i in range(self.__antecedent_indices.size):
+            txt += f"{self.__antecedent_indices[i]} "
+        return txt + "]"

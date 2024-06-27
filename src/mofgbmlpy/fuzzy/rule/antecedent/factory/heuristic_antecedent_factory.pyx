@@ -110,5 +110,8 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     def __str__(self):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__dimension) + "]"
 
-    def __copy__(self):
-        return HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_num_not_dont_care)
+    def __deepcopy__(self, memo={}):
+        new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_num_not_dont_care)
+
+        memo[id(self)] = new_object
+        return new_object

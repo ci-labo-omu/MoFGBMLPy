@@ -3,7 +3,7 @@ from mofgbmlpy.fuzzy.classifier.classification.abstract_classification import Ab
 from mofgbmlpy.gbml.solution.abstract_solution import AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 import cython
-
+import numpy as np
 
 cimport numpy as cnp
 
@@ -50,7 +50,7 @@ cdef class Classifier:
                 errored_patterns.append(pattern)
             else:
                 winner_solution.inc_fitness()
-        return num_errors / dataset.get_size(), errored_patterns
+        return num_errors / dataset.get_size(), np.array(errored_patterns, dtype=object)
 
     @staticmethod
     def get_rule_num(michigan_solution_list):

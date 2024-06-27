@@ -27,6 +27,16 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
 
         return solutions
 
-    def __copy__(self):
-        return MichiganSolutionBuilder(self._bounds, self._num_objectives, self._num_constraints,
-                                                        copy.copy(self._rule_builder))
+    def __deepcopy__(self, memo={}):
+        cdef double[:,:] bounds_copy = np.empty(self._bounds.shape)
+        cdef int i
+        for i in range(bounds_copy.shape[0]):
+            bounds_copy[i][0] = self._bounds[i][0]
+            bounds_copy[i][1] = self._bounds[i][1]
+
+        new_object = MichiganSolutionBuilder(bounds_copy, self._num_objectives, self._num_constraints,
+                                                        copy.deepcopy(self._rule_builder))
+
+        memo[id(self)] = new_object
+
+        return new_object

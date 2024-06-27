@@ -1,3 +1,5 @@
+import copy
+
 from mofgbmlpy.fuzzy.rule.rule_builder_core import RuleBuilderCore
 from mofgbmlpy.fuzzy.rule.abstract_rule cimport AbstractRule
 cimport numpy as cnp
@@ -7,8 +9,10 @@ cdef class RuleBasic(AbstractRule):
     def __init__(self, antecedent, consequent):
         super().__init__(antecedent, consequent)
 
-    def __copy__(self):
-        return RuleBasic(self.get_antecedent(), self.get_consequent())
+    def __deepcopy__(self, memo={}):
+        new_rule =  RuleBasic(copy.deepcopy(self.get_antecedent()), copy.deepcopy(self.get_consequent()))
+        memo[id(self)] = new_rule
+        return new_rule
 
     cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
         cdef double membership

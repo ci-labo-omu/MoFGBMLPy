@@ -7,16 +7,16 @@ cdef class AbstractSolution:
     def __init__(self, num_vars, num_objectives, num_constraints=0):
         self._attributes = {}
         self._vars = []
-        self.__objectives = np.zeros(num_objectives, dtype=np.float64)
-        self.__constraints = np.zeros(num_constraints, dtype=np.float64)
+        self._objectives = np.empty(num_objectives, dtype=np.float64)
+        self.__constraints = np.empty(num_constraints, dtype=np.float64)
 
-    cpdef cnp.ndarray[double, ndim=1] get_objectives(self):
-        return self.__objectives
+    cpdef double[:] get_objectives(self):
+        return self._objectives
 
     cpdef object get_vars(self):
         return self._vars
 
-    cpdef cnp.ndarray[double, ndim=1] get_constraints(self):
+    cpdef double[:] get_constraints(self):
         return self.__constraints
 
     cpdef void set_attribute(self, int id, object value):
@@ -29,10 +29,10 @@ cdef class AbstractSolution:
         return id in self._attributes
 
     cpdef void set_objective(self, int index, double value):
-        self.__objectives[index] = value
+        self._objectives[index] = value
 
     cpdef double get_objective(self, int index):
-        return self.__objectives[index]
+        return self._objectives[index]
 
     cpdef object get_var(self, int index):
         return self._vars[index]
@@ -50,16 +50,30 @@ cdef class AbstractSolution:
         self.__constraints[index] = value
 
     cpdef int get_num_vars(self):
-        return len(self._vars)
+        return self._vars.size
 
     cpdef int get_num_objectives(self):
-        return len(self.__objectives)
+        return self._objectives.size
 
     cpdef int get_num_constraints(self):
-        return len(self.__constraints)
+        return self.__constraints.size
 
-    def __str__(self):
-        return f"Variables: {self._vars} Objectives {self.__objectives} Constraints {self.__constraints}\tAlgorithm Attributes: {self._attributes}"
+    def __repr__(self):
+        txt = "Variables: ["
+        for i in range(self.get_num_vars()):
+            txt += f"{self._vars[i]} "
+
+        txt += "] Objectives "
+        for i in range(self.get_num_objectives()):
+            txt += f"{self._objectives[i]} "
+
+        txt += "] Constraints "
+        for i in range(self.get_num_objectives()):
+            txt += f"{self._objectives[i]} "
+
+        txt += f"] Algorithm Attributes: {self._attributes}"
+
+        return txt
 
     def __eq__(self, other):
         if not isinstance(other, AbstractSolution):

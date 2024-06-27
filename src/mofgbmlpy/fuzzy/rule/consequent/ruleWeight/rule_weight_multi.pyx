@@ -11,6 +11,18 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
     def __copy__(self):
         return RuleWeightMulti(self.get_value())
 
+    def __deepcopy__(self, memo={}):
+        cdef double[:] values_copy = np.empty(self.get_length())
+        cdef int i
+
+        for i in range(values_copy.size):
+            values_copy[i] = self.__rule_weight[i]
+
+        new_object = RuleWeightMulti(values_copy)
+
+        memo[id(self)] = new_object
+        return new_object
+
     def __str__(self):
         if self.get_value() is None:
             # with cython.gil:

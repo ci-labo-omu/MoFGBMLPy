@@ -35,8 +35,10 @@ cdef class Consequent:
     cpdef void set_rule_weight(self, object rule_weight):
         self._rule_weight = rule_weight
 
-    def __copy__(self):
-        return Consequent(copy.copy(self._class_label), copy.copy(self._rule_weight))
+    def __deepcopy__(self, memo={}):
+        new_consequent = Consequent(copy.deepcopy(self._class_label), copy.deepcopy(self._rule_weight))
+        memo[id(self)] = new_consequent
+        return new_consequent
 
     def __str__(self):
         return f"class:[{self._class_label}]: weight:[{self._rule_weight}]"

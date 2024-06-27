@@ -14,7 +14,7 @@ cimport numpy as cnp
 
 
 cdef class MichiganSolution(AbstractSolution):
-    def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, michigan_solution=None, pattern=None):
+    def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, pattern=None, do_init_vars=True):
         if bounds is None:
             bounds = MichiganSolution.make_bounds(knowledge=rule_builder.get_knowledge())
 
@@ -25,20 +25,16 @@ cdef class MichiganSolution(AbstractSolution):
 
         super().__init__(len(bounds), num_objectives, num_constraints)
 
-        if michigan_solution is not None:
-            self._rule = copy.copy(michigan_solution.get_rule())
-            self.set_vars(self._rule.get_antecedent().get_antecedent_indices())
-            return
-
-        cnt = 0
-        is_rejected = True
-        while is_rejected:
-            cnt += 1
-            self.create_rule(pattern=pattern, michigan_solution=None)
-            is_rejected = self._rule.is_rejected_class_label()
-            if cnt > 1000:
-                # with cython.gil:
-                raise Exception("Exceeded maximum number of trials to generate rule")
+        if do_init_vars:
+            cnt = 0
+            is_rejected = True
+            while is_rejected:
+                cnt += 1
+                self.create_rule(pattern=pattern)
+                is_rejected = self._rule.is_rejected_class_label()
+                if cnt > 1000:
+                    # with cython.gil:
+                    raise Exception("Exceeded maximum number of trials to generate rule")
 
 
     @staticmethod
@@ -53,15 +49,10 @@ cdef class MichiganSolution(AbstractSolution):
     cdef double get_upper_bound(self, int index):
         return self._bounds[index][1]
 
-    cdef void create_rule(self, MichiganSolution michigan_solution=None, Pattern pattern=None):
+    cdef void create_rule(self, Pattern pattern=None):
         cdef int[:] antecedent_indices
-        if michigan_solution is None:
-            antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern, num_rules=1)[0]
-            self.set_vars(antecedent_indices)
-        else:
-            # with cython.gil:
-            raise Exception("Not yet implemented")
-            # self.set_vars(self._rule_builder.create_antecedent_indices(michigan_solution))  # TODO: Not yet implemented
+        antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern, num_rules=1)[0]
+        self.set_vars(antecedent_indices)
         self.learning()
 
     cpdef void learning(self):
@@ -90,9 +81,6 @@ cdef class MichiganSolution(AbstractSolution):
     cdef AbstractRuleWeight get_rule_weight(self):
         return self._rule.get_rule_weight()
 
-    cdef object get_vars_array(self):
-        return np.copy(self._vars)
-
     cpdef AbstractRule get_rule(self):
         return self._rule
 
@@ -110,9 +98,6 @@ cdef class MichiganSolution(AbstractSolution):
 
     cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
-
-    def __copy__(self):
-        return MichiganSolution(self.get_num_objectives(), self.get_num_constraints(), copy.copy(self._rule_builder), michigan_solution=self)
 
     cpdef double compute_coverage(self):
         coverage = 1
@@ -142,3 +127,36 @@ cdef class MichiganSolution(AbstractSolution):
 
     def __repr__(self):
         return f"(MichiganSolution) {self._rule}"
+
+    def __deepcopy__(self, memo={}):
+        cdef double[:,:] bounds_copy = np.empty(self._bounds.shape)
+        cdef int i
+        for i in range(bounds_copy.shape[0]):
+            bounds_copy[i][0] = self._bounds[i][0]
+            bounds_copy[i][1] = self._bounds[i][1]
+
+        new_solution = MichiganSolution(self.get_num_objectives(),
+                                        self.get_num_constraints(),
+                                        copy.deepcopy(self._rule_builder),
+                                        bounds = bounds_copy,
+                                        do_init_vars=False)
+
+        cdef int[:] vars_copy = np.empty(self.get_num_vars(), dtype=int)
+        cdef double[:] objectives_copy = np.empty(self.get_num_objectives())
+
+
+        for i in range(vars_copy.size):
+            vars_copy[i] = self._vars[i]
+
+        for i in range(objectives_copy.size):
+            objectives_copy[i] = self._objectives[i]
+
+        new_solution._rule = copy.deepcopy(self._rule)
+        new_solution.__num_wins = self.__num_wins
+        new_solution.__fitness = self.__fitness
+        new_solution._vars = vars_copy
+        new_solution._objectives = objectives_copy
+
+        memo[id(self)] = new_solution
+
+        return new_solution

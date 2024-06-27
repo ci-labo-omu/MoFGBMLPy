@@ -74,17 +74,17 @@ class MoFGBMLBasicMain:
         num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
-        rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
-                                        LearningBasic(train),
-                                        knowledge)
-
-        # rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
-        #                                                            knowledge,
-        #                                                            args.get("IS_DONT_CARE_PROBABILITY"),
-        #                                                            args.get("DONT_CARE_RT"),
-        #                                                            args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+        # rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
         #                                 LearningBasic(train),
         #                                 knowledge)
+        #
+        rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
+                                                                   knowledge,
+                                                                   args.get("IS_DONT_CARE_PROBABILITY"),
+                                                                   args.get("DONT_CARE_RT"),
+                                                                   args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+                                        LearningBasic(train),
+                                        knowledge)
 
         michigan_solution_builder = MichiganSolutionBuilder(bounds_michigan,
                                                             num_objectives_michigan,
@@ -123,6 +123,12 @@ class MoFGBMLBasicMain:
                        seed=1,
                        # save_history=True,
                        verbose=True)
+
+        # print("\n\nEND\n\n")
+        # for i in range(len(res.X)):
+        #     print(res.X[i][0])
+        #     print(f"({res.F[i][0]}, {res.F[i][0]}) - ({res.X[i][0].get_num_vars()}, {res.F[i][1]})")
+
 
         non_dominated_solutions = res.X
         archive_population = np.empty((len(res.archive), res.X.shape[1]), dtype=object)

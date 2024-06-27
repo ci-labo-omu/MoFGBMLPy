@@ -87,7 +87,9 @@ class PittsburghCrossover(Crossover):
             p1 = X[0,i,0]
             p2 = X[1,i,0]
 
-            Y[0,i] = copy.copy(p1)
+            Y[0,i,0] = copy.deepcopy(p1)
+
+
             # Y[0,i,0].clear_vars()
             Y[0,i,0].clear_attributes()
 
@@ -98,10 +100,10 @@ class PittsburghCrossover(Crossover):
             new_vars = np.empty(num_rules_from_p1 + num_rules_from_p2, dtype=object)
             j = 0
             for rule_idx in rules_idx_from_p1:
-                new_vars[j] = copy.copy(p1.get_var(rule_idx))
+                new_vars[j] = copy.deepcopy(p1.get_var(rule_idx))
                 j += 1
             for rule_idx in rules_idx_from_p2:
-                new_vars[j] = copy.copy(p2.get_var(rule_idx))
+                new_vars[j] = copy.deepcopy(p2.get_var(rule_idx))
                 j += 1
 
             Y[0, i, 0].set_vars(new_vars)
