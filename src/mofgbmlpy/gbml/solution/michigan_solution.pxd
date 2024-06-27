@@ -28,6 +28,7 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef int get_rule_length(self)
     cpdef get_class_label(self)
     cdef AbstractRuleWeight get_rule_weight(self)
+    cpdef AbstractRuleWeight get_rule_weight_py(self)
     cpdef AbstractRule get_rule(self)
     cdef RuleBuilderCore get_rule_builder(self)
     cpdef Consequent get_consequent(self)

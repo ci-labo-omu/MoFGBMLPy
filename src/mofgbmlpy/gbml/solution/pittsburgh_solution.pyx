@@ -51,8 +51,19 @@ cdef class PittsburghSolution(AbstractSolution):
             coverage += michigan_solution.compute_coverage()
         return coverage
 
-    cpdef int get_total_rule_weight(self): # TODO: get_total_rule_length or get_total_rule_weight ?
+    cpdef int get_total_rule_length(self):
         return self.__classifier.get_rule_length(self._vars)
+
+    cpdef double get_average_rule_weight(self):
+        cdef double total_rule_weight = 0
+        cdef int i
+        cdef MichiganSolution var
+
+        for i in range(self._vars.size):
+            var = self._vars[i]
+            total_rule_weight += var.get_rule_weight_py().get_value()
+
+        return total_rule_weight/self._vars.size
 
     def __deepcopy__(self, memo={}):
         new_solution = PittsburghSolution(self.get_num_vars(),

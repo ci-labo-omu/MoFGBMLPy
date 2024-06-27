@@ -175,7 +175,6 @@ class MoFGBMLBasicMain:
     def get_results_data(solutions, knowledge, train, test):
         results_data = np.zeros(len(solutions), dtype=object)
         for i in range(len(solutions)):
-            total_rule_weight = 0
             sol = solutions[i][0]
             if sol.get_num_vars() != 0 and sol.get_var(0).get_num_vars() != 0:
                 total_coverage = 1
@@ -188,9 +187,10 @@ class MoFGBMLBasicMain:
                     total_coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
 
             results_data[i] = {}
+            results_data[i]["id"] = i
             results_data[i]["total_coverage"] = total_coverage
-            results_data[i]["total_rule_weight"] = sol.get_total_rule_weight()
-            results_data[i]["average_rule_weight"] = total_rule_weight / sol.get_num_vars()
+            results_data[i]["total_rule_length"] = sol.get_total_rule_length()
+            results_data[i]["average_rule_weight"] = sol.get_average_rule_weight()
             results_data[i]["training_error_rate"] = sol.get_error_rate(train)
             results_data[i]["test_error_rate"] = sol.get_error_rate(test)
             results_data[i]["num_rules"] = sol.get_num_vars()

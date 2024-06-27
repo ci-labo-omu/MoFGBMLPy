@@ -81,6 +81,9 @@ cdef class MichiganSolution(AbstractSolution):
     cdef AbstractRuleWeight get_rule_weight(self):
         return self._rule.get_rule_weight()
 
+    cpdef AbstractRuleWeight get_rule_weight_py(self):
+        return self._rule.get_rule_weight_py()
+
     cpdef AbstractRule get_rule(self):
         return self._rule
 

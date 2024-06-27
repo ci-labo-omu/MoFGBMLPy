@@ -24,6 +24,7 @@ cdef class AbstractRule:
     cdef cnp.npy_bool equals_class_label(self, AbstractRule other)
     cpdef cnp.npy_bool is_rejected_class_label(self)
     cdef AbstractRuleWeight get_rule_weight(self)
+    cpdef AbstractRuleWeight get_rule_weight_py(self)
     cdef object get_rule_weight_value(self)
     cdef set_rule_weight_value(self, object rule_weight_value)
     cdef set_class_label_value(self, object class_label_value)

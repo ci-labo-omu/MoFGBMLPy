@@ -43,6 +43,9 @@ cdef class AbstractRule:
     cdef AbstractRuleWeight get_rule_weight(self):
         return self._consequent.get_rule_weight()
 
+    cpdef AbstractRuleWeight get_rule_weight_py(self):
+        return self._consequent.get_rule_weight()
+
     cdef object get_rule_weight_value(self):
         return self._consequent.get_rule_weight().get_value()
 

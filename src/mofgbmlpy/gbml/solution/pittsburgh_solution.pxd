@@ -23,4 +23,5 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef double get_error_rate(self, dataset)
     cdef cnp.ndarray[object, ndim=1] get_errored_patterns(self)
     cpdef double compute_coverage(self)
-    cpdef int get_total_rule_weight(self)
+    cpdef int get_total_rule_length(self)
+    cpdef double get_average_rule_weight(self)
