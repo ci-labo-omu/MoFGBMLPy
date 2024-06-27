@@ -1,56 +1,92 @@
-import copy
+# distutils: language = c++
 
-from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
-from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
+import copy
+cimport numpy as cnp
+from libcpp cimport queue as cqueue
+from libcpp cimport vector as cvector
+from libc cimport math as cmath
+from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable cimport LinguisticVariable
+from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
+from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 
 
-class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
-    __antecedents_indices = None
-    __dimension = None
-    __knowledge = None
-
+cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, knowledge):
         self.__dimension = knowledge.get_num_dim()
         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
         self.__knowledge = knowledge
 
-    def generate_antecedents_indices(self, fuzzy_sets):
-        queue = [[]]
-        indices = []
+    cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets):
+        cdef int i
+        cdef int j
+        cdef int k = 0
+        cdef int current_dim
+        cdef cqueue.queue[cvector.vector[int]] indices_queue
+        cdef int num_generated_indices = 1
+        cdef cvector.vector[int] tmp
+        cdef LinguisticVariable var
+
+        for i in range(self.__dimension):
+            var = fuzzy_sets[i]
+            num_generated_indices *= var.get_length()
+
+        cdef int[:,:] indices = (np.empty((num_generated_indices, self.__dimension), dtype=int))
+
+        indices_queue.push(cvector.vector[int]())
 
         # Generate all combination of fuzzy sets indices
-        while len(queue) > 0:
-            buffer = queue.pop(0)
-            current_dim = len(buffer)
+        while indices_queue.size() > 0:
+            buffer = indices_queue.front()
+            indices_queue.pop()
+            current_dim = buffer.size()
             if current_dim < self.__dimension:
-                for i in range(len(fuzzy_sets[current_dim])):
-                    tmp = copy.copy(buffer)
-                    tmp.append(i)
-                    queue.append(tmp)
+                var = fuzzy_sets[current_dim]
+                for i in range(var.get_length()):
+                    tmp = cvector.vector[int]()
+
+                    for j in range(current_dim):
+                        tmp.push_back(buffer[j])
+                    tmp.push_back(i)
+                    indices_queue.push(tmp)
             else:
-                indices.append(buffer)
+                # print(indices.shape[0], k)
+                for i in range(self.__dimension):
+                    indices[k][i] = buffer[i]
+                k += 1
 
-        self.__antecedents_indices = np.zeros((len(indices), self.__dimension), dtype=np.int_)
-        for i in range(len(indices)):
-            self.__antecedents_indices[i, :] = np.array(indices[i], dtype=np.int_)
+        self.__antecedents_indices = indices
 
-    def create(self, num_rules=1):
-        antecedent_objects = np.zeros(num_rules, dtype=object)
-        indices = self.create_antecedent_indices(num_rules)
+    cdef Antecedent[:] create(self, int num_rules=1):
+        cdef cnp.ndarray[object, ndim=1] antecedent_objects = np.zeros(num_rules, dtype=object)
+        cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
+        cdef int i
 
         for i in range(num_rules):
-            antecedent_objects[i] = Antecedent(np.copy(self.__antecedents_indices[indices[i], :]), self.__knowledge)
+            antecedent_objects[i] = Antecedent(indices[i], self.__knowledge)
 
         return antecedent_objects
 
-    def create_antecedent_indices(self, num_rules=1):
+    cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
+        cdef int i
+        cdef int j
+        cdef int[:] chosen_list
+
         num_rules = min(num_rules, len(self.__antecedents_indices))
+
         # Return an antecedent
         if self.__antecedents_indices is None:
             # with cython.gil:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
-        return np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
+        cdef int[:] chosen_indices_lists = np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
+        cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
+
+        for i in range(chosen_indices_lists.size):
+            chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
+            for j in range(chosen_list.size):
+                new_indices[i][j] = chosen_list[j]
+        return new_indices
 
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(

@@ -1,11 +1,12 @@
-from abc import abstractmethod, ABC
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 
 
-class AbstractAntecedentFactory(ABC):
-    @abstractmethod
-    def create(self, num_rules=1):
+cdef class AbstractAntecedentFactory:
+    cdef Antecedent[:] create(self, int num_rules=1):
         pass
 
-    @abstractmethod
+    cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
+        pass
+
     def __copy__(self):
         pass

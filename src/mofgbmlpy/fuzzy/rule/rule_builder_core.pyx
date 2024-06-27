@@ -16,7 +16,7 @@ cdef class RuleBuilderCore:
     cdef Antecedent create_antecedent(self, int num_rules=1):
         return self._antecedent_factory.create(num_rules)
 
-    cdef cnp.ndarray[int, ndim=2] create_antecedent_indices(self, int num_rules=1, Pattern pattern=None):
+    cdef int[:,:] create_antecedent_indices(self, int num_rules=1, Pattern pattern=None):
         if pattern is None:
             return self._antecedent_factory.create_antecedent_indices(num_rules)
         else:
@@ -27,7 +27,7 @@ cdef class RuleBuilderCore:
                 print("Warning: num_rules is not considered when a pattern is provided in create_antecedent_indices")
             return self._antecedent_factory.create_antecedent_indices(pattern)
 
-    cdef Antecedent create_antecedent_from_indices(self, cnp.ndarray[int, ndim=1] antecedent_indices):
+    cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices):
         return Antecedent(antecedent_indices, self._knowledge)
 
     cdef Consequent create_consequent(self, Antecedent antecedent):

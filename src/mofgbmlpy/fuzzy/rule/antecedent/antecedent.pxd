@@ -7,8 +7,8 @@ cdef class Antecedent:
     cdef public Knowledge __knowledge
 
     cpdef int get_array_size(self)
-    cpdef cnp.ndarray[int, ndim=1] get_antecedent_indices(self)
-    cpdef void set_antecedent_indices(self, cnp.ndarray[int, ndim=1] new_indices)
+    cpdef int[:] get_antecedent_indices(self)
+    cpdef void set_antecedent_indices(self, int[:] new_indices)
     cpdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector)
     cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector)
     cpdef double get_compatible_grade_value_py(self, cnp.ndarray[double, ndim=1] attribute_vector)

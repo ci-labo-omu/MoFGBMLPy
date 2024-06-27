@@ -29,6 +29,7 @@ class HybridGBMLSampling(Sampling):
             # start = time.time()
         # for i in prange(n_samples, nogil=True): # TODO CHECK IF IT CAN BE USED
             initial_population[i][0] = problem.create_solution()
+            # print(initial_population[i][0].get_vars())
             # times[i] = time.time() - start
         # print(np.sum(times), times)
 

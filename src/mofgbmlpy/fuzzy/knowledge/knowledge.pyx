@@ -1,63 +1,81 @@
 import math
+from copy import deepcopy
 
+import numpy as np
 from matplotlib import pyplot as plt
 cimport numpy as cnp
-from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
+
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable cimport LinguisticVariable
 
 cdef class Knowledge:
-    def __init__(self):
-        self.__fuzzy_sets = []
+    def __init__(self, fuzzy_sets=None):
+        if fuzzy_sets is None:
+            self.__fuzzy_sets = np.empty(0, dtype=object)
+        else:
+            self.__fuzzy_sets = fuzzy_sets
 
-    cpdef object get_fuzzy_variable(self, int dim):
+    cpdef LinguisticVariable get_fuzzy_variable(self, int dim):
         return self.__fuzzy_sets[dim]
 
-    cpdef object get_fuzzy_set(self, int dim, int fuzzy_set_id):
-        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+    cpdef FuzzySet get_fuzzy_set(self, int dim, int fuzzy_set_id):
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None or fuzzy_sets.size == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
-        return self.__fuzzy_sets[dim].get_fuzzy_set(fuzzy_set_id)
+        cdef LinguisticVariable var = fuzzy_sets[dim]
+        return var.get_fuzzy_set(fuzzy_set_id)
 
     cpdef int get_num_fuzzy_sets(self, int dim):
-        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None or fuzzy_sets.size == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
-        return self.__fuzzy_sets[dim].get_length()
+        cdef LinguisticVariable var = fuzzy_sets[dim]
+        return var.get_length()
 
-    cpdef void set_fuzzy_sets(self, cnp.ndarray[object, ndim=1] fuzzy_sets):
+    cpdef void set_fuzzy_sets(self, LinguisticVariable[:] fuzzy_sets):
+        # cdef LinguisticVariable[:] self_fuzzy_sets = self.__fuzzy_sets
+        #     if self_fuzzy_sets is None or self_fuzzy_sets.size == 0:
         if self.__fuzzy_sets is not None and len(self.__fuzzy_sets) != 0:
             # with cython.gil:
             raise Exception("You can't overwrite fuzzy sets. You must call clear before doing so")
 
         self.__fuzzy_sets = fuzzy_sets
 
-    cpdef cnp.ndarray[object, ndim=1] get_fuzzy_sets(self):
-        if self.__fuzzy_sets is None or len(self.__fuzzy_sets) == 0:
+    cpdef LinguisticVariable[:] get_fuzzy_sets(self):
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None or fuzzy_sets.size == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
-        return self.__fuzzy_sets
+        return fuzzy_sets
 
     cpdef double get_membership_value_py(self, double attribute_value, int dim, int fuzzy_set_id):
-        if self.__fuzzy_sets is None or self.__fuzzy_sets.size == 0:
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None or fuzzy_sets.size == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
-        return self.__fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
+        cdef LinguisticVariable var = fuzzy_sets[dim]
+        return var.get_membership_value(fuzzy_set_id, attribute_value)
 
     cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
-        cdef cnp.ndarray[object, ndim=1] fuzzy_sets = self.__fuzzy_sets
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
         if fuzzy_sets is None or fuzzy_sets.size == 0:
             return -1
-        return fuzzy_sets[dim].get_membership_value(fuzzy_set_id, attribute_value)
+        cdef LinguisticVariable var = fuzzy_sets[dim]
+        return var.get_membership_value(fuzzy_set_id, attribute_value)
 
-    cpdef int  get_num_dim(self):
-        if self.__fuzzy_sets is None:
+    cpdef int get_num_dim(self):
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        if fuzzy_sets is None:
             return 0
-        return len(self.__fuzzy_sets)
+        return fuzzy_sets.size
 
     cpdef void clear(self):
-        self.__fuzzy_sets = []
+        self.__fuzzy_sets = np.empty(0, dtype=object)
 
     # def plot_one_fuzzy_set(self, dim_i, fuzzy_set_id):
     #     linguistic_var = self.get_fuzzy_variable(dim_i)
@@ -116,8 +134,21 @@ cdef class Knowledge:
     cpdef double get_support(self, int  dim, int  fuzzy_set_id):
         return self.get_fuzzy_variable(dim).get_support(fuzzy_set_id)
 
-    def __str__(self):
+    def __repr__(self):
         txt = ""
         for i in range(self.get_num_dim()):
             txt = f"{txt}{str(self.__fuzzy_sets[i])}\n"
         return txt
+
+    def __deepcopy__(self, memo={}):
+        cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
+        cdef cnp.ndarray[object, ndim=1] fuzzy_sets_copy = np.empty(fuzzy_sets.size, dtype=object)
+        cdef int i
+
+        for i in range(fuzzy_sets.size):
+            fuzzy_sets_copy[i] = deepcopy(fuzzy_sets[i])
+
+        new_knowledge = Knowledge(fuzzy_sets_copy)
+        memo[id(self)] = new_knowledge
+
+        return new_knowledge

@@ -20,6 +20,8 @@ cdef class MichiganSolution(AbstractSolution):
 
         self._bounds = bounds
         self._rule_builder = rule_builder
+        self.__num_wins = 0
+        self.__fitness = 0
 
         super().__init__(len(bounds), num_objectives, num_constraints)
 
@@ -52,7 +54,7 @@ cdef class MichiganSolution(AbstractSolution):
         return self._bounds[index][1]
 
     cdef void create_rule(self, MichiganSolution michigan_solution=None, Pattern pattern=None):
-        cdef cnp.ndarray[int, ndim=1] antecedent_indices
+        cdef int[:] antecedent_indices
         if michigan_solution is None:
             antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern, num_rules=1)[0]
             self.set_vars(antecedent_indices)
@@ -63,6 +65,7 @@ cdef class MichiganSolution(AbstractSolution):
         self.learning()
 
     cpdef void learning(self):
+        cdef Antecedent antecedent_object
         if self._vars is None:
             # with cython.gil:
             raise Exception("Vars is not defined")
@@ -118,3 +121,24 @@ cdef class MichiganSolution(AbstractSolution):
             coverage *= self._rule_builder.get_knowledge().get_support(dim_i, fuzzy_set_id)
             dim_i += 1
         return coverage
+
+    cpdef void reset_num_wins(self):
+        self.__num_wins = 0
+
+    cpdef void reset_fitness(self):
+        self.__fitness = 0
+
+    cpdef void inc_num_wins(self):
+        self.__num_wins += 1
+
+    cpdef void inc_fitness(self):
+        self.__fitness += 1
+
+    cpdef int get_num_wins(self):
+        return self.__num_wins
+
+    cpdef int get_fitness(self):
+        return self.__fitness
+
+    def __repr__(self):
+        return f"(MichiganSolution) {self._rule}"

@@ -20,11 +20,12 @@ cdef class LinguisticVariable:
     cpdef str get_concept(self):
         return self.__concept
 
-    cpdef double get_membership_value(self, int fuzzy_set_index, double x):
+    cdef double get_membership_value(self, int fuzzy_set_index, double x):
         if fuzzy_set_index > self.__fuzzy_sets.size:
             # with cython.gil:
             raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
-        return self.__fuzzy_sets[fuzzy_set_index].get_membership_value(x)
+        cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
+        return fuzzy_set.get_membership_value(x)
 
     cpdef int get_length(self):
         return len(self.__fuzzy_sets)
@@ -34,3 +35,10 @@ cdef class LinguisticVariable:
 
     cpdef double get_support(self, int fuzzy_set_id):
         return self.__support_values[fuzzy_set_id]
+
+    def __repr__(self):
+        txt = f"Fuzzy variable for {self.__concept}:\n"
+        cdef int i
+        for i in range(len(self.__fuzzy_sets)):
+            txt += f"\t{self.__fuzzy_sets[i]}\n"
+        return txt

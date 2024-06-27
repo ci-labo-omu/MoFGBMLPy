@@ -1,4 +1,4 @@
 import cython
 
 cdef class AbstractMF:
-    cpdef double get_value(self, double x)
+    cdef double get_value(self, double x)

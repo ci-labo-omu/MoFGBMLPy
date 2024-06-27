@@ -40,7 +40,7 @@ for root, dirs, files in os.walk('src'):
 setup(
     ext_modules=cythonize(
         cython_files,
-        compiler_directives={"language_level": "3", "profile": True},
+        compiler_directives={"language_level": "3", "profile": True}
     ),
     name="mofgbml-python",
     version="1.0.0",

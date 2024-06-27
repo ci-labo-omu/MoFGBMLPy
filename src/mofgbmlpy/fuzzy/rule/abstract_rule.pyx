@@ -60,3 +60,6 @@ cdef class AbstractRule:
 
     def __eq__(self, other):
         return self._antecedent == other.get_antecedent() and self._consequent == other.get_consequent()
+
+    def __str__(self):
+        return f"Antecedent: {self._antecedent} => Consequent: {self._consequent}"

@@ -11,15 +11,15 @@ class Arguments(ABC):
         self.__values["POPULATION_SIZE"] = 60
         self.__values["OFFSPRING_POPULATION_SIZE"] = 60
         self.__values["TERMINATE_GENERATION"] = 500
-        self.__values["TERMINATE_EVALUATION"] = 300000
-        self.__values["OUTPUT_FREQUENCY"] = 6000
+        self.__values["TERMINATE_EVALUATION"] = 1000 #300000
+        # self.__values["OUTPUT_FREQUENCY"] = 6000
 
         # Random Number Seed
         self.__values["RAND_SEED"] = 2020
 
         # OS
-        self.__values["WINDOWS"] = 0     # Windows
-        self.__values["UNIX"] = 1        # Mac or Linux
+        # self.__values["WINDOWS"] = 0     # Windows
+        # self.__values["UNIX"] = 1        # Mac or Linux
 
         # Fuzzy Classifier
         self.__values["IS_DONT_CARE_PROBABILITY"] = False
@@ -42,14 +42,14 @@ class Arguments(ABC):
         self.__values["EXPERIMENT_ID_DIR"] = "EXPERIMENT_ID"
 
         # Index
-        self.__values["TRAIN"] = 0
-        self.__values["TEST"] = 1
-        self.__values["XML_FILE_NAME"] = "results_XML"
+        # self.__values["TRAIN"] = 0
+        # self.__values["TEST"] = 1
+        # self.__values["XML_FILE_NAME"] = "results_XML"
 
         # Dataset info
         self.__values["DATA_SIZE"] = 0
         self.__values["ATTRIBUTE_NUMBER"] = 0
-        self.__values["CLASS_LABEL_NUMBER"] = 0
+        # self.__values["CLASS_LABEL_NUMBER"] = 0
 
     def set(self, key, value):
         self.__values[str(key)] = value

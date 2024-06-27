@@ -1,8 +1,9 @@
 import cython
 
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 cdef class FuzzySet:
-    cdef object __function
+    cdef AbstractMF __function
     cdef str __term
 
-    cpdef double get_membership_value(self, double x)
+    cdef double get_membership_value(self, double x)

@@ -3,7 +3,7 @@ import shutil
 
 
 def clean():
-    extensions = ['.pyd', '.c']
+    extensions = ['.pyd', '.c', 'html']
 
     try:
         shutil.rmtree("build")

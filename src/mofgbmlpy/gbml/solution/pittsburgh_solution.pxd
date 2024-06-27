@@ -15,7 +15,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef object __errored_patterns
 
     cdef MichiganSolutionBuilder get_michigan_solution_builder(self)
-    cdef void remove_var(self, int index)
+    cpdef void remove_var(self, int index)
     cpdef void clear_vars(self)
     cpdef void clear_attributes(self)
     cdef void learning(self)

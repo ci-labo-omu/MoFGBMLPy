@@ -9,17 +9,17 @@ cdef class Antecedent:
     # cdef public object __antecedent_indices
     # cdef public Knowledge __knowledge
 
-    def __init__(self, cnp.ndarray[int, ndim=1] antecedent_indices, Knowledge knowledge):
+    def __init__(self, int[:] antecedent_indices, Knowledge knowledge):
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge
 
     cpdef int get_array_size(self):
         return self.__antecedent_indices.size
 
-    cpdef cnp.ndarray[int, ndim=1] get_antecedent_indices(self):
+    cpdef int[:] get_antecedent_indices(self):
         return self.__antecedent_indices
 
-    cpdef void set_antecedent_indices(self, cnp.ndarray[int, ndim=1] new_indices):
+    cpdef void set_antecedent_indices(self, int[:] new_indices):
         self.__antecedent_indices = new_indices
 
     cpdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector):
@@ -91,3 +91,6 @@ cdef class Antecedent:
 
     def __eq__(self, other):
         return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
+
+    def __str__(self):
+        return f"{self.__antecedent_indices}"

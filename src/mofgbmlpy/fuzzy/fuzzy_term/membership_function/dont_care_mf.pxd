@@ -3,4 +3,4 @@ import cython
 
 
 cdef class DontCareMF(AbstractMF):
-    cpdef double get_value(self, double _)
+    cdef double get_value(self, double _)

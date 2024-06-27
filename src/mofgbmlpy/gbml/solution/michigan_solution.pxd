@@ -17,6 +17,8 @@ cdef class MichiganSolution(AbstractSolution):
     cdef object _bounds
     cdef object _rule
     cdef RuleBuilderCore _rule_builder
+    cdef int __num_wins
+    cdef int __fitness
 
     cdef double get_lower_bound(self, int index)
     cdef double get_upper_bound(self, int index)
@@ -34,3 +36,9 @@ cdef class MichiganSolution(AbstractSolution):
     cdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector)
     cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector)
     cpdef double compute_coverage(self)
+    cpdef void reset_num_wins(self)
+    cpdef void reset_fitness(self)
+    cpdef void inc_num_wins(self)
+    cpdef void inc_fitness(self)
+    cpdef int get_num_wins(self)
+    cpdef int get_fitness(self)

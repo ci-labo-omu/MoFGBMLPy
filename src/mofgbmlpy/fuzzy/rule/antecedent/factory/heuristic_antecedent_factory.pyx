@@ -1,19 +1,13 @@
-from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory import AbstractAntecedentFactory
+from mofgbmlpy.data.pattern cimport Pattern
+from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 import random
 import cython
 
 
-class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    __dimension = None
-    __training_set = None
-    __knowledge = None
-    __is_dc_probability = None
-    __dc_rate = None
-    __antecedent_num_not_dont_care = None
-
+cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, training_set, knowledge, is_dc_probability, dc_rate, antecedent_num_not_dont_care):
         self.__dimension = knowledge.get_num_dim()
         self.__training_set = training_set
@@ -22,12 +16,14 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         self.__dc_rate = dc_rate
         self.__antecedent_num_not_dont_care = antecedent_num_not_dont_care
 
-    def select_antecedent_part(self, index):
+    cdef int[:] select_antecedent_part(self, int index):
         pattern = self.__training_set.get_pattern(index)
         return self.calculate_antecedent_part(pattern)
 
-    def calculate_antecedent_part(self, pattern):
-        attribute_array = pattern.get_attributes_vector()
+    cdef int[:] calculate_antecedent_part(self, Pattern pattern):
+        cdef double[:] attribute_array = pattern.get_attributes_vector()
+        cdef int dim_i
+        cdef int h
 
         if self.__is_dc_probability:
             dc_rate = self.__dc_rate
@@ -69,29 +65,33 @@ class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         return antecedent_indices
 
-    def create(self, num_rules=None):
-        indices = self.create_antecedent_indices(num_rules)
-        antecedent_objects = np.array([Antecedent(self.select_antecedent_part((indices[i])), self.__knowledge) for i in range(num_rules)], dtype=object)
+    cdef Antecedent[:] create(self, int num_rules=1):
+        cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
+        cdef int i
+        cdef Antecedent[:] antecedent_objects = np.array([Antecedent(indices[i], self.__knowledge) for i in range(num_rules)], dtype=object)
 
         return antecedent_objects
 
-    def create_antecedent_indices_from_pattern(self, pattern=None):
+    cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern=None):
         if pattern is None:
             # with cython.gil:
             raise Exception("Pattern cannot be None")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 
-    def create_antecedent_indices(self, num_rules=None):
-        data_size = self.__training_set.get_size()
-        if num_rules is None:
+    cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
+        cdef int data_size = self.__training_set.get_size()
+        cdef int i
+        cdef int pattern_index
+        cdef int[:] pattern_indices
+        cdef int num_remaining_indices
+        cdef int[:,:] new_antecedent_indices
+
+        if num_rules is None or num_rules == 1:
             pattern_index = random.randint(0, data_size - 1)
             return np.array([self.select_antecedent_part(pattern_index)], dtype=int)
 
         if num_rules <= self.__training_set.get_size():
             pattern_indices = np.random.choice(list(range(self.__training_set.get_size())), num_rules, replace=False)
-            # print(result.shape, result)
-            if len(pattern_indices.shape) == 1:
-                pattern_indices = np.array([pattern_indices], dtype=int)
 
         else:
             # TODO: this function seems invalid (indices is maybe an array of copies and the concatenation is maybe between incompatible types (int and array)

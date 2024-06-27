@@ -3,8 +3,8 @@ cdef class FuzzySet:
         self.__function = function
         self.__term = term
 
-    def __str__(self):
+    def __repr__(self):
         return f"Fuzzy set {self.__term}"
 
-    cpdef double get_membership_value(self, double x):
+    cdef double get_membership_value(self, double x):
         return self.__function.get_value(x)

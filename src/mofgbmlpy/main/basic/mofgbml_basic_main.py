@@ -2,10 +2,13 @@ import numpy as np
 from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
 
+from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+
+from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.classifier.classifier import Classifier
@@ -60,6 +63,7 @@ class MoFGBMLBasicMain:
     @staticmethod
     def hybrid_style_mofgbml(train, test, args):
         random.seed(args.get("RAND_SEED"))
+        np.random.seed(args.get("RAND_SEED"))
         knowledge = HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
         bounds_michigan = MichiganSolution.make_bounds(knowledge)
 
@@ -70,13 +74,18 @@ class MoFGBMLBasicMain:
         num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
-        rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
-                                                                   knowledge,
-                                                                   args.get("IS_DONT_CARE_PROBABILITY"),
-                                                                   args.get("DONT_CARE_RT"),
-                                                                   args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+        rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
                                         LearningBasic(train),
                                         knowledge)
+
+        # rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
+        #                                                            knowledge,
+        #                                                            args.get("IS_DONT_CARE_PROBABILITY"),
+        #                                                            args.get("DONT_CARE_RT"),
+        #                                                            args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+        #                                 LearningBasic(train),
+        #                                 knowledge)
+
         michigan_solution_builder = MichiganSolutionBuilder(bounds_michigan,
                                                             num_objectives_michigan,
                                                             num_constraints_michigan,
@@ -101,6 +110,7 @@ class MoFGBMLBasicMain:
                           # crossover=HybridGBMLCrossover(crossover_probability,
                           #                               args.get("MIN_NUM_RULES"),
                           #                               args.get("MAX_NUM_RULES")),
+                          repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=BasicDuplicateElimination(),
                           archive=MultiObjectiveArchive(duplicate_elimination=BasicDuplicateElimination(),
@@ -108,31 +118,44 @@ class MoFGBMLBasicMain:
 
         res = minimize(problem,
                        algorithm,
-                       termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
-                       # get_termination("n_eval", args.get("TERMINATE_EVALUATION"),
+                       # termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
+                       termination=get_termination("n_eval", args.get("TERMINATE_EVALUATION")),
                        seed=1,
-                       verbose=True,
-                       save_history=True)
+                       # save_history=True,
+                       verbose=True)
 
-        plot = Scatter()
-        plot.add(problem.pareto_front(), plot_type="line", color="black", alpha=0.7)
-        plot.add(res.F, color="red")
+        non_dominated_solutions = res.X
+        archive_population = np.empty((len(res.archive), res.X.shape[1]), dtype=object)
+        for i in range(len(res.archive)):
+            archive_population[i] = res.archive[i].X
+
+        exec_time = res.exec_time
+        #
+        # with Recorder(Video("ga.mp4")) as rec:
+        #     # for each algorithm object in the history
+        #     for entry in res.history:
+        #         sc = Scatter(title=("Gen %s" % entry.n_gen))
+        #         sc.add(entry.pop.get("F"))
+        #         sc.do()
+        #
+        #         # finally record the current visualization to the video
+        #         rec.record()
+
+        plot_data = np.empty(res.F.shape, dtype=object)
+        for i in range(len(res.F)):
+            plot_data[i] = [int(res.F[i][1]), res.F[i][0]]
+
+        plot = Scatter(labels=["Number of rules", "Error rate"])
+        plot.add(plot_data, color="red")
         plot.show()
 
-        non_dominated_solutions = res.pop
-        archive_population = res.archive
-        exec_time = res.exec_time
-
-        with Recorder(Video("ga.mp4")) as rec:
-            # for each algorithm object in the history
-            for entry in res.history:
-                sc = Scatter(title=("Gen %s" % entry.n_gen))
-                sc.add(entry.pop.get("F"))
-                sc.do()
-
-                # finally record the current visualization to the video
-                rec.record()
-
+        # f_archive = np.empty((len(res.archive), res.F.shape[1]), dtype=object)
+        # for i in range(len(res.archive)):
+        #     f_archive[i] = res.archive[i].F[[1, 0]]
+        #
+        # plot = Scatter()
+        # plot.add(f_archive, color="red")
+        # plot.show()
 
         results_data = MoFGBMLBasicMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
@@ -147,7 +170,7 @@ class MoFGBMLBasicMain:
         results_data = np.zeros(len(solutions), dtype=object)
         for i in range(len(solutions)):
             total_rule_weight = 0
-            sol = solutions[i].X[0]
+            sol = solutions[i][0]
             if sol.get_num_vars() != 0 and sol.get_var(0).get_num_vars() != 0:
                 total_coverage = 1
             else:

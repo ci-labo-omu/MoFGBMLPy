@@ -30,6 +30,11 @@ cdef class Classifier:
     cdef object get_error_rate(self, cnp.ndarray[object, ndim=1] michigan_solution_list, dataset):
         num_errors = 0
         errored_patterns = []
+
+        for sol in michigan_solution_list:
+            sol.reset_num_wins()
+            sol.reset_fitness()
+
         for pattern in dataset.get_patterns():
             winner_solution = self.classify(michigan_solution_list, pattern)
 
@@ -38,9 +43,13 @@ cdef class Classifier:
                 errored_patterns.append(pattern)
                 continue
 
+            winner_solution.inc_num_wins()
+
             if pattern.get_target_class() != winner_solution.get_class_label():
                 num_errors += 1
                 errored_patterns.append(pattern)
+            else:
+                winner_solution.inc_fitness()
         return num_errors / dataset.get_size(), errored_patterns
 
     @staticmethod

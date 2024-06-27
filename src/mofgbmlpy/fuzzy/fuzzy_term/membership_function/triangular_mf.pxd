@@ -6,4 +6,4 @@ cdef class TriangularMF(AbstractMF):
     cdef double __center
     cdef double __right
 
-    cpdef double get_value(self, double x)
+    cdef double get_value(self, double x)

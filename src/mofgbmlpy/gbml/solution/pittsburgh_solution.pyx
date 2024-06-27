@@ -20,8 +20,8 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolutionBuilder get_michigan_solution_builder(self):
         return self.__michigan_solution_builder
 
-    cdef void remove_var(self, int index):
-        del self._vars[index]
+    cpdef void remove_var(self, int index):
+        self._vars = np.delete(self._vars, index)
 
     cpdef void clear_vars(self):
         self._vars = []

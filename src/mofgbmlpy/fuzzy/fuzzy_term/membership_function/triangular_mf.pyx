@@ -14,17 +14,15 @@ cdef class TriangularMF(AbstractMF):
             # with cython.gil:
             raise Exception(f"Error in triangular membership function: center={center:.2f} should be <= right={right:.2f}")
 
-    cpdef double get_value(self, double x):
-        if x < self.__center:
-            if self.__left != self.__center:
-                return (x - self.__left) * (1 / (self.__center - self.__left))
-            else:
-                return 1
+    cdef double get_value(self, double x):
+        if x < self.__left or x > self.__right:
+            return 0
+        elif x == self.__center:
+            return 1
+        elif x < self.__center:
+            return (x - self.__left) / (self.__center - self.__left)
         else:
-            if self.__center != self.__right:
-                return 1 + (x - self.__center) * (-1 / (self.__right - self.__center))
-            else:
-                return 1
+            return 1 + (x - self.__center) / (self.__right - self.__center)
 
     def __str__(self):
         return "<Triangular MF (%f, %f, %f)>" % (self.__left, self.__center, self.__right)
