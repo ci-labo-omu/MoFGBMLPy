@@ -4,6 +4,8 @@ from pymoo.util.archive import MultiObjectiveArchive
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
+from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
@@ -101,15 +103,24 @@ class MoFGBMLBasicMain:
                                     michigan_solution_builder,
                                     classifier)
 
-        crossover_probability = 1
+        crossover_probability = args.get("")
 
         algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(train),
-                          crossover=PittsburghCrossover(args.get("MIN_NUM_RULES"),
-                                                        args.get("MAX_NUM_RULES")),
-                          # crossover=HybridGBMLCrossover(crossover_probability,
-                          #                               args.get("MIN_NUM_RULES"),
+                          # crossover=PittsburghCrossover(args.get("MIN_NUM_RULES"),
                           #                               args.get("MAX_NUM_RULES")),
+                          crossover=HybridGBMLCrossover(args.get("MICHIGAN_OPE_RT"),
+                                                        MichiganCrossover(
+                                                            args.get("RULE_CHANGE_RT"),
+                                                            train,
+                                                            args.get("MICHIGAN_CROSS_RT"),
+                                                            knowledge
+                                                        ),
+                                                        PittsburghCrossover(
+                                                            args.get("MIN_NUM_RULES"),
+                                                            args.get("MAX_NUM_RULES"),
+                                                            args.get("PITTSBURGH_CROSS_RT")),
+                                                        crossover_probability),
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=BasicDuplicateElimination(),
