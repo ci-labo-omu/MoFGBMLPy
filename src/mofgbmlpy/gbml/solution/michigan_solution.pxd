@@ -30,7 +30,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef AbstractRuleWeight get_rule_weight(self)
     cpdef AbstractRuleWeight get_rule_weight_py(self)
     cpdef AbstractRule get_rule(self)
-    cdef RuleBuilderCore get_rule_builder(self)
+    cpdef RuleBuilderCore get_rule_builder(self)
     cpdef Consequent get_consequent(self)
     cpdef Antecedent get_antecedent(self)
     cdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector)

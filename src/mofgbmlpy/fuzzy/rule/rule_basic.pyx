@@ -10,7 +10,7 @@ cdef class RuleBasic(AbstractRule):
         super().__init__(antecedent, consequent)
 
     def __deepcopy__(self, memo={}):
-        new_rule =  RuleBasic(copy.deepcopy(self.get_antecedent()), copy.deepcopy(self.get_consequent()))
+        new_rule = RuleBasic(copy.deepcopy(self.get_antecedent()), copy.deepcopy(self.get_consequent()))
         memo[id(self)] = new_rule
         return new_rule
 

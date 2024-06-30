@@ -1,7 +1,8 @@
 import cython
 from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory cimport HeuristicAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 cimport numpy as cnp
 
@@ -17,15 +18,17 @@ cdef class RuleBuilderCore:
         return self._antecedent_factory.create(num_rules)
 
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1, Pattern pattern=None):
+        cdef AbstractAntecedentFactory factory = self._antecedent_factory
+        cdef HeuristicAntecedentFactory heuristic_factory
+
         if pattern is None:
-            return self._antecedent_factory.create_antecedent_indices(num_rules)
+            return factory.create_antecedent_indices(num_rules)
         else:
-            if not isinstance(self._antecedent_factory, HeuristicAntecedentFactory):
+            if not isinstance(factory, HeuristicAntecedentFactory):
                 # with cython.gil:
                 raise Exception("The antecedent factory must be HeuristicAntecedentFactory if a pattern is provided")
-            if num_rules is not None:
-                print("Warning: num_rules is not considered when a pattern is provided in create_antecedent_indices")
-            return self._antecedent_factory.create_antecedent_indices(pattern)
+            heuristic_factory = factory
+            return heuristic_factory.create_antecedent_indices_from_pattern(pattern)
 
     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices):
         return Antecedent(antecedent_indices, self._knowledge)

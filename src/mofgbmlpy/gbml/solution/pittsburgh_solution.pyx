@@ -19,7 +19,7 @@ cdef class PittsburghSolution(AbstractSolution):
         if do_init_vars:
             self._vars = michigan_solution_builder.create(num_vars)
 
-    cdef MichiganSolutionBuilder get_michigan_solution_builder(self):
+    cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
         return self.__michigan_solution_builder
 
     cpdef void remove_var(self, int index):
@@ -42,7 +42,7 @@ cdef class PittsburghSolution(AbstractSolution):
         error_rate, self.__errored_patterns = self.__classifier.get_error_rate(self.get_vars(), dataset)
         return error_rate
 
-    cdef cnp.ndarray[object, ndim=1] get_errored_patterns(self):
+    cpdef cnp.ndarray[object, ndim=1] get_errored_patterns(self):
         return self.__errored_patterns
 
     cpdef double compute_coverage(self):

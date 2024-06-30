@@ -10,6 +10,7 @@ from pymoo.core.population import Population
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring import UniformCrossoverSingleOffspring
 from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.NaryTournamentSelectionOnFitness import NaryTournamentSelectionOnFitness
+from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurvival
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
@@ -19,41 +20,103 @@ class MichiganCrossover(Crossover):
     __rule_change_rate = None
     __training_set = None
     __knowledge = None
+    __prob_float = None
 
-    def __init__(self, rule_change_rate, training_set, knowledge, prob=0.9):
+    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, prob=0.9):
         super().__init__(1, 1, prob)
+        self.__prob_float = prob
         self.__rule_change_rate = rule_change_rate
         self.__training_set = training_set
         self.__knowledge = knowledge
+        self.__max_num_rules = max_num_rules
 
     def ga_rules_gen(self, crossover, mutation, selection, pop, problem, mating_pool_size, n_parents, num_ga):
-        mating_pop = selection.do(problem, pop, mating_pool_size, n_parents)
+        mating_pop = selection.do(problem, pop, mating_pool_size, n_parents, to_pop=False)
         generated_solutions = []
-        for i in range(mating_pool_size, step=2):
-            parents = [mating_pop[i], mating_pop[i+1]]
-            offspring = crossover.do(problem, pop, parents=parents)
-            mutation.do(problem, pop)
 
-            for j in range(len(offspring.X)):
-                if offspring.X[i, 0].get_rule().is_rejected():
-                    offspring = copy.deepcopy(parents)
+        for i in range(0, mating_pool_size, 2):
+            parents = mating_pop[i]
+            p1_obj = pop[parents[0]].X[0]
+            p2_obj = pop[parents[1]].X[0]
 
-                generated_solutions.append(offspring)
+            print("P1",np.copy(p1_obj.get_vars()))
+            ind = p1_obj.get_rule().get_antecedent().get_antecedent_indices()
+            print(np.copy(ind))
+
+            print("P2",np.copy(p2_obj.get_vars()))
+            ind = p2_obj.get_rule().get_antecedent().get_antecedent_indices()
+            print(np.copy(ind))
+            print("###")
+
+            # TODO: remove these "if" tests
+            if p1_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p1_obj)
+                raise Exception(f"Invalid parent A")
+            if p2_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p2_obj)
+                raise Exception(f"Invalid parent B")
+
+            offspring = crossover.do(problem, pop, parents=[parents])
+            if p1_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p1_obj)
+                raise Exception(f"Invalid parent A")
+            if p2_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p2_obj)
+                raise Exception(f"Invalid parent B")
+
+            offspring = mutation.do(problem, offspring)
+
+            if p1_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p1_obj)
+                raise Exception(f"Invalid parent A")
+            if p2_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p2_obj)
+                raise Exception(f"Invalid parent B")
+
+            for j in range(len(offspring)):
+                if offspring[j].X[0].get_rule().is_rejected_class_label():
+                    generated_solutions.append(copy.deepcopy(p1_obj))
+                    if len(generated_solutions) == num_ga:
+                        return generated_solutions
+                    generated_solutions.append(copy.deepcopy(p2_obj))
+                else:
+                    generated_solutions.append(offspring[j].X[0])
                 if len(generated_solutions) == num_ga:
                     return generated_solutions
+
+            if p1_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p1_obj)
+                raise Exception(f"Invalid parent A")
+            if p2_obj.get_rule().is_rejected_class_label():
+                print("P exc = ", p2_obj)
+                raise Exception(f"Invalid parent B")
 
         return generated_solutions
 
     def _do(self, problem, X, **kwargs):
-        _, n_matings, n_var = X.shape
+        # Note: X contains Pittsburgh solutions
+        n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
-        num_dim = X[0, 0, 0].get_var(0).get_num_vars()
+        num_dim = X[0, 0].get_var(0).get_num_vars()
+
+        for sol in X:
+            for m in sol[0].get_vars():
+                # print(m)
+                if m.get_rule().is_rejected_class_label():
+                    raise Exception("Invalid parent")
+
+        # print("P19", X[19, 0])
 
         for i in range(n_matings):
             generated_solutions = []
 
-            parent = X[0, i, 0]
+            parent = X[i, 0]
+            for m in parent.get_vars():
+                # print(m)
+                if m.get_rule().is_rejected_class_label():
+                    print("P exc = ", parent)
+                    raise Exception(f"Invalid parent {i} var {m}")
 
             # 1. Calculate number of all of generating rules
 
@@ -73,14 +136,20 @@ class MichiganCrossover(Crossover):
                 error_patterns = parent.get_errored_patterns()
                 lack_size = num_heuristic - len(error_patterns)
 
-                new_patterns = np.random.choice(self.__training_set.get_patterns(), lack_size)
-                error_patterns = np.concatenate(error_patterns, new_patterns)
+                if lack_size > 0:
+                    new_patterns = np.random.choice(self.__training_set.get_patterns(), lack_size)
+                    error_patterns = np.concatenate(error_patterns, new_patterns)
                 selected_error_patterns = np.random.choice(error_patterns, num_heuristic, replace=False)
 
                 for j in range(num_heuristic):
                     generated_solutions.append(
-                        parent.get_michigan_solution_builder().create(pattern=selected_error_patterns[j]))
+                        parent.get_michigan_solution_builder().create(pattern=selected_error_patterns[j])[0])
 
+            for m in parent.get_vars():
+                # print(m)
+                if m.get_rule().is_rejected_class_label():
+                    print("P exc = ", parent)
+                    raise Exception(f"Invalid parent {i} var {m}")
             # 4. Rule Generation by Genetic Algorithm - Michigan-style GA
             num_ga = num_generating_rules - num_heuristic
 
@@ -91,58 +160,58 @@ class MichiganCrossover(Crossover):
                                                    problem.get_training_set(),
                                                    problem.get_rule_builder())
 
-                crossover = UniformCrossoverSingleOffspring(self.prob)
+                crossover = UniformCrossoverSingleOffspring(self.__prob_float)
 
                 mutation_rt = 1/self.__training_set.get_num_dim()
-                mutation = MichiganMutation(mutation_rt, self.__knowledge, mutation_rt)
+                mutation = MichiganMutation(self.__training_set, self.__knowledge, mutation_rt)
 
                 if parent.get_num_vars() == 1:
                     tournament_size = 1
                 else:
                     tournament_size = 2
-                mating_pool_size = num_ga * crossover.get_num_required_parents() / crossover.get_num_generated_children
+                mating_pool_size = num_ga * crossover.n_parents // crossover.n_offsprings
                 selection = NaryTournamentSelectionOnFitness(tournament_size)
 
-                michigan_solutions_array = parent.get_vars().reshape((parent.get_num_vars, 1))
-                michigan_population = pop = Population.new(X=michigan_solutions_array)
 
-                np.concatenate((generated_solutions, self.ga_rules_gen(crossover,
-                                                                      mutation,
-                                                                      selection,
-                                                                      michigan_population,
-                                                                      problem,
-                                                                      mating_pool_size,
-                                                                      2,
-                                                                      num_ga)))
+                for m in parent.get_vars():
+                    # print(m)
+                    if m.get_rule().is_rejected_class_label():
+                        print("P exc = ", parent)
+                        raise Exception(f"Invalid parent {i} var {m}")
+
+                michigan_solutions_array = parent.get_vars().reshape((parent.get_num_vars(), 1))
+                michigan_population = Population.new(X=michigan_solutions_array)
+
+                ga_generated_solutions = self.ga_rules_gen(crossover,
+                                                            mutation,
+                                                            selection,
+                                                            michigan_population,
+                                                            problem,
+                                                            mating_pool_size,
+                                                            2,
+                                                            num_ga)
+
+                generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
+                for m in parent.get_vars():
+                    # print(m)
+                    if m.get_rule().is_rejected_class_label():
+                        print("P exc = ", parent)
+                        raise Exception(f"Invalid parent {i} var {m}")
 
             # 5. Replacement: Single objective maximization replacement
-
-
-            generated_solutions = replacement(parent.get_vars(), generated_solutions)
+            generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
 
             offspring = copy.deepcopy(parent)
             offspring.clear_vars()
-            offspring.set_vars(michigan_solutions)
+            offspring.set_vars(generated_solutions)
 
-            raise Exception("Not yet implemented")
+            for m in parent.get_vars():
+                # print(m)
+                if m.get_rule().is_rejected_class_label():
+                    print("P exc = ", parent)
+                    raise Exception(f"Invalid parent {i} var {m}")
 
-            return [offspring]
-
-
-            # Y[0, i] = copy.copy(p1)
-            # Y[0, i, 0].clear_vars()
-            # Y[0, i, 0].clear_attributes()
-            #
-            # num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(),
-            #                                                                        n_var)
-            # rules_idx_from_p1 = np.random.choice(list(range(p1.get_num_vars())), num_rules_from_p1, replace=False)
-            # rules_idx_from_p2 = np.random.choice(list(range(p2.get_num_vars())), num_rules_from_p2, replace=False)
-            #
-            # for rule_idx in rules_idx_from_p1:
-            #     Y[0, i, 0].add_var(copy.copy(p1.get_var(rule_idx)))
-            # for rule_idx in rules_idx_from_p2:
-            #     Y[0, i, 0].add_var(copy.copy(p2.get_var(rule_idx)))
-
+            Y[0, i, 0] = offspring
         return Y
 
     def execute(self, problem, X, **kwargs):

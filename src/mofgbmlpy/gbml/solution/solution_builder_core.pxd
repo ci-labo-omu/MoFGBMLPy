@@ -6,4 +6,4 @@ cdef class SolutionBuilderCore:
     cdef int _num_constraints
     cdef RuleBuilderCore _rule_builder
 
-    cdef RuleBuilderCore get_rule_builder(self)
+    cpdef RuleBuilderCore get_rule_builder(self)

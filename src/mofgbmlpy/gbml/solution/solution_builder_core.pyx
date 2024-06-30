@@ -7,5 +7,5 @@ cdef class SolutionBuilderCore:
         self._num_constraints = num_constraints
         self._rule_builder = rule_builder
 
-    cdef RuleBuilderCore get_rule_builder(self):
+    cpdef RuleBuilderCore get_rule_builder(self):
         return self._rule_builder

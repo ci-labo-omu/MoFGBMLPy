@@ -14,14 +14,14 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolutionBuilder __michigan_solution_builder
     cdef object __errored_patterns
 
-    cdef MichiganSolutionBuilder get_michigan_solution_builder(self)
+    cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
     cpdef void remove_var(self, int index)
     cpdef void clear_vars(self)
     cpdef void clear_attributes(self)
     cdef void learning(self)
     cdef AbstractSolution classify(self, Pattern pattern)
     cpdef double get_error_rate(self, dataset)
-    cdef cnp.ndarray[object, ndim=1] get_errored_patterns(self)
+    cpdef cnp.ndarray[object, ndim=1] get_errored_patterns(self)
     cpdef double compute_coverage(self)
     cpdef int get_total_rule_length(self)
     cpdef double get_average_rule_weight(self)

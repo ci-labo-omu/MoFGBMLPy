@@ -2,9 +2,9 @@ import numpy as np
 from pymoo.operators.selection.tournament import TournamentSelection
 
 
-cdef class NaryTournamentSelectionOnFitness(TournamentSelection):
+class NaryTournamentSelectionOnFitness(TournamentSelection):
     @staticmethod
-    def nary_fitness_tournament(pop, P, algorithm, **kwargs):
+    def nary_fitness_tournament(pop, P, **kwargs):
         n_tournaments, n_parents = P.shape
 
         if n_parents < 0:

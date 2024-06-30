@@ -95,12 +95,12 @@ cdef class Antecedent:
         for i in range(antecedent_indices_copy.size):
             antecedent_indices_copy[i] = self.__antecedent_indices[i]
 
-        new_antecedent =  Antecedent(antecedent_indices_copy, knowledge=self.__knowledge)
+        new_antecedent = Antecedent(antecedent_indices_copy, knowledge=self.__knowledge)
         memo[id(self)] = new_antecedent
         return new_antecedent
 
     def __eq__(self, other):
-        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
+        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.__knowledge
 
     def __repr__(self):
         txt = "["

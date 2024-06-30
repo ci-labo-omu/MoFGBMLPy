@@ -11,7 +11,7 @@ class Arguments(ABC):
         self.__values["POPULATION_SIZE"] = 60
         self.__values["OFFSPRING_POPULATION_SIZE"] = 60
         self.__values["TERMINATE_GENERATION"] = 500
-        self.__values["TERMINATE_EVALUATION"] = 1000 #300000
+        self.__values["TERMINATE_EVALUATION"] = 5000 #300000
         # self.__values["OUTPUT_FREQUENCY"] = 6000
 
         # Random Number Seed
@@ -30,6 +30,7 @@ class Arguments(ABC):
         self.__values["MIN_NUM_RULES"] = 1
 
         # FGBML
+        self.__values["HYBRID_CROSS_RT"] = 1
         self.__values["MICHIGAN_OPE_RT"] = 0.5
         self.__values["RULE_CHANGE_RT"] = 0.2
         self.__values["MICHIGAN_CROSS_RT"] = 0.9

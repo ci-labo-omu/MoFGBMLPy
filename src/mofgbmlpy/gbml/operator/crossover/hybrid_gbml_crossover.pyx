@@ -29,8 +29,14 @@ class HybridGBMLCrossover(Crossover):
             else:
                 michigan_crossover_mask[i] = random.random() < self.__michigan_crossover_probability
 
+        # for sol in X[0, michigan_crossover_mask]:
+        #     for m in sol[0].get_vars():
+        #         print(m)
+        #         if m.get_rule().is_rejected_class_label():
+        #             raise Exception("Invalid parent")
+
         Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
-        Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, michigan_crossover_mask], **kwargs)
+        Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
         Y = np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
 
         return Y

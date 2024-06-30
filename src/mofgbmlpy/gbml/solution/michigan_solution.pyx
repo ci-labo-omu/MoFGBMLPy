@@ -51,7 +51,7 @@ cdef class MichiganSolution(AbstractSolution):
 
     cdef void create_rule(self, Pattern pattern=None):
         cdef int[:] antecedent_indices
-        antecedent_indices = self._rule_builder.create_antecedent_indices(pattern=pattern, num_rules=1)[0]
+        antecedent_indices = self._rule_builder.create_antecedent_indices(num_rules=1, pattern=pattern)[0]
         self.set_vars(antecedent_indices)
         self.learning()
 
@@ -87,7 +87,7 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef AbstractRule get_rule(self):
         return self._rule
 
-    cdef RuleBuilderCore get_rule_builder(self):
+    cpdef RuleBuilderCore get_rule_builder(self):
         return self._rule_builder
 
     cpdef Consequent get_consequent(self):
@@ -158,8 +158,18 @@ cdef class MichiganSolution(AbstractSolution):
         new_solution.__num_wins = self.__num_wins
         new_solution.__fitness = self.__fitness
         new_solution._vars = vars_copy
+        new_solution._rule.get_antecedent().set_antecedent_indices(vars_copy)
         new_solution._objectives = objectives_copy
 
         memo[id(self)] = new_solution
+
+        # if id(new_solution._rule) == id(self._rule):
+        #     raise Exception("invalid rule copy")
+        # if id(new_solution._vars) == id(self._vars):
+        #     raise Exception("invalid _vars copy")
+        # if id(new_solution._rule.get_antecedent()) == id(self._rule.get_antecedent()):
+        #     raise Exception("invalid rule antecedent copy")
+        # if id(new_solution._rule.get_antecedent().get_antecedent_indices()) == id(self._rule.get_antecedent().get_antecedent_indices()):
+        #     raise Exception("invalid rule antecedent copy")
 
         return new_solution

@@ -103,7 +103,7 @@ class MoFGBMLBasicMain:
                                     michigan_solution_builder,
                                     classifier)
 
-        crossover_probability = args.get("")
+        crossover_probability = args.get("HYBRID_CROSS_RT")
 
         algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(train),
@@ -113,8 +113,9 @@ class MoFGBMLBasicMain:
                                                         MichiganCrossover(
                                                             args.get("RULE_CHANGE_RT"),
                                                             train,
-                                                            args.get("MICHIGAN_CROSS_RT"),
-                                                            knowledge
+                                                            knowledge,
+                                                            args.get("MAX_NUM_RULES"),
+                                                            args.get("MICHIGAN_CROSS_RT")
                                                         ),
                                                         PittsburghCrossover(
                                                             args.get("MIN_NUM_RULES"),
