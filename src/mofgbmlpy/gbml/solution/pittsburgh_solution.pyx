@@ -94,3 +94,6 @@ cdef class PittsburghSolution(AbstractSolution):
         memo[id(self)] = new_solution
 
         return new_solution
+
+    def __copy__(self):
+        return self.__deepcopy__() # pymoo use copy so it causes issues

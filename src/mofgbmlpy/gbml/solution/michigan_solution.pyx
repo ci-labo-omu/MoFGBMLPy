@@ -163,13 +163,7 @@ cdef class MichiganSolution(AbstractSolution):
 
         memo[id(self)] = new_solution
 
-        # if id(new_solution._rule) == id(self._rule):
-        #     raise Exception("invalid rule copy")
-        # if id(new_solution._vars) == id(self._vars):
-        #     raise Exception("invalid _vars copy")
-        # if id(new_solution._rule.get_antecedent()) == id(self._rule.get_antecedent()):
-        #     raise Exception("invalid rule antecedent copy")
-        # if id(new_solution._rule.get_antecedent().get_antecedent_indices()) == id(self._rule.get_antecedent().get_antecedent_indices()):
-        #     raise Exception("invalid rule antecedent copy")
-
         return new_solution
+
+    def __copy__(self):
+        return self.__deepcopy__() # pymoo use copy so it causes issues

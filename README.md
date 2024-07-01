@@ -9,6 +9,17 @@
 
 `python setup.py build_ext --inplace`
 
+### Speedup pymoo
+Use the compiled version of pymoo to reduce computation time
+
+1. `pip uninstall pymoo`
+2. `mkdir pymoo`
+3. `cd pymoo`
+4. `git clone https://github.com/anyoptimization/pymoo`
+5. `cd pymoo`
+6. `make compile`
+7. `pip install .`
+
 ### Note
 - pymoo is not yet compatible with numpy 2.0.0, so we use the previous version instead
 - Profiler for Cython only works for Python<3.12

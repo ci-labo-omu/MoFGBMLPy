@@ -25,9 +25,8 @@ class MichiganMutation(Mutation):
             # for each var
             indices = sol.get_antecedent().get_antecedent_indices()
             for j in range(sol.get_num_vars()):
-                if random.random() < self.__mutation_rt:
+                if random.random() > self.__mutation_rt:
                     continue
-
                 # TODO: check Java version for categorical attributes
 
                 num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j) # TODO: check if _vars and antecedent indices are the same array object

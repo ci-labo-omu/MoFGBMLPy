@@ -2,11 +2,11 @@ import copy
 import random
 
 import numpy as np
-from pymoo.core.crossover import Crossover
+from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.util.misc import crossover_mask
 
 
-class UniformCrossoverSingleOffspring(Crossover):
+class UniformCrossoverSingleOffspring(PymooDeepcopyCrossover):
 
     def __init__(self, prob, **kwargs):
         super().__init__(2, 1, prob=prob, **kwargs)
@@ -30,23 +30,6 @@ class UniformCrossoverSingleOffspring(Crossover):
             indices_1 = child_1.get_vars()
             indices_2 = child_2.get_vars()
 
-            # print("\nOFFSPRING 1 (start): ", end="")
-            # for xi in child_1.get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nOFFSPRING 2 (start): ", end="")
-            # for xi in child_2.get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nPARENT 1: ", end="")
-            # for xi in X[0, i, 0].get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nPARENT 2: ", end="")
-            # for xi in X[1, i, 0].get_vars():
-            #     print(xi, end=" ")
-
-
             for j in range(n_vars):
                 if mask[i, j]:
                     tmp = indices_1[j]
@@ -60,27 +43,5 @@ class UniformCrossoverSingleOffspring(Crossover):
                 offspring[0, i, 0] = child_2
 
             indices = offspring[0, i, 0].get_antecedent().get_antecedent_indices()
-
-            # print("\nPARENT 1 (end): ", end="")
-            # for xi in X[0, i, 0].get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nPARENT 2 (end): ", end="")
-            # for xi in X[1, i, 0].get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nOFFSPRING 1 (end): ", end="")
-            # for xi in child_1.get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nOFFSPRING 2 (end): ", end="")
-            # for xi in child_2.get_vars():
-            #     print(xi, end=" ")
-            #
-            # print("\nOFFSPRING (end): ", end="")
-            # for xi in offspring[0, i, 0].get_vars():
-            #     print(xi, end=" ")
-            # print()
-
 
         return offspring
