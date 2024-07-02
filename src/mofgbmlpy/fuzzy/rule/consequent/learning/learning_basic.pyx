@@ -10,6 +10,8 @@ from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWeightBasic
 from mofgbmlpy.data.pattern cimport Pattern
 from libc.math cimport INFINITY
+from cython.parallel import prange
+
 
 cdef class LearningBasic(AbstractLearning):
     def __init__(self, training_dataset):
@@ -35,7 +37,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef int i
         cdef Pattern p
 
-        # for i in prange(size, nogil=True):
+        # for i in prange(self._train_ds.get_size(), nogil=True):
         for i in range(self._train_ds.get_size()):
             p = patterns[i]
             compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())

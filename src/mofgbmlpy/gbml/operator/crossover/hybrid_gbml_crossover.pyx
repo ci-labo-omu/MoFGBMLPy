@@ -22,21 +22,35 @@ class HybridGBMLCrossover(Crossover):
 
         michigan_crossover_mask = np.empty(n_matings, dtype=np.bool_)
 
+        cdef bint at_least_one_michigan_crossover = False
+        cdef bint at_least_one_pittsburgh_crossover = False
+
         for i in range(n_matings):
             # Check if the 2 parents are identical
             if X[0,i,0] == X[1,i,0]:
                 michigan_crossover_mask[i] = True
+                if not at_least_one_michigan_crossover:
+                    at_least_one_michigan_crossover = True
             else:
                 michigan_crossover_mask[i] = random.random() < self.__michigan_crossover_probability
+                if not at_least_one_michigan_crossover and michigan_crossover_mask[i]:
+                    at_least_one_michigan_crossover = True
+                elif not at_least_one_pittsburgh_crossover and not michigan_crossover_mask[i]:
+                    at_least_one_pittsburgh_crossover = True
 
-        # for sol in X[0, michigan_crossover_mask]:
-        #     for m in sol[0].get_vars():
-        #         print(m)
-        #         if m.get_rule().is_rejected_class_label():
-        #             raise Exception("Invalid parent")
+        if at_least_one_pittsburgh_crossover:
+            Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
 
-        Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
-        Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
-        Y = np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
+        if at_least_one_michigan_crossover:
+            Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
+
+        if at_least_one_michigan_crossover and at_least_one_pittsburgh_crossover:
+            Y = np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
+        elif not at_least_one_michigan_crossover:
+            return Y_pittsburgh
+        elif not at_least_one_pittsburgh_crossover:
+            return Y_michigan
+        else:
+            raise Exception("No offspring created during hybrid crossover")
 
         return Y

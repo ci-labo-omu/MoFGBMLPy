@@ -1,6 +1,8 @@
 import numpy as np
+from pymoo.algorithms.moo.moead import MOEAD
 from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
+from pymoo.util.ref_dirs import get_reference_directions
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
@@ -17,7 +19,7 @@ from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
+from mofgbmlpy.main.moead.mofgbml_moead_args import MoFGBMLMOEADArgs
 import sys
 import os
 from pymoo.visualization.scatter import Scatter
@@ -37,15 +39,12 @@ from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
 
-class MoFGBMLBasicMain:
+class MoFGBMLMOEADMain:
     @staticmethod
     def main(args):
         # TODO: print information
 
-        # Consts.set()
-        #...
-
-        mofgbml_args = MoFGBMLBasicArgs()
+        mofgbml_args = MoFGBMLMOEADArgs()
         Output.mkdirs(mofgbml_args.get("ROOT_FOLDER"))
 
         # set command arguments to static variables
@@ -59,7 +58,7 @@ class MoFGBMLBasicMain:
         train, test = Input.get_train_test_files(mofgbml_args)
 
         # Run the algo
-        exec_time = MoFGBMLBasicMain.hybrid_style_mofgbml(train, test, mofgbml_args)
+        exec_time = MoFGBMLMOEADMain.hybrid_style_mofgbml(train, test, mofgbml_args)
         print("Execution time: ", exec_time)
 
     @staticmethod
@@ -68,7 +67,7 @@ class MoFGBMLBasicMain:
         np.random.seed(args.get("RAND_SEED"))
         knowledge = HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
 
-        num_objectives_michigan = 1
+        num_objectives_michigan = 2
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
@@ -103,28 +102,34 @@ class MoFGBMLBasicMain:
 
         crossover_probability = args.get("HYBRID_CROSS_RT")
 
-        algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
-                          sampling=HybridGBMLSampling(train),
-                          # crossover=PittsburghCrossover(args.get("MIN_NUM_RULES"),
-                          #                               args.get("MAX_NUM_RULES")),
-                          crossover=HybridGBMLCrossover(args.get("MICHIGAN_OPE_RT"),
-                                                        MichiganCrossover(
-                                                            args.get("RULE_CHANGE_RT"),
-                                                            train,
-                                                            knowledge,
-                                                            args.get("MAX_NUM_RULES"),
-                                                            args.get("MICHIGAN_CROSS_RT")
-                                                        ),
-                                                        PittsburghCrossover(
-                                                            args.get("MIN_NUM_RULES"),
-                                                            args.get("MAX_NUM_RULES"),
-                                                            args.get("PITTSBURGH_CROSS_RT")),
-                                                        crossover_probability),
-                          repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(train, knowledge),
-                          eliminate_duplicates=False,
-                          archive=MultiObjectiveArchive(duplicate_elimination=False,
-                                                        max_size=None, truncate_size=None))
+        ref_dirs = get_reference_directions("uniform",
+                                            problem.get_num_objectives(),
+                                            n_partitions=args.get("POPULATION_SIZE")-1)
+
+        #TODO: check "variation" in the java code
+
+        algorithm = MOEAD(
+            ref_dirs,
+            n_neighbors=args.get("NEIGHBORHOOD_SIZE"),
+            prob_neighbor_mating=args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
+            sampling=HybridGBMLSampling(train),
+            crossover=HybridGBMLCrossover(args.get("MICHIGAN_OPE_RT"),
+                                          MichiganCrossover(
+                                              args.get("RULE_CHANGE_RT"),
+                                              train,
+                                              knowledge,
+                                              args.get("MAX_NUM_RULES"),
+                                              args.get("MICHIGAN_CROSS_RT")
+                                          ),
+                                          PittsburghCrossover(
+                                              args.get("MIN_NUM_RULES"),
+                                              args.get("MAX_NUM_RULES"),
+                                              args.get("PITTSBURGH_CROSS_RT")),
+                                          crossover_probability),
+            repair=PittsburghRepair(),
+            mutation=PittsburghMutation(train, knowledge),
+            archive=MultiObjectiveArchive(duplicate_elimination=False,
+                                          max_size=None, truncate_size=None))
 
         res = minimize(problem,
                        algorithm,
@@ -138,7 +143,6 @@ class MoFGBMLBasicMain:
         # for i in range(len(res.X)):
         #     print(res.X[i][0])
         #     print(f"({res.F[i][0]}, {res.F[i][0]}) - ({res.X[i][0].get_num_vars()}, {res.F[i][1]})")
-
 
         non_dominated_solutions = res.X
         archive_population = np.empty((len(res.archive), res.X.shape[1]), dtype=object)
@@ -173,10 +177,10 @@ class MoFGBMLBasicMain:
         # plot.add(f_archive, color="red")
         # plot.show()
 
-        results_data = MoFGBMLBasicMain.get_results_data(non_dominated_solutions, knowledge, train, test)
+        results_data = MoFGBMLMOEADMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
-        results_data = MoFGBMLBasicMain.get_results_data(archive_population, knowledge, train, test)
+        results_data = MoFGBMLMOEADMain.get_results_data(archive_population, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 
         return exec_time
@@ -208,4 +212,4 @@ class MoFGBMLBasicMain:
 
 
 if __name__ == '__main__':
-    MoFGBMLBasicMain.main(sys.argv[1:])
+    MoFGBMLMOEADMain.main(sys.argv[1:])
