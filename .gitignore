@@ -165,6 +165,7 @@ prof
 results
 src/**/*.pyd
 src/**/*.c
+src/**/*.cpp
 **/*.pstat
 profiler_results
 **/*.mp4
