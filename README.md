@@ -29,10 +29,10 @@ Use the compiled version of pymoo to reduce computation time
 
 #### Automatically
 
-Run `python profiler.py`
+Run `python profiler.py MoFGBMLBasicMain` (or replace MoFGBMLBasicMain with the method you want to use)
 
 #### Manually
 
-1. Generate a pstats profiler resutls file
+1. Generate a pstats profiler results file
 2. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
 3. `dot Profile.dot -Tpng -o Profile.png`
