@@ -59,12 +59,14 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         self.__antecedents_indices = indices
 
     cdef Antecedent[:] create(self, int num_rules=1):
-        cdef cnp.ndarray[object, ndim=1] antecedent_objects = np.zeros(num_rules, dtype=object)
+        cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
         cdef int i
+        cdef Antecedent new_antecedent_obj
 
         for i in range(num_rules):
-            antecedent_objects[i] = Antecedent(indices[i], self.__knowledge)
+            new_antecedent_obj = Antecedent(indices[i], self.__knowledge)
+            antecedent_objects[i] = new_antecedent_obj
 
         return antecedent_objects
 
@@ -73,13 +75,13 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int j
         cdef int[:] chosen_list
 
-        num_rules = min(num_rules, len(self.__antecedents_indices))
+        num_rules = min(num_rules, self.__antecedents_indices.size)
 
         # Return an antecedent
         if self.__antecedents_indices is None:
             # with cython.gil:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
-        cdef int[:] chosen_indices_lists = np.random.choice(list(range(len(self.__antecedents_indices))), num_rules, replace=False)
+        cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)
         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
 
         for i in range(chosen_indices_lists.size):

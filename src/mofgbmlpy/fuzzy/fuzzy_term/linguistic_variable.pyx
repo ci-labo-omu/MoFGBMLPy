@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 cimport numpy as cnp
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
@@ -15,7 +17,7 @@ cdef class LinguisticVariable:
         self.__support_values = support_values
         self.__fuzzy_sets = fuzzy_sets
         self.__concept = str(name)
-        self.__domain = [0, 1]
+        self.__domain = np.array([0.0, 1.0])
 
     cpdef str get_concept(self):
         return self.__concept
@@ -42,3 +44,15 @@ cdef class LinguisticVariable:
         for i in range(len(self.__fuzzy_sets)):
             txt += f"\t{self.__fuzzy_sets[i]}\n"
         return txt
+
+    def __deepcopy__(self, memo={}):
+        cdef double[:] support_values_copy = np.copy(self.__support_values)
+        cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.size, dtype=object)
+        cdef int i
+
+        for i in range(fuzzy_sets_copy.size):
+            fuzzy_sets_copy[i] = copy.deepcopy(self.__fuzzy_sets[i])
+
+        cdef LinguisticVariable new_object = LinguisticVariable(fuzzy_sets_copy, self.__concept, support_values_copy)
+        memo[id(self)] = new_object
+        return new_object

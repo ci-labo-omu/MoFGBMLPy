@@ -14,7 +14,7 @@ cdef class LearningBasic(AbstractLearning):
     cdef Dataset _train_ds
 
     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=?)
-    cdef cnp.ndarray[double, ndim=1] calc_confidence(self, Antecedent antecedent)
-    cpdef ClassLabelBasic calc_class_label(self, cnp.ndarray[double, ndim=1] confidence)
-    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, cnp.ndarray[double, ndim=1] confidence, double reject_threshold)
+    cdef double[:] calc_confidence(self, Antecedent antecedent)
+    cpdef ClassLabelBasic calc_class_label(self, double[:] confidence)
+    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold)
     cpdef Dataset get_training_set(self)

@@ -14,16 +14,12 @@ cimport numpy as cnp
 
 
 cdef class MichiganSolution(AbstractSolution):
-    def __init__(self, num_objectives, num_constraints, rule_builder, bounds=None, pattern=None, do_init_vars=True):
-        if bounds is None:
-            bounds = MichiganSolution.make_bounds(knowledge=rule_builder.get_knowledge())
-
-        self._bounds = bounds
+    def __init__(self, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True):
         self._rule_builder = rule_builder
         self.__num_wins = 0
         self.__fitness = 0
 
-        super().__init__(len(bounds), num_objectives, num_constraints)
+        super().__init__(num_objectives, num_constraints)
 
         if do_init_vars:
             cnt = 0
@@ -35,19 +31,6 @@ cdef class MichiganSolution(AbstractSolution):
                 if cnt > 1000:
                     # with cython.gil:
                     raise Exception("Exceeded maximum number of trials to generate rule")
-
-
-    @staticmethod
-    def make_bounds(knowledge):
-        num_dim = knowledge.get_num_dim()
-
-        return np.array([(0, knowledge.get_num_fuzzy_sets(dim_i)-1) for dim_i in range(num_dim)], dtype=object)
-
-    cdef double get_lower_bound(self, int index):
-        return self._bounds[index][0]
-
-    cdef double get_upper_bound(self, int index):
-        return self._bounds[index][1]
 
     cdef void create_rule(self, Pattern pattern=None):
         cdef int[:] antecedent_indices
@@ -69,7 +52,7 @@ cdef class MichiganSolution(AbstractSolution):
             antecedent_object.set_antecedent_indices(self._vars)
             self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object))
 
-    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] in_vector):
+    cpdef double get_fitness_value(self, double[:] in_vector):
         return self._rule.get_fitness_value(in_vector)
 
     cpdef int get_rule_length(self):
@@ -96,10 +79,10 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef Antecedent get_antecedent(self):
         return self._rule.get_antecedent()
 
-    cdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double[:] get_compatible_grade(self, double[:] attribute_vector):
         return self._rule.get_compatible_grade(attribute_vector)
 
-    cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
 
     cpdef double compute_coverage(self):
@@ -132,16 +115,10 @@ cdef class MichiganSolution(AbstractSolution):
         return f"(MichiganSolution) {self._rule}"
 
     def __deepcopy__(self, memo={}):
-        cdef double[:,:] bounds_copy = np.empty(self._bounds.shape)
         cdef int i
-        for i in range(bounds_copy.shape[0]):
-            bounds_copy[i][0] = self._bounds[i][0]
-            bounds_copy[i][1] = self._bounds[i][1]
-
         new_solution = MichiganSolution(self.get_num_objectives(),
                                         self.get_num_constraints(),
                                         copy.deepcopy(self._rule_builder),
-                                        bounds = bounds_copy,
                                         do_init_vars=False)
 
         cdef int[:] vars_copy = np.empty(self.get_num_vars(), dtype=int)
@@ -167,3 +144,41 @@ cdef class MichiganSolution(AbstractSolution):
 
     def __copy__(self):
         return self.__deepcopy__() # pymoo use copy so it causes issues
+
+    def __hash__(self):
+        return hash(self._vars)
+
+    cdef void clear_vars(self):
+        self._vars = np.empty(0, dtype=int)
+
+    cpdef int[:] get_vars(self):
+        return self._vars
+
+    cpdef int get_var(self, int index):
+        return self._vars[index]
+
+    cpdef void set_var(self, int index, int value):
+        self._vars[index] = value
+
+    cpdef void set_vars(self, int[:] new_vars):
+        self._vars = new_vars
+
+    cpdef int get_num_vars(self):
+        return self._vars.size
+
+    def __repr__(self):
+        txt = "(Michigan Solution) Variables: ["
+        for i in range(self.get_num_vars()):
+            txt += f"{self._vars[i]} "
+
+        txt += "] Objectives "
+        for i in range(self.get_num_objectives()):
+            txt += f"{self._objectives[i]} "
+
+        # txt += "] Constraints "
+        # for i in range(self.get_num_constraints()):
+        #     txt += f"{self._objectives[i]} "
+
+        txt += f"] Algorithm Attributes: {self._attributes}"
+
+        return txt

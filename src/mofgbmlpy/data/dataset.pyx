@@ -1,14 +1,11 @@
+import copy
+
 import numpy as np
 cimport numpy as cnp
 from mofgbmlpy.data.pattern cimport Pattern
 import cython
 
 cdef class Dataset:
-    # cdef int __size
-    # cdef int __num_dim  # number of attributes
-    # cdef int __num_classes
-    # cdef object __patterns
-
     def __init__(self, size, n_dim, c_num, patterns):
         if size <= 0 or n_dim <= 0 or c_num <= 0:
             # with cython.gil:
@@ -21,7 +18,7 @@ cdef class Dataset:
     cpdef Pattern get_pattern(self, int index):
         return self.__patterns[index]
 
-    cpdef cnp.ndarray[object, ndim=1] get_patterns(self):
+    cpdef Pattern[:] get_patterns(self):
         return self.__patterns
 
     def __str__(self):
@@ -41,8 +38,11 @@ cdef class Dataset:
     cpdef int get_size(self):
         return self.__size
 
-    # def __reduce__(self):
-    #     cdef cnp.ndarray[object, ndim=1] patterns_copy = np.empty(self.__patterns.shape[0], dtype=object)
-    #     for i in range(self.__patterns.shape[0]):
-    #         patterns_copy[i] = deepcopy(self.__patterns[i])
-    #     return (self.__class__, (self.__size, self.__num_dim, self.__num_classes, patterns_copy))
+    def __deepcopy__(self, memo={}):
+        cdef Pattern[:] patterns_copy = np.empty(self.__size, dtype=object)
+        for i in range(self.__size):
+            patterns_copy[i] = copy.deepcopy(self.__patterns[i])
+
+        cdef Dataset new_object = Dataset(self.__size, self.__num_dim, self.__num_classes, patterns_copy)
+        memo[id(self)] = new_object
+        return new_object

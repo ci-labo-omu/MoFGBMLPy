@@ -1,3 +1,5 @@
+import copy
+
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 cimport numpy as cnp
 import cython
@@ -12,8 +14,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         if not isinstance(other, ClassLabelMulti) or self.get_length() != other.get_length():
             return False
 
-        cdef cnp.ndarray[int, ndim=1] label = self.get_class_label_value()
-        cdef cnp.ndarray[int, ndim=1] other_label = other.get_class_label_value()
+        cdef int[:] label = self.get_class_label_value()
+        cdef int[:] other_label = other.get_class_label_value()
         cdef int i
 
         for i in range(self.get_length()):
@@ -24,14 +26,16 @@ cdef class ClassLabelMulti(AbstractClassLabel):
     cpdef int get_length(self):
         return self.get_class_label_value().size
 
-    def __copy__(self):
-        return ClassLabelMulti(self.get_class_label_value())
+    def __deepcopy__(self, memo={}):
+        cdef ClassLabelMulti new_object = ClassLabelMulti(copy.deepcopy(self.get_class_label_value()))
+        memo[id(self)] = new_object
+        return new_object
 
     def __str__(self):
         if self.get_class_label_value() is None:
             # with cython.gil:
             raise Exception("class label value is None")
-        cdef cnp.ndarray[int, ndim=1] label_value = self.get_class_label_value()
+        cdef int[:] label_value = self.get_class_label_value()
         txt = f"{self.label_value[0]:2d}"
 
         if self.get_length() > 1:

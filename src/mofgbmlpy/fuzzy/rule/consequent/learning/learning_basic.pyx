@@ -9,42 +9,48 @@ from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWeightBasic
 from mofgbmlpy.data.pattern cimport Pattern
+from libc.math cimport INFINITY
 
 cdef class LearningBasic(AbstractLearning):
     def __init__(self, training_dataset):
         self._train_ds = training_dataset
 
     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
-        cdef cnp.ndarray[double, ndim=1] confidence = self.calc_confidence(antecedent)
+        cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
 
         return Consequent(class_label, rule_weight)
 
-    cdef cnp.ndarray[double, ndim=1] calc_confidence(self, Antecedent antecedent):
+    cdef double[:] calc_confidence(self, Antecedent antecedent):
         if antecedent is None:
             # with cython.gil:
             raise ValueError('Antecedent cannot be None')
 
         cdef int num_classes = self._train_ds.get_num_classes()
-        cdef cnp.ndarray[double, ndim=1] confidence = np.zeros(num_classes)
+        cdef double[:] confidence = np.zeros(num_classes)
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes)
-        cdef cnp.ndarray[double, ndim=1] compatible_grades = np.zeros(self._train_ds.get_size())
-        cdef cnp.ndarray[object, ndim=1] patterns = self._train_ds.get_patterns()
+        cdef double[:] compatible_grades = np.zeros(self._train_ds.get_size())
+        cdef Pattern[:] patterns = self._train_ds.get_patterns()
         cdef int i
+        cdef Pattern p
 
+        # for i in prange(size, nogil=True):
         for i in range(self._train_ds.get_size()):
-            compatible_grades[i] = antecedent.get_compatible_grade_value(patterns[i].get_attributes_vector())
+            p = patterns[i]
+            compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())
 
         cdef double all_sum = 0
         cdef int c
         cdef double part_sum = 0
+        cdef int class_label
 
         for c in range(num_classes):
             part_sum = 0
             # TODO: Add multithreading
             for i in range(self._train_ds.get_size()):
-                if patterns[i].get_target_class().get_class_label_value() == c:
+                pattern = patterns[i]
+                if pattern.get_target_class().get_class_label_value() == c:
                     part_sum += compatible_grades[i]
 
             sum_compatible_grade_for_each_class[c] = part_sum
@@ -55,9 +61,10 @@ cdef class LearningBasic(AbstractLearning):
 
         return confidence
 
-    cpdef ClassLabelBasic calc_class_label(self, cnp.ndarray[double, ndim=1] confidence):
-        cdef double max_val = float('-inf')
+    cpdef ClassLabelBasic calc_class_label(self, double[:] confidence):
+        cdef double max_val = -INFINITY
         cdef int consequent_class = -1
+        cdef int i
 
         for i in range(confidence.size):
             if confidence[i] > max_val:
@@ -73,7 +80,7 @@ cdef class LearningBasic(AbstractLearning):
             class_label = ClassLabelBasic(consequent_class)
         return class_label
 
-    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, cnp.ndarray[double, ndim=1] confidence, double reject_threshold):
+    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold):
         cdef RuleWeightBasic zero_weight = RuleWeightBasic(0.0)
 
         if class_label.is_rejected():

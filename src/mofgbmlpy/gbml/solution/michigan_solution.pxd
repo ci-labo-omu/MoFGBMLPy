@@ -14,17 +14,15 @@ cimport numpy as cnp
 
 
 cdef class MichiganSolution(AbstractSolution):
-    cdef object _bounds
-    cdef object _rule
+    cdef AbstractRule _rule
     cdef RuleBuilderCore _rule_builder
+    cdef int[:] _vars
     cdef int __num_wins
     cdef int __fitness
 
-    cdef double get_lower_bound(self, int index)
-    cdef double get_upper_bound(self, int index)
     cdef void create_rule(self, Pattern pattern=?)
     cpdef void learning(self)
-    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] in_vector)
+    cpdef double get_fitness_value(self, double[:] in_vector)
     cpdef int get_rule_length(self)
     cpdef get_class_label(self)
     cdef AbstractRuleWeight get_rule_weight(self)
@@ -33,8 +31,8 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef RuleBuilderCore get_rule_builder(self)
     cpdef Consequent get_consequent(self)
     cpdef Antecedent get_antecedent(self)
-    cdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector)
-    cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector)
+    cdef double[:] get_compatible_grade(self, double[:] attribute_vector)
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector)
     cpdef double compute_coverage(self)
     cpdef void reset_num_wins(self)
     cpdef void reset_fitness(self)
@@ -42,3 +40,9 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef void inc_fitness(self)
     cpdef int get_num_wins(self)
     cpdef int get_fitness(self)
+    cdef void clear_vars(self)
+    cpdef int[:] get_vars(self)
+    cpdef int get_var(self, int index)
+    cpdef void set_var(self, int index, int value)
+    cpdef void set_vars(self, int[:] new_vars)
+    cpdef int get_num_vars(self)

@@ -12,8 +12,10 @@ cdef class ClassLabelBasic(AbstractClassLabel):
             return False
         return other.get_class_label_value() == self.get_class_label_value()
 
-    def __copy__(self):
-        return ClassLabelBasic(self.get_class_label_value())
+    def __deepcopy__(self, memo={}):
+        new_object = ClassLabelBasic(self.get_class_label_value())
+        memo[id(self)] = new_object
+        return new_object
 
     def __str__(self):
         if self.get_class_label_value() is None:

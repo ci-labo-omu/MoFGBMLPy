@@ -5,6 +5,10 @@ from pymoo.core.sampling import Sampling
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 import numpy as np
 cimport numpy as cnp
+
+from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
+
+
 # from cython.parallel cimport prange
 
 
@@ -16,7 +20,8 @@ class HybridGBMLSampling(Sampling):
         self.__learner = LearningBasic(training_set)
 
     def _do(self, problem, n_samples, **kwargs):
-        cdef cnp.ndarray[object, ndim=2] initial_population = np.zeros((n_samples,1), dtype=object)
+        cdef int i
+        cdef AbstractSolution[:,:] initial_population = np.zeros((n_samples,1), dtype=object)
         # with concurrent.futures.ProcessPoolExecutor() as executor:
         #     tasks = {executor.submit(problem.create_solution): _ for _ in range(n_samples)}
         #     i = 0

@@ -15,17 +15,18 @@ cdef class HomoTriangleKnowledgeFactory:
         cdef double center
         cdef double right
         cdef cnp.ndarray[double, ndim=2] params
-        cdef cnp.ndarray[double, ndim=1] partition
+        cdef double[:] partition
+        cdef int num_partitions_int = num_partitions
 
-        params = np.zeros((num_partitions, 3))
-        partition = np.zeros(num_partitions+1)  # e.g.: K = 5: 0, 1/8, 3/8, 5/8, 7/8, 1
+        params = np.zeros((num_partitions_int, 3))
+        partition = np.zeros(num_partitions_int+1)  # e.g.: K = 5: 0, 1/8, 3/8, 5/8, 7/8, 1
 
-        for i in range(1, num_partitions):
-            partition[i] = (2*i-1) / ((num_partitions-1) * 2)
+        for i in range(1, num_partitions_int):
+            partition[i] = (2*i-1) / ((num_partitions_int-1) * 2)
 
-        partition[num_partitions] = 1
+        partition[num_partitions_int] = 1
 
-        for i in range(num_partitions):
+        for i in range(num_partitions_int):
             if i == 0:  # 1st partition
                 params[i] = np.array([0, 0, 2*partition[i+1]])
             elif i == partition.size-2:  # last partition

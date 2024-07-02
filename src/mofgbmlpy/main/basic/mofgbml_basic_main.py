@@ -67,7 +67,6 @@ class MoFGBMLBasicMain:
         random.seed(args.get("RAND_SEED"))
         np.random.seed(args.get("RAND_SEED"))
         knowledge = HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
-        bounds_michigan = MichiganSolution.make_bounds(knowledge)
 
         num_objectives_michigan = 1
         num_constraints_michigan = 0
@@ -88,8 +87,7 @@ class MoFGBMLBasicMain:
                                         LearningBasic(train),
                                         knowledge)
 
-        michigan_solution_builder = MichiganSolutionBuilder(bounds_michigan,
-                                                            num_objectives_michigan,
+        michigan_solution_builder = MichiganSolutionBuilder(num_objectives_michigan,
                                                             num_constraints_michigan,
                                                             rule_builder)
 
@@ -124,8 +122,8 @@ class MoFGBMLBasicMain:
                                                         crossover_probability),
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
-                          eliminate_duplicates=BasicDuplicateElimination(),
-                          archive=MultiObjectiveArchive(duplicate_elimination=BasicDuplicateElimination(),
+                          eliminate_duplicates=False,
+                          archive=MultiObjectiveArchive(duplicate_elimination=False,
                                                         max_size=None, truncate_size=None))
 
         res = minimize(problem,

@@ -22,10 +22,10 @@ cdef class AbstractRule:
     cpdef void set_consequent(self, Consequent consequent):
         self._consequent = consequent
 
-    cdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double[:] get_compatible_grade(self, double[:] attribute_vector):
         return self._antecedent.get_compatible_grade(attribute_vector)
 
-    cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         return self._antecedent.get_compatible_grade_value(attribute_vector)
 
     cpdef AbstractClassLabel get_class_label(self):
@@ -58,7 +58,7 @@ cdef class AbstractRule:
     cpdef int get_rule_length(self):
         return self.get_antecedent().get_length()
 
-    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cpdef double get_fitness_value(self, double[:] attribute_vector):
         Exception("AbstractRule is abstract")
 
     def __eq__(self, other):

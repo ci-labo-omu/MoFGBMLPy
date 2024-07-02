@@ -8,12 +8,12 @@
             "/openmp"
         ],
         "language": "c++",
-        "name": "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory",
+        "name": "mofgbmlpy.fuzzy.classifier.classifier",
         "sources": [
-            "src\\mofgbmlpy\\fuzzy\\rule\\antecedent\\factory\\all_combination_antecedent_factory.pyx"
+            "src\\mofgbmlpy\\fuzzy\\classifier\\classifier.pyx"
         ]
     },
-    "module_name": "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory"
+    "module_name": "mofgbmlpy.fuzzy.classifier.classifier"
 }
 END: Cython Metadata */
 
@@ -1245,8 +1245,8 @@ static CYTHON_INLINE float __PYX_NAN() {
     #define __PYX_EXTERN_C extern "C++"
 #endif
 
-#define __PYX_HAVE__mofgbmlpy__fuzzy__rule__antecedent__factory__all_combination_antecedent_factory
-#define __PYX_HAVE_API__mofgbmlpy__fuzzy__rule__antecedent__factory__all_combination_antecedent_factory
+#define __PYX_HAVE__mofgbmlpy__fuzzy__classifier__classifier
+#define __PYX_HAVE_API__mofgbmlpy__fuzzy__classifier__classifier
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -1262,9 +1262,7 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include "new"
 #include "stdexcept"
 #include "typeinfo"
-#include <queue>
 #include <vector>
-#include <math.h>
 #include "pythread.h"
 #include <stdlib.h>
 #ifdef _OPENMP
@@ -1537,15 +1535,27 @@ static const char *__pyx_filename;
 /* #### Code section: filename_table ### */
 
 static const char *__pyx_f[] = {
-  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\antecedent\\\\factory\\\\all_combination_antecedent_factory.pyx",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\classifier\\\\classifier.pyx",
   "<stringsource>",
   "venv\\\\Lib\\\\site-packages\\\\numpy\\\\__init__.cython-30.pxd",
   "venv\\\\Lib\\\\site-packages\\\\Cython\\\\Includes\\\\cpython\\\\type.pxd",
+  "src\\\\mofgbmlpy\\\\data\\\\class_label\\\\abstract_class_label.pxd",
+  "src\\\\mofgbmlpy\\\\data\\\\pattern.pxd",
+  "src\\\\mofgbmlpy\\\\data\\\\dataset.pxd",
   "src\\\\mofgbmlpy\\\\fuzzy\\\\fuzzy_term\\\\membership_function\\\\abstract_mf.pxd",
   "src\\\\mofgbmlpy\\\\fuzzy\\\\fuzzy_term\\\\fuzzy_set.pxd",
   "src\\\\mofgbmlpy\\\\fuzzy\\\\fuzzy_term\\\\linguistic_variable.pxd",
   "src\\\\mofgbmlpy\\\\fuzzy\\\\knowledge\\\\knowledge.pxd",
   "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\antecedent\\\\antecedent.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\antecedent\\\\factory\\\\abstract_antecedent_factory.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\consequent\\\\ruleWeight\\\\abstract_rule_weight.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\consequent\\\\consequent.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\consequent\\\\learning\\\\abstract_learning.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\rule_builder_core.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\rule\\\\abstract_rule.pxd",
+  "src\\\\mofgbmlpy\\\\gbml\\\\solution\\\\abstract_solution.pxd",
+  "src\\\\mofgbmlpy\\\\gbml\\\\solution\\\\michigan_solution.pxd",
+  "src\\\\mofgbmlpy\\\\fuzzy\\\\classifier\\\\classification\\\\abstract_classification.pxd",
 };
 /* #### Code section: utility_code_proto_before_types ### */
 /* ForceInitThreads.proto */
@@ -1889,13 +1899,24 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 /* #### Code section: type_declarations ### */
 
 /*--- Type declarations ---*/
+struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel;
+struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern;
+struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent;
 struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory;
-struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule;
+struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution;
+struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -1959,29 +1980,104 @@ struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_a
   int __pyx_n;
   int num_rules;
 };
-struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create;
-struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices;
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_16AbstractLearning_learning;
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pxd":16
+/* "mofgbmlpy/fuzzy/rule/consequent/learning/abstract_learning.pxd":6
  * 
- *     cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets)
- *     cdef Antecedent[:] create(self, int num_rules=?)             # <<<<<<<<<<<<<<
- *     cdef int[:,:] create_antecedent_indices(self, int num_rules=?)
+ * cdef class AbstractLearning:
+ *     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=?)             # <<<<<<<<<<<<<<
  */
-struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create {
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_16AbstractLearning_learning {
+  int __pyx_n;
+  double reject_threshold;
+};
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent;
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent_indices;
+
+/* "mofgbmlpy/fuzzy/rule/rule_builder_core.pxd":15
+ *     cdef Knowledge _knowledge
+ * 
+ *     cdef Antecedent create_antecedent(self, int num_rules=?)             # <<<<<<<<<<<<<<
+ *     cdef int[:,:] create_antecedent_indices(self, int num_rules=?, Pattern pattern=?)
+ *     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices)
+ */
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent {
   int __pyx_n;
   int num_rules;
 };
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pxd":17
- *     cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets)
- *     cdef Antecedent[:] create(self, int num_rules=?)
- *     cdef int[:,:] create_antecedent_indices(self, int num_rules=?)             # <<<<<<<<<<<<<<
+/* "mofgbmlpy/fuzzy/rule/rule_builder_core.pxd":16
+ * 
+ *     cdef Antecedent create_antecedent(self, int num_rules=?)
+ *     cdef int[:,:] create_antecedent_indices(self, int num_rules=?, Pattern pattern=?)             # <<<<<<<<<<<<<<
+ *     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices)
+ *     cdef Consequent create_consequent(self, Antecedent antecedent)
  */
-struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices {
+struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent_indices {
   int __pyx_n;
   int num_rules;
+  struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *pattern;
 };
+struct __pyx_opt_args_9mofgbmlpy_4gbml_8solution_17michigan_solution_16MichiganSolution_create_rule;
+
+/* "mofgbmlpy/gbml/solution/michigan_solution.pxd":23
+ *     cdef int __fitness
+ * 
+ *     cdef void create_rule(self, Pattern pattern=?)             # <<<<<<<<<<<<<<
+ *     cpdef void learning(self)
+ *     cpdef double get_fitness_value(self, double[:] in_vector)
+ */
+struct __pyx_opt_args_9mofgbmlpy_4gbml_8solution_17michigan_solution_16MichiganSolution_create_rule {
+  int __pyx_n;
+  struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *pattern;
+};
+
+/* "mofgbmlpy/data/class_label/abstract_class_label.pxd":3
+ * cimport numpy as cnp
+ * 
+ * cdef class AbstractClassLabel:             # <<<<<<<<<<<<<<
+ *     cdef cnp.npy_bool __is_rejected
+ * 
+ */
+struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *__pyx_vtab;
+  npy_bool _AbstractClassLabel__is_rejected;
+};
+
+
+/* "mofgbmlpy/data/pattern.pxd":5
+ * from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+ * 
+ * cdef class Pattern:             # <<<<<<<<<<<<<<
+ *     cdef int __id
+ *     cdef double[:] __attribute_vector
+ */
+struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_4data_7pattern_Pattern *__pyx_vtab;
+  int _Pattern__id;
+  __Pyx_memviewslice _Pattern__attribute_vector;
+  struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *_Pattern__target_class;
+};
+
+
+/* "mofgbmlpy/data/dataset.pxd":6
+ * 
+ * 
+ * cdef class Dataset:             # <<<<<<<<<<<<<<
+ *     cdef int __size
+ *     cdef int __num_dim  # number of attributes
+ */
+struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset *__pyx_vtab;
+  int _Dataset__size;
+  int _Dataset__num_dim;
+  int _Dataset__num_classes;
+  __Pyx_memviewslice _Dataset__patterns;
+};
+
 
 /* "mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pxd":3
  * import cython
@@ -2069,18 +2165,132 @@ struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antece
 };
 
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pxd":10
+/* "mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pxd":4
+ * import cython
  * 
+ * cdef class AbstractRuleWeight:             # <<<<<<<<<<<<<<
+ *     cpdef object get_value(self)
  * 
- * cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):             # <<<<<<<<<<<<<<
- *     cdef int[:,:] __antecedents_indices
- *     cdef int __dimension
  */
-struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory {
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory __pyx_base;
-  __Pyx_memviewslice _AllCombinationAntecedentFactory__antecedents_indices;
-  int _AllCombinationAntecedentFactory__dimension;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *_AllCombinationAntecedentFactory__knowledge;
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *__pyx_vtab;
+};
+
+
+/* "mofgbmlpy/fuzzy/rule/consequent/consequent.pxd":7
+ * 
+ * 
+ * cdef class Consequent:             # <<<<<<<<<<<<<<
+ *     cdef AbstractClassLabel _class_label
+ *     cdef AbstractRuleWeight _rule_weight
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *__pyx_vtab;
+  struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *_class_label;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *_rule_weight;
+};
+
+
+/* "mofgbmlpy/fuzzy/rule/consequent/learning/abstract_learning.pxd":5
+ * import cython
+ * 
+ * cdef class AbstractLearning:             # <<<<<<<<<<<<<<
+ *     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=?)
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning *__pyx_vtab;
+};
+
+
+/* "mofgbmlpy/fuzzy/rule/rule_builder_core.pxd":10
+ * from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
+ * 
+ * cdef class RuleBuilderCore:             # <<<<<<<<<<<<<<
+ *     cdef AbstractAntecedentFactory _antecedent_factory
+ *     cdef AbstractLearning _consequent_factory
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *__pyx_vtab;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory *_antecedent_factory;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning *_consequent_factory;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *_knowledge;
+};
+
+
+/* "mofgbmlpy/fuzzy/rule/abstract_rule.pxd":13
+ * 
+ * 
+ * cdef class AbstractRule:             # <<<<<<<<<<<<<<
+ *     cdef Antecedent _antecedent
+ *     cdef Consequent _consequent
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *__pyx_vtab;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *_antecedent;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *_consequent;
+};
+
+
+/* "mofgbmlpy/gbml/solution/abstract_solution.pxd":7
+ * 
+ * 
+ * cdef class AbstractSolution:             # <<<<<<<<<<<<<<
+ *     cdef double[:] _objectives
+ *     # cdef double[:] __constraints
+ */
+struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_vtab;
+  __Pyx_memviewslice _objectives;
+  PyObject *_attributes;
+};
+
+
+/* "mofgbmlpy/gbml/solution/michigan_solution.pxd":16
+ * 
+ * 
+ * cdef class MichiganSolution(AbstractSolution):             # <<<<<<<<<<<<<<
+ *     cdef AbstractRule _rule
+ *     cdef RuleBuilderCore _rule_builder
+ */
+struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution {
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution __pyx_base;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *_rule;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *_rule_builder;
+  __Pyx_memviewslice _vars;
+  int _MichiganSolution__num_wins;
+  int _MichiganSolution__fitness;
+};
+
+
+/* "mofgbmlpy/fuzzy/classifier/classification/abstract_classification.pxd":5
+ * from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+ * 
+ * cdef class AbstractClassification:             # <<<<<<<<<<<<<<
+ *     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern)
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *__pyx_vtab;
+};
+
+
+/* "mofgbmlpy/fuzzy/classifier/classifier.pxd":8
+ * from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+ * 
+ * cdef class Classifier:             # <<<<<<<<<<<<<<
+ *     cdef AbstractClassification _classification
+ * 
+ */
+struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_vtab;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *_classification;
 };
 
 
@@ -2159,6 +2369,58 @@ struct __pyx_memoryviewslice_obj {
   int (*to_dtype_func)(char *, PyObject *);
 };
 
+
+
+/* "mofgbmlpy/data/class_label/abstract_class_label.pxd":3
+ * cimport numpy as cnp
+ * 
+ * cdef class AbstractClassLabel:             # <<<<<<<<<<<<<<
+ *     cdef cnp.npy_bool __is_rejected
+ * 
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel {
+  PyObject *(*get_class_label_value)(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *, int __pyx_skip_dispatch);
+  void (*set_class_label_value)(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *, PyObject *, int __pyx_skip_dispatch);
+  npy_bool (*is_rejected)(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *, int __pyx_skip_dispatch);
+  void (*set_rejected)(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *__pyx_vtabptr_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel;
+
+
+/* "mofgbmlpy/data/pattern.pxd":5
+ * from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+ * 
+ * cdef class Pattern:             # <<<<<<<<<<<<<<
+ *     cdef int __id
+ *     cdef double[:] __attribute_vector
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_4data_7pattern_Pattern {
+  int (*get_id)(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *, int __pyx_skip_dispatch);
+  __Pyx_memviewslice (*get_attributes_vector)(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *, int __pyx_skip_dispatch);
+  double (*get_attribute_value)(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *, int, int __pyx_skip_dispatch);
+  PyObject *(*get_target_class)(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_4data_7pattern_Pattern *__pyx_vtabptr_9mofgbmlpy_4data_7pattern_Pattern;
+
+
+/* "mofgbmlpy/data/dataset.pxd":6
+ * 
+ * 
+ * cdef class Dataset:             # <<<<<<<<<<<<<<
+ *     cdef int __size
+ *     cdef int __num_dim  # number of attributes
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset {
+  struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *(*get_pattern)(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *, int, int __pyx_skip_dispatch);
+  __Pyx_memviewslice (*get_patterns)(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *, int __pyx_skip_dispatch);
+  int (*get_num_dim)(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *, int __pyx_skip_dispatch);
+  int (*get_num_classes)(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *, int __pyx_skip_dispatch);
+  int (*get_size)(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset *__pyx_vtabptr_9mofgbmlpy_4data_7dataset_Dataset;
 
 
 /* "mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pxd":3
@@ -2264,19 +2526,190 @@ struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract
 static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory;
 
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":15
+/* "mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pxd":4
+ * import cython
  * 
+ * cdef class AbstractRuleWeight:             # <<<<<<<<<<<<<<
+ *     cpdef object get_value(self)
  * 
- * cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):             # <<<<<<<<<<<<<<
- *     def __init__(self, knowledge):
- *         self.__dimension = knowledge.get_num_dim()
  */
 
-struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory {
-  struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory __pyx_base;
-  void (*generate_antecedents_indices)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *, __Pyx_memviewslice);
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight {
+  PyObject *(*get_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *, int __pyx_skip_dispatch);
+  void (*set_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *, PyObject *, int __pyx_skip_dispatch);
 };
-static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight;
+
+
+/* "mofgbmlpy/fuzzy/rule/consequent/consequent.pxd":7
+ * 
+ * 
+ * cdef class Consequent:             # <<<<<<<<<<<<<<
+ *     cdef AbstractClassLabel _class_label
+ *     cdef AbstractRuleWeight _rule_weight
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent {
+  struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *(*get_class_label)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  void (*set_class_label_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, PyObject *, int __pyx_skip_dispatch);
+  PyObject *(*get_class_label_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  npy_bool (*is_rejected)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  void (*set_rejected)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  PyObject *(*get_rule_weight)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  void (*set_rule_weight)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, PyObject *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent;
+
+
+/* "mofgbmlpy/fuzzy/rule/consequent/learning/abstract_learning.pxd":5
+ * import cython
+ * 
+ * cdef class AbstractLearning:             # <<<<<<<<<<<<<<
+ *     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=?)
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *(*learning)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning *, struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *, int __pyx_skip_dispatch, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_16AbstractLearning_learning *__pyx_optional_args);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning;
+
+
+/* "mofgbmlpy/fuzzy/rule/rule_builder_core.pxd":10
+ * from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
+ * 
+ * cdef class RuleBuilderCore:             # <<<<<<<<<<<<<<
+ *     cdef AbstractAntecedentFactory _antecedent_factory
+ *     cdef AbstractLearning _consequent_factory
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *(*create_antecedent)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent *__pyx_optional_args);
+  __Pyx_memviewslice (*create_antecedent_indices)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_15RuleBuilderCore_create_antecedent_indices *__pyx_optional_args);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *(*create_antecedent_from_indices)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *, __Pyx_memviewslice);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *(*create_consequent)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *, struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *(*get_knowledge)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore;
+
+
+/* "mofgbmlpy/fuzzy/rule/abstract_rule.pxd":13
+ * 
+ * 
+ * cdef class AbstractRule:             # <<<<<<<<<<<<<<
+ *     cdef Antecedent _antecedent
+ *     cdef Consequent _consequent
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *(*get_antecedent)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *(*get_consequent)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  void (*set_consequent)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *, int __pyx_skip_dispatch);
+  __Pyx_memviewslice (*get_compatible_grade)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, __Pyx_memviewslice);
+  double (*get_compatible_grade_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, __Pyx_memviewslice);
+  struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel *(*get_class_label)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  PyObject *(*get_class_label_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  npy_bool (*equals_class_label)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *);
+  npy_bool (*is_rejected_class_label)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *(*get_rule_weight)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *(*get_rule_weight_py)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  PyObject *(*get_rule_weight_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *);
+  PyObject *(*set_rule_weight_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, PyObject *);
+  PyObject *(*set_class_label_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, PyObject *);
+  int (*get_rule_length)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, int __pyx_skip_dispatch);
+  double (*get_fitness_value)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *, __Pyx_memviewslice, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule;
+
+
+/* "mofgbmlpy/gbml/solution/abstract_solution.pxd":7
+ * 
+ * 
+ * cdef class AbstractSolution:             # <<<<<<<<<<<<<<
+ *     cdef double[:] _objectives
+ *     # cdef double[:] __constraints
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution {
+  __Pyx_memviewslice (*get_objectives)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+  void (*set_attribute)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int, PyObject *, int __pyx_skip_dispatch);
+  PyObject *(*get_attribute)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int, int __pyx_skip_dispatch);
+  npy_bool (*has_attribute)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int, int __pyx_skip_dispatch);
+  void (*set_objective)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int, double, int __pyx_skip_dispatch);
+  double (*get_objective)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int, int __pyx_skip_dispatch);
+  int (*get_num_vars)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+  void (*clear_vars)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *);
+  int (*get_num_objectives)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+  int (*get_num_constraints)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+  PyObject *(*get_attributes)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+  void (*clear_attributes)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *);
+  double (*compute_coverage)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution;
+
+
+/* "mofgbmlpy/gbml/solution/michigan_solution.pxd":16
+ * 
+ * 
+ * cdef class MichiganSolution(AbstractSolution):             # <<<<<<<<<<<<<<
+ *     cdef AbstractRule _rule
+ *     cdef RuleBuilderCore _rule_builder
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution {
+  struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution __pyx_base;
+  void (*create_rule)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, struct __pyx_opt_args_9mofgbmlpy_4gbml_8solution_17michigan_solution_16MichiganSolution_create_rule *__pyx_optional_args);
+  void (*learning)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  double (*get_fitness_value)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, __Pyx_memviewslice, int __pyx_skip_dispatch);
+  int (*get_rule_length)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  PyObject *(*get_class_label)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *(*get_rule_weight)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight *(*get_rule_weight_py)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule *(*get_rule)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore *(*get_rule_builder)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent *(*get_consequent)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *(*get_antecedent)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  __Pyx_memviewslice (*get_compatible_grade)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, __Pyx_memviewslice);
+  double (*get_compatible_grade_value)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, __Pyx_memviewslice);
+  void (*reset_num_wins)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  void (*reset_fitness)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  void (*inc_num_wins)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  void (*inc_fitness)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  int (*get_num_wins)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  int (*get_fitness)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  __Pyx_memviewslice (*get_vars)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int __pyx_skip_dispatch);
+  int (*get_var)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int, int __pyx_skip_dispatch);
+  void (*set_var)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, int, int, int __pyx_skip_dispatch);
+  void (*set_vars)(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *, __Pyx_memviewslice, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *__pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution;
+
+
+/* "mofgbmlpy/fuzzy/classifier/classification/abstract_classification.pxd":5
+ * from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+ * 
+ * cdef class AbstractClassification:             # <<<<<<<<<<<<<<
+ *     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern)
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification {
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *(*classify)(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *, __Pyx_memviewslice, struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *, int __pyx_skip_dispatch);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *__pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification;
+
+
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":14
+ * cimport numpy as cnp
+ * 
+ * cdef class Classifier:             # <<<<<<<<<<<<<<
+ *     def __init__(self, classification):
+ *         if classification is None or not isinstance(classification, AbstractClassification):
+ */
+
+struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier {
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *(*classify)(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *, __Pyx_memviewslice, struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *);
+  PyObject *(*get_error_rate)(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *, __Pyx_memviewslice, struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *);
+};
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
 
 
 /* "View.MemoryView":114
@@ -3157,45 +3590,6 @@ static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
 /* BufferIndexError.proto */
 static void __Pyx_RaiseBufferIndexError(int axis);
 
-/* MoveIfSupported.proto */
-#if CYTHON_USE_CPP_STD_MOVE
-  #include <utility>
-  #define __PYX_STD_MOVE_IF_SUPPORTED(x) std::move(x)
-#else
-  #define __PYX_STD_MOVE_IF_SUPPORTED(x) x
-#endif
-
-/* PyObject_Str.proto */
-#define __Pyx_PyObject_Str(obj)\
-    (likely(PyString_CheckExact(obj)) ? __Pyx_NewRef(obj) : PyObject_Str(obj))
-
-/* UnicodeConcatInPlace.proto */
-# if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
-    #if CYTHON_REFNANNY
-        #define __Pyx_PyUnicode_ConcatInPlace(left, right) __Pyx_PyUnicode_ConcatInPlaceImpl(&left, right, __pyx_refnanny)
-    #else
-        #define __Pyx_PyUnicode_ConcatInPlace(left, right) __Pyx_PyUnicode_ConcatInPlaceImpl(&left, right)
-    #endif
-    static CYTHON_INLINE PyObject *__Pyx_PyUnicode_ConcatInPlaceImpl(PyObject **p_left, PyObject *right
-        #if CYTHON_REFNANNY
-        , void* __pyx_refnanny
-        #endif
-    );
-#else
-#define __Pyx_PyUnicode_ConcatInPlace __Pyx_PyUnicode_Concat
-#endif
-#define __Pyx_PyUnicode_ConcatInPlaceSafe(left, right) ((unlikely((left) == Py_None) || unlikely((right) == Py_None)) ?\
-    PyNumber_InPlaceAdd(left, right) : __Pyx_PyUnicode_ConcatInPlace(left, right))
-
-/* CallNextTpDealloc.proto */
-static void __Pyx_call_next_tp_dealloc(PyObject* obj, destructor current_tp_dealloc);
-
-/* CallNextTpTraverse.proto */
-static int __Pyx_call_next_tp_traverse(PyObject* obj, visitproc v, void *a, traverseproc current_tp_traverse);
-
-/* CallNextTpClear.proto */
-static void __Pyx_call_next_tp_clear(PyObject* obj, inquiry current_tp_clear);
-
 /* PyObject_GenericGetAttrNoDict.proto */
 #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name);
@@ -3209,28 +3603,6 @@ static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_nam
 #else
 #define __Pyx_PyObject_GenericGetAttr PyObject_GenericGetAttr
 #endif
-
-/* TypeImport.proto */
-#ifndef __PYX_HAVE_RT_ImportType_proto_3_0_10
-#define __PYX_HAVE_RT_ImportType_proto_3_0_10
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
-#include <stdalign.h>
-#endif
-#if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || __cplusplus >= 201103L
-#define __PYX_GET_STRUCT_ALIGNMENT_3_0_10(s) alignof(s)
-#else
-#define __PYX_GET_STRUCT_ALIGNMENT_3_0_10(s) sizeof(void*)
-#endif
-enum __Pyx_ImportType_CheckSize_3_0_10 {
-   __Pyx_ImportType_CheckSize_Error_3_0_10 = 0,
-   __Pyx_ImportType_CheckSize_Warn_3_0_10 = 1,
-   __Pyx_ImportType_CheckSize_Ignore_3_0_10 = 2
-};
-static PyTypeObject *__Pyx_ImportType_3_0_10(PyObject* module, const char *module_name, const char *class_name, size_t size, size_t alignment, enum __Pyx_ImportType_CheckSize_3_0_10 check_size);
-#endif
-
-/* GetVTable.proto */
-static void* __Pyx_GetVtable(PyTypeObject *type);
 
 /* IncludeStructmemberH.proto */
 #include <structmember.h>
@@ -3260,6 +3632,9 @@ CYTHON_UNUSED static int __Pyx_PyType_Ready(PyTypeObject *t);
 /* SetVTable.proto */
 static int __Pyx_SetVtable(PyTypeObject* typeptr , void* vtable);
 
+/* GetVTable.proto */
+static void* __Pyx_GetVtable(PyTypeObject *type);
+
 /* MergeVTables.proto */
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __Pyx_MergeVtables(PyTypeObject *type);
@@ -3268,6 +3643,25 @@ static int __Pyx_MergeVtables(PyTypeObject *type);
 /* SetupReduce.proto */
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __Pyx_setup_reduce(PyObject* type_obj);
+#endif
+
+/* TypeImport.proto */
+#ifndef __PYX_HAVE_RT_ImportType_proto_3_0_10
+#define __PYX_HAVE_RT_ImportType_proto_3_0_10
+#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#include <stdalign.h>
+#endif
+#if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || __cplusplus >= 201103L
+#define __PYX_GET_STRUCT_ALIGNMENT_3_0_10(s) alignof(s)
+#else
+#define __PYX_GET_STRUCT_ALIGNMENT_3_0_10(s) sizeof(void*)
+#endif
+enum __Pyx_ImportType_CheckSize_3_0_10 {
+   __Pyx_ImportType_CheckSize_Error_3_0_10 = 0,
+   __Pyx_ImportType_CheckSize_Warn_3_0_10 = 1,
+   __Pyx_ImportType_CheckSize_Ignore_3_0_10 = 2
+};
+static PyTypeObject *__Pyx_ImportType_3_0_10(PyObject* module, const char *module_name, const char *class_name, size_t size, size_t alignment, enum __Pyx_ImportType_CheckSize_3_0_10 check_size);
 #endif
 
 /* FetchSharedCythonModule.proto */
@@ -3410,6 +3804,10 @@ static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml,
                                       PyObject *module, PyObject *globals,
                                       PyObject* code);
 
+/* GetNameInClass.proto */
+#define __Pyx_GetNameInClass(var, nmspace, name)  (var) = __Pyx__GetNameInClass(nmspace, name)
+static PyObject *__Pyx__GetNameInClass(PyObject *nmspace, PyObject *name);
+
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -3469,38 +3867,9 @@ static int __pyx_slices_overlap(__Pyx_memviewslice *slice1,
                                 __Pyx_memviewslice *slice2,
                                 int ndim, size_t itemsize);
 
-/* MemviewDtypeToObject.proto */
-static CYTHON_INLINE PyObject *__pyx_memview_get_int(const char *itemp);
-static CYTHON_INLINE int __pyx_memview_set_int(const char *itemp, PyObject *obj);
-
-/* IsLittleEndian.proto */
-static CYTHON_INLINE int __Pyx_Is_Little_Endian(void);
-
-/* BufferFormatCheck.proto */
-static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts);
-static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
-                              __Pyx_BufFmt_StackElem* stack,
-                              __Pyx_TypeInfo* type);
-
-/* TypeInfoCompare.proto */
-static int __pyx_typeinfo_cmp(__Pyx_TypeInfo *a, __Pyx_TypeInfo *b);
-
-/* MemviewSliceValidateAndInit.proto */
-static int __Pyx_ValidateAndInit_memviewslice(
-                int *axes_specs,
-                int c_or_f_flag,
-                int buf_flags,
-                int ndim,
-                __Pyx_TypeInfo *dtype,
-                __Pyx_BufFmt_StackElem stack[],
-                __Pyx_memviewslice *memviewslice,
-                PyObject *original_obj);
-
-/* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_int(PyObject *, int writable_flag);
-
-/* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_object(PyObject *, int writable_flag);
+/* MemviewObjectToObject.proto */
+static PyObject *__pyx_memview_get_object(const char *itemp);
+static int __pyx_memview_set_object(const char *itemp, PyObject *obj);
 
 /* CppExceptionConversion.proto */
 #ifndef __Pyx_CppExn2PyErr
@@ -3544,8 +3913,31 @@ static void __Pyx_CppExn2PyErr() {
 }
 #endif
 
+/* IsLittleEndian.proto */
+static CYTHON_INLINE int __Pyx_Is_Little_Endian(void);
+
+/* BufferFormatCheck.proto */
+static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts);
+static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
+                              __Pyx_BufFmt_StackElem* stack,
+                              __Pyx_TypeInfo* type);
+
+/* TypeInfoCompare.proto */
+static int __pyx_typeinfo_cmp(__Pyx_TypeInfo *a, __Pyx_TypeInfo *b);
+
+/* MemviewSliceValidateAndInit.proto */
+static int __Pyx_ValidateAndInit_memviewslice(
+                int *axes_specs,
+                int c_or_f_flag,
+                int buf_flags,
+                int ndim,
+                __Pyx_TypeInfo *dtype,
+                __Pyx_BufFmt_StackElem stack[],
+                __Pyx_memviewslice *memviewslice,
+                PyObject *original_obj);
+
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_int(PyObject *, int writable_flag);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_object(PyObject *, int writable_flag);
 
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
@@ -3677,14 +4069,14 @@ static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
 static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
 static CYTHON_INLINE void __Pyx_XCLEAR_MEMVIEW(__Pyx_memviewslice *, int, int);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+/* CIntFromPy.proto */
+static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
-/* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -3735,9 +4127,8 @@ static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_5shape_shape(PyArrayObjec
 static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_7strides_strides(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE npy_intp __pyx_f_5numpy_7ndarray_4size_size(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__pyx_v_self); /* proto*/
-static void __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_generate_antecedents_indices(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, __Pyx_memviewslice __pyx_v_fuzzy_sets); /* proto*/
-static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create *__pyx_optional_args); /* proto*/
-static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices *__pyx_optional_args); /* proto*/
+static struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_classify(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, __Pyx_memviewslice __pyx_v_michigan_solution_list, struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *__pyx_v_pattern); /* proto*/
+static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_get_error_rate(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, __Pyx_memviewslice __pyx_v_michigan_solution_list, struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *__pyx_v_dataset); /* proto*/
 
 /* Module declarations from "libc.string" */
 
@@ -3763,6 +4154,12 @@ static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_
 
 /* Module declarations from "cython" */
 
+/* Module declarations from "mofgbmlpy.data.class_label.abstract_class_label" */
+
+/* Module declarations from "mofgbmlpy.data.pattern" */
+
+/* Module declarations from "mofgbmlpy.data.dataset" */
+
 /* Module declarations from "mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf" */
 
 /* Module declarations from "mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set" */
@@ -3775,17 +4172,27 @@ static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_
 
 /* Module declarations from "mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory" */
 
-/* Module declarations from "libcpp" */
+/* Module declarations from "mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight" */
 
-/* Module declarations from "libcpp.queue" */
+/* Module declarations from "mofgbmlpy.fuzzy.rule.consequent.consequent" */
+
+/* Module declarations from "mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning" */
+
+/* Module declarations from "mofgbmlpy.fuzzy.rule.rule_builder_core" */
+
+/* Module declarations from "mofgbmlpy.fuzzy.rule.abstract_rule" */
+
+/* Module declarations from "mofgbmlpy.gbml.solution.abstract_solution" */
+
+/* Module declarations from "mofgbmlpy.gbml.solution.michigan_solution" */
+
+/* Module declarations from "mofgbmlpy.fuzzy.classifier.classification.abstract_classification" */
+
+/* Module declarations from "libcpp" */
 
 /* Module declarations from "libcpp.vector" */
 
-/* Module declarations from "libc" */
-
-/* Module declarations from "libc.math" */
-
-/* Module declarations from "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory" */
+/* Module declarations from "mofgbmlpy.fuzzy.classifier.classifier" */
 static PyObject *__pyx_collections_abc_Sequence = 0;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
@@ -3794,7 +4201,7 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory__set_state(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *, PyObject *); /*proto*/
+static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier__set_state(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *, PyObject *); /*proto*/
 static int __pyx_array_allocate_buffer(struct __pyx_array_obj *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -3830,18 +4237,18 @@ static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
 /* #### Code section: typeinfo ### */
-static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, __PYX_IS_UNSIGNED(int) ? 'U' : 'I', __PYX_IS_UNSIGNED(int), 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_object = { "LinguisticVariable", NULL, sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *), { 0 }, 0, 'O', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_object = { "Python object", NULL, sizeof(PyObject *), { 0 }, 0, 'O', 0, 0 };
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory"
-extern int __pyx_module_is_main_mofgbmlpy__fuzzy__rule__antecedent__factory__all_combination_antecedent_factory;
-int __pyx_module_is_main_mofgbmlpy__fuzzy__rule__antecedent__factory__all_combination_antecedent_factory = 0;
+#define __Pyx_MODULE_NAME "mofgbmlpy.fuzzy.classifier.classifier"
+extern int __pyx_module_is_main_mofgbmlpy__fuzzy__classifier__classifier;
+int __pyx_module_is_main_mofgbmlpy__fuzzy__classifier__classifier = 0;
 
-/* Implementation of "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory" */
+/* Implementation of "mofgbmlpy.fuzzy.classifier.classifier" */
 /* #### Code section: global_var ### */
+static PyObject *__pyx_builtin_staticmethod;
+static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_object;
-static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin___import__;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_MemoryError;
@@ -3862,8 +4269,7 @@ static const char __pyx_k__7[] = ")";
 static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k__12[] = "]";
-static const char __pyx_k__33[] = "?";
+static const char __pyx_k__38[] = "?";
 static const char __pyx_k_abc[] = "abc";
 static const char __pyx_k_and[] = " and ";
 static const char __pyx_k_got[] = " (got ";
@@ -3873,6 +4279,7 @@ static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_copy[] = "copy";
 static const char __pyx_k_dict[] = "__dict__";
+static const char __pyx_k_item[] = "item";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_memo[] = "memo";
 static const char __pyx_k_mode[] = "mode";
@@ -3898,18 +4305,16 @@ static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
 static const char __pyx_k_state[] = "state";
-static const char __pyx_k_zeros[] = "zeros";
-static const char __pyx_k_arange[] = "arange";
-static const char __pyx_k_choice[] = "choice";
+static const char __pyx_k_copy_2[] = "__copy__";
 static const char __pyx_k_dict_2[] = "_dict";
 static const char __pyx_k_enable[] = "enable";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
+static const char __pyx_k_length[] = "length";
 static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_object[] = "object";
 static const char __pyx_k_pickle[] = "pickle";
-static const char __pyx_k_random[] = "random";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_struct[] = "struct";
 static const char __pyx_k_unpack[] = "unpack";
@@ -3917,24 +4322,23 @@ static const char __pyx_k_update[] = "update";
 static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
-static const char __pyx_k_replace[] = "replace";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_Sequence[] = "Sequence";
-static const char __pyx_k_deepcopy[] = "__deepcopy__";
+static const char __pyx_k_deepcopy[] = "deepcopy";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_register[] = "register";
 static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
-static const char __pyx_k_dimension[] = ", dimension=";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_isenabled[] = "isenabled";
-static const char __pyx_k_knowledge[] = "knowledge";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
+static const char __pyx_k_Classifier[] = "Classifier";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_deepcopy_2[] = "__deepcopy__";
 static const char __pyx_k_new_object[] = "new_object";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
@@ -3942,43 +4346,54 @@ static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_collections[] = "collections";
-static const char __pyx_k_get_num_dim[] = "get_num_dim";
+static const char __pyx_k_inc_fitness[] = "inc_fitness";
+static const char __pyx_k_get_rule_num[] = "get_rule_num";
+static const char __pyx_k_inc_num_wins[] = "inc_num_wins";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
+static const char __pyx_k_staticmethod[] = "staticmethod";
 static const char __pyx_k_stringsource[] = "<stringsource>";
 static const char __pyx_k_use_setstate[] = "use_setstate";
 static const char __pyx_k_version_info[] = "version_info";
 static const char __pyx_k_class_getitem[] = "__class_getitem__";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_AssertionError[] = "AssertionError";
-static const char __pyx_k_get_fuzzy_sets[] = "get_fuzzy_sets";
+static const char __pyx_k_classification[] = "classification";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
 static const char __pyx_k_allocate_buffer[] = "allocate_buffer";
 static const char __pyx_k_collections_abc[] = "collections.abc";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
+static const char __pyx_k_get_class_label[] = "get_class_label";
+static const char __pyx_k_get_rule_length[] = "get_rule_length";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
+static const char __pyx_k_Classifier___copy[] = "Classifier.__copy__";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
+static const char __pyx_k_Classifier___deepcopy[] = "Classifier.__deepcopy__";
 static const char __pyx_k_Invalid_shape_in_axis[] = "Invalid shape in axis ";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_Cannot_index_with_type[] = "Cannot index with type '";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
+static const char __pyx_k_michigan_solution_list[] = "michigan_solution_list";
+static const char __pyx_k_Classifier_get_rule_num[] = "Classifier.get_rule_num";
 static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x>";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
+static const char __pyx_k_pyx_unpickle_Classifier[] = "__pyx_unpickle_Classifier";
 static const char __pyx_k_Dimension_d_is_not_direct[] = "Dimension %d is not direct";
+static const char __pyx_k_Classifier___reduce_cython[] = "Classifier.__reduce_cython__";
+static const char __pyx_k_Classifier_get_rule_length[] = "Classifier.get_rule_length";
 static const char __pyx_k_Index_out_of_bounds_axis_d[] = "Index out of bounds (axis %d)";
 static const char __pyx_k_Step_may_not_be_zero_axis_d[] = "Step may not be zero (axis %d)";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
+static const char __pyx_k_Classifier___setstate_cython[] = "Classifier.__setstate_cython__";
+static const char __pyx_k_Invalid_classification_method[] = "Invalid classification method";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
-static const char __pyx_k_pyx_unpickle_AllCombinationAnt[] = "__pyx_unpickle_AllCombinationAntecedentFactory";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
-static const char __pyx_k_AllCombinationAntecedentFactory[] = "AllCombinationAntecedentFactory hasn't been initialised";
-static const char __pyx_k_mofgbmlpy_fuzzy_rule_antecedent[] = "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_All_dimensions_preceding_dimensi[] = "All dimensions preceding dimension %d must be indexed and not sliced";
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
@@ -3993,16 +4408,12 @@ static const char __pyx_k_Invalid_mode_expected_c_or_fortr[] = "Invalid mode, ex
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis ";
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension ";
+static const char __pyx_k_mofgbmlpy_fuzzy_classifier_class[] = "mofgbmlpy.fuzzy.classifier.classifier";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
-static const char __pyx_k_src_mofgbmlpy_fuzzy_rule_anteced[] = "src\\mofgbmlpy\\fuzzy\\rule\\antecedent\\factory\\all_combination_antecedent_factory.pyx";
+static const char __pyx_k_src_mofgbmlpy_fuzzy_classifier_c[] = "src\\mofgbmlpy\\fuzzy\\classifier\\classifier.pyx";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
-static const char __pyx_k_AllCombinationAntecedentFactory_2[] = "AllCombinationAntecedentFactory [antecedents=";
-static const char __pyx_k_AllCombinationAntecedentFactory_3[] = "AllCombinationAntecedentFactory";
-static const char __pyx_k_AllCombinationAntecedentFactory_4[] = "AllCombinationAntecedentFactory.__deepcopy__";
-static const char __pyx_k_AllCombinationAntecedentFactory_5[] = "AllCombinationAntecedentFactory.__reduce_cython__";
-static const char __pyx_k_AllCombinationAntecedentFactory_6[] = "AllCombinationAntecedentFactory.__setstate_cython__";
-static const char __pyx_k_Incompatible_checksums_0x_x_vs_0_2[] = "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))";
+static const char __pyx_k_Incompatible_checksums_0x_x_vs_0_2[] = "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))";
 /* #### Code section: decls ### */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
@@ -4045,13 +4456,15 @@ static void __pyx_memoryviewslice___pyx_pf_15View_dot_MemoryView_16_memoryviewsl
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory___init__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v_knowledge); /* proto */
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_2__str__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_4__deepcopy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v_memo); /* proto */
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_6__reduce_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_8__setstate_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static int __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier___init__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v_classification); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_2__copy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_4__deepcopy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v_memo); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_6get_rule_length(PyObject *__pyx_v_michigan_solution_list); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_8get_rule_num(PyObject *__pyx_v_michigan_solution_list); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_10__reduce_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_12__setstate_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -4125,6 +4538,15 @@ typedef struct {
   #endif
   #if CYTHON_USE_MODULE_STATE
   #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
   PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF;
   #if CYTHON_USE_MODULE_STATE
   #endif
@@ -4143,34 +4565,46 @@ typedef struct {
   PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory;
   #if CYTHON_USE_MODULE_STATE
   #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution;
+  #if CYTHON_USE_MODULE_STATE
+  #endif
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification;
   #if CYTHON_USE_MODULE_STATE
   #endif
   #if CYTHON_USE_MODULE_STATE
   #endif
   #if CYTHON_USE_MODULE_STATE
-  #endif
-  #if CYTHON_USE_MODULE_STATE
-  #endif
-  #if CYTHON_USE_MODULE_STATE
-  PyObject *__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+  PyObject *__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
   PyObject *__pyx_type___pyx_array;
   PyObject *__pyx_type___pyx_MemviewEnum;
   PyObject *__pyx_type___pyx_memoryview;
   PyObject *__pyx_type___pyx_memoryviewslice;
   #endif
-  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+  PyTypeObject *__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
   PyTypeObject *__pyx_array_type;
   PyTypeObject *__pyx_MemviewEnum_type;
   PyTypeObject *__pyx_memoryview_type;
   PyTypeObject *__pyx_memoryviewslice_type;
   PyObject *__pyx_kp_u_;
   PyObject *__pyx_n_s_ASCII;
-  PyObject *__pyx_kp_u_AllCombinationAntecedentFactory;
-  PyObject *__pyx_kp_u_AllCombinationAntecedentFactory_2;
-  PyObject *__pyx_n_s_AllCombinationAntecedentFactory_3;
-  PyObject *__pyx_n_s_AllCombinationAntecedentFactory_4;
-  PyObject *__pyx_n_s_AllCombinationAntecedentFactory_5;
-  PyObject *__pyx_n_s_AllCombinationAntecedentFactory_6;
   PyObject *__pyx_kp_s_All_dimensions_preceding_dimensi;
   PyObject *__pyx_n_s_AssertionError;
   PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
@@ -4179,6 +4613,13 @@ typedef struct {
   PyObject *__pyx_kp_s_Cannot_create_writable_memory_vi;
   PyObject *__pyx_kp_u_Cannot_index_with_type;
   PyObject *__pyx_kp_s_Cannot_transpose_memoryview_with;
+  PyObject *__pyx_n_s_Classifier;
+  PyObject *__pyx_n_s_Classifier___copy;
+  PyObject *__pyx_n_s_Classifier___deepcopy;
+  PyObject *__pyx_n_s_Classifier___reduce_cython;
+  PyObject *__pyx_n_s_Classifier___setstate_cython;
+  PyObject *__pyx_n_s_Classifier_get_rule_length;
+  PyObject *__pyx_n_s_Classifier_get_rule_num;
   PyObject *__pyx_kp_s_Dimension_d_is_not_direct;
   PyObject *__pyx_n_s_Ellipsis;
   PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
@@ -4188,6 +4629,7 @@ typedef struct {
   PyObject *__pyx_n_s_IndexError;
   PyObject *__pyx_kp_s_Index_out_of_bounds_axis_d;
   PyObject *__pyx_kp_s_Indirect_dimensions_not_supporte;
+  PyObject *__pyx_kp_u_Invalid_classification_method;
   PyObject *__pyx_kp_u_Invalid_mode_expected_c_or_fortr;
   PyObject *__pyx_kp_u_Invalid_shape_in_axis;
   PyObject *__pyx_n_s_MemoryError;
@@ -4202,34 +4644,33 @@ typedef struct {
   PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
   PyObject *__pyx_n_s_ValueError;
   PyObject *__pyx_n_s_View_MemoryView;
-  PyObject *__pyx_kp_u__12;
   PyObject *__pyx_kp_u__2;
   PyObject *__pyx_n_s__3;
-  PyObject *__pyx_n_s__33;
+  PyObject *__pyx_n_s__38;
   PyObject *__pyx_kp_u__6;
   PyObject *__pyx_kp_u__7;
   PyObject *__pyx_n_s_abc;
   PyObject *__pyx_n_s_allocate_buffer;
   PyObject *__pyx_kp_u_and;
-  PyObject *__pyx_n_s_arange;
   PyObject *__pyx_n_s_asyncio_coroutines;
   PyObject *__pyx_n_s_base;
   PyObject *__pyx_n_s_c;
   PyObject *__pyx_n_u_c;
-  PyObject *__pyx_n_s_choice;
   PyObject *__pyx_n_s_class;
   PyObject *__pyx_n_s_class_getitem;
+  PyObject *__pyx_n_s_classification;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_collections;
   PyObject *__pyx_kp_s_collections_abc;
   PyObject *__pyx_kp_s_contiguous_and_direct;
   PyObject *__pyx_kp_s_contiguous_and_indirect;
   PyObject *__pyx_n_s_copy;
+  PyObject *__pyx_n_s_copy_2;
   PyObject *__pyx_n_s_count;
   PyObject *__pyx_n_s_deepcopy;
+  PyObject *__pyx_n_s_deepcopy_2;
   PyObject *__pyx_n_s_dict;
   PyObject *__pyx_n_s_dict_2;
-  PyObject *__pyx_kp_u_dimension;
   PyObject *__pyx_kp_u_disable;
   PyObject *__pyx_n_s_dtype;
   PyObject *__pyx_n_s_dtype_is_object;
@@ -4243,25 +4684,30 @@ typedef struct {
   PyObject *__pyx_n_s_fortran;
   PyObject *__pyx_n_u_fortran;
   PyObject *__pyx_kp_u_gc;
-  PyObject *__pyx_n_s_get_fuzzy_sets;
-  PyObject *__pyx_n_s_get_num_dim;
+  PyObject *__pyx_n_s_get_class_label;
+  PyObject *__pyx_n_s_get_rule_length;
+  PyObject *__pyx_n_s_get_rule_num;
   PyObject *__pyx_n_s_getstate;
   PyObject *__pyx_kp_u_got;
   PyObject *__pyx_kp_u_got_differing_extents_in_dimensi;
   PyObject *__pyx_n_s_id;
   PyObject *__pyx_n_s_import;
+  PyObject *__pyx_n_s_inc_fitness;
+  PyObject *__pyx_n_s_inc_num_wins;
   PyObject *__pyx_n_s_index;
   PyObject *__pyx_n_s_initializing;
   PyObject *__pyx_n_s_is_coroutine;
   PyObject *__pyx_kp_u_isenabled;
+  PyObject *__pyx_n_s_item;
   PyObject *__pyx_n_s_itemsize;
   PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
-  PyObject *__pyx_n_s_knowledge;
+  PyObject *__pyx_n_s_length;
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_memo;
   PyObject *__pyx_n_s_memview;
+  PyObject *__pyx_n_s_michigan_solution_list;
   PyObject *__pyx_n_s_mode;
-  PyObject *__pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent;
+  PyObject *__pyx_n_s_mofgbmlpy_fuzzy_classifier_class;
   PyObject *__pyx_n_s_name;
   PyObject *__pyx_n_s_name_2;
   PyObject *__pyx_n_s_ndim;
@@ -4281,25 +4727,24 @@ typedef struct {
   PyObject *__pyx_n_s_pyx_result;
   PyObject *__pyx_n_s_pyx_state;
   PyObject *__pyx_n_s_pyx_type;
-  PyObject *__pyx_n_s_pyx_unpickle_AllCombinationAnt;
+  PyObject *__pyx_n_s_pyx_unpickle_Classifier;
   PyObject *__pyx_n_s_pyx_unpickle_Enum;
   PyObject *__pyx_n_s_pyx_vtable;
-  PyObject *__pyx_n_s_random;
   PyObject *__pyx_n_s_range;
   PyObject *__pyx_n_s_reduce;
   PyObject *__pyx_n_s_reduce_cython;
   PyObject *__pyx_n_s_reduce_ex;
   PyObject *__pyx_n_s_register;
-  PyObject *__pyx_n_s_replace;
   PyObject *__pyx_n_s_self;
   PyObject *__pyx_n_s_setstate;
   PyObject *__pyx_n_s_setstate_cython;
   PyObject *__pyx_n_s_shape;
   PyObject *__pyx_n_s_size;
   PyObject *__pyx_n_s_spec;
-  PyObject *__pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced;
+  PyObject *__pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c;
   PyObject *__pyx_n_s_start;
   PyObject *__pyx_n_s_state;
+  PyObject *__pyx_n_s_staticmethod;
   PyObject *__pyx_n_s_step;
   PyObject *__pyx_n_s_stop;
   PyObject *__pyx_kp_s_strided_and_direct;
@@ -4315,16 +4760,15 @@ typedef struct {
   PyObject *__pyx_n_s_update;
   PyObject *__pyx_n_s_use_setstate;
   PyObject *__pyx_n_s_version_info;
-  PyObject *__pyx_n_s_zeros;
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
   PyObject *__pyx_int_3;
-  PyObject *__pyx_int_86109117;
+  PyObject *__pyx_int_106372493;
   PyObject *__pyx_int_112105877;
   PyObject *__pyx_int_136983863;
   PyObject *__pyx_int_184977713;
-  PyObject *__pyx_int_222958791;
-  PyObject *__pyx_int_246002622;
+  PyObject *__pyx_int_243001594;
+  PyObject *__pyx_int_252302287;
   PyObject *__pyx_int_neg_1;
   PyObject *__pyx_k__13;
   PyObject *__pyx_slice__5;
@@ -4333,8 +4777,6 @@ typedef struct {
   PyObject *__pyx_tuple__9;
   PyObject *__pyx_tuple__10;
   PyObject *__pyx_tuple__11;
-  PyObject *__pyx_tuple__18;
-  PyObject *__pyx_tuple__19;
   PyObject *__pyx_tuple__20;
   PyObject *__pyx_tuple__21;
   PyObject *__pyx_tuple__22;
@@ -4344,14 +4786,22 @@ typedef struct {
   PyObject *__pyx_tuple__26;
   PyObject *__pyx_tuple__27;
   PyObject *__pyx_tuple__28;
+  PyObject *__pyx_tuple__29;
   PyObject *__pyx_tuple__30;
-  PyObject *__pyx_tuple__31;
   PyObject *__pyx_tuple__32;
+  PyObject *__pyx_tuple__33;
+  PyObject *__pyx_tuple__34;
+  PyObject *__pyx_tuple__35;
+  PyObject *__pyx_tuple__36;
+  PyObject *__pyx_tuple__37;
+  PyObject *__pyx_codeobj__12;
   PyObject *__pyx_codeobj__14;
   PyObject *__pyx_codeobj__15;
   PyObject *__pyx_codeobj__16;
   PyObject *__pyx_codeobj__17;
-  PyObject *__pyx_codeobj__29;
+  PyObject *__pyx_codeobj__18;
+  PyObject *__pyx_codeobj__19;
+  PyObject *__pyx_codeobj__31;
 } __pyx_mstate;
 
 #if CYTHON_USE_MODULE_STATE
@@ -4410,14 +4860,25 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_flexible);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_character);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_ufunc);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent);
   Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory);
-  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
-  Py_CLEAR(clear_module_state->__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification);
+  Py_CLEAR(clear_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+  Py_CLEAR(clear_module_state->__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
   Py_CLEAR(clear_module_state->__pyx_array_type);
   Py_CLEAR(clear_module_state->__pyx_type___pyx_array);
   Py_CLEAR(clear_module_state->__pyx_MemviewEnum_type);
@@ -4428,12 +4889,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_type___pyx_memoryviewslice);
   Py_CLEAR(clear_module_state->__pyx_kp_u_);
   Py_CLEAR(clear_module_state->__pyx_n_s_ASCII);
-  Py_CLEAR(clear_module_state->__pyx_kp_u_AllCombinationAntecedentFactory);
-  Py_CLEAR(clear_module_state->__pyx_kp_u_AllCombinationAntecedentFactory_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_AllCombinationAntecedentFactory_3);
-  Py_CLEAR(clear_module_state->__pyx_n_s_AllCombinationAntecedentFactory_4);
-  Py_CLEAR(clear_module_state->__pyx_n_s_AllCombinationAntecedentFactory_5);
-  Py_CLEAR(clear_module_state->__pyx_n_s_AllCombinationAntecedentFactory_6);
   Py_CLEAR(clear_module_state->__pyx_kp_s_All_dimensions_preceding_dimensi);
   Py_CLEAR(clear_module_state->__pyx_n_s_AssertionError);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Buffer_view_does_not_expose_stri);
@@ -4442,6 +4897,13 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_Cannot_create_writable_memory_vi);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Cannot_index_with_type);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Cannot_transpose_memoryview_with);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier___copy);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier___deepcopy);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier___reduce_cython);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier___setstate_cython);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier_get_rule_length);
+  Py_CLEAR(clear_module_state->__pyx_n_s_Classifier_get_rule_num);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Dimension_d_is_not_direct);
   Py_CLEAR(clear_module_state->__pyx_n_s_Ellipsis);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Empty_shape_tuple_for_cython_arr);
@@ -4451,6 +4913,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_IndexError);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Index_out_of_bounds_axis_d);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Indirect_dimensions_not_supporte);
+  Py_CLEAR(clear_module_state->__pyx_kp_u_Invalid_classification_method);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Invalid_mode_expected_c_or_fortr);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Invalid_shape_in_axis);
   Py_CLEAR(clear_module_state->__pyx_n_s_MemoryError);
@@ -4465,34 +4928,33 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_Unable_to_convert_item_to_object);
   Py_CLEAR(clear_module_state->__pyx_n_s_ValueError);
   Py_CLEAR(clear_module_state->__pyx_n_s_View_MemoryView);
-  Py_CLEAR(clear_module_state->__pyx_kp_u__12);
   Py_CLEAR(clear_module_state->__pyx_kp_u__2);
   Py_CLEAR(clear_module_state->__pyx_n_s__3);
-  Py_CLEAR(clear_module_state->__pyx_n_s__33);
+  Py_CLEAR(clear_module_state->__pyx_n_s__38);
   Py_CLEAR(clear_module_state->__pyx_kp_u__6);
   Py_CLEAR(clear_module_state->__pyx_kp_u__7);
   Py_CLEAR(clear_module_state->__pyx_n_s_abc);
   Py_CLEAR(clear_module_state->__pyx_n_s_allocate_buffer);
   Py_CLEAR(clear_module_state->__pyx_kp_u_and);
-  Py_CLEAR(clear_module_state->__pyx_n_s_arange);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
   Py_CLEAR(clear_module_state->__pyx_n_s_base);
   Py_CLEAR(clear_module_state->__pyx_n_s_c);
   Py_CLEAR(clear_module_state->__pyx_n_u_c);
-  Py_CLEAR(clear_module_state->__pyx_n_s_choice);
   Py_CLEAR(clear_module_state->__pyx_n_s_class);
   Py_CLEAR(clear_module_state->__pyx_n_s_class_getitem);
+  Py_CLEAR(clear_module_state->__pyx_n_s_classification);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_collections);
   Py_CLEAR(clear_module_state->__pyx_kp_s_collections_abc);
   Py_CLEAR(clear_module_state->__pyx_kp_s_contiguous_and_direct);
   Py_CLEAR(clear_module_state->__pyx_kp_s_contiguous_and_indirect);
   Py_CLEAR(clear_module_state->__pyx_n_s_copy);
+  Py_CLEAR(clear_module_state->__pyx_n_s_copy_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_count);
   Py_CLEAR(clear_module_state->__pyx_n_s_deepcopy);
+  Py_CLEAR(clear_module_state->__pyx_n_s_deepcopy_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_dict);
   Py_CLEAR(clear_module_state->__pyx_n_s_dict_2);
-  Py_CLEAR(clear_module_state->__pyx_kp_u_dimension);
   Py_CLEAR(clear_module_state->__pyx_kp_u_disable);
   Py_CLEAR(clear_module_state->__pyx_n_s_dtype);
   Py_CLEAR(clear_module_state->__pyx_n_s_dtype_is_object);
@@ -4506,25 +4968,30 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_fortran);
   Py_CLEAR(clear_module_state->__pyx_n_u_fortran);
   Py_CLEAR(clear_module_state->__pyx_kp_u_gc);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_fuzzy_sets);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_num_dim);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_class_label);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_rule_length);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_rule_num);
   Py_CLEAR(clear_module_state->__pyx_n_s_getstate);
   Py_CLEAR(clear_module_state->__pyx_kp_u_got);
   Py_CLEAR(clear_module_state->__pyx_kp_u_got_differing_extents_in_dimensi);
   Py_CLEAR(clear_module_state->__pyx_n_s_id);
   Py_CLEAR(clear_module_state->__pyx_n_s_import);
+  Py_CLEAR(clear_module_state->__pyx_n_s_inc_fitness);
+  Py_CLEAR(clear_module_state->__pyx_n_s_inc_num_wins);
   Py_CLEAR(clear_module_state->__pyx_n_s_index);
   Py_CLEAR(clear_module_state->__pyx_n_s_initializing);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
   Py_CLEAR(clear_module_state->__pyx_kp_u_isenabled);
+  Py_CLEAR(clear_module_state->__pyx_n_s_item);
   Py_CLEAR(clear_module_state->__pyx_n_s_itemsize);
   Py_CLEAR(clear_module_state->__pyx_kp_s_itemsize_0_for_cython_array);
-  Py_CLEAR(clear_module_state->__pyx_n_s_knowledge);
+  Py_CLEAR(clear_module_state->__pyx_n_s_length);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_memo);
   Py_CLEAR(clear_module_state->__pyx_n_s_memview);
+  Py_CLEAR(clear_module_state->__pyx_n_s_michigan_solution_list);
   Py_CLEAR(clear_module_state->__pyx_n_s_mode);
-  Py_CLEAR(clear_module_state->__pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent);
+  Py_CLEAR(clear_module_state->__pyx_n_s_mofgbmlpy_fuzzy_classifier_class);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_name_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_ndim);
@@ -4544,25 +5011,24 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_result);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_state);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_type);
-  Py_CLEAR(clear_module_state->__pyx_n_s_pyx_unpickle_AllCombinationAnt);
+  Py_CLEAR(clear_module_state->__pyx_n_s_pyx_unpickle_Classifier);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_unpickle_Enum);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_vtable);
-  Py_CLEAR(clear_module_state->__pyx_n_s_random);
   Py_CLEAR(clear_module_state->__pyx_n_s_range);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_ex);
   Py_CLEAR(clear_module_state->__pyx_n_s_register);
-  Py_CLEAR(clear_module_state->__pyx_n_s_replace);
   Py_CLEAR(clear_module_state->__pyx_n_s_self);
   Py_CLEAR(clear_module_state->__pyx_n_s_setstate);
   Py_CLEAR(clear_module_state->__pyx_n_s_setstate_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_shape);
   Py_CLEAR(clear_module_state->__pyx_n_s_size);
   Py_CLEAR(clear_module_state->__pyx_n_s_spec);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced);
+  Py_CLEAR(clear_module_state->__pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c);
   Py_CLEAR(clear_module_state->__pyx_n_s_start);
   Py_CLEAR(clear_module_state->__pyx_n_s_state);
+  Py_CLEAR(clear_module_state->__pyx_n_s_staticmethod);
   Py_CLEAR(clear_module_state->__pyx_n_s_step);
   Py_CLEAR(clear_module_state->__pyx_n_s_stop);
   Py_CLEAR(clear_module_state->__pyx_kp_s_strided_and_direct);
@@ -4578,16 +5044,15 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_update);
   Py_CLEAR(clear_module_state->__pyx_n_s_use_setstate);
   Py_CLEAR(clear_module_state->__pyx_n_s_version_info);
-  Py_CLEAR(clear_module_state->__pyx_n_s_zeros);
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
   Py_CLEAR(clear_module_state->__pyx_int_3);
-  Py_CLEAR(clear_module_state->__pyx_int_86109117);
+  Py_CLEAR(clear_module_state->__pyx_int_106372493);
   Py_CLEAR(clear_module_state->__pyx_int_112105877);
   Py_CLEAR(clear_module_state->__pyx_int_136983863);
   Py_CLEAR(clear_module_state->__pyx_int_184977713);
-  Py_CLEAR(clear_module_state->__pyx_int_222958791);
-  Py_CLEAR(clear_module_state->__pyx_int_246002622);
+  Py_CLEAR(clear_module_state->__pyx_int_243001594);
+  Py_CLEAR(clear_module_state->__pyx_int_252302287);
   Py_CLEAR(clear_module_state->__pyx_int_neg_1);
   Py_CLEAR(clear_module_state->__pyx_k__13);
   Py_CLEAR(clear_module_state->__pyx_slice__5);
@@ -4596,8 +5061,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__9);
   Py_CLEAR(clear_module_state->__pyx_tuple__10);
   Py_CLEAR(clear_module_state->__pyx_tuple__11);
-  Py_CLEAR(clear_module_state->__pyx_tuple__18);
-  Py_CLEAR(clear_module_state->__pyx_tuple__19);
   Py_CLEAR(clear_module_state->__pyx_tuple__20);
   Py_CLEAR(clear_module_state->__pyx_tuple__21);
   Py_CLEAR(clear_module_state->__pyx_tuple__22);
@@ -4607,14 +5070,22 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__26);
   Py_CLEAR(clear_module_state->__pyx_tuple__27);
   Py_CLEAR(clear_module_state->__pyx_tuple__28);
+  Py_CLEAR(clear_module_state->__pyx_tuple__29);
   Py_CLEAR(clear_module_state->__pyx_tuple__30);
-  Py_CLEAR(clear_module_state->__pyx_tuple__31);
   Py_CLEAR(clear_module_state->__pyx_tuple__32);
+  Py_CLEAR(clear_module_state->__pyx_tuple__33);
+  Py_CLEAR(clear_module_state->__pyx_tuple__34);
+  Py_CLEAR(clear_module_state->__pyx_tuple__35);
+  Py_CLEAR(clear_module_state->__pyx_tuple__36);
+  Py_CLEAR(clear_module_state->__pyx_tuple__37);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__12);
   Py_CLEAR(clear_module_state->__pyx_codeobj__14);
   Py_CLEAR(clear_module_state->__pyx_codeobj__15);
   Py_CLEAR(clear_module_state->__pyx_codeobj__16);
   Py_CLEAR(clear_module_state->__pyx_codeobj__17);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__29);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__18);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__19);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__31);
   return 0;
 }
 #endif
@@ -4651,14 +5122,25 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_flexible);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_character);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_ufunc);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent);
   Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory);
-  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
-  Py_VISIT(traverse_module_state->__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification);
+  Py_VISIT(traverse_module_state->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+  Py_VISIT(traverse_module_state->__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
   Py_VISIT(traverse_module_state->__pyx_array_type);
   Py_VISIT(traverse_module_state->__pyx_type___pyx_array);
   Py_VISIT(traverse_module_state->__pyx_MemviewEnum_type);
@@ -4669,12 +5151,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_type___pyx_memoryviewslice);
   Py_VISIT(traverse_module_state->__pyx_kp_u_);
   Py_VISIT(traverse_module_state->__pyx_n_s_ASCII);
-  Py_VISIT(traverse_module_state->__pyx_kp_u_AllCombinationAntecedentFactory);
-  Py_VISIT(traverse_module_state->__pyx_kp_u_AllCombinationAntecedentFactory_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_AllCombinationAntecedentFactory_3);
-  Py_VISIT(traverse_module_state->__pyx_n_s_AllCombinationAntecedentFactory_4);
-  Py_VISIT(traverse_module_state->__pyx_n_s_AllCombinationAntecedentFactory_5);
-  Py_VISIT(traverse_module_state->__pyx_n_s_AllCombinationAntecedentFactory_6);
   Py_VISIT(traverse_module_state->__pyx_kp_s_All_dimensions_preceding_dimensi);
   Py_VISIT(traverse_module_state->__pyx_n_s_AssertionError);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Buffer_view_does_not_expose_stri);
@@ -4683,6 +5159,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_Cannot_create_writable_memory_vi);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Cannot_index_with_type);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Cannot_transpose_memoryview_with);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier___copy);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier___deepcopy);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier___reduce_cython);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier___setstate_cython);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier_get_rule_length);
+  Py_VISIT(traverse_module_state->__pyx_n_s_Classifier_get_rule_num);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Dimension_d_is_not_direct);
   Py_VISIT(traverse_module_state->__pyx_n_s_Ellipsis);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Empty_shape_tuple_for_cython_arr);
@@ -4692,6 +5175,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_IndexError);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Index_out_of_bounds_axis_d);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Indirect_dimensions_not_supporte);
+  Py_VISIT(traverse_module_state->__pyx_kp_u_Invalid_classification_method);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Invalid_mode_expected_c_or_fortr);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Invalid_shape_in_axis);
   Py_VISIT(traverse_module_state->__pyx_n_s_MemoryError);
@@ -4706,34 +5190,33 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_Unable_to_convert_item_to_object);
   Py_VISIT(traverse_module_state->__pyx_n_s_ValueError);
   Py_VISIT(traverse_module_state->__pyx_n_s_View_MemoryView);
-  Py_VISIT(traverse_module_state->__pyx_kp_u__12);
   Py_VISIT(traverse_module_state->__pyx_kp_u__2);
   Py_VISIT(traverse_module_state->__pyx_n_s__3);
-  Py_VISIT(traverse_module_state->__pyx_n_s__33);
+  Py_VISIT(traverse_module_state->__pyx_n_s__38);
   Py_VISIT(traverse_module_state->__pyx_kp_u__6);
   Py_VISIT(traverse_module_state->__pyx_kp_u__7);
   Py_VISIT(traverse_module_state->__pyx_n_s_abc);
   Py_VISIT(traverse_module_state->__pyx_n_s_allocate_buffer);
   Py_VISIT(traverse_module_state->__pyx_kp_u_and);
-  Py_VISIT(traverse_module_state->__pyx_n_s_arange);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
   Py_VISIT(traverse_module_state->__pyx_n_s_base);
   Py_VISIT(traverse_module_state->__pyx_n_s_c);
   Py_VISIT(traverse_module_state->__pyx_n_u_c);
-  Py_VISIT(traverse_module_state->__pyx_n_s_choice);
   Py_VISIT(traverse_module_state->__pyx_n_s_class);
   Py_VISIT(traverse_module_state->__pyx_n_s_class_getitem);
+  Py_VISIT(traverse_module_state->__pyx_n_s_classification);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_collections);
   Py_VISIT(traverse_module_state->__pyx_kp_s_collections_abc);
   Py_VISIT(traverse_module_state->__pyx_kp_s_contiguous_and_direct);
   Py_VISIT(traverse_module_state->__pyx_kp_s_contiguous_and_indirect);
   Py_VISIT(traverse_module_state->__pyx_n_s_copy);
+  Py_VISIT(traverse_module_state->__pyx_n_s_copy_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_count);
   Py_VISIT(traverse_module_state->__pyx_n_s_deepcopy);
+  Py_VISIT(traverse_module_state->__pyx_n_s_deepcopy_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_dict);
   Py_VISIT(traverse_module_state->__pyx_n_s_dict_2);
-  Py_VISIT(traverse_module_state->__pyx_kp_u_dimension);
   Py_VISIT(traverse_module_state->__pyx_kp_u_disable);
   Py_VISIT(traverse_module_state->__pyx_n_s_dtype);
   Py_VISIT(traverse_module_state->__pyx_n_s_dtype_is_object);
@@ -4747,25 +5230,30 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_fortran);
   Py_VISIT(traverse_module_state->__pyx_n_u_fortran);
   Py_VISIT(traverse_module_state->__pyx_kp_u_gc);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_fuzzy_sets);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_num_dim);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_class_label);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_rule_length);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_rule_num);
   Py_VISIT(traverse_module_state->__pyx_n_s_getstate);
   Py_VISIT(traverse_module_state->__pyx_kp_u_got);
   Py_VISIT(traverse_module_state->__pyx_kp_u_got_differing_extents_in_dimensi);
   Py_VISIT(traverse_module_state->__pyx_n_s_id);
   Py_VISIT(traverse_module_state->__pyx_n_s_import);
+  Py_VISIT(traverse_module_state->__pyx_n_s_inc_fitness);
+  Py_VISIT(traverse_module_state->__pyx_n_s_inc_num_wins);
   Py_VISIT(traverse_module_state->__pyx_n_s_index);
   Py_VISIT(traverse_module_state->__pyx_n_s_initializing);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
   Py_VISIT(traverse_module_state->__pyx_kp_u_isenabled);
+  Py_VISIT(traverse_module_state->__pyx_n_s_item);
   Py_VISIT(traverse_module_state->__pyx_n_s_itemsize);
   Py_VISIT(traverse_module_state->__pyx_kp_s_itemsize_0_for_cython_array);
-  Py_VISIT(traverse_module_state->__pyx_n_s_knowledge);
+  Py_VISIT(traverse_module_state->__pyx_n_s_length);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_memo);
   Py_VISIT(traverse_module_state->__pyx_n_s_memview);
+  Py_VISIT(traverse_module_state->__pyx_n_s_michigan_solution_list);
   Py_VISIT(traverse_module_state->__pyx_n_s_mode);
-  Py_VISIT(traverse_module_state->__pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent);
+  Py_VISIT(traverse_module_state->__pyx_n_s_mofgbmlpy_fuzzy_classifier_class);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_name_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_ndim);
@@ -4785,25 +5273,24 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_result);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_state);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_type);
-  Py_VISIT(traverse_module_state->__pyx_n_s_pyx_unpickle_AllCombinationAnt);
+  Py_VISIT(traverse_module_state->__pyx_n_s_pyx_unpickle_Classifier);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_unpickle_Enum);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_vtable);
-  Py_VISIT(traverse_module_state->__pyx_n_s_random);
   Py_VISIT(traverse_module_state->__pyx_n_s_range);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_ex);
   Py_VISIT(traverse_module_state->__pyx_n_s_register);
-  Py_VISIT(traverse_module_state->__pyx_n_s_replace);
   Py_VISIT(traverse_module_state->__pyx_n_s_self);
   Py_VISIT(traverse_module_state->__pyx_n_s_setstate);
   Py_VISIT(traverse_module_state->__pyx_n_s_setstate_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_shape);
   Py_VISIT(traverse_module_state->__pyx_n_s_size);
   Py_VISIT(traverse_module_state->__pyx_n_s_spec);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced);
+  Py_VISIT(traverse_module_state->__pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c);
   Py_VISIT(traverse_module_state->__pyx_n_s_start);
   Py_VISIT(traverse_module_state->__pyx_n_s_state);
+  Py_VISIT(traverse_module_state->__pyx_n_s_staticmethod);
   Py_VISIT(traverse_module_state->__pyx_n_s_step);
   Py_VISIT(traverse_module_state->__pyx_n_s_stop);
   Py_VISIT(traverse_module_state->__pyx_kp_s_strided_and_direct);
@@ -4819,16 +5306,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_update);
   Py_VISIT(traverse_module_state->__pyx_n_s_use_setstate);
   Py_VISIT(traverse_module_state->__pyx_n_s_version_info);
-  Py_VISIT(traverse_module_state->__pyx_n_s_zeros);
   Py_VISIT(traverse_module_state->__pyx_int_0);
   Py_VISIT(traverse_module_state->__pyx_int_1);
   Py_VISIT(traverse_module_state->__pyx_int_3);
-  Py_VISIT(traverse_module_state->__pyx_int_86109117);
+  Py_VISIT(traverse_module_state->__pyx_int_106372493);
   Py_VISIT(traverse_module_state->__pyx_int_112105877);
   Py_VISIT(traverse_module_state->__pyx_int_136983863);
   Py_VISIT(traverse_module_state->__pyx_int_184977713);
-  Py_VISIT(traverse_module_state->__pyx_int_222958791);
-  Py_VISIT(traverse_module_state->__pyx_int_246002622);
+  Py_VISIT(traverse_module_state->__pyx_int_243001594);
+  Py_VISIT(traverse_module_state->__pyx_int_252302287);
   Py_VISIT(traverse_module_state->__pyx_int_neg_1);
   Py_VISIT(traverse_module_state->__pyx_k__13);
   Py_VISIT(traverse_module_state->__pyx_slice__5);
@@ -4837,8 +5323,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__9);
   Py_VISIT(traverse_module_state->__pyx_tuple__10);
   Py_VISIT(traverse_module_state->__pyx_tuple__11);
-  Py_VISIT(traverse_module_state->__pyx_tuple__18);
-  Py_VISIT(traverse_module_state->__pyx_tuple__19);
   Py_VISIT(traverse_module_state->__pyx_tuple__20);
   Py_VISIT(traverse_module_state->__pyx_tuple__21);
   Py_VISIT(traverse_module_state->__pyx_tuple__22);
@@ -4848,14 +5332,22 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__26);
   Py_VISIT(traverse_module_state->__pyx_tuple__27);
   Py_VISIT(traverse_module_state->__pyx_tuple__28);
+  Py_VISIT(traverse_module_state->__pyx_tuple__29);
   Py_VISIT(traverse_module_state->__pyx_tuple__30);
-  Py_VISIT(traverse_module_state->__pyx_tuple__31);
   Py_VISIT(traverse_module_state->__pyx_tuple__32);
+  Py_VISIT(traverse_module_state->__pyx_tuple__33);
+  Py_VISIT(traverse_module_state->__pyx_tuple__34);
+  Py_VISIT(traverse_module_state->__pyx_tuple__35);
+  Py_VISIT(traverse_module_state->__pyx_tuple__36);
+  Py_VISIT(traverse_module_state->__pyx_tuple__37);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__12);
   Py_VISIT(traverse_module_state->__pyx_codeobj__14);
   Py_VISIT(traverse_module_state->__pyx_codeobj__15);
   Py_VISIT(traverse_module_state->__pyx_codeobj__16);
   Py_VISIT(traverse_module_state->__pyx_codeobj__17);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__29);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__18);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__19);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__31);
   return 0;
 }
 #endif
@@ -4926,6 +5418,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #endif
 #if CYTHON_USE_MODULE_STATE
 #endif
+#define __pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset
+#if CYTHON_USE_MODULE_STATE
+#endif
 #define __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF
 #if CYTHON_USE_MODULE_STATE
 #endif
@@ -4944,34 +5445,46 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory
 #if CYTHON_USE_MODULE_STATE
 #endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution
+#if CYTHON_USE_MODULE_STATE
+#endif
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification
 #if CYTHON_USE_MODULE_STATE
 #endif
 #if CYTHON_USE_MODULE_STATE
 #endif
 #if CYTHON_USE_MODULE_STATE
-#endif
-#if CYTHON_USE_MODULE_STATE
-#endif
-#if CYTHON_USE_MODULE_STATE
-#define __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory __pyx_mstate_global->__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory
+#define __pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier __pyx_mstate_global->__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier
 #define __pyx_type___pyx_array __pyx_mstate_global->__pyx_type___pyx_array
 #define __pyx_type___pyx_MemviewEnum __pyx_mstate_global->__pyx_type___pyx_MemviewEnum
 #define __pyx_type___pyx_memoryview __pyx_mstate_global->__pyx_type___pyx_memoryview
 #define __pyx_type___pyx_memoryviewslice __pyx_mstate_global->__pyx_type___pyx_memoryviewslice
 #endif
-#define __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory
+#define __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier __pyx_mstate_global->__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier
 #define __pyx_array_type __pyx_mstate_global->__pyx_array_type
 #define __pyx_MemviewEnum_type __pyx_mstate_global->__pyx_MemviewEnum_type
 #define __pyx_memoryview_type __pyx_mstate_global->__pyx_memoryview_type
 #define __pyx_memoryviewslice_type __pyx_mstate_global->__pyx_memoryviewslice_type
 #define __pyx_kp_u_ __pyx_mstate_global->__pyx_kp_u_
 #define __pyx_n_s_ASCII __pyx_mstate_global->__pyx_n_s_ASCII
-#define __pyx_kp_u_AllCombinationAntecedentFactory __pyx_mstate_global->__pyx_kp_u_AllCombinationAntecedentFactory
-#define __pyx_kp_u_AllCombinationAntecedentFactory_2 __pyx_mstate_global->__pyx_kp_u_AllCombinationAntecedentFactory_2
-#define __pyx_n_s_AllCombinationAntecedentFactory_3 __pyx_mstate_global->__pyx_n_s_AllCombinationAntecedentFactory_3
-#define __pyx_n_s_AllCombinationAntecedentFactory_4 __pyx_mstate_global->__pyx_n_s_AllCombinationAntecedentFactory_4
-#define __pyx_n_s_AllCombinationAntecedentFactory_5 __pyx_mstate_global->__pyx_n_s_AllCombinationAntecedentFactory_5
-#define __pyx_n_s_AllCombinationAntecedentFactory_6 __pyx_mstate_global->__pyx_n_s_AllCombinationAntecedentFactory_6
 #define __pyx_kp_s_All_dimensions_preceding_dimensi __pyx_mstate_global->__pyx_kp_s_All_dimensions_preceding_dimensi
 #define __pyx_n_s_AssertionError __pyx_mstate_global->__pyx_n_s_AssertionError
 #define __pyx_kp_s_Buffer_view_does_not_expose_stri __pyx_mstate_global->__pyx_kp_s_Buffer_view_does_not_expose_stri
@@ -4980,6 +5493,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_Cannot_create_writable_memory_vi __pyx_mstate_global->__pyx_kp_s_Cannot_create_writable_memory_vi
 #define __pyx_kp_u_Cannot_index_with_type __pyx_mstate_global->__pyx_kp_u_Cannot_index_with_type
 #define __pyx_kp_s_Cannot_transpose_memoryview_with __pyx_mstate_global->__pyx_kp_s_Cannot_transpose_memoryview_with
+#define __pyx_n_s_Classifier __pyx_mstate_global->__pyx_n_s_Classifier
+#define __pyx_n_s_Classifier___copy __pyx_mstate_global->__pyx_n_s_Classifier___copy
+#define __pyx_n_s_Classifier___deepcopy __pyx_mstate_global->__pyx_n_s_Classifier___deepcopy
+#define __pyx_n_s_Classifier___reduce_cython __pyx_mstate_global->__pyx_n_s_Classifier___reduce_cython
+#define __pyx_n_s_Classifier___setstate_cython __pyx_mstate_global->__pyx_n_s_Classifier___setstate_cython
+#define __pyx_n_s_Classifier_get_rule_length __pyx_mstate_global->__pyx_n_s_Classifier_get_rule_length
+#define __pyx_n_s_Classifier_get_rule_num __pyx_mstate_global->__pyx_n_s_Classifier_get_rule_num
 #define __pyx_kp_s_Dimension_d_is_not_direct __pyx_mstate_global->__pyx_kp_s_Dimension_d_is_not_direct
 #define __pyx_n_s_Ellipsis __pyx_mstate_global->__pyx_n_s_Ellipsis
 #define __pyx_kp_s_Empty_shape_tuple_for_cython_arr __pyx_mstate_global->__pyx_kp_s_Empty_shape_tuple_for_cython_arr
@@ -4989,6 +5509,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_IndexError __pyx_mstate_global->__pyx_n_s_IndexError
 #define __pyx_kp_s_Index_out_of_bounds_axis_d __pyx_mstate_global->__pyx_kp_s_Index_out_of_bounds_axis_d
 #define __pyx_kp_s_Indirect_dimensions_not_supporte __pyx_mstate_global->__pyx_kp_s_Indirect_dimensions_not_supporte
+#define __pyx_kp_u_Invalid_classification_method __pyx_mstate_global->__pyx_kp_u_Invalid_classification_method
 #define __pyx_kp_u_Invalid_mode_expected_c_or_fortr __pyx_mstate_global->__pyx_kp_u_Invalid_mode_expected_c_or_fortr
 #define __pyx_kp_u_Invalid_shape_in_axis __pyx_mstate_global->__pyx_kp_u_Invalid_shape_in_axis
 #define __pyx_n_s_MemoryError __pyx_mstate_global->__pyx_n_s_MemoryError
@@ -5003,34 +5524,33 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_Unable_to_convert_item_to_object __pyx_mstate_global->__pyx_kp_s_Unable_to_convert_item_to_object
 #define __pyx_n_s_ValueError __pyx_mstate_global->__pyx_n_s_ValueError
 #define __pyx_n_s_View_MemoryView __pyx_mstate_global->__pyx_n_s_View_MemoryView
-#define __pyx_kp_u__12 __pyx_mstate_global->__pyx_kp_u__12
 #define __pyx_kp_u__2 __pyx_mstate_global->__pyx_kp_u__2
 #define __pyx_n_s__3 __pyx_mstate_global->__pyx_n_s__3
-#define __pyx_n_s__33 __pyx_mstate_global->__pyx_n_s__33
+#define __pyx_n_s__38 __pyx_mstate_global->__pyx_n_s__38
 #define __pyx_kp_u__6 __pyx_mstate_global->__pyx_kp_u__6
 #define __pyx_kp_u__7 __pyx_mstate_global->__pyx_kp_u__7
 #define __pyx_n_s_abc __pyx_mstate_global->__pyx_n_s_abc
 #define __pyx_n_s_allocate_buffer __pyx_mstate_global->__pyx_n_s_allocate_buffer
 #define __pyx_kp_u_and __pyx_mstate_global->__pyx_kp_u_and
-#define __pyx_n_s_arange __pyx_mstate_global->__pyx_n_s_arange
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
 #define __pyx_n_s_base __pyx_mstate_global->__pyx_n_s_base
 #define __pyx_n_s_c __pyx_mstate_global->__pyx_n_s_c
 #define __pyx_n_u_c __pyx_mstate_global->__pyx_n_u_c
-#define __pyx_n_s_choice __pyx_mstate_global->__pyx_n_s_choice
 #define __pyx_n_s_class __pyx_mstate_global->__pyx_n_s_class
 #define __pyx_n_s_class_getitem __pyx_mstate_global->__pyx_n_s_class_getitem
+#define __pyx_n_s_classification __pyx_mstate_global->__pyx_n_s_classification
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_collections __pyx_mstate_global->__pyx_n_s_collections
 #define __pyx_kp_s_collections_abc __pyx_mstate_global->__pyx_kp_s_collections_abc
 #define __pyx_kp_s_contiguous_and_direct __pyx_mstate_global->__pyx_kp_s_contiguous_and_direct
 #define __pyx_kp_s_contiguous_and_indirect __pyx_mstate_global->__pyx_kp_s_contiguous_and_indirect
 #define __pyx_n_s_copy __pyx_mstate_global->__pyx_n_s_copy
+#define __pyx_n_s_copy_2 __pyx_mstate_global->__pyx_n_s_copy_2
 #define __pyx_n_s_count __pyx_mstate_global->__pyx_n_s_count
 #define __pyx_n_s_deepcopy __pyx_mstate_global->__pyx_n_s_deepcopy
+#define __pyx_n_s_deepcopy_2 __pyx_mstate_global->__pyx_n_s_deepcopy_2
 #define __pyx_n_s_dict __pyx_mstate_global->__pyx_n_s_dict
 #define __pyx_n_s_dict_2 __pyx_mstate_global->__pyx_n_s_dict_2
-#define __pyx_kp_u_dimension __pyx_mstate_global->__pyx_kp_u_dimension
 #define __pyx_kp_u_disable __pyx_mstate_global->__pyx_kp_u_disable
 #define __pyx_n_s_dtype __pyx_mstate_global->__pyx_n_s_dtype
 #define __pyx_n_s_dtype_is_object __pyx_mstate_global->__pyx_n_s_dtype_is_object
@@ -5044,25 +5564,30 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_fortran __pyx_mstate_global->__pyx_n_s_fortran
 #define __pyx_n_u_fortran __pyx_mstate_global->__pyx_n_u_fortran
 #define __pyx_kp_u_gc __pyx_mstate_global->__pyx_kp_u_gc
-#define __pyx_n_s_get_fuzzy_sets __pyx_mstate_global->__pyx_n_s_get_fuzzy_sets
-#define __pyx_n_s_get_num_dim __pyx_mstate_global->__pyx_n_s_get_num_dim
+#define __pyx_n_s_get_class_label __pyx_mstate_global->__pyx_n_s_get_class_label
+#define __pyx_n_s_get_rule_length __pyx_mstate_global->__pyx_n_s_get_rule_length
+#define __pyx_n_s_get_rule_num __pyx_mstate_global->__pyx_n_s_get_rule_num
 #define __pyx_n_s_getstate __pyx_mstate_global->__pyx_n_s_getstate
 #define __pyx_kp_u_got __pyx_mstate_global->__pyx_kp_u_got
 #define __pyx_kp_u_got_differing_extents_in_dimensi __pyx_mstate_global->__pyx_kp_u_got_differing_extents_in_dimensi
 #define __pyx_n_s_id __pyx_mstate_global->__pyx_n_s_id
 #define __pyx_n_s_import __pyx_mstate_global->__pyx_n_s_import
+#define __pyx_n_s_inc_fitness __pyx_mstate_global->__pyx_n_s_inc_fitness
+#define __pyx_n_s_inc_num_wins __pyx_mstate_global->__pyx_n_s_inc_num_wins
 #define __pyx_n_s_index __pyx_mstate_global->__pyx_n_s_index
 #define __pyx_n_s_initializing __pyx_mstate_global->__pyx_n_s_initializing
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
 #define __pyx_kp_u_isenabled __pyx_mstate_global->__pyx_kp_u_isenabled
+#define __pyx_n_s_item __pyx_mstate_global->__pyx_n_s_item
 #define __pyx_n_s_itemsize __pyx_mstate_global->__pyx_n_s_itemsize
 #define __pyx_kp_s_itemsize_0_for_cython_array __pyx_mstate_global->__pyx_kp_s_itemsize_0_for_cython_array
-#define __pyx_n_s_knowledge __pyx_mstate_global->__pyx_n_s_knowledge
+#define __pyx_n_s_length __pyx_mstate_global->__pyx_n_s_length
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_memo __pyx_mstate_global->__pyx_n_s_memo
 #define __pyx_n_s_memview __pyx_mstate_global->__pyx_n_s_memview
+#define __pyx_n_s_michigan_solution_list __pyx_mstate_global->__pyx_n_s_michigan_solution_list
 #define __pyx_n_s_mode __pyx_mstate_global->__pyx_n_s_mode
-#define __pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent __pyx_mstate_global->__pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent
+#define __pyx_n_s_mofgbmlpy_fuzzy_classifier_class __pyx_mstate_global->__pyx_n_s_mofgbmlpy_fuzzy_classifier_class
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
 #define __pyx_n_s_name_2 __pyx_mstate_global->__pyx_n_s_name_2
 #define __pyx_n_s_ndim __pyx_mstate_global->__pyx_n_s_ndim
@@ -5082,25 +5607,24 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_pyx_result __pyx_mstate_global->__pyx_n_s_pyx_result
 #define __pyx_n_s_pyx_state __pyx_mstate_global->__pyx_n_s_pyx_state
 #define __pyx_n_s_pyx_type __pyx_mstate_global->__pyx_n_s_pyx_type
-#define __pyx_n_s_pyx_unpickle_AllCombinationAnt __pyx_mstate_global->__pyx_n_s_pyx_unpickle_AllCombinationAnt
+#define __pyx_n_s_pyx_unpickle_Classifier __pyx_mstate_global->__pyx_n_s_pyx_unpickle_Classifier
 #define __pyx_n_s_pyx_unpickle_Enum __pyx_mstate_global->__pyx_n_s_pyx_unpickle_Enum
 #define __pyx_n_s_pyx_vtable __pyx_mstate_global->__pyx_n_s_pyx_vtable
-#define __pyx_n_s_random __pyx_mstate_global->__pyx_n_s_random
 #define __pyx_n_s_range __pyx_mstate_global->__pyx_n_s_range
 #define __pyx_n_s_reduce __pyx_mstate_global->__pyx_n_s_reduce
 #define __pyx_n_s_reduce_cython __pyx_mstate_global->__pyx_n_s_reduce_cython
 #define __pyx_n_s_reduce_ex __pyx_mstate_global->__pyx_n_s_reduce_ex
 #define __pyx_n_s_register __pyx_mstate_global->__pyx_n_s_register
-#define __pyx_n_s_replace __pyx_mstate_global->__pyx_n_s_replace
 #define __pyx_n_s_self __pyx_mstate_global->__pyx_n_s_self
 #define __pyx_n_s_setstate __pyx_mstate_global->__pyx_n_s_setstate
 #define __pyx_n_s_setstate_cython __pyx_mstate_global->__pyx_n_s_setstate_cython
 #define __pyx_n_s_shape __pyx_mstate_global->__pyx_n_s_shape
 #define __pyx_n_s_size __pyx_mstate_global->__pyx_n_s_size
 #define __pyx_n_s_spec __pyx_mstate_global->__pyx_n_s_spec
-#define __pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced __pyx_mstate_global->__pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced
+#define __pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c __pyx_mstate_global->__pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c
 #define __pyx_n_s_start __pyx_mstate_global->__pyx_n_s_start
 #define __pyx_n_s_state __pyx_mstate_global->__pyx_n_s_state
+#define __pyx_n_s_staticmethod __pyx_mstate_global->__pyx_n_s_staticmethod
 #define __pyx_n_s_step __pyx_mstate_global->__pyx_n_s_step
 #define __pyx_n_s_stop __pyx_mstate_global->__pyx_n_s_stop
 #define __pyx_kp_s_strided_and_direct __pyx_mstate_global->__pyx_kp_s_strided_and_direct
@@ -5116,16 +5640,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_update __pyx_mstate_global->__pyx_n_s_update
 #define __pyx_n_s_use_setstate __pyx_mstate_global->__pyx_n_s_use_setstate
 #define __pyx_n_s_version_info __pyx_mstate_global->__pyx_n_s_version_info
-#define __pyx_n_s_zeros __pyx_mstate_global->__pyx_n_s_zeros
 #define __pyx_int_0 __pyx_mstate_global->__pyx_int_0
 #define __pyx_int_1 __pyx_mstate_global->__pyx_int_1
 #define __pyx_int_3 __pyx_mstate_global->__pyx_int_3
-#define __pyx_int_86109117 __pyx_mstate_global->__pyx_int_86109117
+#define __pyx_int_106372493 __pyx_mstate_global->__pyx_int_106372493
 #define __pyx_int_112105877 __pyx_mstate_global->__pyx_int_112105877
 #define __pyx_int_136983863 __pyx_mstate_global->__pyx_int_136983863
 #define __pyx_int_184977713 __pyx_mstate_global->__pyx_int_184977713
-#define __pyx_int_222958791 __pyx_mstate_global->__pyx_int_222958791
-#define __pyx_int_246002622 __pyx_mstate_global->__pyx_int_246002622
+#define __pyx_int_243001594 __pyx_mstate_global->__pyx_int_243001594
+#define __pyx_int_252302287 __pyx_mstate_global->__pyx_int_252302287
 #define __pyx_int_neg_1 __pyx_mstate_global->__pyx_int_neg_1
 #define __pyx_k__13 __pyx_mstate_global->__pyx_k__13
 #define __pyx_slice__5 __pyx_mstate_global->__pyx_slice__5
@@ -5134,8 +5657,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__9 __pyx_mstate_global->__pyx_tuple__9
 #define __pyx_tuple__10 __pyx_mstate_global->__pyx_tuple__10
 #define __pyx_tuple__11 __pyx_mstate_global->__pyx_tuple__11
-#define __pyx_tuple__18 __pyx_mstate_global->__pyx_tuple__18
-#define __pyx_tuple__19 __pyx_mstate_global->__pyx_tuple__19
 #define __pyx_tuple__20 __pyx_mstate_global->__pyx_tuple__20
 #define __pyx_tuple__21 __pyx_mstate_global->__pyx_tuple__21
 #define __pyx_tuple__22 __pyx_mstate_global->__pyx_tuple__22
@@ -5145,14 +5666,22 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__26 __pyx_mstate_global->__pyx_tuple__26
 #define __pyx_tuple__27 __pyx_mstate_global->__pyx_tuple__27
 #define __pyx_tuple__28 __pyx_mstate_global->__pyx_tuple__28
+#define __pyx_tuple__29 __pyx_mstate_global->__pyx_tuple__29
 #define __pyx_tuple__30 __pyx_mstate_global->__pyx_tuple__30
-#define __pyx_tuple__31 __pyx_mstate_global->__pyx_tuple__31
 #define __pyx_tuple__32 __pyx_mstate_global->__pyx_tuple__32
+#define __pyx_tuple__33 __pyx_mstate_global->__pyx_tuple__33
+#define __pyx_tuple__34 __pyx_mstate_global->__pyx_tuple__34
+#define __pyx_tuple__35 __pyx_mstate_global->__pyx_tuple__35
+#define __pyx_tuple__36 __pyx_mstate_global->__pyx_tuple__36
+#define __pyx_tuple__37 __pyx_mstate_global->__pyx_tuple__37
+#define __pyx_codeobj__12 __pyx_mstate_global->__pyx_codeobj__12
 #define __pyx_codeobj__14 __pyx_mstate_global->__pyx_codeobj__14
 #define __pyx_codeobj__15 __pyx_mstate_global->__pyx_codeobj__15
 #define __pyx_codeobj__16 __pyx_mstate_global->__pyx_codeobj__16
 #define __pyx_codeobj__17 __pyx_mstate_global->__pyx_codeobj__17
-#define __pyx_codeobj__29 __pyx_mstate_global->__pyx_codeobj__29
+#define __pyx_codeobj__18 __pyx_mstate_global->__pyx_codeobj__18
+#define __pyx_codeobj__19 __pyx_mstate_global->__pyx_codeobj__19
+#define __pyx_codeobj__31 __pyx_mstate_global->__pyx_codeobj__31
 /* #### Code section: module_code ### */
 
 /* "View.MemoryView":131
@@ -20277,18 +20806,18 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":16
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":15
  * 
- * cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
- *     def __init__(self, knowledge):             # <<<<<<<<<<<<<<
- *         self.__dimension = knowledge.get_num_dim()
- *         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
+ * cdef class Classifier:
+ *     def __init__(self, classification):             # <<<<<<<<<<<<<<
+ *         if classification is None or not isinstance(classification, AbstractClassification):
+ *             # with cython.gil:
  */
 
 /* Python wrapper */
-static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_knowledge = 0;
+static int __pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_classification = 0;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject* values[1] = {0};
@@ -20305,7 +20834,7 @@ static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combinat
   #endif
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_knowledge,0};
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_classification,0};
     if (__pyx_kwds) {
       Py_ssize_t kw_args;
       switch (__pyx_nargs) {
@@ -20317,27 +20846,27 @@ static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combinat
       kw_args = __Pyx_NumKwargs_VARARGS(__pyx_kwds);
       switch (__pyx_nargs) {
         case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_knowledge)) != 0)) {
+        if (likely((values[0] = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_classification)) != 0)) {
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 16, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 15, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__init__") < 0)) __PYX_ERR(0, 16, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__init__") < 0)) __PYX_ERR(0, 15, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_Arg_VARARGS(__pyx_args, 0);
     }
-    __pyx_v_knowledge = values[0];
+    __pyx_v_classification = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 16, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 15, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -20347,11 +20876,11 @@ static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combinat
       __Pyx_Arg_XDECREF_VARARGS(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory___init__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self), __pyx_v_knowledge);
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier___init__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self), __pyx_v_classification);
 
   /* function exit code */
   {
@@ -20364,126 +20893,91 @@ static int __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combinat
   return __pyx_r;
 }
 
-static int __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory___init__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v_knowledge) {
+static int __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier___init__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v_classification) {
   int __pyx_r;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
-  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 1);
-  __Pyx_TraceCall("__init__", __pyx_f[0], 16, 0, __PYX_ERR(0, 16, __pyx_L1_error));
+  __Pyx_TraceCall("__init__", __pyx_f[0], 15, 0, __PYX_ERR(0, 15, __pyx_L1_error));
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":17
- * cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
- *     def __init__(self, knowledge):
- *         self.__dimension = knowledge.get_num_dim()             # <<<<<<<<<<<<<<
- *         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
- *         self.__knowledge = knowledge
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":16
+ * cdef class Classifier:
+ *     def __init__(self, classification):
+ *         if classification is None or not isinstance(classification, AbstractClassification):             # <<<<<<<<<<<<<<
+ *             # with cython.gil:
+ *             raise Exception("Invalid classification method")
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_knowledge, __pyx_n_s_get_num_dim); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
+  __pyx_t_2 = (__pyx_v_classification == Py_None);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = __Pyx_TypeCheck(__pyx_v_classification, __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification); 
+  __pyx_t_3 = (!__pyx_t_2);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_L4_bool_binop_done:;
+  if (unlikely(__pyx_t_1)) {
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":18
+ *         if classification is None or not isinstance(classification, AbstractClassification):
+ *             # with cython.gil:
+ *             raise Exception("Invalid classification method")             # <<<<<<<<<<<<<<
+ *         self._classification = classification
+ * 
+ */
+    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 18, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_Raise(__pyx_t_4, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __PYX_ERR(0, 18, __pyx_L1_error)
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":16
+ * cdef class Classifier:
+ *     def __init__(self, classification):
+ *         if classification is None or not isinstance(classification, AbstractClassification):             # <<<<<<<<<<<<<<
+ *             # with cython.gil:
+ *             raise Exception("Invalid classification method")
+ */
+  }
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":19
+ *             # with cython.gil:
+ *             raise Exception("Invalid classification method")
+ *         self._classification = classification             # <<<<<<<<<<<<<<
+ * 
+ *     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
+ */
+  if (!(likely(((__pyx_v_classification) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_classification, __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification))))) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_4 = __pyx_v_classification;
+  __Pyx_INCREF(__pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_4);
+  __Pyx_GOTREF((PyObject *)__pyx_v_self->_classification);
+  __Pyx_DECREF((PyObject *)__pyx_v_self->_classification);
+  __pyx_v_self->_classification = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *)__pyx_t_4);
   __pyx_t_4 = 0;
-  #if CYTHON_UNPACK_METHODS
-  if (likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-      __pyx_t_4 = 1;
-    }
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  }
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_self->_AllCombinationAntecedentFactory__dimension = __pyx_t_4;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":18
- *     def __init__(self, knowledge):
- *         self.__dimension = knowledge.get_num_dim()
- *         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())             # <<<<<<<<<<<<<<
- *         self.__knowledge = knowledge
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":15
  * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_knowledge, __pyx_n_s_get_fuzzy_sets); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  __pyx_t_4 = 0;
-  #if CYTHON_UNPACK_METHODS
-  if (likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-      __pyx_t_4 = 1;
-    }
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  }
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_object(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 18, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  ((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self->__pyx_base.__pyx_vtab)->generate_antecedents_indices(__pyx_v_self, __pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 18, __pyx_L1_error)
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_5, 1);
-  __pyx_t_5.memview = NULL; __pyx_t_5.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":19
- *         self.__dimension = knowledge.get_num_dim()
- *         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
- *         self.__knowledge = knowledge             # <<<<<<<<<<<<<<
- * 
- *     cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets):
- */
-  if (!(likely(((__pyx_v_knowledge) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_knowledge, __pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge))))) __PYX_ERR(0, 19, __pyx_L1_error)
-  __pyx_t_1 = __pyx_v_knowledge;
-  __Pyx_INCREF(__pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-  __Pyx_DECREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-  __pyx_v_self->_AllCombinationAntecedentFactory__knowledge = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":16
- * 
- * cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
- *     def __init__(self, knowledge):             # <<<<<<<<<<<<<<
- *         self.__dimension = knowledge.get_num_dim()
- *         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
+ * cdef class Classifier:
+ *     def __init__(self, classification):             # <<<<<<<<<<<<<<
+ *         if classification is None or not isinstance(classification, AbstractClassification):
+ *             # with cython.gil:
  */
 
   /* function exit code */
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_5, 1);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_TraceReturn(Py_None, 0);
@@ -20491,1121 +20985,146 @@ static int __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combinat
   return __pyx_r;
 }
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":21
- *         self.__knowledge = knowledge
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":21
+ *         self._classification = classification
  * 
- *     cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef int j
- */
-
-static void __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_generate_antecedents_indices(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, __Pyx_memviewslice __pyx_v_fuzzy_sets) {
-  int __pyx_v_i;
-  int __pyx_v_j;
-  int __pyx_v_k;
-  int __pyx_v_current_dim;
-  std::queue<std::vector<int> >  __pyx_v_indices_queue;
-  int __pyx_v_num_generated_indices;
-  std::vector<int>  __pyx_v_tmp;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *__pyx_v_var = 0;
-  __Pyx_memviewslice __pyx_v_indices = { 0, 0, { 0 }, { 0 }, { 0 } };
-  std::vector<int>  __pyx_v_buffer;
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
-  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  std::vector<int>  __pyx_t_11;
-  int __pyx_t_12;
-  int __pyx_t_13;
-  int __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("generate_antecedents_indices", 1);
-  __Pyx_TraceCall("generate_antecedents_indices", __pyx_f[0], 21, 0, __PYX_ERR(0, 21, __pyx_L1_error));
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":24
- *         cdef int i
- *         cdef int j
- *         cdef int k = 0             # <<<<<<<<<<<<<<
- *         cdef int current_dim
- *         cdef cqueue.queue[cvector.vector[int]] indices_queue
- */
-  __pyx_v_k = 0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":27
- *         cdef int current_dim
- *         cdef cqueue.queue[cvector.vector[int]] indices_queue
- *         cdef int num_generated_indices = 1             # <<<<<<<<<<<<<<
- *         cdef cvector.vector[int] tmp
- *         cdef LinguisticVariable var
- */
-  __pyx_v_num_generated_indices = 1;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":31
- *         cdef LinguisticVariable var
- * 
- *         for i in range(self.__dimension):             # <<<<<<<<<<<<<<
- *             var = fuzzy_sets[i]
- *             num_generated_indices *= var.get_length()
- */
-  __pyx_t_1 = __pyx_v_self->_AllCombinationAntecedentFactory__dimension;
-  __pyx_t_2 = __pyx_t_1;
-  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-    __pyx_v_i = __pyx_t_3;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":32
- * 
- *         for i in range(self.__dimension):
- *             var = fuzzy_sets[i]             # <<<<<<<<<<<<<<
- *             num_generated_indices *= var.get_length()
+ *     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):             # <<<<<<<<<<<<<<
+ *         return self._classification.classify(michigan_solution_list, pattern)
  * 
  */
-    __pyx_t_5 = __pyx_v_i;
-    __pyx_t_6 = -1;
-    if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_fuzzy_sets.shape[0];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_fuzzy_sets.shape[0])) __pyx_t_6 = 0;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
-      __PYX_ERR(0, 32, __pyx_L1_error)
-    }
-    __pyx_t_4 = (PyObject *) *((struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable * *) ( /* dim=0 */ (__pyx_v_fuzzy_sets.data + __pyx_t_5 * __pyx_v_fuzzy_sets.strides[0]) ));
-    if (unlikely(__pyx_t_4 == NULL)) __pyx_t_4 = Py_None;
-    __Pyx_INCREF((PyObject*)__pyx_t_4);
-    __Pyx_XDECREF_SET(__pyx_v_var, ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *)__pyx_t_4));
-    __pyx_t_4 = 0;
 
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":33
- *         for i in range(self.__dimension):
- *             var = fuzzy_sets[i]
- *             num_generated_indices *= var.get_length()             # <<<<<<<<<<<<<<
- * 
- *         cdef int[:,:] indices = (np.empty((num_generated_indices, self.__dimension), dtype=int))
- */
-    __pyx_t_6 = ((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *)__pyx_v_var->__pyx_vtab)->get_length(__pyx_v_var, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
-    __pyx_v_num_generated_indices = (__pyx_v_num_generated_indices * __pyx_t_6);
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":35
- *             num_generated_indices *= var.get_length()
- * 
- *         cdef int[:,:] indices = (np.empty((num_generated_indices, self.__dimension), dtype=int))             # <<<<<<<<<<<<<<
- * 
- *         indices_queue.push(cvector.vector[int]())
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_num_generated_indices); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_self->_AllCombinationAntecedentFactory__dimension); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_8)) __PYX_ERR(0, 35, __pyx_L1_error);
-  __pyx_t_4 = 0;
-  __pyx_t_8 = 0;
-  __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GIVEREF(__pyx_t_9);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_9)) __PYX_ERR(0, 35, __pyx_L1_error);
-  __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_8, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_indices = __pyx_t_10;
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":37
- *         cdef int[:,:] indices = (np.empty((num_generated_indices, self.__dimension), dtype=int))
- * 
- *         indices_queue.push(cvector.vector[int]())             # <<<<<<<<<<<<<<
- * 
- *         # Generate all combination of fuzzy sets indices
- */
-  try {
-    __pyx_t_11 = std::vector<int> ();
-  } catch(...) {
-    __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 37, __pyx_L1_error)
-  }
-  __pyx_v_indices_queue.push(__pyx_t_11);
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":40
- * 
- *         # Generate all combination of fuzzy sets indices
- *         while indices_queue.size() > 0:             # <<<<<<<<<<<<<<
- *             buffer = indices_queue.front()
- *             indices_queue.pop()
- */
-  while (1) {
-    __pyx_t_12 = (__pyx_v_indices_queue.size() > 0);
-    if (!__pyx_t_12) break;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":41
- *         # Generate all combination of fuzzy sets indices
- *         while indices_queue.size() > 0:
- *             buffer = indices_queue.front()             # <<<<<<<<<<<<<<
- *             indices_queue.pop()
- *             current_dim = buffer.size()
- */
-    __pyx_v_buffer = __pyx_v_indices_queue.front();
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":42
- *         while indices_queue.size() > 0:
- *             buffer = indices_queue.front()
- *             indices_queue.pop()             # <<<<<<<<<<<<<<
- *             current_dim = buffer.size()
- *             if current_dim < self.__dimension:
- */
-    __pyx_v_indices_queue.pop();
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":43
- *             buffer = indices_queue.front()
- *             indices_queue.pop()
- *             current_dim = buffer.size()             # <<<<<<<<<<<<<<
- *             if current_dim < self.__dimension:
- *                 var = fuzzy_sets[current_dim]
- */
-    __pyx_v_current_dim = __pyx_v_buffer.size();
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":44
- *             indices_queue.pop()
- *             current_dim = buffer.size()
- *             if current_dim < self.__dimension:             # <<<<<<<<<<<<<<
- *                 var = fuzzy_sets[current_dim]
- *                 for i in range(var.get_length()):
- */
-    __pyx_t_12 = (__pyx_v_current_dim < __pyx_v_self->_AllCombinationAntecedentFactory__dimension);
-    if (__pyx_t_12) {
-
-      /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":45
- *             current_dim = buffer.size()
- *             if current_dim < self.__dimension:
- *                 var = fuzzy_sets[current_dim]             # <<<<<<<<<<<<<<
- *                 for i in range(var.get_length()):
- *                     tmp = cvector.vector[int]()
- */
-      __pyx_t_5 = __pyx_v_current_dim;
-      __pyx_t_1 = -1;
-      if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_fuzzy_sets.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_1 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_fuzzy_sets.shape[0])) __pyx_t_1 = 0;
-      if (unlikely(__pyx_t_1 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_1);
-        __PYX_ERR(0, 45, __pyx_L1_error)
-      }
-      __pyx_t_4 = (PyObject *) *((struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable * *) ( /* dim=0 */ (__pyx_v_fuzzy_sets.data + __pyx_t_5 * __pyx_v_fuzzy_sets.strides[0]) ));
-      if (unlikely(__pyx_t_4 == NULL)) __pyx_t_4 = Py_None;
-      __Pyx_INCREF((PyObject*)__pyx_t_4);
-      __Pyx_XDECREF_SET(__pyx_v_var, ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *)__pyx_t_4));
-      __pyx_t_4 = 0;
-
-      /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":46
- *             if current_dim < self.__dimension:
- *                 var = fuzzy_sets[current_dim]
- *                 for i in range(var.get_length()):             # <<<<<<<<<<<<<<
- *                     tmp = cvector.vector[int]()
- * 
- */
-      __pyx_t_1 = ((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable *)__pyx_v_var->__pyx_vtab)->get_length(__pyx_v_var, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L1_error)
-      __pyx_t_2 = __pyx_t_1;
-      for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-        __pyx_v_i = __pyx_t_3;
-
-        /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":47
- *                 var = fuzzy_sets[current_dim]
- *                 for i in range(var.get_length()):
- *                     tmp = cvector.vector[int]()             # <<<<<<<<<<<<<<
- * 
- *                     for j in range(current_dim):
- */
-        try {
-          __pyx_t_11 = std::vector<int> ();
-        } catch(...) {
-          __Pyx_CppExn2PyErr();
-          __PYX_ERR(0, 47, __pyx_L1_error)
-        }
-        __pyx_v_tmp = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_11);
-
-        /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":49
- *                     tmp = cvector.vector[int]()
- * 
- *                     for j in range(current_dim):             # <<<<<<<<<<<<<<
- *                         tmp.push_back(buffer[j])
- *                     tmp.push_back(i)
- */
-        __pyx_t_6 = __pyx_v_current_dim;
-        __pyx_t_13 = __pyx_t_6;
-        for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-          __pyx_v_j = __pyx_t_14;
-
-          /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":50
- * 
- *                     for j in range(current_dim):
- *                         tmp.push_back(buffer[j])             # <<<<<<<<<<<<<<
- *                     tmp.push_back(i)
- *                     indices_queue.push(tmp)
- */
-          try {
-            __pyx_v_tmp.push_back((__pyx_v_buffer[__pyx_v_j]));
-          } catch(...) {
-            __Pyx_CppExn2PyErr();
-            __PYX_ERR(0, 50, __pyx_L1_error)
-          }
-        }
-
-        /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":51
- *                     for j in range(current_dim):
- *                         tmp.push_back(buffer[j])
- *                     tmp.push_back(i)             # <<<<<<<<<<<<<<
- *                     indices_queue.push(tmp)
- *             else:
- */
-        try {
-          __pyx_v_tmp.push_back(__pyx_v_i);
-        } catch(...) {
-          __Pyx_CppExn2PyErr();
-          __PYX_ERR(0, 51, __pyx_L1_error)
-        }
-
-        /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":52
- *                         tmp.push_back(buffer[j])
- *                     tmp.push_back(i)
- *                     indices_queue.push(tmp)             # <<<<<<<<<<<<<<
- *             else:
- *                 # print(indices.shape[0], k)
- */
-        __pyx_v_indices_queue.push(__pyx_v_tmp);
-      }
-
-      /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":44
- *             indices_queue.pop()
- *             current_dim = buffer.size()
- *             if current_dim < self.__dimension:             # <<<<<<<<<<<<<<
- *                 var = fuzzy_sets[current_dim]
- *                 for i in range(var.get_length()):
- */
-      goto __pyx_L7;
-    }
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":55
- *             else:
- *                 # print(indices.shape[0], k)
- *                 for i in range(self.__dimension):             # <<<<<<<<<<<<<<
- *                     indices[k][i] = buffer[i]
- *                 k += 1
- */
-    /*else*/ {
-      __pyx_t_1 = __pyx_v_self->_AllCombinationAntecedentFactory__dimension;
-      __pyx_t_2 = __pyx_t_1;
-      for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-        __pyx_v_i = __pyx_t_3;
-
-        /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":56
- *                 # print(indices.shape[0], k)
- *                 for i in range(self.__dimension):
- *                     indices[k][i] = buffer[i]             # <<<<<<<<<<<<<<
- *                 k += 1
- * 
- */
-        __pyx_t_5 = __pyx_v_k;
-        __pyx_t_15 = __pyx_v_i;
-        __pyx_t_6 = -1;
-        if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_indices.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_indices.shape[0])) __pyx_t_6 = 0;
-        if (__pyx_t_15 < 0) {
-          __pyx_t_15 += __pyx_v_indices.shape[1];
-          if (unlikely(__pyx_t_15 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_15 >= __pyx_v_indices.shape[1])) __pyx_t_6 = 1;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
-          __PYX_ERR(0, 56, __pyx_L1_error)
-        }
-        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_5 * __pyx_v_indices.strides[0]) ) + __pyx_t_15 * __pyx_v_indices.strides[1]) )) = (__pyx_v_buffer[__pyx_v_i]);
-      }
-
-      /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":57
- *                 for i in range(self.__dimension):
- *                     indices[k][i] = buffer[i]
- *                 k += 1             # <<<<<<<<<<<<<<
- * 
- *         self.__antecedents_indices = indices
- */
-      __pyx_v_k = (__pyx_v_k + 1);
-    }
-    __pyx_L7:;
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":59
- *                 k += 1
- * 
- *         self.__antecedents_indices = indices             # <<<<<<<<<<<<<<
- * 
- *     cdef Antecedent[:] create(self, int num_rules=1):
- */
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices, 0);
-  __PYX_INC_MEMVIEW(&__pyx_v_indices, 1);
-  __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices = __pyx_v_indices;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":21
- *         self.__knowledge = knowledge
- * 
- *     cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef int j
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_10, 1);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.generate_antecedents_indices", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_var);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_indices, 1);
-  __Pyx_TraceReturn(Py_None, 0);
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":61
- *         self.__antecedents_indices = indices
- * 
- *     cdef Antecedent[:] create(self, int num_rules=1):             # <<<<<<<<<<<<<<
- *         cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
- *         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
- */
-
-static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create *__pyx_optional_args) {
-  int __pyx_v_num_rules = ((int)1);
-  __Pyx_memviewslice __pyx_v_antecedent_objects = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_indices = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_v_i;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *__pyx_v_new_antecedent_obj = 0;
-  __Pyx_memviewslice __pyx_r = { 0, 0, { 0 }, { 0 }, { 0 } };
+static struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_classify(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, __Pyx_memviewslice __pyx_v_michigan_solution_list, struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *__pyx_v_pattern) {
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_25AbstractAntecedentFactory_create_antecedent_indices __pyx_t_7;
-  int __pyx_t_8;
-  int __pyx_t_9;
-  int __pyx_t_10;
-  __Pyx_memviewslice __pyx_t_11 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_12;
-  int __pyx_t_13;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent **__pyx_t_14;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("create", 1);
-  __Pyx_TraceCall("create", __pyx_f[0], 61, 0, __PYX_ERR(0, 61, __pyx_L1_error));
-  if (__pyx_optional_args) {
-    if (__pyx_optional_args->__pyx_n > 0) {
-      __pyx_v_num_rules = __pyx_optional_args->num_rules;
-    }
-  }
+  __Pyx_RefNannySetupContext("classify", 1);
+  __Pyx_TraceCall("classify", __pyx_f[0], 21, 0, __PYX_ERR(0, 21, __pyx_L1_error));
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":62
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":22
  * 
- *     cdef Antecedent[:] create(self, int num_rules=1):
- *         cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)             # <<<<<<<<<<<<<<
- *         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
- *         cdef int i
+ *     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
+ *         return self._classification.classify(michigan_solution_list, pattern)             # <<<<<<<<<<<<<<
+ * 
+ *     def __copy__(self):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __Pyx_XDECREF((PyObject *)__pyx_r);
+  __pyx_t_1 = ((PyObject *)((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *)__pyx_v_self->_classification->__pyx_vtab)->classify(__pyx_v_self->_classification, __pyx_v_michigan_solution_list, __pyx_v_pattern, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_num_rules); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error);
+  __pyx_r = ((struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *)__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_builtin_object) < 0) __PYX_ERR(0, 62, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_object(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_antecedent_objects = __pyx_t_5;
-  __pyx_t_5.memview = NULL;
-  __pyx_t_5.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":63
- *     cdef Antecedent[:] create(self, int num_rules=1):
- *         cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
- *         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef Antecedent new_antecedent_obj
- */
-  __pyx_t_7.__pyx_n = 1;
-  __pyx_t_7.num_rules = __pyx_v_num_rules;
-  __pyx_t_6 = ((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self->__pyx_base.__pyx_vtab)->__pyx_base.create_antecedent_indices(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory *)__pyx_v_self), &__pyx_t_7); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 63, __pyx_L1_error)
-  __pyx_v_indices = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":67
- *         cdef Antecedent new_antecedent_obj
- * 
- *         for i in range(num_rules):             # <<<<<<<<<<<<<<
- *             new_antecedent_obj = Antecedent(indices[i], self.__knowledge)
- *             antecedent_objects[i] = new_antecedent_obj
- */
-  __pyx_t_8 = __pyx_v_num_rules;
-  __pyx_t_9 = __pyx_t_8;
-  for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
-    __pyx_v_i = __pyx_t_10;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":68
- * 
- *         for i in range(num_rules):
- *             new_antecedent_obj = Antecedent(indices[i], self.__knowledge)             # <<<<<<<<<<<<<<
- *             antecedent_objects[i] = new_antecedent_obj
- * 
- */
-    __pyx_t_11.data = __pyx_v_indices.data;
-    __pyx_t_11.memview = __pyx_v_indices.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_11, 1);
-    {
-    Py_ssize_t __pyx_tmp_idx = __pyx_v_i;
-        Py_ssize_t __pyx_tmp_shape = __pyx_v_indices.shape[0];
-    Py_ssize_t __pyx_tmp_stride = __pyx_v_indices.strides[0];
-        if (__pyx_tmp_idx < 0)
-            __pyx_tmp_idx += __pyx_tmp_shape;
-        if (unlikely(!__Pyx_is_valid_index(__pyx_tmp_idx, __pyx_tmp_shape))) {
-            PyErr_SetString(PyExc_IndexError,
-                            "Index out of bounds (axis 0)");
-            __PYX_ERR(0, 68, __pyx_L1_error)
-        }
-        __pyx_t_11.data += __pyx_tmp_idx * __pyx_tmp_stride;
-}
-
-__pyx_t_11.shape[0] = __pyx_v_indices.shape[1];
-__pyx_t_11.strides[0] = __pyx_v_indices.strides[1];
-    __pyx_t_11.suboffsets[0] = -1;
-
-__pyx_t_4 = __pyx_memoryview_fromslice(__pyx_t_11, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __PYX_XCLEAR_MEMVIEW(&__pyx_t_11, 1);
-    __pyx_t_11.memview = NULL; __pyx_t_11.data = NULL;
-    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_4);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4)) __PYX_ERR(0, 68, __pyx_L1_error);
-    __Pyx_INCREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-    __Pyx_GIVEREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge))) __PYX_ERR(0, 68, __pyx_L1_error);
-    __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent), __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_new_antecedent_obj, ((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent *)__pyx_t_4));
-    __pyx_t_4 = 0;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":69
- *         for i in range(num_rules):
- *             new_antecedent_obj = Antecedent(indices[i], self.__knowledge)
- *             antecedent_objects[i] = new_antecedent_obj             # <<<<<<<<<<<<<<
- * 
- *         return antecedent_objects
- */
-    __pyx_t_12 = __pyx_v_i;
-    __pyx_t_13 = -1;
-    if (__pyx_t_12 < 0) {
-      __pyx_t_12 += __pyx_v_antecedent_objects.shape[0];
-      if (unlikely(__pyx_t_12 < 0)) __pyx_t_13 = 0;
-    } else if (unlikely(__pyx_t_12 >= __pyx_v_antecedent_objects.shape[0])) __pyx_t_13 = 0;
-    if (unlikely(__pyx_t_13 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_13);
-      __PYX_ERR(0, 69, __pyx_L1_error)
-    }
-    __pyx_t_14 = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent * *) ( /* dim=0 */ (__pyx_v_antecedent_objects.data + __pyx_t_12 * __pyx_v_antecedent_objects.strides[0]) ));
-    __Pyx_XGOTREF((PyObject *)*__pyx_t_14);
-    __Pyx_INCREF(__pyx_v_new_antecedent_obj); __Pyx_XDECREF(*__pyx_t_14);
-    *__pyx_t_14 = __pyx_v_new_antecedent_obj;
-    __Pyx_XGIVEREF((PyObject *)*__pyx_t_14);
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":71
- *             antecedent_objects[i] = new_antecedent_obj
- * 
- *         return antecedent_objects             # <<<<<<<<<<<<<<
- * 
- *     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
- */
-  __PYX_INC_MEMVIEW(&__pyx_v_antecedent_objects, 1);
-  __pyx_r = __pyx_v_antecedent_objects;
   goto __pyx_L0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":61
- *         self.__antecedents_indices = indices
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":21
+ *         self._classification = classification
  * 
- *     cdef Antecedent[:] create(self, int num_rules=1):             # <<<<<<<<<<<<<<
- *         cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
- *         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
+ *     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):             # <<<<<<<<<<<<<<
+ *         return self._classification.classify(michigan_solution_list, pattern)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_5, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_6, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_11, 1);
-  __pyx_r.data = NULL;
-  __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.create", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  goto __pyx_L2;
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.classify", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
   __pyx_L0:;
-  if (unlikely(!__pyx_r.memview)) {
-    PyErr_SetString(PyExc_TypeError, "Memoryview return value is not initialized");
-  }
-  __pyx_L2:;
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_antecedent_objects, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_indices, 1);
-  __Pyx_XDECREF((PyObject *)__pyx_v_new_antecedent_obj);
-  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":73
- *         return antecedent_objects
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":24
+ *         return self._classification.classify(michigan_solution_list, pattern)
  * 
- *     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef int j
- */
-
-static __Pyx_memviewslice __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices *__pyx_optional_args) {
-  int __pyx_v_num_rules = ((int)1);
-  int __pyx_v_i;
-  int __pyx_v_j;
-  __Pyx_memviewslice __pyx_v_chosen_list = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_chosen_indices_lists = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_new_indices = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_r = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
-  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  long __pyx_t_10;
-  long __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  int __pyx_t_13;
-  long __pyx_t_14;
-  long __pyx_t_15;
-  int __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("create_antecedent_indices", 1);
-  __Pyx_TraceCall("create_antecedent_indices", __pyx_f[0], 73, 0, __PYX_ERR(0, 73, __pyx_L1_error));
-  if (__pyx_optional_args) {
-    if (__pyx_optional_args->__pyx_n > 0) {
-      __pyx_v_num_rules = __pyx_optional_args->num_rules;
-    }
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":78
- *         cdef int[:] chosen_list
+ *     def __copy__(self):             # <<<<<<<<<<<<<<
+ *         return Classifier(self._classification)
  * 
- *         num_rules = min(num_rules, self.__antecedents_indices.size)             # <<<<<<<<<<<<<<
- * 
- *         # Return an antecedent
- */
-  if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 78, __pyx_L1_error)}
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_v_num_rules;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyObject_RichCompare(__pyx_t_2, __pyx_t_4, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (__pyx_t_6) {
-    __Pyx_INCREF(__pyx_t_2);
-    __pyx_t_1 = __pyx_t_2;
-  } else {
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __pyx_t_5;
-    __pyx_t_5 = 0;
-  }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_num_rules = __pyx_t_3;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":81
- * 
- *         # Return an antecedent
- *         if self.__antecedents_indices is None:             # <<<<<<<<<<<<<<
- *             # with cython.gil:
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
- */
-  if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 81, __pyx_L1_error)}
-  __pyx_t_6 = (((PyObject *) __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview) == Py_None);
-  if (unlikely(__pyx_t_6)) {
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":83
- *         if self.__antecedents_indices is None:
- *             # with cython.gil:
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")             # <<<<<<<<<<<<<<
- *         cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)
- *         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
- */
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 83, __pyx_L1_error)
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":81
- * 
- *         # Return an antecedent
- *         if self.__antecedents_indices is None:             # <<<<<<<<<<<<<<
- *             # with cython.gil:
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
- */
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":84
- *             # with cython.gil:
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
- *         cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)             # <<<<<<<<<<<<<<
- *         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
- * 
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_choice); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_arange); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 84, __pyx_L1_error)}
-  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_num_rules); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_7)) __PYX_ERR(0, 84, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error);
-  __pyx_t_7 = 0;
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_replace, Py_False) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_t_7, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 84, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_chosen_indices_lists = __pyx_t_8;
-  __pyx_t_8.memview = NULL;
-  __pyx_t_8.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":85
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
- *         cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)
- *         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)             # <<<<<<<<<<<<<<
- * 
- *         for i in range(chosen_indices_lists.size):
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_num_rules); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->_AllCombinationAntecedentFactory__dimension); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_7)) __PYX_ERR(0, 85, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error);
-  __pyx_t_7 = 0;
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error);
-  __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, ((PyObject *)(&PyInt_Type))) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_7, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 85, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_new_indices = __pyx_t_9;
-  __pyx_t_9.memview = NULL;
-  __pyx_t_9.data = NULL;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":87
- *         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
- * 
- *         for i in range(chosen_indices_lists.size):             # <<<<<<<<<<<<<<
- *             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
- *             for j in range(chosen_list.size):
- */
-  __pyx_t_7 = __pyx_memoryview_fromslice(__pyx_v_chosen_indices_lists, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 87, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_1); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_11 = __pyx_t_10;
-  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_11; __pyx_t_3+=1) {
-    __pyx_v_i = __pyx_t_3;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":88
- * 
- *         for i in range(chosen_indices_lists.size):
- *             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]             # <<<<<<<<<<<<<<
- *             for j in range(chosen_list.size):
- *                 new_indices[i][j] = chosen_list[j]
- */
-    if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 88, __pyx_L1_error)}
-    __pyx_t_12 = __pyx_v_i;
-    __pyx_t_13 = -1;
-    if (__pyx_t_12 < 0) {
-      __pyx_t_12 += __pyx_v_chosen_indices_lists.shape[0];
-      if (unlikely(__pyx_t_12 < 0)) __pyx_t_13 = 0;
-    } else if (unlikely(__pyx_t_12 >= __pyx_v_chosen_indices_lists.shape[0])) __pyx_t_13 = 0;
-    if (unlikely(__pyx_t_13 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_13);
-      __PYX_ERR(0, 88, __pyx_L1_error)
-    }
-    __pyx_t_8.data = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.data;
-    __pyx_t_8.memview = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_8, 1);
-    {
-    Py_ssize_t __pyx_tmp_idx = (*((int *) ( /* dim=0 */ (__pyx_v_chosen_indices_lists.data + __pyx_t_12 * __pyx_v_chosen_indices_lists.strides[0]) )));
-        Py_ssize_t __pyx_tmp_shape = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.shape[0];
-    Py_ssize_t __pyx_tmp_stride = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.strides[0];
-        if (__pyx_tmp_idx < 0)
-            __pyx_tmp_idx += __pyx_tmp_shape;
-        if (unlikely(!__Pyx_is_valid_index(__pyx_tmp_idx, __pyx_tmp_shape))) {
-            PyErr_SetString(PyExc_IndexError,
-                            "Index out of bounds (axis 0)");
-            __PYX_ERR(0, 88, __pyx_L1_error)
-        }
-        __pyx_t_8.data += __pyx_tmp_idx * __pyx_tmp_stride;
-}
-
-__pyx_t_8.shape[0] = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.shape[1];
-__pyx_t_8.strides[0] = __pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.strides[1];
-    __pyx_t_8.suboffsets[0] = -1;
-
-__PYX_XCLEAR_MEMVIEW(&__pyx_v_chosen_list, 1);
-    __pyx_v_chosen_list = __pyx_t_8;
-    __pyx_t_8.memview = NULL;
-    __pyx_t_8.data = NULL;
-
-    /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":89
- *         for i in range(chosen_indices_lists.size):
- *             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
- *             for j in range(chosen_list.size):             # <<<<<<<<<<<<<<
- *                 new_indices[i][j] = chosen_list[j]
- *         return new_indices
- */
-    __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_chosen_list, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_size); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_14 = __Pyx_PyInt_As_long(__pyx_t_7); if (unlikely((__pyx_t_14 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_15 = __pyx_t_14;
-    for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_15; __pyx_t_13+=1) {
-      __pyx_v_j = __pyx_t_13;
-
-      /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":90
- *             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
- *             for j in range(chosen_list.size):
- *                 new_indices[i][j] = chosen_list[j]             # <<<<<<<<<<<<<<
- *         return new_indices
- * 
- */
-      __pyx_t_12 = __pyx_v_j;
-      __pyx_t_16 = -1;
-      if (__pyx_t_12 < 0) {
-        __pyx_t_12 += __pyx_v_chosen_list.shape[0];
-        if (unlikely(__pyx_t_12 < 0)) __pyx_t_16 = 0;
-      } else if (unlikely(__pyx_t_12 >= __pyx_v_chosen_list.shape[0])) __pyx_t_16 = 0;
-      if (unlikely(__pyx_t_16 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_16);
-        __PYX_ERR(0, 90, __pyx_L1_error)
-      }
-      __pyx_t_17 = __pyx_v_i;
-      __pyx_t_18 = __pyx_v_j;
-      __pyx_t_16 = -1;
-      if (__pyx_t_17 < 0) {
-        __pyx_t_17 += __pyx_v_new_indices.shape[0];
-        if (unlikely(__pyx_t_17 < 0)) __pyx_t_16 = 0;
-      } else if (unlikely(__pyx_t_17 >= __pyx_v_new_indices.shape[0])) __pyx_t_16 = 0;
-      if (__pyx_t_18 < 0) {
-        __pyx_t_18 += __pyx_v_new_indices.shape[1];
-        if (unlikely(__pyx_t_18 < 0)) __pyx_t_16 = 1;
-      } else if (unlikely(__pyx_t_18 >= __pyx_v_new_indices.shape[1])) __pyx_t_16 = 1;
-      if (unlikely(__pyx_t_16 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_16);
-        __PYX_ERR(0, 90, __pyx_L1_error)
-      }
-      *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_new_indices.data + __pyx_t_17 * __pyx_v_new_indices.strides[0]) ) + __pyx_t_18 * __pyx_v_new_indices.strides[1]) )) = (*((int *) ( /* dim=0 */ (__pyx_v_chosen_list.data + __pyx_t_12 * __pyx_v_chosen_list.strides[0]) )));
-    }
-  }
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":91
- *             for j in range(chosen_list.size):
- *                 new_indices[i][j] = chosen_list[j]
- *         return new_indices             # <<<<<<<<<<<<<<
- * 
- *     def __str__(self):
- */
-  __PYX_INC_MEMVIEW(&__pyx_v_new_indices, 1);
-  __pyx_r = __pyx_v_new_indices;
-  goto __pyx_L0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":73
- *         return antecedent_objects
- * 
- *     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef int j
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_7);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_8, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_9, 1);
-  __pyx_r.data = NULL;
-  __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.create_antecedent_indices", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  goto __pyx_L2;
-  __pyx_L0:;
-  if (unlikely(!__pyx_r.memview)) {
-    PyErr_SetString(PyExc_TypeError, "Memoryview return value is not initialized");
-  }
-  __pyx_L2:;
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_chosen_list, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_chosen_indices_lists, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_new_indices, 1);
-  __Pyx_TraceReturn(Py_None, 0);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":93
- *         return new_indices
- * 
- *     def __str__(self):             # <<<<<<<<<<<<<<
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
- *             self.__dimension) + "]"
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_3__str__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_3__str__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__ = {"__copy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__str__ (wrapper)", 0);
-  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_2__str__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("__copy__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) {
+    __Pyx_RaiseArgtupleInvalid("__copy__", 1, 0, 0, __pyx_nargs); return NULL;}
+  if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__copy__", 0))) return NULL;
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_2__copy__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_2__str__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self) {
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_2__copy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__str__", 1);
-  __Pyx_TraceCall("__str__", __pyx_f[0], 93, 0, __PYX_ERR(0, 93, __pyx_L1_error));
+  __Pyx_TraceFrameInit(__pyx_codeobj__12)
+  __Pyx_RefNannySetupContext("__copy__", 1);
+  __Pyx_TraceCall("__copy__", __pyx_f[0], 24, 0, __PYX_ERR(0, 24, __pyx_L1_error));
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":94
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":25
  * 
- *     def __str__(self):
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(             # <<<<<<<<<<<<<<
- *             self.__dimension) + "]"
+ *     def __copy__(self):
+ *         return Classifier(self._classification)             # <<<<<<<<<<<<<<
  * 
+ *     def __deepcopy__(self, memo={}):
  */
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 94, __pyx_L1_error)}
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier), ((PyObject *)__pyx_v_self->_classification)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_Str(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Add(__pyx_kp_u_AllCombinationAntecedentFactory_2, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyUnicode_ConcatInPlace(__pyx_t_1, __pyx_kp_u_dimension); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":95
- *     def __str__(self):
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
- *             self.__dimension) + "]"             # <<<<<<<<<<<<<<
- * 
- *     def __deepcopy__(self, memo={}):
- */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->_AllCombinationAntecedentFactory__dimension); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":94
- * 
- *     def __str__(self):
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(             # <<<<<<<<<<<<<<
- *             self.__dimension) + "]"
- * 
- */
-  __pyx_t_3 = __Pyx_PyObject_Str(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":95
- *     def __str__(self):
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
- *             self.__dimension) + "]"             # <<<<<<<<<<<<<<
- * 
- *     def __deepcopy__(self, memo={}):
- */
-  __pyx_t_3 = __Pyx_PyUnicode_ConcatInPlace(__pyx_t_1, __pyx_kp_u__12); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_3;
-  __pyx_t_3 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":93
- *         return new_indices
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":24
+ *         return self._classification.classify(michigan_solution_list, pattern)
  * 
- *     def __str__(self):             # <<<<<<<<<<<<<<
- *         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
- *             self.__dimension) + "]"
+ *     def __copy__(self):             # <<<<<<<<<<<<<<
+ *         return Classifier(self._classification)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__str__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__copy__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -21614,24 +21133,24 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   return __pyx_r;
 }
 
-/* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":97
- *             self.__dimension) + "]"
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":27
+ *         return Classifier(self._classification)
  * 
  *     def __deepcopy__(self, memo={}):             # <<<<<<<<<<<<<<
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)
- * 
+ *         new_object = Classifier(copy.deepcopy(self._classification))
+ *         memo[id(self)] = new_object
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__ = {"__deepcopy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__ = {"__deepcopy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -21675,12 +21194,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_memo);
           if (value) { values[0] = __Pyx_Arg_NewRef_FASTCALL(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 97, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__deepcopy__") < 0)) __PYX_ERR(0, 97, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__deepcopy__") < 0)) __PYX_ERR(0, 27, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -21694,7 +21213,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__deepcopy__", 0, 0, 1, __pyx_nargs); __PYX_ERR(0, 97, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__deepcopy__", 0, 0, 1, __pyx_nargs); __PYX_ERR(0, 27, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -21704,11 +21223,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__deepcopy__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__deepcopy__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_4__deepcopy__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self), __pyx_v_memo);
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_4__deepcopy__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self), __pyx_v_memo);
 
   /* function exit code */
   {
@@ -21721,67 +21240,1038 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_4__deepcopy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v_memo) {
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_new_object = NULL;
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_4__deepcopy__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v_memo) {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_new_object = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_TraceFrameInit(__pyx_codeobj__14)
   __Pyx_RefNannySetupContext("__deepcopy__", 1);
-  __Pyx_TraceCall("__deepcopy__", __pyx_f[0], 97, 0, __PYX_ERR(0, 97, __pyx_L1_error));
+  __Pyx_TraceCall("__deepcopy__", __pyx_f[0], 27, 0, __PYX_ERR(0, 27, __pyx_L1_error));
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":98
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":28
  * 
  *     def __deepcopy__(self, memo={}):
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)             # <<<<<<<<<<<<<<
- * 
+ *         new_object = Classifier(copy.deepcopy(self._classification))             # <<<<<<<<<<<<<<
  *         memo[id(self)] = new_object
- */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory), ((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_new_object = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":100
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)
- * 
- *         memo[id(self)] = new_object             # <<<<<<<<<<<<<<
  *         return new_object
  */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((PyObject_SetItem(__pyx_v_memo, __pyx_t_1, ((PyObject *)__pyx_v_new_object)) < 0))) __PYX_ERR(0, 100, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_deepcopy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = NULL;
+  __pyx_t_4 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_4 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_2, ((PyObject *)__pyx_v_self->_classification)};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_4, 1+__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier), __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_new_object = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_t_3);
+  __pyx_t_3 = 0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":101
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":29
+ *     def __deepcopy__(self, memo={}):
+ *         new_object = Classifier(copy.deepcopy(self._classification))
+ *         memo[id(self)] = new_object             # <<<<<<<<<<<<<<
+ *         return new_object
  * 
+ */
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_id, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (unlikely((PyObject_SetItem(__pyx_v_memo, __pyx_t_3, ((PyObject *)__pyx_v_new_object)) < 0))) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":30
+ *         new_object = Classifier(copy.deepcopy(self._classification))
  *         memo[id(self)] = new_object
  *         return new_object             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF((PyObject *)__pyx_v_new_object);
   __pyx_r = ((PyObject *)__pyx_v_new_object);
   goto __pyx_L0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":97
- *             self.__dimension) + "]"
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":27
+ *         return Classifier(self._classification)
  * 
  *     def __deepcopy__(self, memo={}):             # <<<<<<<<<<<<<<
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)
- * 
+ *         new_object = Classifier(copy.deepcopy(self._classification))
+ *         memo[id(self)] = new_object
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__deepcopy__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__deepcopy__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF((PyObject *)__pyx_v_new_object);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":32
+ *         return new_object
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length(CYTHON_UNUSED PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length = {"get_rule_length", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length(CYTHON_UNUSED PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_michigan_solution_list = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_rule_length (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_michigan_solution_list,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_michigan_solution_list)) != 0)) {
+          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_rule_length") < 0)) __PYX_ERR(0, 32, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+    }
+    __pyx_v_michigan_solution_list = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("get_rule_length", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 32, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.get_rule_length", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_6get_rule_length(__pyx_v_michigan_solution_list);
+
+  /* function exit code */
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_6get_rule_length(PyObject *__pyx_v_michigan_solution_list) {
+  PyObject *__pyx_v_length = NULL;
+  PyObject *__pyx_v_item = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *(*__pyx_t_3)(PyObject *);
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_7;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(__pyx_codeobj__15)
+  __Pyx_RefNannySetupContext("get_rule_length", 1);
+  __Pyx_TraceCall("get_rule_length", __pyx_f[0], 32, 0, __PYX_ERR(0, 32, __pyx_L1_error));
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":34
+ *     @staticmethod
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0             # <<<<<<<<<<<<<<
+ *         for item in michigan_solution_list:
+ *             length += item.get_rule_length()
+ */
+  __Pyx_INCREF(__pyx_int_0);
+  __pyx_v_length = __pyx_int_0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":35
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ *         for item in michigan_solution_list:             # <<<<<<<<<<<<<<
+ *             length += item.get_rule_length()
+ *         return length
+ */
+  if (likely(PyList_CheckExact(__pyx_v_michigan_solution_list)) || PyTuple_CheckExact(__pyx_v_michigan_solution_list)) {
+    __pyx_t_1 = __pyx_v_michigan_solution_list; __Pyx_INCREF(__pyx_t_1);
+    __pyx_t_2 = 0;
+    __pyx_t_3 = NULL;
+  } else {
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_michigan_solution_list); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 35, __pyx_L1_error)
+  }
+  for (;;) {
+    if (likely(!__pyx_t_3)) {
+      if (likely(PyList_CheckExact(__pyx_t_1))) {
+        {
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+          #if !CYTHON_ASSUME_SAFE_MACROS
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+          #endif
+          if (__pyx_t_2 >= __pyx_temp) break;
+        }
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+        #else
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        #endif
+      } else {
+        {
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
+          #if !CYTHON_ASSUME_SAFE_MACROS
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+          #endif
+          if (__pyx_t_2 >= __pyx_temp) break;
+        }
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+        #else
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        #endif
+      }
+    } else {
+      __pyx_t_4 = __pyx_t_3(__pyx_t_1);
+      if (unlikely(!__pyx_t_4)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 35, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_4);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_item, __pyx_t_4);
+    __pyx_t_4 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":36
+ *         length = 0
+ *         for item in michigan_solution_list:
+ *             length += item.get_rule_length()             # <<<<<<<<<<<<<<
+ *         return length
+ * 
+ */
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_item, __pyx_n_s_get_rule_length); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = NULL;
+    __pyx_t_7 = 0;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __pyx_t_7 = 1;
+      }
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, NULL};
+      __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 36, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    }
+    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_v_length, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF_SET(__pyx_v_length, __pyx_t_5);
+    __pyx_t_5 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":35
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ *         for item in michigan_solution_list:             # <<<<<<<<<<<<<<
+ *             length += item.get_rule_length()
+ *         return length
+ */
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":37
+ *         for item in michigan_solution_list:
+ *             length += item.get_rule_length()
+ *         return length             # <<<<<<<<<<<<<<
+ * 
+ *     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_length);
+  __pyx_r = __pyx_v_length;
+  goto __pyx_L0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":32
+ *         return new_object
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.get_rule_length", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_length);
+  __Pyx_XDECREF(__pyx_v_item);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":39
+ *         return length
+ * 
+ *     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):             # <<<<<<<<<<<<<<
+ *         cdef int num_errors = 0
+ *         cdef int dataset_size = dataset.get_size()
+ */
+
+static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_get_error_rate(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, __Pyx_memviewslice __pyx_v_michigan_solution_list, struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *__pyx_v_dataset) {
+  int __pyx_v_num_errors;
+  int __pyx_v_dataset_size;
+  int __pyx_v_i;
+  std::vector<int>  __pyx_v_errored_patterns_indices;
+  __Pyx_memviewslice __pyx_v_errored_patterns = { 0, 0, { 0 }, { 0 }, { 0 } };
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *__pyx_v_winner_solution = 0;
+  __Pyx_memviewslice __pyx_v_patterns = { 0, 0, { 0 }, { 0 }, { 0 } };
+  struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *__pyx_v_p = 0;
+  struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *__pyx_v_sol = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_8;
+  int __pyx_t_9;
+  int __pyx_t_10;
+  int __pyx_t_11;
+  int __pyx_t_12;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  std::vector<int> ::size_type __pyx_t_17;
+  std::vector<int> ::size_type __pyx_t_18;
+  PyObject **__pyx_t_19;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_error_rate", 1);
+  __Pyx_TraceCall("get_error_rate", __pyx_f[0], 39, 0, __PYX_ERR(0, 39, __pyx_L1_error));
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":40
+ * 
+ *     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+ *         cdef int num_errors = 0             # <<<<<<<<<<<<<<
+ *         cdef int dataset_size = dataset.get_size()
+ *         cdef int i
+ */
+  __pyx_v_num_errors = 0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":41
+ *     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+ *         cdef int num_errors = 0
+ *         cdef int dataset_size = dataset.get_size()             # <<<<<<<<<<<<<<
+ *         cdef int i
+ *         cdef cvector.vector[int] errored_patterns_indices
+ */
+  __pyx_t_1 = ((struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset *)__pyx_v_dataset->__pyx_vtab)->get_size(__pyx_v_dataset, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_v_dataset_size = __pyx_t_1;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":47
+ *         cdef Pattern pattern
+ *         cdef AbstractSolution winner_solution
+ *         cdef Pattern[:] patterns = dataset.get_patterns()             # <<<<<<<<<<<<<<
+ *         cdef Pattern p
+ * 
+ */
+  __pyx_t_2 = ((struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset *)__pyx_v_dataset->__pyx_vtab)->get_patterns(__pyx_v_dataset, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_v_patterns = __pyx_t_2;
+  __pyx_t_2.memview = NULL;
+  __pyx_t_2.data = NULL;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":50
+ *         cdef Pattern p
+ * 
+ *         for sol in michigan_solution_list:             # <<<<<<<<<<<<<<
+ *             sol.reset_num_wins()
+ *             sol.reset_fitness()
+ */
+  if (unlikely(((PyObject *) __pyx_v_michigan_solution_list.memview) == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' is not iterable");
+    __PYX_ERR(0, 50, __pyx_L1_error)
+  }
+  __PYX_INC_MEMVIEW(&__pyx_v_michigan_solution_list, 1);
+  __pyx_t_3 = __pyx_v_michigan_solution_list;
+  __pyx_t_4 = __Pyx_MemoryView_Len(__pyx_t_3); 
+  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_4; __pyx_t_6++) {
+    __pyx_t_5 = __pyx_t_6;
+    __pyx_t_8 = __pyx_t_5;
+    __pyx_t_7 = (PyObject *) *((struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution * *) ( /* dim=0 */ (__pyx_t_3.data + __pyx_t_8 * __pyx_t_3.strides[0]) ));
+    if (unlikely(__pyx_t_7 == NULL)) __pyx_t_7 = Py_None;
+    __Pyx_INCREF((PyObject*)__pyx_t_7);
+    __Pyx_XDECREF_SET(__pyx_v_sol, ((struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *)__pyx_t_7));
+    __pyx_t_7 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":51
+ * 
+ *         for sol in michigan_solution_list:
+ *             sol.reset_num_wins()             # <<<<<<<<<<<<<<
+ *             sol.reset_fitness()
+ * 
+ */
+    ((struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *)__pyx_v_sol->__pyx_base.__pyx_vtab)->reset_num_wins(__pyx_v_sol, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":52
+ *         for sol in michigan_solution_list:
+ *             sol.reset_num_wins()
+ *             sol.reset_fitness()             # <<<<<<<<<<<<<<
+ * 
+ *         for i in range(dataset.get_size()):
+ */
+    ((struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution *)__pyx_v_sol->__pyx_base.__pyx_vtab)->reset_fitness(__pyx_v_sol, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 52, __pyx_L1_error)
+  }
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_3, 1);
+  __pyx_t_3.memview = NULL; __pyx_t_3.data = NULL;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":54
+ *             sol.reset_fitness()
+ * 
+ *         for i in range(dataset.get_size()):             # <<<<<<<<<<<<<<
+ *             p = patterns[i]
+ *             winner_solution = self.classify(michigan_solution_list, p)
+ */
+  __pyx_t_1 = ((struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset *)__pyx_v_dataset->__pyx_vtab)->get_size(__pyx_v_dataset, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_9 = __pyx_t_1;
+  for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+    __pyx_v_i = __pyx_t_10;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":55
+ * 
+ *         for i in range(dataset.get_size()):
+ *             p = patterns[i]             # <<<<<<<<<<<<<<
+ *             winner_solution = self.classify(michigan_solution_list, p)
+ * 
+ */
+    __pyx_t_8 = __pyx_v_i;
+    __pyx_t_11 = -1;
+    if (__pyx_t_8 < 0) {
+      __pyx_t_8 += __pyx_v_patterns.shape[0];
+      if (unlikely(__pyx_t_8 < 0)) __pyx_t_11 = 0;
+    } else if (unlikely(__pyx_t_8 >= __pyx_v_patterns.shape[0])) __pyx_t_11 = 0;
+    if (unlikely(__pyx_t_11 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_11);
+      __PYX_ERR(0, 55, __pyx_L1_error)
+    }
+    __pyx_t_7 = (PyObject *) *((struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern * *) ( /* dim=0 */ (__pyx_v_patterns.data + __pyx_t_8 * __pyx_v_patterns.strides[0]) ));
+    if (unlikely(__pyx_t_7 == NULL)) __pyx_t_7 = Py_None;
+    __Pyx_INCREF((PyObject*)__pyx_t_7);
+    __Pyx_XDECREF_SET(__pyx_v_p, ((struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *)__pyx_t_7));
+    __pyx_t_7 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":56
+ *         for i in range(dataset.get_size()):
+ *             p = patterns[i]
+ *             winner_solution = self.classify(michigan_solution_list, p)             # <<<<<<<<<<<<<<
+ * 
+ *             if winner_solution is None:
+ */
+    __pyx_t_7 = ((PyObject *)((struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self->__pyx_vtab)->classify(__pyx_v_self, __pyx_v_michigan_solution_list, __pyx_v_p)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 56, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_XDECREF_SET(__pyx_v_winner_solution, ((struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *)__pyx_t_7));
+    __pyx_t_7 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":58
+ *             winner_solution = self.classify(michigan_solution_list, p)
+ * 
+ *             if winner_solution is None:             # <<<<<<<<<<<<<<
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)
+ */
+    __pyx_t_12 = (((PyObject *)__pyx_v_winner_solution) == Py_None);
+    if (__pyx_t_12) {
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":59
+ * 
+ *             if winner_solution is None:
+ *                 num_errors += 1             # <<<<<<<<<<<<<<
+ *                 errored_patterns_indices.push_back(i)
+ *                 continue
+ */
+      __pyx_v_num_errors = (__pyx_v_num_errors + 1);
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":60
+ *             if winner_solution is None:
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)             # <<<<<<<<<<<<<<
+ *                 continue
+ * 
+ */
+      try {
+        __pyx_v_errored_patterns_indices.push_back(__pyx_v_i);
+      } catch(...) {
+        __Pyx_CppExn2PyErr();
+        __PYX_ERR(0, 60, __pyx_L1_error)
+      }
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":61
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)
+ *                 continue             # <<<<<<<<<<<<<<
+ * 
+ *             winner_solution.inc_num_wins()
+ */
+      goto __pyx_L5_continue;
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":58
+ *             winner_solution = self.classify(michigan_solution_list, p)
+ * 
+ *             if winner_solution is None:             # <<<<<<<<<<<<<<
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)
+ */
+    }
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":63
+ *                 continue
+ * 
+ *             winner_solution.inc_num_wins()             # <<<<<<<<<<<<<<
+ * 
+ *             if p.get_target_class() != winner_solution.get_class_label():
+ */
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_winner_solution), __pyx_n_s_inc_num_wins); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 63, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_14 = NULL;
+    __pyx_t_11 = 0;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_14)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_14);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __pyx_t_11 = 1;
+      }
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_14, NULL};
+      __pyx_t_7 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_11, 0+__pyx_t_11);
+      __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 63, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    }
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":65
+ *             winner_solution.inc_num_wins()
+ * 
+ *             if p.get_target_class() != winner_solution.get_class_label():             # <<<<<<<<<<<<<<
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)
+ */
+    __pyx_t_7 = ((struct __pyx_vtabstruct_9mofgbmlpy_4data_7pattern_Pattern *)__pyx_v_p->__pyx_vtab)->get_target_class(__pyx_v_p, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_winner_solution), __pyx_n_s_get_class_label); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_15 = NULL;
+    __pyx_t_11 = 0;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_15)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_15);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
+        __pyx_t_11 = 1;
+      }
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_15, NULL};
+      __pyx_t_13 = __Pyx_PyObject_FastCall(__pyx_t_14, __pyx_callargs+1-__pyx_t_11, 0+__pyx_t_11);
+      __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 65, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    }
+    __pyx_t_14 = PyObject_RichCompare(__pyx_t_7, __pyx_t_13, Py_NE); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely((__pyx_t_12 < 0))) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    if (__pyx_t_12) {
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":66
+ * 
+ *             if p.get_target_class() != winner_solution.get_class_label():
+ *                 num_errors += 1             # <<<<<<<<<<<<<<
+ *                 errored_patterns_indices.push_back(i)
+ *             else:
+ */
+      __pyx_v_num_errors = (__pyx_v_num_errors + 1);
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":67
+ *             if p.get_target_class() != winner_solution.get_class_label():
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)             # <<<<<<<<<<<<<<
+ *             else:
+ *                 winner_solution.inc_fitness()
+ */
+      try {
+        __pyx_v_errored_patterns_indices.push_back(__pyx_v_i);
+      } catch(...) {
+        __Pyx_CppExn2PyErr();
+        __PYX_ERR(0, 67, __pyx_L1_error)
+      }
+
+      /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":65
+ *             winner_solution.inc_num_wins()
+ * 
+ *             if p.get_target_class() != winner_solution.get_class_label():             # <<<<<<<<<<<<<<
+ *                 num_errors += 1
+ *                 errored_patterns_indices.push_back(i)
+ */
+      goto __pyx_L8;
+    }
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":69
+ *                 errored_patterns_indices.push_back(i)
+ *             else:
+ *                 winner_solution.inc_fitness()             # <<<<<<<<<<<<<<
+ * 
+ *         errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
+ */
+    /*else*/ {
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_winner_solution), __pyx_n_s_inc_fitness); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 69, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_7 = NULL;
+      __pyx_t_11 = 0;
+      #if CYTHON_UNPACK_METHODS
+      if (likely(PyMethod_Check(__pyx_t_13))) {
+        __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_13);
+        if (likely(__pyx_t_7)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+          __Pyx_INCREF(__pyx_t_7);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_13, function);
+          __pyx_t_11 = 1;
+        }
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_7, NULL};
+        __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_11, 0+__pyx_t_11);
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+        if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 69, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      }
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    }
+    __pyx_L8:;
+    __pyx_L5_continue:;
+  }
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":71
+ *                 winner_solution.inc_fitness()
+ * 
+ *         errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)             # <<<<<<<<<<<<<<
+ *         for i in range(errored_patterns_indices.size()):
+ *             errored_patterns[i] = patterns[errored_patterns_indices[i]]
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_empty); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = __Pyx_PyInt_FromSize_t(__pyx_v_errored_patterns_indices.size()); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_14);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_14)) __PYX_ERR(0, 71, __pyx_L1_error);
+  __pyx_t_14 = 0;
+  __pyx_t_14 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  if (PyDict_SetItem(__pyx_t_14, __pyx_n_s_dtype, __pyx_builtin_object) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_7, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_ds_object(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_errored_patterns = __pyx_t_16;
+  __pyx_t_16.memview = NULL;
+  __pyx_t_16.data = NULL;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":72
+ * 
+ *         errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
+ *         for i in range(errored_patterns_indices.size()):             # <<<<<<<<<<<<<<
+ *             errored_patterns[i] = patterns[errored_patterns_indices[i]]
+ * 
+ */
+  __pyx_t_17 = __pyx_v_errored_patterns_indices.size();
+  __pyx_t_18 = __pyx_t_17;
+  for (__pyx_t_1 = 0; __pyx_t_1 < __pyx_t_18; __pyx_t_1+=1) {
+    __pyx_v_i = __pyx_t_1;
+
+    /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":73
+ *         errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
+ *         for i in range(errored_patterns_indices.size()):
+ *             errored_patterns[i] = patterns[errored_patterns_indices[i]]             # <<<<<<<<<<<<<<
+ * 
+ *         return num_errors / dataset_size, errored_patterns
+ */
+    __pyx_t_8 = (__pyx_v_errored_patterns_indices[__pyx_v_i]);
+    __pyx_t_9 = -1;
+    if (__pyx_t_8 < 0) {
+      __pyx_t_8 += __pyx_v_patterns.shape[0];
+      if (unlikely(__pyx_t_8 < 0)) __pyx_t_9 = 0;
+    } else if (unlikely(__pyx_t_8 >= __pyx_v_patterns.shape[0])) __pyx_t_9 = 0;
+    if (unlikely(__pyx_t_9 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_9);
+      __PYX_ERR(0, 73, __pyx_L1_error)
+    }
+    __pyx_t_15 = (PyObject *) *((struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern * *) ( /* dim=0 */ (__pyx_v_patterns.data + __pyx_t_8 * __pyx_v_patterns.strides[0]) ));
+    if (unlikely(__pyx_t_15 == NULL)) __pyx_t_15 = Py_None;
+    __Pyx_INCREF((PyObject*)__pyx_t_15);
+    __pyx_t_8 = __pyx_v_i;
+    __pyx_t_9 = -1;
+    if (__pyx_t_8 < 0) {
+      __pyx_t_8 += __pyx_v_errored_patterns.shape[0];
+      if (unlikely(__pyx_t_8 < 0)) __pyx_t_9 = 0;
+    } else if (unlikely(__pyx_t_8 >= __pyx_v_errored_patterns.shape[0])) __pyx_t_9 = 0;
+    if (unlikely(__pyx_t_9 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_9);
+      __PYX_ERR(0, 73, __pyx_L1_error)
+    }
+    __pyx_t_19 = ((PyObject * *) ( /* dim=0 */ (__pyx_v_errored_patterns.data + __pyx_t_8 * __pyx_v_errored_patterns.strides[0]) ));
+    __Pyx_XGOTREF(*__pyx_t_19);
+    __Pyx_INCREF(__pyx_t_15); __Pyx_XDECREF(*__pyx_t_19);
+    *__pyx_t_19 = __pyx_t_15;
+    __Pyx_XGIVEREF(*__pyx_t_19);
+    __Pyx_DECREF((PyObject *)__pyx_t_15); __pyx_t_15 = 0;
+  }
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":75
+ *             errored_patterns[i] = patterns[errored_patterns_indices[i]]
+ * 
+ *         return num_errors / dataset_size, errored_patterns             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
+ */
+  __Pyx_XDECREF(__pyx_r);
+  if (unlikely(__pyx_v_dataset_size == 0)) {
+    PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+    __PYX_ERR(0, 75, __pyx_L1_error)
+  }
+  __pyx_t_15 = PyFloat_FromDouble((((double)__pyx_v_num_errors) / ((double)__pyx_v_dataset_size))); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_14 = __pyx_memoryview_fromslice(__pyx_v_errored_patterns, 1, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_15);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_15)) __PYX_ERR(0, 75, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_14);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_14)) __PYX_ERR(0, 75, __pyx_L1_error);
+  __pyx_t_15 = 0;
+  __pyx_t_14 = 0;
+  __pyx_r = ((PyObject*)__pyx_t_7);
+  __pyx_t_7 = 0;
+  goto __pyx_L0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":39
+ *         return length
+ * 
+ *     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):             # <<<<<<<<<<<<<<
+ *         cdef int num_errors = 0
+ *         cdef int dataset_size = dataset.get_size()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_3, 1);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_t_16, 1);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.get_error_rate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __PYX_XCLEAR_MEMVIEW(&__pyx_v_errored_patterns, 1);
+  __Pyx_XDECREF((PyObject *)__pyx_v_winner_solution);
+  __PYX_XCLEAR_MEMVIEW(&__pyx_v_patterns, 1);
+  __Pyx_XDECREF((PyObject *)__pyx_v_p);
+  __Pyx_XDECREF((PyObject *)__pyx_v_sol);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "mofgbmlpy/fuzzy/classifier/classifier.pyx":77
+ *         return num_errors / dataset_size, errored_patterns
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_num(michigan_solution_list):
+ *         return len(michigan_solution_list)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num(CYTHON_UNUSED PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num = {"get_rule_num", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num(CYTHON_UNUSED PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_michigan_solution_list = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_rule_num (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_michigan_solution_list,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_michigan_solution_list)) != 0)) {
+          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_rule_num") < 0)) __PYX_ERR(0, 77, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+    }
+    __pyx_v_michigan_solution_list = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("get_rule_num", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 77, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.get_rule_num", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_8get_rule_num(__pyx_v_michigan_solution_list);
+
+  /* function exit code */
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
+    }
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_8get_rule_num(PyObject *__pyx_v_michigan_solution_list) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  Py_ssize_t __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(__pyx_codeobj__16)
+  __Pyx_RefNannySetupContext("get_rule_num", 1);
+  __Pyx_TraceCall("get_rule_num", __pyx_f[0], 77, 0, __PYX_ERR(0, 77, __pyx_L1_error));
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":79
+ *     @staticmethod
+ *     def get_rule_num(michigan_solution_list):
+ *         return len(michigan_solution_list)             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyObject_Length(__pyx_v_michigan_solution_list); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 79, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":77
+ *         return num_errors / dataset_size, errored_patterns
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_num(michigan_solution_list):
+ *         return len(michigan_solution_list)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.get_rule_num", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_TraceReturn(__pyx_r, 0);
   __Pyx_RefNannyFinishContext();
@@ -21795,15 +22285,15 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -21828,14 +22318,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_6__reduce_cython__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self));
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_10__reduce_cython__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_6__reduce_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self) {
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_10__reduce_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -21843,63 +22333,52 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
+  PyObject *__pyx_t_4 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__15)
+  __Pyx_TraceFrameInit(__pyx_codeobj__17)
   __Pyx_RefNannySetupContext("__reduce_cython__", 1);
   __Pyx_TraceCall("__reduce_cython__", __pyx_f[1], 1, 0, __PYX_ERR(1, 1, __pyx_L1_error));
 
   /* "(tree fragment)":5
  *     cdef object _dict
  *     cdef bint use_setstate
- *     state = (self._AllCombinationAntecedentFactory__antecedents_indices, self._AllCombinationAntecedentFactory__dimension, self._AllCombinationAntecedentFactory__knowledge)             # <<<<<<<<<<<<<<
+ *     state = (self._classification,)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
-  if (unlikely(!__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(1, 5, __pyx_L1_error)}
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->_AllCombinationAntecedentFactory__antecedents_indices, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->_AllCombinationAntecedentFactory__dimension); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error);
-  __Pyx_INCREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-  __Pyx_GIVEREF((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, ((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge))) __PYX_ERR(1, 5, __pyx_L1_error);
+  __Pyx_INCREF((PyObject *)__pyx_v_self->_classification);
+  __Pyx_GIVEREF((PyObject *)__pyx_v_self->_classification);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self->_classification))) __PYX_ERR(1, 5, __pyx_L1_error);
+  __pyx_v_state = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_2 = 0;
-  __pyx_v_state = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
 
   /* "(tree fragment)":6
  *     cdef bint use_setstate
- *     state = (self._AllCombinationAntecedentFactory__antecedents_indices, self._AllCombinationAntecedentFactory__dimension, self._AllCombinationAntecedentFactory__knowledge)
+ *     state = (self._classification,)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
  */
-  __pyx_t_3 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_v__dict = __pyx_t_3;
-  __pyx_t_3 = 0;
+  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v__dict = __pyx_t_1;
+  __pyx_t_1 = 0;
 
   /* "(tree fragment)":7
- *     state = (self._AllCombinationAntecedentFactory__antecedents_indices, self._AllCombinationAntecedentFactory__dimension, self._AllCombinationAntecedentFactory__knowledge)
+ *     state = (self._classification,)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
  */
-  __pyx_t_4 = (__pyx_v__dict != Py_None);
-  if (__pyx_t_4) {
+  __pyx_t_2 = (__pyx_v__dict != Py_None);
+  if (__pyx_t_2) {
 
     /* "(tree fragment)":8
  *     _dict = getattr(self, '__dict__', None)
@@ -21908,28 +22387,28 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
  *         use_setstate = True
  *     else:
  */
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v__dict)) __PYX_ERR(1, 8, __pyx_L1_error);
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_2));
-    __pyx_t_2 = 0;
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v__dict)) __PYX_ERR(1, 8, __pyx_L1_error);
+    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
 
     /* "(tree fragment)":9
  *     if _dict is not None:
  *         state += (_dict,)
  *         use_setstate = True             # <<<<<<<<<<<<<<
  *     else:
- *         use_setstate = self._AllCombinationAntecedentFactory__knowledge is not None
+ *         use_setstate = self._classification is not None
  */
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":7
- *     state = (self._AllCombinationAntecedentFactory__antecedents_indices, self._AllCombinationAntecedentFactory__dimension, self._AllCombinationAntecedentFactory__knowledge)
+ *     state = (self._classification,)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -21941,102 +22420,102 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   /* "(tree fragment)":11
  *         use_setstate = True
  *     else:
- *         use_setstate = self._AllCombinationAntecedentFactory__knowledge is not None             # <<<<<<<<<<<<<<
+ *         use_setstate = self._classification is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, None), state
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, None), state
  */
   /*else*/ {
-    __pyx_t_4 = (((PyObject *)__pyx_v_self->_AllCombinationAntecedentFactory__knowledge) != Py_None);
-    __pyx_v_use_setstate = __pyx_t_4;
+    __pyx_t_2 = (((PyObject *)__pyx_v_self->_classification) != Py_None);
+    __pyx_v_use_setstate = __pyx_t_2;
   }
   __pyx_L3:;
 
   /* "(tree fragment)":12
  *     else:
- *         use_setstate = self._AllCombinationAntecedentFactory__knowledge is not None
+ *         use_setstate = self._classification is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, None), state
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, None), state
  *     else:
  */
   if (__pyx_v_use_setstate) {
 
     /* "(tree fragment)":13
- *         use_setstate = self._AllCombinationAntecedentFactory__knowledge is not None
+ *         use_setstate = self._classification is not None
  *     if use_setstate:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pyx_unpickle_AllCombinationAnt); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pyx_unpickle_Classifier); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))))) __PYX_ERR(1, 13, __pyx_L1_error);
-    __Pyx_INCREF(__pyx_int_86109117);
-    __Pyx_GIVEREF(__pyx_int_86109117);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_86109117)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __Pyx_INCREF(Py_None);
-    __Pyx_GIVEREF(Py_None);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, Py_None)) __PYX_ERR(1, 13, __pyx_L1_error);
     __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_2);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))))) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_int_243001594);
+    __Pyx_GIVEREF(__pyx_int_243001594);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_243001594)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_INCREF(Py_None);
+    __Pyx_GIVEREF(Py_None);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, Py_None)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_3);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_GIVEREF(__pyx_t_1);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __pyx_t_2 = 0;
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_state)) __PYX_ERR(1, 13, __pyx_L1_error);
     __pyx_t_3 = 0;
-    __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_4;
+    __pyx_t_4 = 0;
     goto __pyx_L0;
 
     /* "(tree fragment)":12
  *     else:
- *         use_setstate = self._AllCombinationAntecedentFactory__knowledge is not None
+ *         use_setstate = self._classification is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, None), state
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, None), state
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, None), state
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pyx_unpickle_AllCombinationAnt); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pyx_unpickle_Classifier); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))))) __PYX_ERR(1, 15, __pyx_L1_error);
-    __Pyx_INCREF(__pyx_int_86109117);
-    __Pyx_GIVEREF(__pyx_int_86109117);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_86109117)) __PYX_ERR(1, 15, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))))) __PYX_ERR(1, 15, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_int_243001594);
+    __Pyx_GIVEREF(__pyx_int_243001594);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_243001594)) __PYX_ERR(1, 15, __pyx_L1_error);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_state)) __PYX_ERR(1, 15, __pyx_L1_error);
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state)) __PYX_ERR(1, 15, __pyx_L1_error);
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_4);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4)) __PYX_ERR(1, 15, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_1);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error);
-    __Pyx_GIVEREF(__pyx_t_3);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3)) __PYX_ERR(1, 15, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error);
+    __pyx_t_4 = 0;
     __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_3;
     __pyx_t_3 = 0;
-    __pyx_r = __pyx_t_2;
-    __pyx_t_2 = 0;
     goto __pyx_L0;
   }
 
@@ -22049,9 +22528,9 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_state);
@@ -22064,21 +22543,21 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
 
 /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -22148,11 +22627,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_8__setstate_cython__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_12__setstate_cython__(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -22165,7 +22644,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_8__setstate_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_12__setstate_cython__(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
@@ -22173,25 +22652,25 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__16)
+  __Pyx_TraceFrameInit(__pyx_codeobj__18)
   __Pyx_RefNannySetupContext("__setstate_cython__", 1);
   __Pyx_TraceCall("__setstate_cython__", __pyx_f[1], 16, 0, __PYX_ERR(1, 16, __pyx_L1_error));
 
   /* "(tree fragment)":17
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
   if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v___pyx_state))) __PYX_ERR(1, 17, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)
  */
 
   /* function exit code */
@@ -22199,7 +22678,7 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.Classifier.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -22209,21 +22688,21 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
 }
 
 /* "(tree fragment)":1
- * def __pyx_unpickle_AllCombinationAntecedentFactory(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_Classifier(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_1__pyx_unpickle_AllCombinationAntecedentFactory(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_1__pyx_unpickle_Classifier(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_1__pyx_unpickle_AllCombinationAntecedentFactory = {"__pyx_unpickle_AllCombinationAntecedentFactory", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_1__pyx_unpickle_AllCombinationAntecedentFactory, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_1__pyx_unpickle_AllCombinationAntecedentFactory(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_1__pyx_unpickle_Classifier = {"__pyx_unpickle_Classifier", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_1__pyx_unpickle_Classifier, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_1__pyx_unpickle_Classifier(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -22243,7 +22722,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__pyx_unpickle_AllCombinationAntecedentFactory (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_Classifier (wrapper)", 0);
   #if !CYTHON_METH_FASTCALL
   #if CYTHON_ASSUME_SAFE_MACROS
   __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
@@ -22283,7 +22762,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
         }
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 1, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_AllCombinationAntecedentFactory", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_Classifier", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -22293,12 +22772,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
         }
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 1, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_AllCombinationAntecedentFactory", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_Classifier", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__pyx_unpickle_AllCombinationAntecedentFactory") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__pyx_unpickle_Classifier") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -22313,7 +22792,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_AllCombinationAntecedentFactory", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 1, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_Classifier", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 1, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -22323,11 +22802,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);
     }
   }
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.__pyx_unpickle_AllCombinationAntecedentFactory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.__pyx_unpickle_Classifier", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -22340,7 +22819,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_v___pyx_PickleError = 0;
   PyObject *__pyx_v___pyx_result = 0;
   PyObject *__pyx_r = NULL;
@@ -22354,29 +22833,29 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(__pyx_codeobj__17)
-  __Pyx_RefNannySetupContext("__pyx_unpickle_AllCombinationAntecedentFactory", 1);
-  __Pyx_TraceCall("__pyx_unpickle_AllCombinationAntecedentFactory", __pyx_f[1], 1, 0, __PYX_ERR(1, 1, __pyx_L1_error));
+  __Pyx_TraceFrameInit(__pyx_codeobj__19)
+  __Pyx_RefNannySetupContext("__pyx_unpickle_Classifier", 1);
+  __Pyx_TraceCall("__pyx_unpickle_Classifier", __pyx_f[1], 1, 0, __PYX_ERR(1, 1, __pyx_L1_error));
 
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0x521ebbd, 0xea9b3be, 0xd4a14c7):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xe7be8fa, 0x6571d8d, 0xf09d3cf):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
  */
   __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__18, Py_NE)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__20, Py_NE)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
     /* "(tree fragment)":5
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0x521ebbd, 0xea9b3be, 0xd4a14c7):
+ *     if __pyx_checksum not in (0xe7be8fa, 0x6571d8d, 0xf09d3cf):
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
+ *     __pyx_result = Classifier.__new__(__pyx_type)
  */
     __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -22394,10 +22873,10 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":6
- *     if __pyx_checksum not in (0x521ebbd, 0xea9b3be, 0xd4a14c7):
+ *     if __pyx_checksum not in (0xe7be8fa, 0x6571d8d, 0xf09d3cf):
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum             # <<<<<<<<<<<<<<
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum             # <<<<<<<<<<<<<<
+ *     __pyx_result = Classifier.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_3 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
@@ -22412,20 +22891,20 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
     /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0x521ebbd, 0xea9b3be, 0xd4a14c7):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xe7be8fa, 0x6571d8d, 0xf09d3cf):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
  */
   }
 
   /* "(tree fragment)":7
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
+ *     __pyx_result = Classifier.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory), __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier), __pyx_n_s_new); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -22453,42 +22932,42 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   __pyx_t_1 = 0;
 
   /* "(tree fragment)":8
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
+ *     __pyx_result = Classifier.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   __pyx_t_2 = (__pyx_v___pyx_state != Py_None);
   if (__pyx_t_2) {
 
     /* "(tree fragment)":9
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)
+ *     __pyx_result = Classifier.__new__(__pyx_type)
  *     if __pyx_state is not None:
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
  *     return __pyx_result
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):
  */
     if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v___pyx_state))) __PYX_ERR(1, 9, __pyx_L1_error)
-    __pyx_t_1 = __pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory__set_state(((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 9, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier__set_state(((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 9, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "(tree fragment)":8
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
- *     __pyx_result = AllCombinationAntecedentFactory.__new__(__pyx_type)
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
+ *     __pyx_result = Classifier.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   }
 
   /* "(tree fragment)":10
  *     if __pyx_state is not None:
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):
+ *     __pyx_result._classification = __pyx_state[0]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -22496,7 +22975,7 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   goto __pyx_L0;
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_AllCombinationAntecedentFactory(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_Classifier(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
@@ -22506,7 +22985,7 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.__pyx_unpickle_AllCombinationAntecedentFactory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.__pyx_unpickle_Classifier", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v___pyx_PickleError);
@@ -22518,38 +22997,37 @@ static PyObject *__pyx_pf_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_co
 }
 
 /* "(tree fragment)":11
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result._classification = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
  */
 
-static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory___pyx_unpickle_AllCombinationAntecedentFactory__set_state(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier___pyx_unpickle_Classifier__set_state(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_3;
+  int __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
   int __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
   PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
+  int __pyx_t_8;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_AllCombinationAntecedentFactory__set_state", 1);
-  __Pyx_TraceCall("__pyx_unpickle_AllCombinationAntecedentFactory__set_state", __pyx_f[1], 11, 0, __PYX_ERR(1, 11, __pyx_L1_error));
+  __Pyx_RefNannySetupContext("__pyx_unpickle_Classifier__set_state", 1);
+  __Pyx_TraceCall("__pyx_unpickle_Classifier__set_state", __pyx_f[1], 11, 0, __PYX_ERR(1, 11, __pyx_L1_error));
 
   /* "(tree fragment)":12
  *     return __pyx_result
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):
+ *     __pyx_result._classification = __pyx_state[0]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[1])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -22557,111 +23035,90 @@ static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_com
   }
   __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v___pyx_result->_AllCombinationAntecedentFactory__antecedents_indices, 0);
-  __pyx_v___pyx_result->_AllCombinationAntecedentFactory__antecedents_indices = __pyx_t_2;
-  __pyx_t_2.memview = NULL;
-  __pyx_t_2.data = NULL;
-  if (unlikely(__pyx_v___pyx_state == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(1, 12, __pyx_L1_error)
-  }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v___pyx_result->_AllCombinationAntecedentFactory__dimension = __pyx_t_3;
-  if (unlikely(__pyx_v___pyx_state == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(1, 12, __pyx_L1_error)
-  }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge))))) __PYX_ERR(1, 12, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification))))) __PYX_ERR(1, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->_AllCombinationAntecedentFactory__knowledge);
-  __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->_AllCombinationAntecedentFactory__knowledge);
-  __pyx_v___pyx_result->_AllCombinationAntecedentFactory__knowledge = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *)__pyx_t_1);
+  __Pyx_GOTREF((PyObject *)__pyx_v___pyx_result->_classification);
+  __Pyx_DECREF((PyObject *)__pyx_v___pyx_result->_classification);
+  __pyx_v___pyx_result->_classification = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "(tree fragment)":13
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):
+ *     __pyx_result._classification = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[1])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(1, 13, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
-  __pyx_t_6 = (__pyx_t_5 > 3);
-  if (__pyx_t_6) {
+  __pyx_t_3 = __Pyx_PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_4 = (__pyx_t_3 > 1);
+  if (__pyx_t_4) {
   } else {
-    __pyx_t_4 = __pyx_t_6;
+    __pyx_t_2 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_6 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
-  __pyx_t_4 = __pyx_t_6;
+  __pyx_t_4 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_2 = __pyx_t_4;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_4) {
+  if (__pyx_t_2) {
 
     /* "(tree fragment)":14
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[3])             # <<<<<<<<<<<<<<
+ *     __pyx_result._classification = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[1])             # <<<<<<<<<<<<<<
  */
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 14, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_update); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 14, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_update); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (unlikely(__pyx_v___pyx_state == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(1, 14, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 14, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_9 = NULL;
-    __pyx_t_3 = 0;
+    __pyx_t_5 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = NULL;
+    __pyx_t_8 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
-      if (likely(__pyx_t_9)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_9);
+    if (likely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_6);
+      if (likely(__pyx_t_7)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+        __Pyx_INCREF(__pyx_t_7);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_8, function);
-        __pyx_t_3 = 1;
+        __Pyx_DECREF_SET(__pyx_t_6, function);
+        __pyx_t_8 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_7};
-      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_3, 1+__pyx_t_3);
-      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_t_5};
+      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
+      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 14, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "(tree fragment)":13
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[3])
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):
+ *     __pyx_result._classification = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[1])
  */
   }
 
   /* "(tree fragment)":11
- *         __pyx_unpickle_AllCombinationAntecedentFactory__set_state(<AllCombinationAntecedentFactory> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_Classifier__set_state(<Classifier> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_AllCombinationAntecedentFactory__set_state(AllCombinationAntecedentFactory __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result._AllCombinationAntecedentFactory__antecedents_indices = __pyx_state[0]; __pyx_result._AllCombinationAntecedentFactory__dimension = __pyx_state[1]; __pyx_result._AllCombinationAntecedentFactory__knowledge = __pyx_state[2]
- *     if len(__pyx_state) > 3 and hasattr(__pyx_result, '__dict__'):
+ * cdef __pyx_unpickle_Classifier__set_state(Classifier __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result._classification = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
@@ -22669,11 +23126,10 @@ static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_com
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_t_2, 1);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.__pyx_unpickle_AllCombinationAntecedentFactory__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("mofgbmlpy.fuzzy.classifier.classifier.__pyx_unpickle_Classifier__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -22681,93 +23137,101 @@ static PyObject *__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_com
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory __pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+static struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier __pyx_vtable_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
 
-static PyObject *__pyx_tp_new_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *p;
-  PyObject *o = __Pyx_PyType_GetSlot(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory, tp_new, newfunc)(t, a, k);
+static PyObject *__pyx_tp_new_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *p;
+  PyObject *o;
+  #if CYTHON_COMPILING_IN_LIMITED_API
+  allocfunc alloc_func = (allocfunc)PyType_GetSlot(t, Py_tp_alloc);
+  o = alloc_func(t, 0);
+  #else
+  if (likely(!__Pyx_PyType_HasFeature(t, Py_TPFLAGS_IS_ABSTRACT))) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)o);
-  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory*)__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
-  p->_AllCombinationAntecedentFactory__knowledge = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *)Py_None); Py_INCREF(Py_None);
-  p->_AllCombinationAntecedentFactory__antecedents_indices.data = NULL;
-  p->_AllCombinationAntecedentFactory__antecedents_indices.memview = NULL;
+  #endif
+  p = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)o);
+  p->__pyx_vtab = __pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
+  p->_classification = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *)Py_None); Py_INCREF(Py_None);
   return o;
 }
 
-static void __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory(PyObject *o) {
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)o;
+static void __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier(PyObject *o) {
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)o;
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely((PY_VERSION_HEX >= 0x03080000 || __Pyx_PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE)) && __Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && !__Pyx_PyObject_GC_IsFinalized(o)) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) {
       if (PyObject_CallFinalizerFromDealloc(o)) return;
     }
   }
   #endif
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->_AllCombinationAntecedentFactory__knowledge);
-  __PYX_XCLEAR_MEMVIEW(&p->_AllCombinationAntecedentFactory__antecedents_indices, 1);
-  p->_AllCombinationAntecedentFactory__antecedents_indices.memview = NULL; p->_AllCombinationAntecedentFactory__antecedents_indices.data = NULL;
-  #if PY_MAJOR_VERSION < 3
-  if (!(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory) || PyType_IS_GC(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) PyObject_GC_Track(o);
+  Py_CLEAR(p->_classification);
+  #if CYTHON_USE_TYPE_SLOTS || CYTHON_COMPILING_IN_PYPY
+  (*Py_TYPE(o)->tp_free)(o);
   #else
-  if (PyType_IS_GC(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) PyObject_GC_Track(o);
+  {
+    freefunc tp_free = (freefunc)PyType_GetSlot(Py_TYPE(o), Py_tp_free);
+    if (tp_free) tp_free(o);
+  }
   #endif
-  if (likely(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) __Pyx_PyType_GetSlot(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory, tp_dealloc, destructor)(o); else __Pyx_call_next_tp_dealloc(o, __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
 }
 
-static int __pyx_tp_traverse_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)o;
-  e = ((likely(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) ? ((__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory->tp_traverse) ? __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory->tp_traverse(o, v, a) : 0) : __Pyx_call_next_tp_traverse(o, v, a, __pyx_tp_traverse_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory)); if (e) return e;
-  if (p->_AllCombinationAntecedentFactory__knowledge) {
-    e = (*v)(((PyObject *)p->_AllCombinationAntecedentFactory__knowledge), a); if (e) return e;
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)o;
+  if (p->_classification) {
+    e = (*v)(((PyObject *)p->_classification), a); if (e) return e;
   }
   return 0;
 }
 
-static int __pyx_tp_clear_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory(PyObject *o) {
+static int __pyx_tp_clear_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier(PyObject *o) {
   PyObject* tmp;
-  struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *)o;
-  if (likely(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) { if (__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory->tp_clear) __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory->tp_clear(o); } else __Pyx_call_next_tp_clear(o, __pyx_tp_clear_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
-  tmp = ((PyObject*)p->_AllCombinationAntecedentFactory__knowledge);
-  p->_AllCombinationAntecedentFactory__knowledge = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge *)Py_None); Py_INCREF(Py_None);
+  struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *p = (struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *)o;
+  tmp = ((PyObject*)p->_classification);
+  p->_classification = ((struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
 
-static PyMethodDef __pyx_methods_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory[] = {
-  {"__deepcopy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+static PyMethodDef __pyx_methods_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier[] = {
+  {"__copy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__deepcopy__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"get_rule_length", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"get_rule_num", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
-static PyType_Slot __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory},
-  {Py_tp_str, (void *)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_3__str__},
-  {Py_tp_traverse, (void *)__pyx_tp_traverse_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory},
-  {Py_tp_clear, (void *)__pyx_tp_clear_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory},
-  {Py_tp_methods, (void *)__pyx_methods_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory},
-  {Py_tp_init, (void *)__pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_1__init__},
-  {Py_tp_new, (void *)__pyx_tp_new_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory},
+static PyType_Slot __pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier},
+  {Py_tp_traverse, (void *)__pyx_tp_traverse_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier},
+  {Py_tp_clear, (void *)__pyx_tp_clear_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier},
+  {Py_tp_methods, (void *)__pyx_methods_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier},
+  {Py_tp_init, (void *)__pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_1__init__},
+  {Py_tp_new, (void *)__pyx_tp_new_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier},
   {0, 0},
 };
-static PyType_Spec __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory_spec = {
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.AllCombinationAntecedentFactory",
-  sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory),
+static PyType_Spec __pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier_spec = {
+  "mofgbmlpy.fuzzy.classifier.classifier.Classifier",
+  sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier),
   0,
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_HAVE_FINALIZE,
-  __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory_slots,
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
+  __pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier_slots,
 };
 #else
 
-static PyTypeObject __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory = {
+static PyTypeObject __pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier = {
   PyVarObject_HEAD_INIT(0, 0)
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.""AllCombinationAntecedentFactory", /*tp_name*/
-  sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory), /*tp_basicsize*/
+  "mofgbmlpy.fuzzy.classifier.classifier.""Classifier", /*tp_name*/
+  sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, /*tp_dealloc*/
+  __pyx_tp_dealloc_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -22788,19 +23252,19 @@ static PyTypeObject __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34a
   0, /*tp_as_mapping*/
   0, /*tp_hash*/
   0, /*tp_call*/
-  __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_3__str__, /*tp_str*/
+  0, /*tp_str*/
   0, /*tp_getattro*/
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_HAVE_FINALIZE, /*tp_flags*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, /*tp_traverse*/
-  __pyx_tp_clear_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, /*tp_clear*/
+  __pyx_tp_traverse_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, /*tp_traverse*/
+  __pyx_tp_clear_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, /*tp_methods*/
+  __pyx_methods_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -22810,9 +23274,9 @@ static PyTypeObject __pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34a
   #if !CYTHON_USE_TYPE_SPECS
   0, /*tp_dictoffset*/
   #endif
-  __pyx_pw_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_1__init__, /*tp_init*/
+  __pyx_pw_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_1__init__, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, /*tp_new*/
+  __pyx_tp_new_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -22981,7 +23445,7 @@ static PyType_Slot __pyx_type___pyx_array_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_array_spec = {
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.array",
+  "mofgbmlpy.fuzzy.classifier.classifier.array",
   sizeof(struct __pyx_array_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_SEQUENCE,
@@ -23027,7 +23491,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.""array", /*tp_name*/
+  "mofgbmlpy.fuzzy.classifier.classifier.""array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -23187,7 +23651,7 @@ static PyType_Slot __pyx_type___pyx_MemviewEnum_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.Enum",
+  "mofgbmlpy.fuzzy.classifier.classifier.Enum",
   sizeof(struct __pyx_MemviewEnum_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -23197,7 +23661,7 @@ static PyType_Spec __pyx_type___pyx_MemviewEnum_spec = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.""Enum", /*tp_name*/
+  "mofgbmlpy.fuzzy.classifier.classifier.""Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -23494,7 +23958,7 @@ static PyType_Slot __pyx_type___pyx_memoryview_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryview_spec = {
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.memoryview",
+  "mofgbmlpy.fuzzy.classifier.classifier.memoryview",
   sizeof(struct __pyx_memoryview_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC,
@@ -23540,7 +24004,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.""memoryview", /*tp_name*/
+  "mofgbmlpy.fuzzy.classifier.classifier.""memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -23694,7 +24158,7 @@ static PyType_Slot __pyx_type___pyx_memoryviewslice_slots[] = {
   {0, 0},
 };
 static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory._memoryviewslice",
+  "mofgbmlpy.fuzzy.classifier.classifier._memoryviewslice",
   sizeof(struct __pyx_memoryviewslice_obj),
   0,
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_SEQUENCE,
@@ -23704,7 +24168,7 @@ static PyType_Spec __pyx_type___pyx_memoryviewslice_spec = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory.""_memoryviewslice", /*tp_name*/
+  "mofgbmlpy.fuzzy.classifier.classifier.""_memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -23810,12 +24274,6 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
   __Pyx_StringTabEntry __pyx_string_tab[] = {
     {&__pyx_kp_u_, __pyx_k_, sizeof(__pyx_k_), 0, 1, 0, 0},
     {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
-    {&__pyx_kp_u_AllCombinationAntecedentFactory, __pyx_k_AllCombinationAntecedentFactory, sizeof(__pyx_k_AllCombinationAntecedentFactory), 0, 1, 0, 0},
-    {&__pyx_kp_u_AllCombinationAntecedentFactory_2, __pyx_k_AllCombinationAntecedentFactory_2, sizeof(__pyx_k_AllCombinationAntecedentFactory_2), 0, 1, 0, 0},
-    {&__pyx_n_s_AllCombinationAntecedentFactory_3, __pyx_k_AllCombinationAntecedentFactory_3, sizeof(__pyx_k_AllCombinationAntecedentFactory_3), 0, 0, 1, 1},
-    {&__pyx_n_s_AllCombinationAntecedentFactory_4, __pyx_k_AllCombinationAntecedentFactory_4, sizeof(__pyx_k_AllCombinationAntecedentFactory_4), 0, 0, 1, 1},
-    {&__pyx_n_s_AllCombinationAntecedentFactory_5, __pyx_k_AllCombinationAntecedentFactory_5, sizeof(__pyx_k_AllCombinationAntecedentFactory_5), 0, 0, 1, 1},
-    {&__pyx_n_s_AllCombinationAntecedentFactory_6, __pyx_k_AllCombinationAntecedentFactory_6, sizeof(__pyx_k_AllCombinationAntecedentFactory_6), 0, 0, 1, 1},
     {&__pyx_kp_s_All_dimensions_preceding_dimensi, __pyx_k_All_dimensions_preceding_dimensi, sizeof(__pyx_k_All_dimensions_preceding_dimensi), 0, 0, 1, 0},
     {&__pyx_n_s_AssertionError, __pyx_k_AssertionError, sizeof(__pyx_k_AssertionError), 0, 0, 1, 1},
     {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
@@ -23824,6 +24282,13 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_kp_s_Cannot_create_writable_memory_vi, __pyx_k_Cannot_create_writable_memory_vi, sizeof(__pyx_k_Cannot_create_writable_memory_vi), 0, 0, 1, 0},
     {&__pyx_kp_u_Cannot_index_with_type, __pyx_k_Cannot_index_with_type, sizeof(__pyx_k_Cannot_index_with_type), 0, 1, 0, 0},
     {&__pyx_kp_s_Cannot_transpose_memoryview_with, __pyx_k_Cannot_transpose_memoryview_with, sizeof(__pyx_k_Cannot_transpose_memoryview_with), 0, 0, 1, 0},
+    {&__pyx_n_s_Classifier, __pyx_k_Classifier, sizeof(__pyx_k_Classifier), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier___copy, __pyx_k_Classifier___copy, sizeof(__pyx_k_Classifier___copy), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier___deepcopy, __pyx_k_Classifier___deepcopy, sizeof(__pyx_k_Classifier___deepcopy), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier___reduce_cython, __pyx_k_Classifier___reduce_cython, sizeof(__pyx_k_Classifier___reduce_cython), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier___setstate_cython, __pyx_k_Classifier___setstate_cython, sizeof(__pyx_k_Classifier___setstate_cython), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier_get_rule_length, __pyx_k_Classifier_get_rule_length, sizeof(__pyx_k_Classifier_get_rule_length), 0, 0, 1, 1},
+    {&__pyx_n_s_Classifier_get_rule_num, __pyx_k_Classifier_get_rule_num, sizeof(__pyx_k_Classifier_get_rule_num), 0, 0, 1, 1},
     {&__pyx_kp_s_Dimension_d_is_not_direct, __pyx_k_Dimension_d_is_not_direct, sizeof(__pyx_k_Dimension_d_is_not_direct), 0, 0, 1, 0},
     {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
     {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
@@ -23833,6 +24298,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
     {&__pyx_kp_s_Index_out_of_bounds_axis_d, __pyx_k_Index_out_of_bounds_axis_d, sizeof(__pyx_k_Index_out_of_bounds_axis_d), 0, 0, 1, 0},
     {&__pyx_kp_s_Indirect_dimensions_not_supporte, __pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 0, 1, 0},
+    {&__pyx_kp_u_Invalid_classification_method, __pyx_k_Invalid_classification_method, sizeof(__pyx_k_Invalid_classification_method), 0, 1, 0, 0},
     {&__pyx_kp_u_Invalid_mode_expected_c_or_fortr, __pyx_k_Invalid_mode_expected_c_or_fortr, sizeof(__pyx_k_Invalid_mode_expected_c_or_fortr), 0, 1, 0, 0},
     {&__pyx_kp_u_Invalid_shape_in_axis, __pyx_k_Invalid_shape_in_axis, sizeof(__pyx_k_Invalid_shape_in_axis), 0, 1, 0, 0},
     {&__pyx_n_s_MemoryError, __pyx_k_MemoryError, sizeof(__pyx_k_MemoryError), 0, 0, 1, 1},
@@ -23847,34 +24313,33 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
     {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
     {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
-    {&__pyx_kp_u__12, __pyx_k__12, sizeof(__pyx_k__12), 0, 1, 0, 0},
     {&__pyx_kp_u__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0, 0},
     {&__pyx_n_s__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 1, 1},
-    {&__pyx_n_s__33, __pyx_k__33, sizeof(__pyx_k__33), 0, 0, 1, 1},
+    {&__pyx_n_s__38, __pyx_k__38, sizeof(__pyx_k__38), 0, 0, 1, 1},
     {&__pyx_kp_u__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 1, 0, 0},
     {&__pyx_kp_u__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 1, 0, 0},
     {&__pyx_n_s_abc, __pyx_k_abc, sizeof(__pyx_k_abc), 0, 0, 1, 1},
     {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
     {&__pyx_kp_u_and, __pyx_k_and, sizeof(__pyx_k_and), 0, 1, 0, 0},
-    {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
     {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
     {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
     {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
     {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
-    {&__pyx_n_s_choice, __pyx_k_choice, sizeof(__pyx_k_choice), 0, 0, 1, 1},
     {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
     {&__pyx_n_s_class_getitem, __pyx_k_class_getitem, sizeof(__pyx_k_class_getitem), 0, 0, 1, 1},
+    {&__pyx_n_s_classification, __pyx_k_classification, sizeof(__pyx_k_classification), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_n_s_collections, __pyx_k_collections, sizeof(__pyx_k_collections), 0, 0, 1, 1},
     {&__pyx_kp_s_collections_abc, __pyx_k_collections_abc, sizeof(__pyx_k_collections_abc), 0, 0, 1, 0},
     {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
     {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
     {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
+    {&__pyx_n_s_copy_2, __pyx_k_copy_2, sizeof(__pyx_k_copy_2), 0, 0, 1, 1},
     {&__pyx_n_s_count, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
     {&__pyx_n_s_deepcopy, __pyx_k_deepcopy, sizeof(__pyx_k_deepcopy), 0, 0, 1, 1},
+    {&__pyx_n_s_deepcopy_2, __pyx_k_deepcopy_2, sizeof(__pyx_k_deepcopy_2), 0, 0, 1, 1},
     {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
     {&__pyx_n_s_dict_2, __pyx_k_dict_2, sizeof(__pyx_k_dict_2), 0, 0, 1, 1},
-    {&__pyx_kp_u_dimension, __pyx_k_dimension, sizeof(__pyx_k_dimension), 0, 1, 0, 0},
     {&__pyx_kp_u_disable, __pyx_k_disable, sizeof(__pyx_k_disable), 0, 1, 0, 0},
     {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
     {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
@@ -23888,25 +24353,30 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
     {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
     {&__pyx_kp_u_gc, __pyx_k_gc, sizeof(__pyx_k_gc), 0, 1, 0, 0},
-    {&__pyx_n_s_get_fuzzy_sets, __pyx_k_get_fuzzy_sets, sizeof(__pyx_k_get_fuzzy_sets), 0, 0, 1, 1},
-    {&__pyx_n_s_get_num_dim, __pyx_k_get_num_dim, sizeof(__pyx_k_get_num_dim), 0, 0, 1, 1},
+    {&__pyx_n_s_get_class_label, __pyx_k_get_class_label, sizeof(__pyx_k_get_class_label), 0, 0, 1, 1},
+    {&__pyx_n_s_get_rule_length, __pyx_k_get_rule_length, sizeof(__pyx_k_get_rule_length), 0, 0, 1, 1},
+    {&__pyx_n_s_get_rule_num, __pyx_k_get_rule_num, sizeof(__pyx_k_get_rule_num), 0, 0, 1, 1},
     {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
     {&__pyx_kp_u_got, __pyx_k_got, sizeof(__pyx_k_got), 0, 1, 0, 0},
     {&__pyx_kp_u_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 1, 0, 0},
     {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
     {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+    {&__pyx_n_s_inc_fitness, __pyx_k_inc_fitness, sizeof(__pyx_k_inc_fitness), 0, 0, 1, 1},
+    {&__pyx_n_s_inc_num_wins, __pyx_k_inc_num_wins, sizeof(__pyx_k_inc_num_wins), 0, 0, 1, 1},
     {&__pyx_n_s_index, __pyx_k_index, sizeof(__pyx_k_index), 0, 0, 1, 1},
     {&__pyx_n_s_initializing, __pyx_k_initializing, sizeof(__pyx_k_initializing), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
     {&__pyx_kp_u_isenabled, __pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0, 0},
+    {&__pyx_n_s_item, __pyx_k_item, sizeof(__pyx_k_item), 0, 0, 1, 1},
     {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
     {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
-    {&__pyx_n_s_knowledge, __pyx_k_knowledge, sizeof(__pyx_k_knowledge), 0, 0, 1, 1},
+    {&__pyx_n_s_length, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_memo, __pyx_k_memo, sizeof(__pyx_k_memo), 0, 0, 1, 1},
     {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
+    {&__pyx_n_s_michigan_solution_list, __pyx_k_michigan_solution_list, sizeof(__pyx_k_michigan_solution_list), 0, 0, 1, 1},
     {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
-    {&__pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent, __pyx_k_mofgbmlpy_fuzzy_rule_antecedent, sizeof(__pyx_k_mofgbmlpy_fuzzy_rule_antecedent), 0, 0, 1, 1},
+    {&__pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_k_mofgbmlpy_fuzzy_classifier_class, sizeof(__pyx_k_mofgbmlpy_fuzzy_classifier_class), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
     {&__pyx_n_s_name_2, __pyx_k_name_2, sizeof(__pyx_k_name_2), 0, 0, 1, 1},
     {&__pyx_n_s_ndim, __pyx_k_ndim, sizeof(__pyx_k_ndim), 0, 0, 1, 1},
@@ -23926,25 +24396,24 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
     {&__pyx_n_s_pyx_state, __pyx_k_pyx_state, sizeof(__pyx_k_pyx_state), 0, 0, 1, 1},
     {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
-    {&__pyx_n_s_pyx_unpickle_AllCombinationAnt, __pyx_k_pyx_unpickle_AllCombinationAnt, sizeof(__pyx_k_pyx_unpickle_AllCombinationAnt), 0, 0, 1, 1},
+    {&__pyx_n_s_pyx_unpickle_Classifier, __pyx_k_pyx_unpickle_Classifier, sizeof(__pyx_k_pyx_unpickle_Classifier), 0, 0, 1, 1},
     {&__pyx_n_s_pyx_unpickle_Enum, __pyx_k_pyx_unpickle_Enum, sizeof(__pyx_k_pyx_unpickle_Enum), 0, 0, 1, 1},
     {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
-    {&__pyx_n_s_random, __pyx_k_random, sizeof(__pyx_k_random), 0, 0, 1, 1},
     {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
     {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
     {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
     {&__pyx_n_s_register, __pyx_k_register, sizeof(__pyx_k_register), 0, 0, 1, 1},
-    {&__pyx_n_s_replace, __pyx_k_replace, sizeof(__pyx_k_replace), 0, 0, 1, 1},
     {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
     {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
     {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
     {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
     {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
     {&__pyx_n_s_spec, __pyx_k_spec, sizeof(__pyx_k_spec), 0, 0, 1, 1},
-    {&__pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced, __pyx_k_src_mofgbmlpy_fuzzy_rule_anteced, sizeof(__pyx_k_src_mofgbmlpy_fuzzy_rule_anteced), 0, 0, 1, 0},
+    {&__pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c, __pyx_k_src_mofgbmlpy_fuzzy_classifier_c, sizeof(__pyx_k_src_mofgbmlpy_fuzzy_classifier_c), 0, 0, 1, 0},
     {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
     {&__pyx_n_s_state, __pyx_k_state, sizeof(__pyx_k_state), 0, 0, 1, 1},
+    {&__pyx_n_s_staticmethod, __pyx_k_staticmethod, sizeof(__pyx_k_staticmethod), 0, 0, 1, 1},
     {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
     {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
     {&__pyx_kp_s_strided_and_direct, __pyx_k_strided_and_direct, sizeof(__pyx_k_strided_and_direct), 0, 0, 1, 0},
@@ -23960,16 +24429,16 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
     {&__pyx_n_s_use_setstate, __pyx_k_use_setstate, sizeof(__pyx_k_use_setstate), 0, 0, 1, 1},
     {&__pyx_n_s_version_info, __pyx_k_version_info, sizeof(__pyx_k_version_info), 0, 0, 1, 1},
-    {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
     {0, 0, 0, 0, 0, 0, 0}
   };
   return __Pyx_InitStrings(__pyx_string_tab);
 }
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 31, __pyx_L1_error)
-  __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) __PYX_ERR(0, 62, __pyx_L1_error)
-  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_n_s_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) __PYX_ERR(0, 71, __pyx_L1_error)
   __pyx_builtin___import__ = __Pyx_GetBuiltinName(__pyx_n_s_import); if (!__pyx_builtin___import__) __PYX_ERR(1, 100, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 141, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 156, __pyx_L1_error)
@@ -24047,27 +24516,27 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":83
- *         if self.__antecedents_indices is None:
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":18
+ *         if classification is None or not isinstance(classification, AbstractClassification):
  *             # with cython.gil:
- *             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")             # <<<<<<<<<<<<<<
- *         cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)
- *         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
+ *             raise Exception("Invalid classification method")             # <<<<<<<<<<<<<<
+ *         self._classification = classification
+ * 
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_AllCombinationAntecedentFactory); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_Invalid_classification_method); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0x521ebbd, 0xea9b3be, 0xd4a14c7):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xe7be8fa, 0x6571d8d, 0xf09d3cf):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0x521ebbd, 0xea9b3be, 0xd4a14c7) = (_AllCombinationAntecedentFactory__antecedents_indices, _AllCombinationAntecedentFactory__dimension, _AllCombinationAntecedentFactory__knowledge))" % __pyx_checksum
+ *         raise __pyx_PickleError, "Incompatible checksums (0x%x vs (0xe7be8fa, 0x6571d8d, 0xf09d3cf) = (_classification))" % __pyx_checksum
  */
-  __pyx_tuple__18 = PyTuple_Pack(3, __pyx_int_86109117, __pyx_int_246002622, __pyx_int_222958791); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__18);
-  __Pyx_GIVEREF(__pyx_tuple__18);
+  __pyx_tuple__20 = PyTuple_Pack(3, __pyx_int_243001594, __pyx_int_106372493, __pyx_int_252302287); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
 
   /* "View.MemoryView":100
  * cdef object __pyx_collections_abc_Sequence "__pyx_collections_abc_Sequence"
@@ -24076,12 +24545,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         __pyx_collections_abc_Sequence = __import__("collections.abc").abc.Sequence
  *     else:
  */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_n_s_sys); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(1, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__19);
-  __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_tuple__20 = PyTuple_Pack(2, __pyx_int_3, __pyx_int_3); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__20);
-  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_n_s_sys); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(1, 100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_tuple__22 = PyTuple_Pack(2, __pyx_int_3, __pyx_int_3); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
 
   /* "View.MemoryView":101
  * try:
@@ -24090,9 +24559,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *     else:
  *         __pyx_collections_abc_Sequence = __import__("collections").Sequence
  */
-  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_collections_abc); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(1, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_collections_abc); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
 
   /* "View.MemoryView":103
  *         __pyx_collections_abc_Sequence = __import__("collections.abc").abc.Sequence
@@ -24101,9 +24570,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * except:
  * 
  */
-  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_n_s_collections); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 103, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_n_s_collections); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 103, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
 
   /* "View.MemoryView":309
  *         return self.name
@@ -24112,9 +24581,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 309, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__23);
-  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(1, 309, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__25);
+  __Pyx_GIVEREF(__pyx_tuple__25);
 
   /* "View.MemoryView":310
  * 
@@ -24123,9 +24592,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 310, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
+  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 310, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
 
   /* "View.MemoryView":311
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -24134,9 +24603,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(1, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__25);
-  __Pyx_GIVEREF(__pyx_tuple__25);
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(1, 311, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__27);
+  __Pyx_GIVEREF(__pyx_tuple__27);
 
   /* "View.MemoryView":314
  * 
@@ -24145,9 +24614,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 314, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(1, 314, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
 
   /* "View.MemoryView":315
  * 
@@ -24156,59 +24625,95 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(1, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(1, 315, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
+  __Pyx_GIVEREF(__pyx_tuple__29);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__28 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
-  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(1, 1, __pyx_L1_error)
-
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":97
- *             self.__dimension) + "]"
- * 
- *     def __deepcopy__(self, memo={}):             # <<<<<<<<<<<<<<
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)
- * 
- */
-  __pyx_tuple__30 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_memo, __pyx_n_s_new_object); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_tuple__30 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__30);
   __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_mofgbmlpy_fuzzy_rule_anteced, __pyx_n_s_deepcopy, 97, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(1, 1, __pyx_L1_error)
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":24
+ *         return self._classification.classify(michigan_solution_list, pattern)
+ * 
+ *     def __copy__(self):             # <<<<<<<<<<<<<<
+ *         return Classifier(self._classification)
+ * 
+ */
+  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__32);
+  __Pyx_GIVEREF(__pyx_tuple__32);
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c, __pyx_n_s_copy_2, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 24, __pyx_L1_error)
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":27
+ *         return Classifier(self._classification)
+ * 
+ *     def __deepcopy__(self, memo={}):             # <<<<<<<<<<<<<<
+ *         new_object = Classifier(copy.deepcopy(self._classification))
+ *         memo[id(self)] = new_object
+ */
+  __pyx_tuple__33 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_memo, __pyx_n_s_new_object); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c, __pyx_n_s_deepcopy_2, 27, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 27, __pyx_L1_error)
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":32
+ *         return new_object
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ */
+  __pyx_tuple__34 = PyTuple_Pack(3, __pyx_n_s_michigan_solution_list, __pyx_n_s_length, __pyx_n_s_item); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__34);
+  __Pyx_GIVEREF(__pyx_tuple__34);
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c, __pyx_n_s_get_rule_length, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 32, __pyx_L1_error)
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":77
+ *         return num_errors / dataset_size, errored_patterns
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_num(michigan_solution_list):
+ *         return len(michigan_solution_list)
+ */
+  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_n_s_michigan_solution_list); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__35);
+  __Pyx_GIVEREF(__pyx_tuple__35);
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_mofgbmlpy_fuzzy_classifier_c, __pyx_n_s_get_rule_num, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 77, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_tuple__31 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_2, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__36 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_2, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__36);
+  __Pyx_GIVEREF(__pyx_tuple__36);
+  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(1, 1, __pyx_L1_error)
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)
  */
-  __pyx_tuple__32 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(1, 16, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_tuple__37 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__37);
+  __Pyx_GIVEREF(__pyx_tuple__37);
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(1, 16, __pyx_L1_error)
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_AllCombinationAntecedentFactory(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_Classifier(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_AllCombinationAnt, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Classifier, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -24222,12 +24727,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitConstants(void) {
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_3 = PyInt_FromLong(3); if (unlikely(!__pyx_int_3)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_86109117 = PyInt_FromLong(86109117L); if (unlikely(!__pyx_int_86109117)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_106372493 = PyInt_FromLong(106372493L); if (unlikely(!__pyx_int_106372493)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_112105877 = PyInt_FromLong(112105877L); if (unlikely(!__pyx_int_112105877)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_136983863 = PyInt_FromLong(136983863L); if (unlikely(!__pyx_int_136983863)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_222958791 = PyInt_FromLong(222958791L); if (unlikely(!__pyx_int_222958791)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_246002622 = PyInt_FromLong(246002622L); if (unlikely(!__pyx_int_246002622)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_243001594 = PyInt_FromLong(243001594L); if (unlikely(!__pyx_int_243001594)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_252302287 = PyInt_FromLong(252302287L); if (unlikely(!__pyx_int_252302287)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -24307,52 +24812,40 @@ static int __Pyx_modinit_function_export_code(void) {
 static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory"); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory", "AbstractAntecedentFactory", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory = &__pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
-  __pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory.__pyx_base = *__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory;
-  __pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory.__pyx_base.create = (__Pyx_memviewslice (*)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory *, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_25AbstractAntecedentFactory_create *__pyx_optional_args))__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create;
-  __pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory.__pyx_base.create_antecedent_indices = (__Pyx_memviewslice (*)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory *, struct __pyx_opt_args_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_25AbstractAntecedentFactory_create_antecedent_indices *__pyx_optional_args))__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_create_antecedent_indices;
-  __pyx_vtable_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory.generate_antecedents_indices = (void (*)(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory *, __Pyx_memviewslice))__pyx_f_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_generate_antecedents_indices;
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier = &__pyx_vtable_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
+  __pyx_vtable_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier.classify = (struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution *(*)(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *, __Pyx_memviewslice, struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern *))__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_classify;
+  __pyx_vtable_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier.get_error_rate = (PyObject *(*)(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier *, __Pyx_memviewslice, struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset *))__pyx_f_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_get_error_rate;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_t_2 = PyTuple_Pack(1, (PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory_spec, __pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory)) __PYX_ERR(0, 15, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory_spec, __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier_spec, NULL); if (unlikely(!__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier)) __PYX_ERR(0, 14, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier_spec, __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #else
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory = &__pyx_type_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory;
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier = &__pyx_type_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory->tp_base = __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory;
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory->tp_print = 0;
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier->tp_print = 0;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory->tp_dictoffset && __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory->tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory->tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier->tp_dictoffset && __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_MergeVtables(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_AllCombinationAntecedentFactory_3, (PyObject *) __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Classifier, (PyObject *) __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   #endif
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
@@ -24464,10 +24957,10 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_vtable__memoryviewslice.__pyx_base.assign_item_from_object = (PyObject *(*)(struct __pyx_memoryview_obj *, char *, PyObject *))__pyx_memoryviewslice_assign_item_from_object;
   __pyx_vtable__memoryviewslice.__pyx_base._get_base = (PyObject *(*)(struct __pyx_memoryview_obj *))__pyx_memoryviewslice__get_base;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_t_2 = PyTuple_Pack(1, (PyObject *)__pyx_memoryview_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 952, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_memoryviewslice_type = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type___pyx_memoryviewslice_spec, __pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_memoryview_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 952, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_memoryviewslice_type = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type___pyx_memoryviewslice_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(!__pyx_memoryviewslice_type)) __PYX_ERR(1, 952, __pyx_L1_error)
   if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type___pyx_memoryviewslice_spec, __pyx_memoryviewslice_type) < 0) __PYX_ERR(1, 952, __pyx_L1_error)
   #else
@@ -24494,12 +24987,10 @@ static int __Pyx_modinit_type_init_code(void) {
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if (__Pyx_setup_reduce((PyObject *) __pyx_memoryviewslice_type) < 0) __PYX_ERR(1, 952, __pyx_L1_error)
   #endif
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_RefNannyFinishContext();
   return -1;
 }
@@ -24542,30 +25033,90 @@ static int __Pyx_modinit_type_import_code(void) {
   __pyx_ptype_5numpy_character = __Pyx_ImportType_3_0_10(__pyx_t_1, "numpy", "character", sizeof(PyObject), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(PyObject),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_5numpy_character) __PYX_ERR(2, 827, __pyx_L1_error)
   __pyx_ptype_5numpy_ufunc = __Pyx_ImportType_3_0_10(__pyx_t_1, "numpy", "ufunc", sizeof(PyUFuncObject), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(PyUFuncObject),__Pyx_ImportType_CheckSize_Ignore_3_0_10); if (!__pyx_ptype_5numpy_ufunc) __PYX_ERR(2, 866, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf"); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 3, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.data.class_label.abstract_class_label"); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf", "AbstractMF", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF) __PYX_ERR(4, 3, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF)) __PYX_ERR(4, 3, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.data.class_label.abstract_class_label", "AbstractClassLabel", sizeof(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel) __PYX_ERR(4, 3, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel = (struct __pyx_vtabstruct_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_4data_11class_label_20abstract_class_label_AbstractClassLabel)) __PYX_ERR(4, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set"); if (unlikely(!__pyx_t_1)) __PYX_ERR(5, 5, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.data.pattern"); if (unlikely(!__pyx_t_1)) __PYX_ERR(5, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set", "FuzzySet", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet) __PYX_ERR(5, 5, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet)) __PYX_ERR(5, 5, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.data.pattern", "Pattern", sizeof(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_4data_7pattern_Pattern),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern) __PYX_ERR(5, 5, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_4data_7pattern_Pattern = (struct __pyx_vtabstruct_9mofgbmlpy_4data_7pattern_Pattern*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_4data_7pattern_Pattern); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_4data_7pattern_Pattern)) __PYX_ERR(5, 5, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable"); if (unlikely(!__pyx_t_1)) __PYX_ERR(6, 6, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.data.dataset"); if (unlikely(!__pyx_t_1)) __PYX_ERR(6, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable", "LinguisticVariable", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable) __PYX_ERR(6, 6, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable)) __PYX_ERR(6, 6, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.data.dataset", "Dataset", sizeof(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_4data_7dataset_Dataset),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset) __PYX_ERR(6, 6, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_4data_7dataset_Dataset = (struct __pyx_vtabstruct_9mofgbmlpy_4data_7dataset_Dataset*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_4data_7dataset_Dataset); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_4data_7dataset_Dataset)) __PYX_ERR(6, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.knowledge.knowledge"); if (unlikely(!__pyx_t_1)) __PYX_ERR(7, 9, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf"); if (unlikely(!__pyx_t_1)) __PYX_ERR(7, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.knowledge.knowledge", "Knowledge", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge) __PYX_ERR(7, 9, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge)) __PYX_ERR(7, 9, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf", "AbstractMF", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF) __PYX_ERR(7, 3, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19membership_function_11abstract_mf_AbstractMF)) __PYX_ERR(7, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.antecedent.antecedent"); if (unlikely(!__pyx_t_1)) __PYX_ERR(8, 5, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set"); if (unlikely(!__pyx_t_1)) __PYX_ERR(8, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.antecedent.antecedent", "Antecedent", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent) __PYX_ERR(8, 5, __pyx_L1_error)
-  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent)) __PYX_ERR(8, 5, __pyx_L1_error)
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set", "FuzzySet", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet) __PYX_ERR(8, 5, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_9fuzzy_set_FuzzySet)) __PYX_ERR(8, 5, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable"); if (unlikely(!__pyx_t_1)) __PYX_ERR(9, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable", "LinguisticVariable", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable) __PYX_ERR(9, 6, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10fuzzy_term_19linguistic_variable_LinguisticVariable)) __PYX_ERR(9, 6, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.knowledge.knowledge"); if (unlikely(!__pyx_t_1)) __PYX_ERR(10, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.knowledge.knowledge", "Knowledge", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge) __PYX_ERR(10, 9, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_9knowledge_9knowledge_Knowledge)) __PYX_ERR(10, 9, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.antecedent.antecedent"); if (unlikely(!__pyx_t_1)) __PYX_ERR(11, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.antecedent.antecedent", "Antecedent", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent) __PYX_ERR(11, 5, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_10antecedent_Antecedent)) __PYX_ERR(11, 5, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory"); if (unlikely(!__pyx_t_1)) __PYX_ERR(12, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory", "AbstractAntecedentFactory", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory) __PYX_ERR(12, 3, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_27abstract_antecedent_factory_AbstractAntecedentFactory)) __PYX_ERR(12, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight"); if (unlikely(!__pyx_t_1)) __PYX_ERR(13, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight", "AbstractRuleWeight", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight) __PYX_ERR(13, 4, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10ruleWeight_20abstract_rule_weight_AbstractRuleWeight)) __PYX_ERR(13, 4, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.consequent.consequent"); if (unlikely(!__pyx_t_1)) __PYX_ERR(14, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.consequent.consequent", "Consequent", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent) __PYX_ERR(14, 7, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_10consequent_Consequent)) __PYX_ERR(14, 7, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning"); if (unlikely(!__pyx_t_1)) __PYX_ERR(15, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning", "AbstractLearning", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning) __PYX_ERR(15, 5, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_10consequent_8learning_17abstract_learning_AbstractLearning)) __PYX_ERR(15, 5, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.rule_builder_core"); if (unlikely(!__pyx_t_1)) __PYX_ERR(16, 10, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.rule_builder_core", "RuleBuilderCore", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore) __PYX_ERR(16, 10, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_17rule_builder_core_RuleBuilderCore)) __PYX_ERR(16, 10, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.rule.abstract_rule"); if (unlikely(!__pyx_t_1)) __PYX_ERR(17, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.rule.abstract_rule", "AbstractRule", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule) __PYX_ERR(17, 13, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_4rule_13abstract_rule_AbstractRule)) __PYX_ERR(17, 13, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.gbml.solution.abstract_solution"); if (unlikely(!__pyx_t_1)) __PYX_ERR(18, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.gbml.solution.abstract_solution", "AbstractSolution", sizeof(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution) __PYX_ERR(18, 7, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution = (struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17abstract_solution_AbstractSolution)) __PYX_ERR(18, 7, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.gbml.solution.michigan_solution"); if (unlikely(!__pyx_t_1)) __PYX_ERR(19, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.gbml.solution.michigan_solution", "MichiganSolution", sizeof(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution) __PYX_ERR(19, 16, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution = (struct __pyx_vtabstruct_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_4gbml_8solution_17michigan_solution_MichiganSolution)) __PYX_ERR(19, 16, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("mofgbmlpy.fuzzy.classifier.classification.abstract_classification"); if (unlikely(!__pyx_t_1)) __PYX_ERR(20, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification = __Pyx_ImportType_3_0_10(__pyx_t_1, "mofgbmlpy.fuzzy.classifier.classification.abstract_classification", "AbstractClassification", sizeof(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification), __PYX_GET_STRUCT_ALIGNMENT_3_0_10(struct __pyx_obj_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification),__Pyx_ImportType_CheckSize_Warn_3_0_10); if (!__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification) __PYX_ERR(20, 5, __pyx_L1_error)
+  __pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification = (struct __pyx_vtabstruct_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification*)__Pyx_GetVtable(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification); if (unlikely(!__pyx_vtabptr_9mofgbmlpy_5fuzzy_10classifier_14classification_23abstract_classification_AbstractClassification)) __PYX_ERR(20, 5, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -24595,10 +25146,10 @@ static int __Pyx_modinit_function_import_code(void) {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_all_combination_antecedent_factory(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_classifier(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_all_combination_antecedent_factory},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_classifier},
   {0, NULL}
 };
 #endif
@@ -24611,7 +25162,7 @@ namespace {
   #endif
   {
       PyModuleDef_HEAD_INIT,
-      "all_combination_antecedent_factory",
+      "classifier",
       0, /* m_doc */
     #if CYTHON_PEP489_MULTI_PHASE_INIT
       0, /* m_size */
@@ -24659,11 +25210,11 @@ namespace {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initall_combination_antecedent_factory(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initall_combination_antecedent_factory(void)
+__Pyx_PyMODINIT_FUNC initclassifier(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initclassifier(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_all_combination_antecedent_factory(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_all_combination_antecedent_factory(void)
+__Pyx_PyMODINIT_FUNC PyInit_classifier(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_classifier(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -24744,7 +25295,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_all_combination_antecedent_factory(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_classifier(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -24768,7 +25319,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_all_combination_antecedent_factory
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'all_combination_antecedent_factory' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'classifier' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -24780,13 +25331,13 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_all_combination_antecedent_factory
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("all_combination_antecedent_factory", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("classifier", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   if (unlikely(!__pyx_m)) __PYX_ERR(0, 1, __pyx_L1_error)
   #elif CYTHON_USE_MODULE_STATE
   __pyx_t_1 = PyModule_Create(&__pyx_moduledef); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   {
     int add_module_result = PyState_AddModule(__pyx_t_1, &__pyx_moduledef);
-    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "all_combination_antecedent_factory" pseudovariable */
+    __pyx_t_1 = 0; /* transfer ownership from __pyx_t_1 to "classifier" pseudovariable */
     if (unlikely((add_module_result < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     pystate_addmodule_run = 1;
   }
@@ -24810,7 +25361,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_all_combination_antecedent_factory(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_classifier(void)", 0);
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -24848,14 +25399,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_mofgbmlpy__fuzzy__rule__antecedent__factory__all_combination_antecedent_factory) {
+  if (__pyx_module_is_main_mofgbmlpy__fuzzy__classifier__classifier) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name_2, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory")) {
-      if (unlikely((PyDict_SetItemString(modules, "mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "mofgbmlpy.fuzzy.classifier.classifier")) {
+      if (unlikely((PyDict_SetItemString(modules, "mofgbmlpy.fuzzy.classifier.classifier", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -24875,7 +25426,7 @@ if (!__Pyx_RefNanny) {
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  __Pyx_TraceCall("__Pyx_PyMODINIT_FUNC PyInit_all_combination_antecedent_factory(void)", __pyx_f[0], 1, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceCall("__Pyx_PyMODINIT_FUNC PyInit_classifier(void)", __pyx_f[0], 1, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
   /* "View.MemoryView":99
  * 
@@ -24900,12 +25451,12 @@ if (!__Pyx_RefNanny) {
  *         __pyx_collections_abc_Sequence = __import__("collections.abc").abc.Sequence
  *     else:
  */
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 100, __pyx_L2_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 100, __pyx_L2_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_version_info); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 100, __pyx_L2_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyObject_RichCompare(__pyx_t_5, __pyx_tuple__20, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 100, __pyx_L2_error)
+      __pyx_t_4 = PyObject_RichCompare(__pyx_t_5, __pyx_tuple__22, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 100, __pyx_L2_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 100, __pyx_L2_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -24918,7 +25469,7 @@ if (!__Pyx_RefNanny) {
  *     else:
  *         __pyx_collections_abc_Sequence = __import__("collections").Sequence
  */
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 101, __pyx_L2_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 101, __pyx_L2_error)
         __Pyx_GOTREF(__pyx_t_4);
         __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_abc); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 101, __pyx_L2_error)
         __Pyx_GOTREF(__pyx_t_5);
@@ -24949,7 +25500,7 @@ if (!__Pyx_RefNanny) {
  * 
  */
       /*else*/ {
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 103, __pyx_L2_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin___import__, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 103, __pyx_L2_error)
         __Pyx_GOTREF(__pyx_t_4);
         __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_Sequence); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 103, __pyx_L2_error)
         __Pyx_GOTREF(__pyx_t_5);
@@ -25114,7 +25665,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 309, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_7);
@@ -25128,7 +25679,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 310, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_7);
@@ -25142,7 +25693,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 311, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_7);
@@ -25156,7 +25707,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 314, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 314, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_7);
@@ -25170,7 +25721,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 315, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 315, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_7);
@@ -25390,94 +25941,148 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_7) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":3
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":2
  * # distutils: language = c++
- * 
  * import copy             # <<<<<<<<<<<<<<
- * cimport numpy as cnp
- * from libcpp cimport queue as cqueue
+ * 
+ * from mofgbmlpy.data.dataset cimport Dataset
  */
-  __pyx_t_7 = __Pyx_ImportDottedModule(__pyx_n_s_copy, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_ImportDottedModule(__pyx_n_s_copy, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_copy, __pyx_t_7) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_copy, __pyx_t_7) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":12
- * from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
- * from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":10
+ * from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+ * import cython
  * import numpy as np             # <<<<<<<<<<<<<<
- * 
- * 
+ * from libcpp cimport vector as cvector
+ * cimport numpy as cnp
  */
-  __pyx_t_7 = __Pyx_ImportDottedModule(__pyx_n_s_numpy, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_ImportDottedModule(__pyx_n_s_numpy, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_7) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_7) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":97
- *             self.__dimension) + "]"
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":24
+ *         return self._classification.classify(michigan_solution_list, pattern)
+ * 
+ *     def __copy__(self):             # <<<<<<<<<<<<<<
+ *         return Classifier(self._classification)
+ * 
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_3__copy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier___copy, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_copy_2, __pyx_t_7) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":27
+ *         return Classifier(self._classification)
  * 
  *     def __deepcopy__(self, memo={}):             # <<<<<<<<<<<<<<
- *         new_object = AllCombinationAntecedentFactory(self.__knowledge)
- * 
+ *         new_object = Classifier(copy.deepcopy(self._classification))
+ *         memo[id(self)] = new_object
  */
-  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __pyx_k__13 = __pyx_t_7;
   __Pyx_GIVEREF(__pyx_t_7);
   __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_7)) __PYX_ERR(0, 97, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_7)) __PYX_ERR(0, 27, __pyx_L1_error);
   __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_5__deepcopy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_AllCombinationAntecedentFactory_4, NULL, __pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_5__deepcopy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier___deepcopy, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, __pyx_n_s_deepcopy, __pyx_t_7) < 0) __PYX_ERR(0, 97, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_deepcopy_2, __pyx_t_7) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":32
+ *         return new_object
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_length(michigan_solution_list):
+ *         length = 0
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_7get_rule_length, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier_get_rule_length, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_length, __pyx_t_7) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+  __Pyx_GetNameInClass(__pyx_t_7, (PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_length); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_length, __pyx_t_4) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":77
+ *         return num_errors / dataset_size, errored_patterns
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def get_rule_num(michigan_solution_list):
+ *         return len(michigan_solution_list)
+ */
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_9get_rule_num, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier_get_rule_num, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_num, __pyx_t_4) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
+  __Pyx_GetNameInClass(__pyx_t_4, (PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_num); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_builtin_staticmethod, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_get_rule_num, __pyx_t_7) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_AllCombinationAntecedentFactory_5, NULL, __pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier___reduce_cython, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, __pyx_n_s_reduce_cython, __pyx_t_7) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_reduce_cython, __pyx_t_7) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_AllCombinationAntecedentFactory, (type(self), 0x521ebbd, state)
+ *         return __pyx_unpickle_Classifier, (type(self), 0xe7be8fa, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_AllCombinationAntecedentFactory__set_state(self, __pyx_state)
+ *     __pyx_unpickle_Classifier__set_state(self, __pyx_state)
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_31AllCombinationAntecedentFactory_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_AllCombinationAntecedentFactory_6, NULL, __pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_10Classifier_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Classifier___setstate_cython, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory, __pyx_n_s_setstate_cython, __pyx_t_7) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier, __pyx_n_s_setstate_cython, __pyx_t_7) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_AllCombinationAntecedentFactory);
+  PyType_Modified(__pyx_ptype_9mofgbmlpy_5fuzzy_10classifier_10classifier_Classifier);
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_AllCombinationAntecedentFactory(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_Classifier(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_4rule_10antecedent_7factory_34all_combination_antecedent_factory_1__pyx_unpickle_AllCombinationAntecedentFactory, 0, __pyx_n_s_pyx_unpickle_AllCombinationAnt, NULL, __pyx_n_s_mofgbmlpy_fuzzy_rule_antecedent, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_9mofgbmlpy_5fuzzy_10classifier_10classifier_1__pyx_unpickle_Classifier, 0, __pyx_n_s_pyx_unpickle_Classifier, NULL, __pyx_n_s_mofgbmlpy_fuzzy_classifier_class, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_AllCombinationAnt, __pyx_t_7) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Classifier, __pyx_t_7) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx":1
+  /* "mofgbmlpy/fuzzy/classifier/classifier.pyx":1
  * # distutils: language = c++             # <<<<<<<<<<<<<<
- * 
  * import copy
+ * 
  */
   __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -25494,7 +26099,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init mofgbmlpy.fuzzy.classifier.classifier", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -25508,7 +26113,7 @@ if (!__Pyx_RefNanny) {
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory");
+    PyErr_SetString(PyExc_ImportError, "init mofgbmlpy.fuzzy.classifier.classifier");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -28067,107 +28672,6 @@ static void __Pyx_RaiseBufferIndexError(int axis) {
      "Out of bounds on buffer access (axis %d)", axis);
 }
 
-/* UnicodeConcatInPlace */
-# if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
-static int
-__Pyx_unicode_modifiable(PyObject *unicode)
-{
-    if (Py_REFCNT(unicode) != 1)
-        return 0;
-    if (!PyUnicode_CheckExact(unicode))
-        return 0;
-    if (PyUnicode_CHECK_INTERNED(unicode))
-        return 0;
-    return 1;
-}
-static CYTHON_INLINE PyObject *__Pyx_PyUnicode_ConcatInPlaceImpl(PyObject **p_left, PyObject *right
-        #if CYTHON_REFNANNY
-        , void* __pyx_refnanny
-        #endif
-    ) {
-    PyObject *left = *p_left;
-    Py_ssize_t left_len, right_len, new_len;
-    if (unlikely(__Pyx_PyUnicode_READY(left) == -1))
-        return NULL;
-    if (unlikely(__Pyx_PyUnicode_READY(right) == -1))
-        return NULL;
-    left_len = PyUnicode_GET_LENGTH(left);
-    if (left_len == 0) {
-        Py_INCREF(right);
-        return right;
-    }
-    right_len = PyUnicode_GET_LENGTH(right);
-    if (right_len == 0) {
-        Py_INCREF(left);
-        return left;
-    }
-    if (unlikely(left_len > PY_SSIZE_T_MAX - right_len)) {
-        PyErr_SetString(PyExc_OverflowError,
-                        "strings are too large to concat");
-        return NULL;
-    }
-    new_len = left_len + right_len;
-    if (__Pyx_unicode_modifiable(left)
-            && PyUnicode_CheckExact(right)
-            && PyUnicode_KIND(right) <= PyUnicode_KIND(left)
-            && !(PyUnicode_IS_ASCII(left) && !PyUnicode_IS_ASCII(right))) {
-        int ret;
-        __Pyx_GIVEREF(*p_left);
-        ret = PyUnicode_Resize(p_left, new_len);
-        __Pyx_GOTREF(*p_left);
-        if (unlikely(ret != 0))
-            return NULL;
-        #if PY_VERSION_HEX >= 0x030d0000
-        if (unlikely(PyUnicode_CopyCharacters(*p_left, left_len, right, 0, right_len) < 0)) return NULL;
-        #else
-        _PyUnicode_FastCopyCharacters(*p_left, left_len, right, 0, right_len);
-        #endif
-        __Pyx_INCREF(*p_left);
-        __Pyx_GIVEREF(*p_left);
-        return *p_left;
-    } else {
-        return __Pyx_PyUnicode_Concat(left, right);
-    }
-  }
-#endif
-
-/* CallNextTpDealloc */
-static void __Pyx_call_next_tp_dealloc(PyObject* obj, destructor current_tp_dealloc) {
-    PyTypeObject* type = Py_TYPE(obj);
-    destructor tp_dealloc = NULL;
-    while (type && __Pyx_PyType_GetSlot(type, tp_dealloc, destructor) != current_tp_dealloc)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    while (type && (tp_dealloc = __Pyx_PyType_GetSlot(type, tp_dealloc, destructor)) == current_tp_dealloc)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    if (type)
-        tp_dealloc(obj);
-}
-
-/* CallNextTpTraverse */
-static int __Pyx_call_next_tp_traverse(PyObject* obj, visitproc v, void *a, traverseproc current_tp_traverse) {
-    PyTypeObject* type = Py_TYPE(obj);
-    traverseproc tp_traverse = NULL;
-    while (type && __Pyx_PyType_GetSlot(type, tp_traverse, traverseproc) != current_tp_traverse)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    while (type && (tp_traverse = __Pyx_PyType_GetSlot(type, tp_traverse, traverseproc)) == current_tp_traverse)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    if (type && tp_traverse)
-        return tp_traverse(obj, v, a);
-    return 0;
-}
-
-/* CallNextTpClear */
-static void __Pyx_call_next_tp_clear(PyObject* obj, inquiry current_tp_clear) {
-    PyTypeObject* type = Py_TYPE(obj);
-    inquiry tp_clear = NULL;
-    while (type && __Pyx_PyType_GetSlot(type, tp_clear, inquiry) != current_tp_clear)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    while (type && (tp_clear = __Pyx_PyType_GetSlot(type, tp_clear, inquiry)) == current_tp_clear)
-        type = __Pyx_PyType_GetSlot(type, tp_base, PyTypeObject*);
-    if (type && tp_clear)
-        tp_clear(obj);
-}
-
 /* PyObject_GenericGetAttrNoDict */
 #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static PyObject *__Pyx_RaiseGenericGetAttributeError(PyTypeObject *tp, PyObject *attr_name) {
@@ -28219,106 +28723,6 @@ static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_nam
     return __Pyx_PyObject_GenericGetAttrNoDict(obj, attr_name);
 }
 #endif
-
-/* TypeImport */
-#ifndef __PYX_HAVE_RT_ImportType_3_0_10
-#define __PYX_HAVE_RT_ImportType_3_0_10
-static PyTypeObject *__Pyx_ImportType_3_0_10(PyObject *module, const char *module_name, const char *class_name,
-    size_t size, size_t alignment, enum __Pyx_ImportType_CheckSize_3_0_10 check_size)
-{
-    PyObject *result = 0;
-    char warning[200];
-    Py_ssize_t basicsize;
-    Py_ssize_t itemsize;
-#if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject *py_basicsize;
-    PyObject *py_itemsize;
-#endif
-    result = PyObject_GetAttrString(module, class_name);
-    if (!result)
-        goto bad;
-    if (!PyType_Check(result)) {
-        PyErr_Format(PyExc_TypeError,
-            "%.200s.%.200s is not a type object",
-            module_name, class_name);
-        goto bad;
-    }
-#if !CYTHON_COMPILING_IN_LIMITED_API
-    basicsize = ((PyTypeObject *)result)->tp_basicsize;
-    itemsize = ((PyTypeObject *)result)->tp_itemsize;
-#else
-    py_basicsize = PyObject_GetAttrString(result, "__basicsize__");
-    if (!py_basicsize)
-        goto bad;
-    basicsize = PyLong_AsSsize_t(py_basicsize);
-    Py_DECREF(py_basicsize);
-    py_basicsize = 0;
-    if (basicsize == (Py_ssize_t)-1 && PyErr_Occurred())
-        goto bad;
-    py_itemsize = PyObject_GetAttrString(result, "__itemsize__");
-    if (!py_itemsize)
-        goto bad;
-    itemsize = PyLong_AsSsize_t(py_itemsize);
-    Py_DECREF(py_itemsize);
-    py_itemsize = 0;
-    if (itemsize == (Py_ssize_t)-1 && PyErr_Occurred())
-        goto bad;
-#endif
-    if (itemsize) {
-        if (size % alignment) {
-            alignment = size % alignment;
-        }
-        if (itemsize < (Py_ssize_t)alignment)
-            itemsize = (Py_ssize_t)alignment;
-    }
-    if ((size_t)(basicsize + itemsize) < size) {
-        PyErr_Format(PyExc_ValueError,
-            "%.200s.%.200s size changed, may indicate binary incompatibility. "
-            "Expected %zd from C header, got %zd from PyObject",
-            module_name, class_name, size, basicsize+itemsize);
-        goto bad;
-    }
-    if (check_size == __Pyx_ImportType_CheckSize_Error_3_0_10 &&
-            ((size_t)basicsize > size || (size_t)(basicsize + itemsize) < size)) {
-        PyErr_Format(PyExc_ValueError,
-            "%.200s.%.200s size changed, may indicate binary incompatibility. "
-            "Expected %zd from C header, got %zd-%zd from PyObject",
-            module_name, class_name, size, basicsize, basicsize+itemsize);
-        goto bad;
-    }
-    else if (check_size == __Pyx_ImportType_CheckSize_Warn_3_0_10 && (size_t)basicsize > size) {
-        PyOS_snprintf(warning, sizeof(warning),
-            "%s.%s size changed, may indicate binary incompatibility. "
-            "Expected %zd from C header, got %zd from PyObject",
-            module_name, class_name, size, basicsize);
-        if (PyErr_WarnEx(NULL, warning, 0) < 0) goto bad;
-    }
-    return (PyTypeObject *)result;
-bad:
-    Py_XDECREF(result);
-    return NULL;
-}
-#endif
-
-/* GetVTable */
-static void* __Pyx_GetVtable(PyTypeObject *type) {
-    void* ptr;
-#if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject *ob = PyObject_GetAttr((PyObject *)type, __pyx_n_s_pyx_vtable);
-#else
-    PyObject *ob = PyObject_GetItem(type->tp_dict, __pyx_n_s_pyx_vtable);
-#endif
-    if (!ob)
-        goto bad;
-    ptr = PyCapsule_GetPointer(ob, 0);
-    if (!ptr && !PyErr_Occurred())
-        PyErr_SetString(PyExc_RuntimeError, "invalid vtable found for imported type");
-    Py_DECREF(ob);
-    return ptr;
-bad:
-    Py_XDECREF(ob);
-    return NULL;
-}
 
 /* FixUpExtensionType */
 #if CYTHON_USE_TYPE_SPECS
@@ -28701,6 +29105,26 @@ bad:
     return -1;
 }
 
+/* GetVTable */
+static void* __Pyx_GetVtable(PyTypeObject *type) {
+    void* ptr;
+#if CYTHON_COMPILING_IN_LIMITED_API
+    PyObject *ob = PyObject_GetAttr((PyObject *)type, __pyx_n_s_pyx_vtable);
+#else
+    PyObject *ob = PyObject_GetItem(type->tp_dict, __pyx_n_s_pyx_vtable);
+#endif
+    if (!ob)
+        goto bad;
+    ptr = PyCapsule_GetPointer(ob, 0);
+    if (!ptr && !PyErr_Occurred())
+        PyErr_SetString(PyExc_RuntimeError, "invalid vtable found for imported type");
+    Py_DECREF(ob);
+    return ptr;
+bad:
+    Py_XDECREF(ob);
+    return NULL;
+}
+
 /* MergeVTables */
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static int __Pyx_MergeVtables(PyTypeObject *type) {
@@ -28862,6 +29286,86 @@ __PYX_GOOD:
     Py_XDECREF(setstate);
     Py_XDECREF(setstate_cython);
     return ret;
+}
+#endif
+
+/* TypeImport */
+#ifndef __PYX_HAVE_RT_ImportType_3_0_10
+#define __PYX_HAVE_RT_ImportType_3_0_10
+static PyTypeObject *__Pyx_ImportType_3_0_10(PyObject *module, const char *module_name, const char *class_name,
+    size_t size, size_t alignment, enum __Pyx_ImportType_CheckSize_3_0_10 check_size)
+{
+    PyObject *result = 0;
+    char warning[200];
+    Py_ssize_t basicsize;
+    Py_ssize_t itemsize;
+#if CYTHON_COMPILING_IN_LIMITED_API
+    PyObject *py_basicsize;
+    PyObject *py_itemsize;
+#endif
+    result = PyObject_GetAttrString(module, class_name);
+    if (!result)
+        goto bad;
+    if (!PyType_Check(result)) {
+        PyErr_Format(PyExc_TypeError,
+            "%.200s.%.200s is not a type object",
+            module_name, class_name);
+        goto bad;
+    }
+#if !CYTHON_COMPILING_IN_LIMITED_API
+    basicsize = ((PyTypeObject *)result)->tp_basicsize;
+    itemsize = ((PyTypeObject *)result)->tp_itemsize;
+#else
+    py_basicsize = PyObject_GetAttrString(result, "__basicsize__");
+    if (!py_basicsize)
+        goto bad;
+    basicsize = PyLong_AsSsize_t(py_basicsize);
+    Py_DECREF(py_basicsize);
+    py_basicsize = 0;
+    if (basicsize == (Py_ssize_t)-1 && PyErr_Occurred())
+        goto bad;
+    py_itemsize = PyObject_GetAttrString(result, "__itemsize__");
+    if (!py_itemsize)
+        goto bad;
+    itemsize = PyLong_AsSsize_t(py_itemsize);
+    Py_DECREF(py_itemsize);
+    py_itemsize = 0;
+    if (itemsize == (Py_ssize_t)-1 && PyErr_Occurred())
+        goto bad;
+#endif
+    if (itemsize) {
+        if (size % alignment) {
+            alignment = size % alignment;
+        }
+        if (itemsize < (Py_ssize_t)alignment)
+            itemsize = (Py_ssize_t)alignment;
+    }
+    if ((size_t)(basicsize + itemsize) < size) {
+        PyErr_Format(PyExc_ValueError,
+            "%.200s.%.200s size changed, may indicate binary incompatibility. "
+            "Expected %zd from C header, got %zd from PyObject",
+            module_name, class_name, size, basicsize+itemsize);
+        goto bad;
+    }
+    if (check_size == __Pyx_ImportType_CheckSize_Error_3_0_10 &&
+            ((size_t)basicsize > size || (size_t)(basicsize + itemsize) < size)) {
+        PyErr_Format(PyExc_ValueError,
+            "%.200s.%.200s size changed, may indicate binary incompatibility. "
+            "Expected %zd from C header, got %zd-%zd from PyObject",
+            module_name, class_name, size, basicsize, basicsize+itemsize);
+        goto bad;
+    }
+    else if (check_size == __Pyx_ImportType_CheckSize_Warn_3_0_10 && (size_t)basicsize > size) {
+        PyOS_snprintf(warning, sizeof(warning),
+            "%s.%s size changed, may indicate binary incompatibility. "
+            "Expected %zd from C header, got %zd from PyObject",
+            module_name, class_name, size, basicsize);
+        if (PyErr_WarnEx(NULL, warning, 0) < 0) goto bad;
+    }
+    return (PyTypeObject *)result;
+bad:
+    Py_XDECREF(result);
+    return NULL;
 }
 #endif
 
@@ -30042,6 +30546,29 @@ static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qual
     return op;
 }
 
+/* GetNameInClass */
+static PyObject *__Pyx__GetNameInClass(PyObject *nmspace, PyObject *name) {
+    PyObject *result;
+    PyObject *dict;
+    assert(PyType_Check(nmspace));
+#if CYTHON_USE_TYPE_SLOTS
+    dict = ((PyTypeObject*)nmspace)->tp_dict;
+    Py_XINCREF(dict);
+#else
+    dict = PyObject_GetAttr(nmspace, __pyx_n_s_dict);
+#endif
+    if (likely(dict)) {
+        result = PyObject_GetItem(dict, name);
+        Py_DECREF(dict);
+        if (result) {
+            return result;
+        }
+    }
+    PyErr_Clear();
+    __Pyx_GetModuleGlobalNameUncached(result, name);
+    return result;
+}
+
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(PyThreadState *tstate, int c_line) {
@@ -30466,15 +30993,16 @@ __pyx_slices_overlap(__Pyx_memviewslice *slice1,
         return (target_type) value;\
     }
 
-/* MemviewDtypeToObject */
-static CYTHON_INLINE PyObject *__pyx_memview_get_int(const char *itemp) {
-    return (PyObject *) __Pyx_PyInt_From_int(*(int *) itemp);
+/* MemviewObjectToObject */
+static PyObject *__pyx_memview_get_object(const char *itemp) {
+    PyObject *result = *(PyObject **) itemp;
+    Py_INCREF(result);
+    return result;
 }
-static CYTHON_INLINE int __pyx_memview_set_int(const char *itemp, PyObject *obj) {
-    int value = __Pyx_PyInt_As_int(obj);
-    if (unlikely((value == (int)-1) && PyErr_Occurred()))
-        return 0;
-    *(int *) itemp = value;
+static int __pyx_memview_set_object(const char *itemp, PyObject *obj) {
+    Py_INCREF(obj);
+    Py_DECREF(*(PyObject **) itemp);
+    *(PyObject **) itemp = obj;
     return 1;
 }
 
@@ -31223,29 +31751,6 @@ no_fail:
 }
 
 /* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_int(PyObject *obj, int writable_flag) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS_RO | writable_flag, 2,
-                                                 &__Pyx_TypeInfo_int, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
-}
-
-/* ObjectToMemviewSlice */
   static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_object(PyObject *obj, int writable_flag) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
@@ -31258,29 +31763,6 @@ __pyx_fail:
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
                                                  PyBUF_RECORDS_RO | writable_flag, 1,
                                                  &__Pyx_TypeInfo_object, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
-}
-
-/* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_int(PyObject *obj, int writable_flag) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS_RO | writable_flag, 1,
-                                                 &__Pyx_TypeInfo_int, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -31801,68 +32283,277 @@ static CYTHON_INLINE void __Pyx_XCLEAR_MEMVIEW(__Pyx_memviewslice *memslice,
     }
 }
 
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+/* CIntFromPy */
+  static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
-    const int neg_one = (int) -1, const_zero = (int) 0;
+    const long neg_one = (long) -1, const_zero = (long) 0;
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic pop
 #endif
     const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if ((sizeof(long) < sizeof(long))) {
+            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (long) val;
+        }
+    } else
 #endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            if (unlikely(__Pyx_PyLong_IsNeg(x))) {
+                goto raise_neg_overflow;
+            } else if (__Pyx_PyLong_IsCompact(x)) {
+                __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
+            } else {
+                const digit* digits = __Pyx_PyLong_Digits(x);
+                assert(__Pyx_PyLong_DigitCount(x) > 1);
+                switch (__Pyx_PyLong_DigitCount(x)) {
+                    case 2:
+                        if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
+                                return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                            }
+                        }
+                        break;
+                    case 3:
+                        if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
+                                return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                            }
+                        }
+                        break;
+                    case 4:
+                        if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
+                                return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                            }
+                        }
+                        break;
+                }
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (long) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if ((sizeof(long) <= sizeof(unsigned long))) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            if (__Pyx_PyLong_IsCompact(x)) {
+                __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
+            } else {
+                const digit* digits = __Pyx_PyLong_Digits(x);
+                assert(__Pyx_PyLong_DigitCount(x) > 1);
+                switch (__Pyx_PyLong_SignedDigitCount(x)) {
+                    case -2:
+                        if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                                return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                    case 2:
+                        if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                                return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                    case -3:
+                        if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                                return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                    case 3:
+                        if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                                return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                    case -4:
+                        if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                                return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                    case 4:
+                        if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                            } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                                return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                            }
+                        }
+                        break;
+                }
+            }
+#endif
+            if ((sizeof(long) <= sizeof(long))) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+            long val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+#if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+#endif
+            if (likely(v)) {
+                int ret = -1;
+#if PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                           bytes, sizeof(val),
+                                           is_little, !is_unsigned);
+#else
+                PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
+                int bits, remaining_bits, is_negative = 0;
+                long idigit;
+                int chunk_size = (sizeof(long) < 8) ? 30 : 62;
+                if (unlikely(!PyLong_CheckExact(v))) {
+                    PyObject *tmp = v;
+                    v = PyNumber_Long(v);
+                    assert(PyLong_CheckExact(v));
+                    Py_DECREF(tmp);
+                    if (unlikely(!v)) return (long) -1;
+                }
+#if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
+                if (Py_SIZE(x) == 0)
+                    return (long) 0;
+                is_negative = Py_SIZE(x) < 0;
+#else
+                {
+                    int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                    if (unlikely(result < 0))
+                        return (long) -1;
+                    is_negative = result == 1;
+                }
+#endif
+                if (is_unsigned && unlikely(is_negative)) {
+                    goto raise_neg_overflow;
+                } else if (is_negative) {
+                    stepval = PyNumber_Invert(v);
+                    if (unlikely(!stepval))
+                        return (long) -1;
+                } else {
+                    stepval = __Pyx_NewRef(v);
+                }
+                val = (long) 0;
+                mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
+                shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
+                for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
+                    PyObject *tmp, *digit;
+                    digit = PyNumber_And(stepval, mask);
+                    if (unlikely(!digit)) goto done;
+                    idigit = PyLong_AsLong(digit);
+                    Py_DECREF(digit);
+                    if (unlikely(idigit < 0)) goto done;
+                    tmp = PyNumber_Rshift(stepval, shift);
+                    if (unlikely(!tmp)) goto done;
+                    Py_DECREF(stepval); stepval = tmp;
+                    val |= ((long) idigit) << bits;
+                    #if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
+                    if (Py_SIZE(stepval) == 0)
+                        goto unpacking_done;
+                    #endif
+                }
+                idigit = PyLong_AsLong(stepval);
+                if (unlikely(idigit < 0)) goto done;
+                remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
+                if (unlikely(idigit >= (1L << remaining_bits)))
+                    goto raise_overflow;
+                val |= ((long) idigit) << bits;
+            #if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
+            unpacking_done:
+            #endif
+                if (!is_unsigned) {
+                    if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
+                        goto raise_overflow;
+                    if (is_negative)
+                        val = ~val;
+                }
+                ret = 0;
+            done:
+                Py_XDECREF(shift);
+                Py_XDECREF(mask);
+                Py_XDECREF(stepval);
+#endif
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+            return (long) -1;
         }
     } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
+        long val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (long) -1;
+        val = __Pyx_PyInt_As_long(tmp);
+        Py_DECREF(tmp);
+        return val;
     }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-#else
-        PyObject *from_bytes, *result = NULL;
-        PyObject *py_bytes = NULL, *arg_tuple = NULL, *kwds = NULL, *order_str = NULL;
-        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
-        if (!from_bytes) return NULL;
-        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(int));
-        if (!py_bytes) goto limited_bad;
-        order_str = PyUnicode_FromString(little ? "little" : "big");
-        if (!order_str) goto limited_bad;
-        arg_tuple = PyTuple_Pack(2, py_bytes, order_str);
-        if (!arg_tuple) goto limited_bad;
-        if (!is_unsigned) {
-            kwds = PyDict_New();
-            if (!kwds) goto limited_bad;
-            if (PyDict_SetItemString(kwds, "signed", __Pyx_NewRef(Py_True))) goto limited_bad;
-        }
-        result = PyObject_Call(from_bytes, arg_tuple, kwds);
-        limited_bad:
-        Py_XDECREF(kwds);
-        Py_XDECREF(arg_tuple);
-        Py_XDECREF(order_str);
-        Py_XDECREF(py_bytes);
-        Py_XDECREF(from_bytes);
-        return result;
-#endif
-    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to long");
+    return (long) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to long");
+    return (long) -1;
 }
 
 /* CIntFromPy */
@@ -32138,277 +32829,68 @@ raise_neg_overflow:
     return (int) -1;
 }
 
-/* CIntFromPy */
-  static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
+    const int neg_one = (int) -1, const_zero = (int) 0;
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic pop
 #endif
     const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if ((sizeof(long) < sizeof(long))) {
-            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (long) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            if (unlikely(__Pyx_PyLong_IsNeg(x))) {
-                goto raise_neg_overflow;
-            } else if (__Pyx_PyLong_IsCompact(x)) {
-                __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
-            } else {
-                const digit* digits = __Pyx_PyLong_Digits(x);
-                assert(__Pyx_PyLong_DigitCount(x) > 1);
-                switch (__Pyx_PyLong_DigitCount(x)) {
-                    case 2:
-                        if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
-                                return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                            }
-                        }
-                        break;
-                    case 3:
-                        if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
-                                return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                            }
-                        }
-                        break;
-                    case 4:
-                        if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
-                                return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                            }
-                        }
-                        break;
-                }
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (long) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if ((sizeof(long) <= sizeof(unsigned long))) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
 #ifdef HAVE_LONG_LONG
-            } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
 #endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            if (__Pyx_PyLong_IsCompact(x)) {
-                __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
-            } else {
-                const digit* digits = __Pyx_PyLong_Digits(x);
-                assert(__Pyx_PyLong_DigitCount(x) > 1);
-                switch (__Pyx_PyLong_SignedDigitCount(x)) {
-                    case -2:
-                        if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                                return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                    case 2:
-                        if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                                return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                    case -3:
-                        if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                                return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                    case 3:
-                        if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                                return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                    case -4:
-                        if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                                return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                    case 4:
-                        if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                            if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                                __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                            } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                                return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                            }
-                        }
-                        break;
-                }
-            }
-#endif
-            if ((sizeof(long) <= sizeof(long))) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-            long val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
-#if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
-#endif
-            if (likely(v)) {
-                int ret = -1;
-#if PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                           bytes, sizeof(val),
-                                           is_little, !is_unsigned);
-#else
-                PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
-                int bits, remaining_bits, is_negative = 0;
-                long idigit;
-                int chunk_size = (sizeof(long) < 8) ? 30 : 62;
-                if (unlikely(!PyLong_CheckExact(v))) {
-                    PyObject *tmp = v;
-                    v = PyNumber_Long(v);
-                    assert(PyLong_CheckExact(v));
-                    Py_DECREF(tmp);
-                    if (unlikely(!v)) return (long) -1;
-                }
-#if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
-                if (Py_SIZE(x) == 0)
-                    return (long) 0;
-                is_negative = Py_SIZE(x) < 0;
-#else
-                {
-                    int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                    if (unlikely(result < 0))
-                        return (long) -1;
-                    is_negative = result == 1;
-                }
-#endif
-                if (is_unsigned && unlikely(is_negative)) {
-                    goto raise_neg_overflow;
-                } else if (is_negative) {
-                    stepval = PyNumber_Invert(v);
-                    if (unlikely(!stepval))
-                        return (long) -1;
-                } else {
-                    stepval = __Pyx_NewRef(v);
-                }
-                val = (long) 0;
-                mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
-                shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
-                for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
-                    PyObject *tmp, *digit;
-                    digit = PyNumber_And(stepval, mask);
-                    if (unlikely(!digit)) goto done;
-                    idigit = PyLong_AsLong(digit);
-                    Py_DECREF(digit);
-                    if (unlikely(idigit < 0)) goto done;
-                    tmp = PyNumber_Rshift(stepval, shift);
-                    if (unlikely(!tmp)) goto done;
-                    Py_DECREF(stepval); stepval = tmp;
-                    val |= ((long) idigit) << bits;
-                    #if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
-                    if (Py_SIZE(stepval) == 0)
-                        goto unpacking_done;
-                    #endif
-                }
-                idigit = PyLong_AsLong(stepval);
-                if (unlikely(idigit < 0)) goto done;
-                remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
-                if (unlikely(idigit >= (1L << remaining_bits)))
-                    goto raise_overflow;
-                val |= ((long) idigit) << bits;
-            #if CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030B0000
-            unpacking_done:
-            #endif
-                if (!is_unsigned) {
-                    if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
-                        goto raise_overflow;
-                    if (is_negative)
-                        val = ~val;
-                }
-                ret = 0;
-            done:
-                Py_XDECREF(shift);
-                Py_XDECREF(mask);
-                Py_XDECREF(stepval);
-#endif
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-            return (long) -1;
         }
     } else {
-        long val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (long) -1;
-        val = __Pyx_PyInt_As_long(tmp);
-        Py_DECREF(tmp);
-        return val;
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
     }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to long");
-    return (long) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to long");
-    return (long) -1;
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+#else
+        PyObject *from_bytes, *result = NULL;
+        PyObject *py_bytes = NULL, *arg_tuple = NULL, *kwds = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(int));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        arg_tuple = PyTuple_Pack(2, py_bytes, order_str);
+        if (!arg_tuple) goto limited_bad;
+        if (!is_unsigned) {
+            kwds = PyDict_New();
+            if (!kwds) goto limited_bad;
+            if (PyDict_SetItemString(kwds, "signed", __Pyx_NewRef(Py_True))) goto limited_bad;
+        }
+        result = PyObject_Call(from_bytes, arg_tuple, kwds);
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(arg_tuple);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
 }
 
 /* CIntToPy */
@@ -32758,7 +33240,7 @@ __Pyx_PyType_GetName(PyTypeObject* tp)
     if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
         PyErr_Clear();
         Py_XDECREF(name);
-        name = __Pyx_NewRef(__pyx_n_s__33);
+        name = __Pyx_NewRef(__pyx_n_s__38);
     }
     return name;
 }

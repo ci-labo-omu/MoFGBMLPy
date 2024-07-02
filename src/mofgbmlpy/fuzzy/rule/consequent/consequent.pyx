@@ -1,9 +1,6 @@
 import copy
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
-from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 cimport numpy as cnp
-from mofgbmlpy.utility.fused_types cimport int_or_int_array
-from mofgbmlpy.utility.fused_types cimport double_or_double_array
 
 
 cdef class Consequent:

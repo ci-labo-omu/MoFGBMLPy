@@ -118,7 +118,10 @@ class MichiganCrossover(Crossover):
                 mating_pool_size = num_ga * crossover.n_parents // crossover.n_offsprings
                 selection = NaryTournamentSelectionOnFitness(tournament_size)
 
-                michigan_solutions_array = parent.get_vars().reshape((parent.get_num_vars(), 1))
+                michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
+                parent_vars = parent.get_vars()
+                for j in range(michigan_solutions_array.size):
+                    michigan_solutions_array[j, 0] = parent_vars[j]
                 michigan_population = Population.new(X=michigan_solutions_array)
 
                 ga_generated_solutions = self.ga_rules_gen(crossover,

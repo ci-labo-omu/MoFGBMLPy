@@ -61,11 +61,6 @@ class PittsburghProblem(Problem):
         self.__michigan_solution_builder.get_rule_builder()
 
     def _evaluate(self, X, out, *args, **kwargs):
-        # vfunc = np.vectorize(self.__evaluate_one)
-        # out["F"] = vfunc(X)
-        #
-        # print(out["F"])
-
         cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), 2), dtype=np.float64)
         cdef int i
 

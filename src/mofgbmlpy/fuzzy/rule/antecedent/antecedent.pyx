@@ -24,10 +24,10 @@ cdef class Antecedent:
     cpdef void set_antecedent_indices(self, int[:] new_indices):
         self.__antecedent_indices = new_indices
 
-    cpdef cnp.ndarray[double, ndim=1] get_compatible_grade(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cpdef double[:] get_compatible_grade(self, double[:] attribute_vector):
         cdef int i
         cdef int size = self.get_array_size()
-        cdef cnp.ndarray[double, ndim=1] grade = np.zeros(size, dtype=np.float64)
+        cdef double[:] grade = np.zeros(size, dtype=np.float64)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
         if size != attribute_vector.size:
@@ -51,7 +51,7 @@ cdef class Antecedent:
 
         return grade
 
-    cdef double get_compatible_grade_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         cdef int i
         cdef int size = self.get_array_size()
         cdef double grade_value = 1
@@ -78,7 +78,7 @@ cdef class Antecedent:
 
         return grade_value
 
-    cpdef double get_compatible_grade_value_py(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cpdef double get_compatible_grade_value_py(self, double[:] attribute_vector):
         cdef double compatible_grade_value = self.get_compatible_grade_value(attribute_vector)
         if compatible_grade_value == -1:
             # Error code

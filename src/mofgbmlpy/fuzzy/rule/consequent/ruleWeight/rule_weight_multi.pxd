@@ -4,7 +4,7 @@ import cython
 
 
 cdef class RuleWeightMulti(AbstractRuleWeight):
-    cdef object __rule_weight
+    cdef double[:] __rule_weight
 
     cpdef get_rule_weight_at(self, int index)
     cpdef int get_length(self)

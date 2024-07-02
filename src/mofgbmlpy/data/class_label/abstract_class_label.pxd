@@ -1,5 +1,4 @@
 cimport numpy as cnp
-from mofgbmlpy.utility.fused_types cimport int_or_int_array
 
 cdef class AbstractClassLabel:
     cdef cnp.npy_bool __is_rejected

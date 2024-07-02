@@ -91,14 +91,14 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             return np.array([self.select_antecedent_part(pattern_index)], dtype=int)
 
         if num_rules <= self.__training_set.get_size():
-            pattern_indices = np.random.choice(list(range(self.__training_set.get_size())), num_rules, replace=False)
+            pattern_indices = np.random.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
 
         else:
             # TODO: this function seems invalid (indices is maybe an array of copies and the concatenation is maybe between incompatible types (int and array)
             pattern_indices = [i for i in range(data_size)] * (num_rules // data_size)
 
             num_remaining_indices = num_rules % data_size
-            remaining_indices = np.random.choice(list(range(self.__training_set.get_size())), num_remaining_indices,
+            remaining_indices = np.random.choice(np.arange(self.__training_set.get_size(), dtype=int), num_remaining_indices,
                                                  replace=False)
             pattern_indices = np.concatenate((pattern_indices, remaining_indices))
 

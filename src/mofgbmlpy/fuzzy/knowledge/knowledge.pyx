@@ -142,7 +142,7 @@ cdef class Knowledge:
 
     def __deepcopy__(self, memo={}):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        cdef cnp.ndarray[object, ndim=1] fuzzy_sets_copy = np.empty(fuzzy_sets.size, dtype=object)
+        cdef LinguisticVariable[:] fuzzy_sets_copy = np.empty(fuzzy_sets.size, dtype=object)
         cdef int i
 
         for i in range(fuzzy_sets.size):

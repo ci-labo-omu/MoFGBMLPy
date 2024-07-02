@@ -1,13 +1,9 @@
-from copy import deepcopy
+import copy
 import numpy as np
 cimport numpy as cnp
 import cython
 
 cdef class Pattern:
-    # cdef int __id
-    # cdef object __attribute_vector
-    # cdef object __target_class
-
     def __init__(self, pattern_id, attribute_vector, target_class):
         if pattern_id < 0:
             # with cython.gil:
@@ -26,7 +22,7 @@ cdef class Pattern:
     cpdef int get_id(self):
         return self.__id
 
-    cpdef cnp.ndarray[object, ndim=1] get_attributes_vector(self):
+    cpdef double[:] get_attributes_vector(self):
         return self.__attribute_vector
 
     cpdef double get_attribute_value(self, int index):
@@ -41,8 +37,8 @@ cdef class Pattern:
 
         return f"[id:{self.get_id()}, input:{{{self.get_attributes_vector()}}}, Class:{self.get_target_class()}]"
 
-    # def __reduce__(self):
-    #     cdef cnp.ndarray[double, ndim=1] vector_copy = np.empty(self.__attribute_vector.shape[0])
-    #     for i in range(self.__attribute_vector.shape[0]):
-    #         vector_copy[i] = self.__attribute_vector[i]
-    #     return (self.__class__, (self.__id, vector_copy, self.__target_class))
+    def __deepcopy__(self, memo={}):
+        cdef double[:] vector_copy = np.copy(self.__attribute_vector)
+        cdef Pattern new_object = Pattern(self.__id, vector_copy, copy.deepcopy(self.__target_class))
+        memo[id(self)] = new_object
+        return new_object

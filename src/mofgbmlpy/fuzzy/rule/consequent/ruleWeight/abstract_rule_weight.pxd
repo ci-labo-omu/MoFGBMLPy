@@ -1,5 +1,4 @@
 cimport numpy as cnp
-from mofgbmlpy.utility.fused_types cimport double_or_double_array
 import cython
 
 cdef class AbstractRuleWeight:

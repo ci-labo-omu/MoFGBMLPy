@@ -13,7 +13,7 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionB
 
 cdef class PittsburghSolution(AbstractSolution):
     def __init__(self, num_vars, num_objectives, num_constraints, michigan_solution_builder, classifier, do_init_vars=True):
-        super().__init__(num_vars, num_objectives, num_constraints)
+        super().__init__(num_objectives, num_constraints)
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classifier = classifier
         if do_init_vars:
@@ -21,12 +21,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
         return self.__michigan_solution_builder
-
-    cpdef void remove_var(self, int index):
-        self._vars = np.delete(self._vars, index)
-
-    cpdef void clear_vars(self):
-        self._vars = []
 
     cpdef void clear_attributes(self):
         self._attributes = {}
@@ -42,7 +36,7 @@ cdef class PittsburghSolution(AbstractSolution):
         error_rate, self.__errored_patterns = self.__classifier.get_error_rate(self.get_vars(), dataset)
         return error_rate
 
-    cpdef cnp.ndarray[object, ndim=1] get_errored_patterns(self):
+    cpdef Pattern[:] get_errored_patterns(self):
         return self.__errored_patterns
 
     cpdef double compute_coverage(self):
@@ -75,7 +69,7 @@ cdef class PittsburghSolution(AbstractSolution):
 
         cdef MichiganSolution[:] vars_copy = np.empty(self.get_num_vars(), dtype=object)
         cdef double[:] objectives_copy = np.empty(self.get_num_objectives())
-        cdef Pattern[:] errored_patterns_copy = np.empty(self.__errored_patterns.size, dtype=object)
+        cdef Pattern[:] errored_patterns_copy = np.copy(self.__errored_patterns) # shallow copy
         cdef int i
 
         for i in range(vars_copy.size):
@@ -83,9 +77,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
         for i in range(objectives_copy.size):
             objectives_copy[i] = self._objectives[i]
-
-        for i in range(errored_patterns_copy.size):
-            errored_patterns_copy[i] = copy.deepcopy(self.__errored_patterns[i])
 
         new_solution._vars = vars_copy
         new_solution._objectives = objectives_copy
@@ -97,3 +88,44 @@ cdef class PittsburghSolution(AbstractSolution):
 
     def __copy__(self):
         return self.__deepcopy__() # pymoo use copy so it causes issues
+
+    def __hash__(self):
+        return hash(self._vars)
+
+    cpdef void remove_var(self, int index):
+        self._vars = np.delete(self._vars, index)
+
+    cpdef void clear_vars(self):
+        self._vars = np.empty(0, dtype=object)
+
+    cpdef MichiganSolution[:] get_vars(self):
+        return self._vars
+
+    cpdef MichiganSolution get_var(self, int index):
+        return self._vars[index]
+
+    cpdef void set_var(self, int index, MichiganSolution value):
+        self._vars[index] = value
+
+    cpdef void set_vars(self, MichiganSolution[:] new_vars):
+        self._vars = new_vars
+
+    cpdef int get_num_vars(self):
+        return self._vars.size
+
+    def __repr__(self):
+        txt = "(Pittsburgh Solution) Variables: ["
+        for i in range(self.get_num_vars()):
+            txt += f"{self._vars[i]} "
+
+        txt += "] Objectives "
+        for i in range(self.get_num_objectives()):
+            txt += f"{self._objectives[i]} "
+
+        # txt += "] Constraints "
+        # for i in range(self.get_num_constraints()):
+        #     txt += f"{self._objectives[i]} "
+
+        txt += f"] Algorithm Attributes: {self._attributes}"
+
+        return txt

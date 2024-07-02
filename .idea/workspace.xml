@@ -5,14 +5,59 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecabbc7-d586-435b-95fb-fd6ed8f56d1b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/pymoo_deepcopy_crossover.pyx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/abstract_class_label.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/abstract_class_label.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/class_label_basic.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/class_label_basic.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/class_label_multi.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/class_label/class_label_multi.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/dataset.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/dataset.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/dataset.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/dataset.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/pattern.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/pattern.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/pattern.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/pattern.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classification/single_winner_rule_selection.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classification/single_winner_rule_selection.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/all_combination_antecedent_factory.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/heuristic_antecedent_factory.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/factory/heuristic_antecedent_factory.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/consequent.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/consequent.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/consequent.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/consequent.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/learning/learning_basic.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/learning/learning_basic.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/learning/learning_basic.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/learning/learning_basic.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/abstract_rule_weight.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/rule_weight_multi.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/rule_weight_multi.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/rule_weight_multi.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/consequent/ruleWeight/rule_weight_multi.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_basic.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_basic.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_basic.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_basic.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_multi.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_multi.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_multi.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/rule_multi.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/BasicDuplicateElimination.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/BasicDuplicateElimination.pyx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/michigan_crossover.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/michigan_crossover.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/uniform_crossover_single_offspring.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/uniform_crossover_single_offspring.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/mutation/michigan_mutation.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/mutation/michigan_mutation.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/pittsburgh_crossover.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/operator/crossover/pittsburgh_crossover.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/pittsburgh_problem.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/pittsburgh_problem.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/sampling/hybrid_GBML_sampling.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/sampling/hybrid_GBML_sampling.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/abstract_solution.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/abstract_solution.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/abstract_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/abstract_solution.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pxd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution_builder.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution_builder.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution_builder.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution_builder.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pxd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/solution_builder_core.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/solution_builder_core.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/solution_builder_core.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/solution_builder_core.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/main/basic/mofgbml_basic_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/main/basic/mofgbml_basic_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/utility/fused_types.pxd" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +124,7 @@
       <recent name="C:\Users\Robin\Documents\MoFGBML_python\MoFGBML_Python\src\mofgbmlpy" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.profiler">
+  <component name="RunManager" selected="Python.setup">
     <configuration name="clean" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MoFGBML_Python" />
       <option name="ENV_FILES" value="" />
@@ -205,7 +250,7 @@
       <workItem from="1719042101876" duration="2690000" />
       <workItem from="1719121191039" duration="43198000" />
       <workItem from="1719217726055" duration="120402000" />
-      <workItem from="1719754992866" duration="3156000" />
+      <workItem from="1719754992866" duration="21013000" />
     </task>
     <servers />
   </component>
@@ -213,15 +258,15 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler.coverage" NAME="profiler Coverage Results" MODIFIED="1719470875027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler.coverage" NAME="profiler Coverage Results" MODIFIED="1719911960361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_in_profilerTEST_py.coverage" NAME="pytest in profilerTEST.py Coverage Results" MODIFIED="1719128023363" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_homo_triangle_knowledge_factory_test_create2_3_4_5_plot.coverage" NAME="pytest for test_homo_triangle_knowledge_factory.test_create2_3_4_5_plot Coverage Results" MODIFIED="1719035022372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mf_test_mf.coverage" NAME="pytest for test_mf.test_mf Coverage Results" MODIFIED="1719146716574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$clean.coverage" NAME="clean Coverage Results" MODIFIED="1719501544372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mofgbml_basic_main_test_main.coverage" NAME="pytest for test_mofgbml_basic_main.test_main Coverage Results" MODIFIED="1719796131325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$clean.coverage" NAME="clean Coverage Results" MODIFIED="1719907002779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mofgbml_basic_main_test_main.coverage" NAME="pytest for test_mofgbml_basic_main.test_main Coverage Results" MODIFIED="1719911942710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profile_temp.coverage" NAME="profile_temp Coverage Results" MODIFIED="1719128883947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler__1_.coverage" NAME="profiler (1) Coverage Results" MODIFIED="1719126549207" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$setup.coverage" NAME="setup Coverage Results" MODIFIED="1719796089247" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$setup.coverage" NAME="setup Coverage Results" MODIFIED="1719913102931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$convert_format__1_.coverage" NAME="convert_format (1) Coverage Results" MODIFIED="1719123573425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

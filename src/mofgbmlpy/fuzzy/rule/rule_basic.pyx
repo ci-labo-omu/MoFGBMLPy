@@ -14,7 +14,7 @@ cdef class RuleBasic(AbstractRule):
         memo[id(self)] = new_rule
         return new_rule
 
-    cpdef double get_fitness_value(self, cnp.ndarray[double, ndim=1] attribute_vector):
+    cpdef double get_fitness_value(self, double[:] attribute_vector):
         cdef double membership
         cdef double cf
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)

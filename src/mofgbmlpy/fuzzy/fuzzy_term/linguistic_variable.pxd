@@ -4,10 +4,10 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
 import cython
 
 cdef class LinguisticVariable:
-    cdef object __support_values
-    cdef object __fuzzy_sets
+    cdef double[:] __support_values
+    cdef FuzzySet[:] __fuzzy_sets
     cdef str __concept
-    cdef object __domain
+    cdef double[:] __domain
 
     cpdef str get_concept(self)
     cdef double get_membership_value(self, int fuzzy_set_index, double x)

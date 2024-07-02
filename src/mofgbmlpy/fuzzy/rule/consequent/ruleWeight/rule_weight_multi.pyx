@@ -5,7 +5,7 @@ cimport numpy as cnp
 
 
 cdef class RuleWeightMulti(AbstractRuleWeight):
-    def __init__(self, cnp.ndarray[double, ndim=1] rule_weight):
+    def __init__(self, double[:] rule_weight):
         self.__rule_weight = rule_weight
 
     def __copy__(self):
