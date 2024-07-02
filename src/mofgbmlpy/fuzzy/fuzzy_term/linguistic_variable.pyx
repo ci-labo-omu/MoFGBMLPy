@@ -38,6 +38,12 @@ cdef class LinguisticVariable:
     cpdef double get_support(self, int fuzzy_set_id):
         return self.__support_values[fuzzy_set_id]
 
+    cpdef get_fuzzy_sets(self):
+        return self.__fuzzy_sets
+
+    cpdef get_domain(self):
+        return self.__domain
+
     def __repr__(self):
         txt = f"Fuzzy variable for {self.__concept}:\n"
         cdef int i

@@ -7,3 +7,5 @@ cdef class FuzzySet:
     cdef str __term
 
     cdef double get_membership_value(self, double x)
+    cpdef get_term(self)
+    cpdef get_function_callable(self)

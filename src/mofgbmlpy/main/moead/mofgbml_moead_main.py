@@ -88,6 +88,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
 
         #TODO: check "variation" in the java code
 
+        # Note: if num_obj <=2, pymoo uses Tschebyscheff
         algorithm = MOEAD(
             ref_dirs,
             n_neighbors=args.get("NEIGHBORHOOD_SIZE"),

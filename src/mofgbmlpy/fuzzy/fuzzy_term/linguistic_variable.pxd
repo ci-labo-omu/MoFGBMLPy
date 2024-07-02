@@ -14,3 +14,5 @@ cdef class LinguisticVariable:
     cpdef int get_length(self)
     cpdef FuzzySet get_fuzzy_set(self, int fuzzy_set_index)
     cpdef double get_support(self, int fuzzy_set_id)
+    cpdef get_fuzzy_sets(self)
+    cpdef get_domain(self)
