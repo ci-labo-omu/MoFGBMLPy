@@ -2,12 +2,18 @@ import numpy as np
 import cython
 from mofgbmlpy.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
+from mofgbmlpy.fuzzy.knowledge.abstract_knowledge_factory cimport AbstractKnowledgeFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 cimport numpy as cnp
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.fuzzy_term.triangular_fuzzy_set import TriangularFuzzySet
 
-cdef class HomoTriangleKnowledgeFactory:
+cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
+    def __init__(self, num_divisions, var_names, fuzzy_set_names):
+        self.__num_divisions = num_divisions
+        self.__var_names = var_names
+        self.__fuzzy_set_names = fuzzy_set_names
+    
     @staticmethod
     def make_triangle_knowledge_params(num_partitions):
         cdef int i
@@ -39,48 +45,29 @@ cdef class HomoTriangleKnowledgeFactory:
 
         return params
 
-    @staticmethod
-    def create(num_divisions, var_names, fuzzy_set_names):
+    cpdef create(self):
         cdef Knowledge knowledge
 
         knowledge = Knowledge()
-        fuzzy_sets = np.empty(len(num_divisions), dtype=object)
+        fuzzy_sets = np.empty(len(self.__num_divisions), dtype=object)
         #TODO: use numpy
-        for dim_i in range(len(num_divisions)):
+        for dim_i in range(len(self.__num_divisions)):
             current_support_values = [1]
             current_set = [DontCareFuzzySet()]
-            for j in range(len(num_divisions[dim_i])):
-                params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(num_divisions[dim_i][j])
-                for div_i in range(num_divisions[dim_i][j]):
-                    new_fuzzy_set = TriangularFuzzySet(left=params[div_i][0], center=params[div_i][1], right=params[div_i][2], term=fuzzy_set_names[dim_i][j][div_i])
+            for j in range(len(self.__num_divisions[dim_i])):
+                params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(self.__num_divisions[dim_i][j])
+                for div_i in range(self.__num_divisions[dim_i][j]):
+                    new_fuzzy_set = TriangularFuzzySet(left=params[div_i][0], center=params[div_i][1], right=params[div_i][2], term=self.__fuzzy_set_names[dim_i][j][div_i])
                     current_set.append(new_fuzzy_set)
 
-                    if div_i == 0 or num_divisions[dim_i][j] <= 1: # DC or one division
+                    if div_i == 0 or self.__num_divisions[dim_i][j] <= 1: # DC or one division
                         current_support_values.append(1)
-                    elif div_i == 1 or div_i == num_divisions[dim_i][j] - 1:
-                        current_support_values.append(1 / (num_divisions[dim_i][j] - 1))
+                    elif div_i == 1 or div_i == self.__num_divisions[dim_i][j] - 1:
+                        current_support_values.append(1 / (self.__num_divisions[dim_i][j] - 1))
                     else:
-                        current_support_values.append(2 / (num_divisions[dim_i][j] - 1))
+                        current_support_values.append(2 / (self.__num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets[dim_i] = LinguisticVariable(np.array(current_set, dtype=object), var_names[dim_i], np.array(current_support_values))
+            fuzzy_sets[dim_i] = LinguisticVariable(np.array(current_set, dtype=object), self.__var_names[dim_i], np.array(current_support_values))
 
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge
-
-    @staticmethod
-    def create2_3_4_5(num_dims, var_names=None):
-        num_divisions = np.zeros((num_dims, 4), dtype=np.int_)
-        fuzzy_set_names = np.zeros((num_dims, 4), dtype=list)
-        for i in range(num_dims):
-            num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int_)
-            fuzzy_set_names[i] = np.array([
-                ["low_2", "high_2"],
-                ["low_3", "medium_3", "high_3"],
-                ["low_4", "low_medium_4", "high_medium_4", "high_4"],
-                ["very_low_5", "low_5", "medium_5", "high_5", "very_high_5"]],
-                dtype=list)
-
-        if var_names is None:
-            var_names = np.array([f"x{i}" for i in range(num_dims)], dtype=str)
-
-        return HomoTriangleKnowledgeFactory.create(num_divisions, var_names, fuzzy_set_names)

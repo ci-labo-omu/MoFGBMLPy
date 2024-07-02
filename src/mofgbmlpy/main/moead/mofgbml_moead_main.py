@@ -4,6 +4,7 @@ from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
 from pymoo.util.ref_dirs import get_reference_directions
 
+from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
@@ -19,6 +20,7 @@ from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
+from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
 from mofgbmlpy.main.moead.mofgbml_moead_args import MoFGBMLMOEADArgs
 import sys
 import os
@@ -39,34 +41,12 @@ from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
 
-class MoFGBMLMOEADMain:
-    @staticmethod
-    def main(args):
-        # TODO: print information
-
-        mofgbml_args = MoFGBMLMOEADArgs()
-        Output.mkdirs(mofgbml_args.get("ROOT_FOLDER"))
-
-        # set command arguments to static variables
-        mofgbml_args.load(args)
-
-        # Save params
-        file_name = str(os.path.join(mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
-        Output.writeln(file_name, str(mofgbml_args), False)
-
-        # Load dataset
-        train, test = Input.get_train_test_files(mofgbml_args)
-
-        # Run the algo
-        exec_time = MoFGBMLMOEADMain.hybrid_style_mofgbml(train, test, mofgbml_args)
-        print("Execution time: ", exec_time)
+class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
+    def __init__(self, knowledge_factory_class):
+        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.hybrid_style_mofgbml, knowledge_factory_class)
 
     @staticmethod
-    def hybrid_style_mofgbml(train, test, args):
-        random.seed(args.get("RAND_SEED"))
-        np.random.seed(args.get("RAND_SEED"))
-        knowledge = HomoTriangleKnowledgeFactory.create2_3_4_5(train.get_num_dim())
-
+    def hybrid_style_mofgbml(train, args, knowledge):
         num_objectives_michigan = 2
         num_constraints_michigan = 0
 
@@ -138,78 +118,9 @@ class MoFGBMLMOEADMain:
                        seed=1,
                        # save_history=True,
                        verbose=True)
-
-        # print("\n\nEND\n\n")
-        # for i in range(len(res.X)):
-        #     print(res.X[i][0])
-        #     print(f"({res.F[i][0]}, {res.F[i][0]}) - ({res.X[i][0].get_num_vars()}, {res.F[i][1]})")
-
-        non_dominated_solutions = res.X
-        archive_population = np.empty((len(res.archive), res.X.shape[1]), dtype=object)
-        for i in range(len(res.archive)):
-            archive_population[i] = res.archive[i].X
-
-        exec_time = res.exec_time
-        #
-        # with Recorder(Video("ga.mp4")) as rec:
-        #     # for each algorithm object in the history
-        #     for entry in res.history:
-        #         sc = Scatter(title=("Gen %s" % entry.n_gen))
-        #         sc.add(entry.pop.get("F"))
-        #         sc.do()
-        #
-        #         # finally record the current visualization to the video
-        #         rec.record()
-
-        plot_data = np.empty(res.F.shape, dtype=object)
-        for i in range(len(res.F)):
-            plot_data[i] = [int(res.F[i][1]), res.F[i][0]]
-
-        plot = Scatter(labels=["Number of rules", "Error rate"])
-        plot.add(plot_data, color="red")
-        plot.show()
-
-        # f_archive = np.empty((len(res.archive), res.F.shape[1]), dtype=object)
-        # for i in range(len(res.archive)):
-        #     f_archive[i] = res.archive[i].F[[1, 0]]
-        #
-        # plot = Scatter()
-        # plot.add(f_archive, color="red")
-        # plot.show()
-
-        results_data = MoFGBMLMOEADMain.get_results_data(non_dominated_solutions, knowledge, train, test)
-        Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
-
-        results_data = MoFGBMLMOEADMain.get_results_data(archive_population, knowledge, train, test)
-        Output.save_results(results_data, str(os.path.join(args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
-
-        return exec_time
-
-    @staticmethod
-    def get_results_data(solutions, knowledge, train, test):
-        results_data = np.zeros(len(solutions), dtype=object)
-        for i in range(len(solutions)):
-            sol = solutions[i][0]
-            if sol.get_num_vars() != 0 and sol.get_var(0).get_num_vars() != 0:
-                total_coverage = 1
-            else:
-                total_coverage = 0
-            for rule_i in range(sol.get_num_vars()):
-                michigan_solution = sol.get_var(rule_i)
-                fuzzy_set_indices = michigan_solution.get_vars()
-                for dim_i in range(len(fuzzy_set_indices)):
-                    total_coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
-
-            results_data[i] = {}
-            results_data[i]["id"] = i
-            results_data[i]["total_coverage"] = total_coverage
-            results_data[i]["total_rule_length"] = sol.get_total_rule_length()
-            results_data[i]["average_rule_weight"] = sol.get_average_rule_weight()
-            results_data[i]["training_error_rate"] = sol.get_error_rate(train)
-            results_data[i]["test_error_rate"] = sol.get_error_rate(test)
-            results_data[i]["num_rules"] = sol.get_num_vars()
-        return results_data
+        return res
 
 
 if __name__ == '__main__':
-    MoFGBMLMOEADMain.main(sys.argv[1:])
+    runner = MoFGBMLMOEADMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    runner.main(sys.argv[1:])
