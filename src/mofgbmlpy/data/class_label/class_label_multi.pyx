@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
@@ -24,7 +25,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         return True
 
     cpdef int get_length(self):
-        return self.get_class_label_value().size
+        return self.get_class_label_value().shape[0]
 
     def __deepcopy__(self, memo={}):
         cdef ClassLabelMulti new_object = ClassLabelMulti(copy.deepcopy(self.get_class_label_value()))
@@ -50,3 +51,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
     cpdef void set_class_label_value(self, object class_label):
         self.__class_label = class_label
 
+    def to_xml(self):
+        root = xml_tree.Element("classLabel")
+        root.text = str(self)
+
+        return root

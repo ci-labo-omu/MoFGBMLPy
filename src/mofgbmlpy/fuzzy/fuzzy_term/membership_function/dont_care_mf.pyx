@@ -1,3 +1,5 @@
+import xml.etree.cElementTree as xml_tree
+
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 cdef class DontCareMF(AbstractMF):
@@ -6,3 +8,8 @@ cdef class DontCareMF(AbstractMF):
 
     def __str__(self):
         return "<Dont Care MF>"
+
+    def to_xml(self):
+        root = xml_tree.Element("dont-care-mf")
+        root.text = ""
+        return root

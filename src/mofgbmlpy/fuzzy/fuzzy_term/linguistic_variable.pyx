@@ -23,7 +23,7 @@ cdef class LinguisticVariable:
         return self.__concept
 
     cdef double get_membership_value(self, int fuzzy_set_index, double x):
-        if fuzzy_set_index > self.__fuzzy_sets.size:
+        if fuzzy_set_index > self.__fuzzy_sets.shape[0]:
             # with cython.gil:
             raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
@@ -53,10 +53,10 @@ cdef class LinguisticVariable:
 
     def __deepcopy__(self, memo={}):
         cdef double[:] support_values_copy = np.copy(self.__support_values)
-        cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.size, dtype=object)
+        cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.shape[0], dtype=object)
         cdef int i
 
-        for i in range(fuzzy_sets_copy.size):
+        for i in range(fuzzy_sets_copy.shape[0]):
             fuzzy_sets_copy[i] = copy.deepcopy(self.__fuzzy_sets[i])
 
         cdef LinguisticVariable new_object = LinguisticVariable(fuzzy_sets_copy, self.__concept, support_values_copy)

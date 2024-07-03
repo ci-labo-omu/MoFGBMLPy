@@ -120,7 +120,7 @@ class MichiganCrossover(Crossover):
 
                 michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
                 parent_vars = parent.get_vars()
-                for j in range(michigan_solutions_array.size):
+                for j in range(michigan_solutions_array.shape[0]):
                     michigan_solutions_array[j, 0] = parent_vars[j]
                 michigan_population = Population.new(X=michigan_solutions_array)
 

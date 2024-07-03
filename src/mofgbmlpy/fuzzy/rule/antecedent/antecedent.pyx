@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 
 import numpy as np
@@ -16,7 +17,7 @@ cdef class Antecedent:
         self.__knowledge = knowledge
 
     cpdef int get_array_size(self):
-        return self.__antecedent_indices.size
+        return self.__antecedent_indices.shape[0]
 
     cpdef int[:] get_antecedent_indices(self):
         return self.__antecedent_indices
@@ -30,7 +31,7 @@ cdef class Antecedent:
         cdef double[:] grade = np.zeros(size, dtype=np.float64)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
-        if size != attribute_vector.size:
+        if size != attribute_vector.shape[0]:
             # with cython.gil:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
 
@@ -58,7 +59,7 @@ cdef class Antecedent:
         cdef double val
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
-        if size != attribute_vector.size:
+        if size != attribute_vector.shape[0]:
             # with cython.gil:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
 
@@ -92,7 +93,7 @@ cdef class Antecedent:
         cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
         cdef int i
 
-        for i in range(antecedent_indices_copy.size):
+        for i in range(antecedent_indices_copy.shape[0]):
             antecedent_indices_copy[i] = self.__antecedent_indices[i]
 
         new_antecedent = Antecedent(antecedent_indices_copy, knowledge=self.__knowledge)
@@ -104,6 +105,18 @@ cdef class Antecedent:
 
     def __repr__(self):
         txt = "["
-        for i in range(self.__antecedent_indices.size):
+        for i in range(self.__antecedent_indices.shape[0]):
             txt += f"{self.__antecedent_indices[i]} "
         return txt + "]"
+
+    def to_xml(self):
+        root = xml_tree.Element("antecedent")
+        # for dim_i in range(len(self.__antecedent_indices)):
+        #     root.append(self.__knowledge.get_fuzzy_set(dim_i, self.__antecedent_indices[dim_i]).to_xml())
+
+        fuzzy_set_list = xml_tree.SubElement(root, "fuzzySetList")
+        for dim_i in range(len(self.__antecedent_indices)):
+            fuzzy_set_id = xml_tree.SubElement(fuzzy_set_list, "fuzzySetID")
+            fuzzy_set_id.set("dimension", str(dim_i))
+            fuzzy_set_id.text = str(self.__antecedent_indices[dim_i])
+        return root

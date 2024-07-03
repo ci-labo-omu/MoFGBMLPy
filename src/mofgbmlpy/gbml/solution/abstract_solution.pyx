@@ -43,10 +43,10 @@ cdef class AbstractSolution:
     #     self.__constraints[index] = value
 
     cpdef int get_num_objectives(self):
-        return self._objectives.size
+        return self._objectives.shape[0]
 
     cpdef int get_num_constraints(self):
-        # return self.__constraints.size
+        # return self.__constraints.shape[0]
         # TODO
         return 0
 

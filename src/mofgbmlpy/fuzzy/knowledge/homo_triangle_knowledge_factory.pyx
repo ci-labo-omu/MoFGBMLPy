@@ -35,9 +35,9 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         for i in range(num_partitions_int):
             if i == 0:  # 1st partition
                 params[i] = np.array([0, 0, 2*partition[i+1]])
-            elif i == partition.size-2:  # last partition
+            elif i == partition.shape[0]-2:  # last partition
                 params[i] = np.array([2*partition[i]-1, 1, 1])
-            elif i>0 and i<partition.size-2:  # If the index is valid
+            elif i>0 and i<partition.shape[0]-2:  # If the index is valid
                 left = partition[i]*3/2 - partition[i+1]/2
                 center = (partition[i] + partition[i + 1]) / 2
                 right = partition[i+1]*3/2 - partition[i]/2

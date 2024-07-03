@@ -68,7 +68,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef int consequent_class = -1
         cdef int i
 
-        for i in range(confidence.size):
+        for i in range(confidence.shape[0]):
             if confidence[i] > max_val:
                 max_val = confidence[i]
                 consequent_class = i

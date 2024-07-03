@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 import cython
 
@@ -29,3 +30,8 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         self.__class_label = class_label
 
 
+    def to_xml(self):
+        root = xml_tree.Element("classLabel")
+        root.text = str(self)
+
+        return root

@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 
 import numpy as np
@@ -125,10 +126,10 @@ cdef class MichiganSolution(AbstractSolution):
         cdef double[:] objectives_copy = np.empty(self.get_num_objectives())
 
 
-        for i in range(vars_copy.size):
+        for i in range(vars_copy.shape[0]):
             vars_copy[i] = self._vars[i]
 
-        for i in range(objectives_copy.size):
+        for i in range(objectives_copy.shape[0]):
             objectives_copy[i] = self._objectives[i]
 
         new_solution._rule = copy.deepcopy(self._rule)
@@ -164,7 +165,7 @@ cdef class MichiganSolution(AbstractSolution):
         self._vars = new_vars
 
     cpdef int get_num_vars(self):
-        return self._vars.size
+        return self._vars.shape[0]
 
     def __repr__(self):
         txt = "(Michigan Solution) Variables: ["
@@ -182,3 +183,14 @@ cdef class MichiganSolution(AbstractSolution):
         txt += f"] Algorithm Attributes: {self._attributes}"
 
         return txt
+
+    def to_xml(self):
+        root = xml_tree.Element("michiganSolution")
+        root.append(self._rule.to_xml())
+        attributes = xml_tree.SubElement(root, "attributes")
+        for key, value in self.get_attributes().items():
+            attribute = xml_tree.SubElement(attributes, "attribute")
+            attribute.set("attributeID", key)
+            attribute.text = value
+
+        return root

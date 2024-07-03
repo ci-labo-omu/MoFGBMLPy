@@ -1,3 +1,5 @@
+import xml.etree.cElementTree as xml_tree
+
 cdef class FuzzySet:
     def __init__(self, function, term=""):
         self.__function = function
@@ -14,3 +16,12 @@ cdef class FuzzySet:
 
     cpdef get_function_callable(self):
         return self.__function.get_value
+
+    def to_xml(self):
+        root = xml_tree.Element("fuzzy-set")
+        term_xml = xml_tree.SubElement(root, "term")
+        term_xml.text = self.__term
+
+        root.append(self.__function.to_xml())
+
+        return root

@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 cimport numpy as cnp
@@ -42,3 +43,10 @@ cdef class Consequent:
 
     def __eq__(self, other):
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
+
+    def to_xml(self):
+        root = xml_tree.Element("consequent")
+        root.append(self._class_label.to_xml())
+        root.append(self._rule_weight.to_xml())
+
+        return root

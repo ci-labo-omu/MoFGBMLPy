@@ -1,3 +1,5 @@
+import xml.etree.cElementTree as xml_tree
+
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 
@@ -26,3 +28,9 @@ cdef class TriangularMF(AbstractMF):
 
     def __str__(self):
         return "<Triangular MF (%f, %f, %f)>" % (self.__left, self.__center, self.__right)
+
+    def to_xml(self):
+        root = xml_tree.Element("triangular-mf")
+        root.text = f"(a={self.__left}, b={self.__center}, c={self.__right})"
+
+        return root

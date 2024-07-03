@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -66,3 +67,11 @@ cdef class AbstractRule:
 
     def __str__(self):
         return f"Antecedent: {self._antecedent} => Consequent: {self._consequent}"
+
+    def to_xml(self):
+        root = xml_tree.Element("rule")
+
+        root.append(self._antecedent.to_xml())
+        root.append(self._consequent.to_xml())
+
+        return root

@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 import time
 
@@ -53,11 +54,11 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef int i
         cdef MichiganSolution var
 
-        for i in range(self._vars.size):
+        for i in range(self._vars.shape[0]):
             var = self._vars[i]
             total_rule_weight += var.get_rule_weight_py().get_value()
 
-        return total_rule_weight/self._vars.size
+        return total_rule_weight/self._vars.shape[0]
 
     def __deepcopy__(self, memo={}):
         new_solution = PittsburghSolution(self.get_num_vars(),
@@ -72,10 +73,10 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef Pattern[:] errored_patterns_copy = np.copy(self.__errored_patterns) # shallow copy
         cdef int i
 
-        for i in range(vars_copy.size):
+        for i in range(vars_copy.shape[0]):
             vars_copy[i] = copy.deepcopy(self._vars[i])
 
-        for i in range(objectives_copy.size):
+        for i in range(objectives_copy.shape[0]):
             objectives_copy[i] = self._objectives[i]
 
         new_solution._vars = vars_copy
@@ -111,7 +112,7 @@ cdef class PittsburghSolution(AbstractSolution):
         self._vars = new_vars
 
     cpdef int get_num_vars(self):
-        return self._vars.size
+        return self._vars.shape[0]
 
     def __repr__(self):
         txt = "(Pittsburgh Solution) Variables: ["
@@ -129,3 +130,23 @@ cdef class PittsburghSolution(AbstractSolution):
         txt += f"] Algorithm Attributes: {self._attributes}"
 
         return txt
+
+    def to_xml(self):
+        root = xml_tree.Element("pittsburghSolution")
+        for sol in self._vars:
+            root.append(sol.to_xml())
+
+        objectives = xml_tree.SubElement(root, "objectives")
+        for i in range(self.get_num_objectives()):
+            objective = xml_tree.SubElement(objectives, "objective")
+            objective.set("id", str(i))
+            objective.set("objectiveName", "UNKNOWN")
+            objective.text = str(self.get_objective(i))
+
+        attributes = xml_tree.SubElement(root, "attributes")
+        for key, value in self.get_attributes().items():
+            attribute = xml_tree.SubElement(attributes, "attribute")
+            attribute.set("attributeID", key)
+            attribute.text = value
+
+        return root

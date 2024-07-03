@@ -75,18 +75,18 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int j
         cdef int[:] chosen_list
 
-        num_rules = min(num_rules, self.__antecedents_indices.size)
+        num_rules = min(num_rules, self.__antecedents_indices.shape[0])
 
         # Return an antecedent
         if self.__antecedents_indices is None:
             # with cython.gil:
             raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
-        cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.size, dtype=int), num_rules, replace=False)
+        cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
         cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
 
-        for i in range(chosen_indices_lists.size):
+        for i in range(chosen_indices_lists.shape[0]):
             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
-            for j in range(chosen_list.size):
+            for j in range(chosen_list.shape[0]):
                 new_indices[i][j] = chosen_list[j]
         return new_indices
 

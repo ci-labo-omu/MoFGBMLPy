@@ -18,3 +18,6 @@ cdef class AbstractClassLabel:
 
     cpdef void set_rejected(self):
         self.__is_rejected = True
+
+    def to_xml(self):
+        pass

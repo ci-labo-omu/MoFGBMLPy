@@ -5,3 +5,6 @@ cdef class AbstractMF:
 
     def __str__(self):
         return "Abstract membership function"
+
+    def to_xml(self):
+        raise Exception("This class is abstract")

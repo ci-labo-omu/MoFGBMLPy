@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import numpy as np
 
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
@@ -15,7 +16,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         cdef double[:] values_copy = np.empty(self.get_length())
         cdef int i
 
-        for i in range(values_copy.size):
+        for i in range(values_copy.shape[0]):
             values_copy[i] = self.__rule_weight[i]
 
         new_object = RuleWeightMulti(values_copy)
@@ -40,7 +41,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         return self.get_value()[index]
 
     cpdef int get_length(self):
-        return self.get_value().size
+        return self.get_value().shape[0]
 
     cpdef object get_value(self):
         return self.__rule_weight
@@ -50,3 +51,9 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
 
     def __eq__(self, other):
         return np.array_equal(self.__rule_weight, other.get_value())
+
+    def to_xml(self):
+        root = xml_tree.Element("ruleWeight")
+        root.text = str(self)
+
+        return root

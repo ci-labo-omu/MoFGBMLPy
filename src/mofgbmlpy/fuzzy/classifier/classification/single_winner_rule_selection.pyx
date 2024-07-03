@@ -15,7 +15,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         cdef MichiganSolution solution
         cdef bint can_classify = False
 
-        if michigan_solution_list.size < 1:
+        if michigan_solution_list.shape[0] < 1:
             raise Exception("argument [michigan_solution_list] must contain at least 1 item")
         winner =  michigan_solution_list[0]
 

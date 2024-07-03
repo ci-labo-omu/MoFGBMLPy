@@ -23,7 +23,7 @@ cdef class Knowledge:
 
     cpdef FuzzySet get_fuzzy_set(self, int dim, int fuzzy_set_id):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        if fuzzy_sets is None or fuzzy_sets.size == 0:
+        if fuzzy_sets is None or fuzzy_sets.shape[0] == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
@@ -32,7 +32,7 @@ cdef class Knowledge:
 
     cpdef int get_num_fuzzy_sets(self, int dim):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        if fuzzy_sets is None or fuzzy_sets.size == 0:
+        if fuzzy_sets is None or fuzzy_sets.shape[0] == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
@@ -41,7 +41,7 @@ cdef class Knowledge:
 
     cpdef void set_fuzzy_sets(self, LinguisticVariable[:] fuzzy_sets):
         # cdef LinguisticVariable[:] self_fuzzy_sets = self.__fuzzy_sets
-        #     if self_fuzzy_sets is None or self_fuzzy_sets.size == 0:
+        #     if self_fuzzy_sets is None or self_fuzzy_sets.shape[0] == 0:
         if self.__fuzzy_sets is not None and len(self.__fuzzy_sets) != 0:
             # with cython.gil:
             raise Exception("You can't overwrite fuzzy sets. You must call clear before doing so")
@@ -50,7 +50,7 @@ cdef class Knowledge:
 
     cpdef LinguisticVariable[:] get_fuzzy_sets(self):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        if fuzzy_sets is None or fuzzy_sets.size == 0:
+        if fuzzy_sets is None or fuzzy_sets.shape[0] == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
 
@@ -58,7 +58,7 @@ cdef class Knowledge:
 
     cpdef double get_membership_value_py(self, double attribute_value, int dim, int fuzzy_set_id):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        if fuzzy_sets is None or fuzzy_sets.size == 0:
+        if fuzzy_sets is None or fuzzy_sets.shape[0] == 0:
             # with cython.gil:
             raise Exception("Context is not yet initialized (no fuzzy set)")
         cdef LinguisticVariable var = fuzzy_sets[dim]
@@ -66,7 +66,7 @@ cdef class Knowledge:
 
     cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_id):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        if fuzzy_sets is None or fuzzy_sets.size == 0:
+        if fuzzy_sets is None or fuzzy_sets.shape[0] == 0:
             return -1
         cdef LinguisticVariable var = fuzzy_sets[dim]
         return var.get_membership_value(fuzzy_set_id, attribute_value)
@@ -75,7 +75,7 @@ cdef class Knowledge:
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
         if fuzzy_sets is None:
             return 0
-        return fuzzy_sets.size
+        return fuzzy_sets.shape[0]
 
     cpdef void clear(self):
         self.__fuzzy_sets = np.empty(0, dtype=object)
@@ -144,10 +144,10 @@ cdef class Knowledge:
 
     def __deepcopy__(self, memo={}):
         cdef LinguisticVariable[:] fuzzy_sets = self.__fuzzy_sets
-        cdef LinguisticVariable[:] fuzzy_sets_copy = np.empty(fuzzy_sets.size, dtype=object)
+        cdef LinguisticVariable[:] fuzzy_sets_copy = np.empty(fuzzy_sets.shape[0], dtype=object)
         cdef int i
 
-        for i in range(fuzzy_sets.size):
+        for i in range(fuzzy_sets.shape[0]):
             fuzzy_sets_copy[i] = deepcopy(fuzzy_sets[i])
 
         new_knowledge = Knowledge(fuzzy_sets_copy)

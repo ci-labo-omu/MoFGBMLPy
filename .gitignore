@@ -169,3 +169,4 @@ src/**/*.cpp
 **/*.pstat
 profiler_results
 **/*.mp4
+.idea

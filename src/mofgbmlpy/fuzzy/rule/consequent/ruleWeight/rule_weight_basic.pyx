@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 
 
@@ -24,3 +25,9 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
 
     def __eq__(self, other):
         return self.__rule_weight == other.get_value()
+
+    def to_xml(self):
+        root = xml_tree.Element("ruleWeight")
+        root.text = str(self)
+
+        return root
