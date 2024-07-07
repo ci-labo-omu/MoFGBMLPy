@@ -30,7 +30,7 @@ cdef class FuzzySet:
         term_xml.text = self.get_term()
 
         term_xml = xml_tree.SubElement(root, "ShapeTypeName")
-        term_xml.text = str(self.__function.__name)
+        term_xml.text = str(self.__function.__class__.__name__)
 
         root.append(self.__function.to_xml())
 
