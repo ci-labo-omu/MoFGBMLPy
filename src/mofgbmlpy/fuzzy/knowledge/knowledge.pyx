@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import math
 from copy import deepcopy
 
@@ -154,3 +155,12 @@ cdef class Knowledge:
         memo[id(self)] = new_knowledge
 
         return new_knowledge
+
+    def to_xml(self):
+        root = xml_tree.Element("knowledgeBase")
+        for i in range(self.get_num_dim()):
+            var = self.get_fuzzy_variable(i).to_xml()
+            var.set("dimension", str(i))
+            root.append(var)
+
+        return root

@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import os
 from abc import ABC, abstractmethod
 
@@ -22,7 +23,8 @@ class Arguments(ABC):
         self.__bool_args = [
             "is-dont-care-probability",
             "is-multi-label",
-            "no-plot"
+            "no-plot",
+            "pretty-xml"
         ]
 
         # TODO: Check if those parameters are all useful
@@ -83,7 +85,8 @@ class Arguments(ABC):
         self.__values["DATA_NAME"] = None
 
         # Results and display
-        self.__values["NO_PLOT"] = True
+        self.__values["NO_PLOT"] = False
+        self.__values["PRETTY_XML"] = False
 
     def set(self, key, value):
         self.__values[str(key)] = value
@@ -106,27 +109,35 @@ class Arguments(ABC):
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser()
+        args_dict_keys = [Arguments.key_to_arg(key) for key in self.__values.keys()]
 
-        formated_dict_keys = [str(key).lower().replace('_','-') for key in self.__values.keys()]
-        for key in formated_dict_keys:
-            if key in self.__required_args:
+        for arg in args_dict_keys:
+            if arg in self.__required_args:
                 is_required = True
             else:
                 is_required = False
 
-            action = "store"
-            if key in self.__bool_args:
-                action = "store_true"
-            parser.add_argument("--"+key, required=is_required, action=action)
+            if arg in self.__bool_args:
+                parser.add_argument("--" + arg, required=is_required, action="store_true"),
+            else:
+                parser.add_argument("--"+arg, required=is_required)
+
 
         # Remove not specified args and return a dict of the args
         returned_args = {}
-        for key, value in vars(parser.parse_args(args)).items():
+        for arg, value in vars(parser.parse_args(args)).items():
             if value is not None:
-                returned_args[str(key).upper().replace('-','_')] = value
+                returned_args[Arguments.arg_to_key(arg)] = value
 
         return returned_args
 
+    @staticmethod
+    def arg_to_key(arg):
+        return arg.upper().replace("-", "_")
+
+    @staticmethod
+    def key_to_arg(arg):
+        return arg.lower().replace("_", "-")
 
     def load(self, args):
         parsed_args = self.parse_args(args)
@@ -145,3 +156,11 @@ class Arguments(ABC):
                      self.get("DATA_NAME"),
                      str(self.get("EXPERIMENT_ID")))))
         Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
+
+    def to_xml(self):
+        root = xml_tree.Element("consts")
+        for key, value in self.__values.items():
+            term_xml = xml_tree.SubElement(root, key)
+            term_xml.text = str(value)
+
+        return root

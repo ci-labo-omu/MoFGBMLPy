@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import copy
 
 import numpy as np
@@ -62,3 +63,11 @@ cdef class LinguisticVariable:
         cdef LinguisticVariable new_object = LinguisticVariable(fuzzy_sets_copy, self.__concept, support_values_copy)
         memo[id(self)] = new_object
         return new_object
+
+    def to_xml(self):
+        root = xml_tree.Element("fuzzySets")
+
+        for i in range(self.get_length()):
+            root.append(self.get_fuzzy_set(i).to_xml())
+
+        return root

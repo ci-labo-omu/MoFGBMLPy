@@ -1,5 +1,6 @@
 import numpy as np
 import cython
+
 from mofgbmlpy.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
 from mofgbmlpy.fuzzy.knowledge.abstract_knowledge_factory cimport AbstractKnowledgeFactory
@@ -48,16 +49,22 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
     cpdef create(self):
         cdef Knowledge knowledge
 
+        cdef int set_id = 0
+
         knowledge = Knowledge()
         fuzzy_sets = np.empty(len(self.__num_divisions), dtype=object)
+
         #TODO: use numpy
         for dim_i in range(len(self.__num_divisions)):
             current_support_values = [1]
-            current_set = [DontCareFuzzySet()]
+            current_set = [DontCareFuzzySet(id=set_id)]
+            set_id += 1
+
             for j in range(len(self.__num_divisions[dim_i])):
                 params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(self.__num_divisions[dim_i][j])
                 for div_i in range(self.__num_divisions[dim_i][j]):
-                    new_fuzzy_set = TriangularFuzzySet(left=params[div_i][0], center=params[div_i][1], right=params[div_i][2], term=self.__fuzzy_set_names[dim_i][j][div_i])
+                    new_fuzzy_set = TriangularFuzzySet(left=params[div_i][0], center=params[div_i][1], right=params[div_i][2], id=set_id, term=self.__fuzzy_set_names[dim_i][j][div_i])
+                    set_id += 1
                     current_set.append(new_fuzzy_set)
 
                     if div_i == 0 or self.__num_divisions[dim_i][j] <= 1: # DC or one division

@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -114,8 +115,11 @@ class AbstractMoFGBMLMain(ABC):
 
         results_data = AbstractMoFGBMLMain.get_results_data(archive_population, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
+        
+        results_xml = self.get_results_xml(knowledge, res.pop)
+        Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')), args=self._mofgbml_args)
 
-        return exec_time
+        return res
 
     @staticmethod
     def get_results_data(solutions, knowledge, train, test):
@@ -141,3 +145,13 @@ class AbstractMoFGBMLMain(ABC):
             results_data[i]["test_error_rate"] = sol.get_error_rate(test)
             results_data[i]["num_rules"] = sol.get_num_vars()
         return results_data
+
+    def get_results_xml(self, knowledge, pop):
+        root = xml_tree.Element("results")
+        root.append(self._mofgbml_args.to_xml())
+        root.append(knowledge.to_xml())
+        population = xml_tree.SubElement(root, "population")
+        for ind in pop:
+            population.append(ind.X[0].to_xml())
+
+        return xml_tree.ElementTree(root)

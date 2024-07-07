@@ -11,6 +11,7 @@ def test_main():
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         # "--no-plot",
+        "--pretty-xml",
     ]
 
     runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)

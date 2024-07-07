@@ -1,5 +1,9 @@
+import xml.etree.cElementTree as xml_tree
 import os
 import csv
+
+import numpy
+import numpy as np
 
 
 class Output:
@@ -20,10 +24,17 @@ class Output:
                 f.write('\n')
 
     @staticmethod
-    def save_results(results_data, path):
-        fields = list(results_data[0].keys())
+    def save_results(results_data, path, args=None):
+        if isinstance(results_data, xml_tree.ElementTree):
+            if args is not None and args.has_key("PRETTY_XML") and args.get("PRETTY_XML"):
+                xml_tree.indent(results_data, space="\t", level=0)
+            results_data.write(path, encoding="utf-8", xml_declaration=True)
+        elif isinstance(results_data, np.ndarray):
+            fields = list(results_data[0].keys())
 
-        with open(path, 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fields)
-            writer.writeheader()
-            writer.writerows(results_data)
+            with open(path, 'w', newline='') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=fields)
+                writer.writeheader()
+                writer.writerows(results_data)
+        else:
+            raise TypeError("results_data must be an instance of xml.etree.ElementTree or dict")

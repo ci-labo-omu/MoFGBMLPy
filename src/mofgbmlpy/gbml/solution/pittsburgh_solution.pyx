@@ -147,6 +147,6 @@ cdef class PittsburghSolution(AbstractSolution):
         for key, value in self.get_attributes().items():
             attribute = xml_tree.SubElement(attributes, "attribute")
             attribute.set("attributeID", key)
-            attribute.text = value
+            attribute.text = str(value)
 
         return root

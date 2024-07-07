@@ -3,5 +3,5 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import Triangu
 
 
 cdef class TriangularFuzzySet(FuzzySet):
-    def __init__(self, left, center, right, term):
-        super().__init__(function=TriangularMF(left, center, right), term=term)
+    def __init__(self, left, center, right, id, term):
+        super().__init__(function=TriangularMF(left, center, right), id=id, term=term)

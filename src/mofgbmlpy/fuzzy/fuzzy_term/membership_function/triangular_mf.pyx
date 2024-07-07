@@ -30,7 +30,13 @@ cdef class TriangularMF(AbstractMF):
         return "<Triangular MF (%f, %f, %f)>" % (self.__left, self.__center, self.__right)
 
     def to_xml(self):
-        root = xml_tree.Element("triangular-mf")
-        root.text = f"(a={self.__left}, b={self.__center}, c={self.__right})"
+        root = xml_tree.Element("membershipFunction")
+        params_set = xml_tree.SubElement(root, "parameterSet")
+        i = 0
+        for p in [self.__left, self.__center, self.__right]:
+            param = xml_tree.SubElement(params_set, "parameterSet")
+            param.text = str(p)
+            param.set("id", str(i))
+            i += 1
 
         return root

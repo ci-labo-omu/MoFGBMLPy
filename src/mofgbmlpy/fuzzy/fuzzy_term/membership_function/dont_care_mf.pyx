@@ -10,6 +10,6 @@ cdef class DontCareMF(AbstractMF):
         return "<Dont Care MF>"
 
     def to_xml(self):
-        root = xml_tree.Element("dont-care-mf")
-        root.text = ""
+        root = xml_tree.Element("membershipFunction")
+        root.text = "Dont care"
         return root
