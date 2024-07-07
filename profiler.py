@@ -15,12 +15,13 @@ from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import Ho
 
 def run_profiler(mofgbml_class_name):
     args = [
-        "iris",
-        1,
-        2,
-        1,
-        "dataset/iris/a0_0_iris-10tra.dat",
-        "dataset/iris/a0_0_iris-10tst.dat",
+        "--data-name", "iris",
+        "--algorithm-id", "1",
+        "--experiment-id", "2",
+        "--num-parallel-cores", "1",
+        "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
+        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
+        # "--no-plot",
     ]
 
     cProfile.runctx(f"{mofgbml_class_name}(HomoTriangleKnowledgeFactory_2_3_4_5).main(args)", globals(), locals(), "Profile.pstats")

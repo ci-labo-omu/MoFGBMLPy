@@ -2,15 +2,38 @@ import os
 from abc import ABC, abstractmethod
 
 from mofgbmlpy.data.output import Output
-
+import argparse
 
 class Arguments(ABC):
-    __values = {}
+    __values = None
+    __required_args = None
+    __bool_args = None
 
     def __init__(self):
+        self.__values = {}
+        self.__required_args = [
+            "data-name",
+            "algorithm-id",
+            "experiment-id",
+            "num-parallel-cores",
+            "train-file",
+            "test-file"
+        ]
+        self.__bool_args = [
+            "is-dont-care-probability",
+            "is-multi-label",
+            "no-plot"
+        ]
+
         # TODO: Check if those parameters are all useful
 
+        # Parallelization
+        self.__values["NUM_PARALLEL_CORES"] = None
+
+
         # Experimental Settings
+        self.__values["EXPERIMENT_ID"] = None
+        self.__values["ALGORITHM_ID"] = None
         self.__values["POPULATION_SIZE"] = 60
         self.__values["OFFSPRING_POPULATION_SIZE"] = 60
         self.__values["TERMINATE_GENERATION"] = 500
@@ -54,6 +77,13 @@ class Arguments(ABC):
         self.__values["DATA_SIZE"] = 0
         self.__values["ATTRIBUTE_NUMBER"] = 0
         # self.__values["CLASS_LABEL_NUMBER"] = 0
+        self.__values["IS_MULTI_LABEL"] = False
+        self.__values["TRAIN_FILE"] = None
+        self.__values["TEST_FILE"] = None
+        self.__values["DATA_NAME"] = None
+
+        # Results and display
+        self.__values["NO_PLOT"] = True
 
     def set(self, key, value):
         self.__values[str(key)] = value
@@ -74,32 +104,44 @@ class Arguments(ABC):
 
         return txt
 
-    def load(self, args):
-        if len(args) < 6:
-            # with cython.gil:
-            raise Exception("Not enough arguments (6 were expected)")
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser()
 
-        self.set("DATA_NAME", args[0])
-        self.set("ALGORITHM_ID", args[1])
+        formated_dict_keys = [str(key).lower().replace('_','-') for key in self.__values.keys()]
+        for key in formated_dict_keys:
+            if key in self.__required_args:
+                is_required = True
+            else:
+                is_required = False
+
+            action = "store"
+            if key in self.__bool_args:
+                action = "store_true"
+            parser.add_argument("--"+key, required=is_required, action=action)
+
+        # Remove not specified args and return a dict of the args
+        returned_args = {}
+        for key, value in vars(parser.parse_args(args)).items():
+            if value is not None:
+                returned_args[str(key).upper().replace('-','_')] = value
+
+        return returned_args
+
+
+    def load(self, args):
+        parsed_args = self.parse_args(args)
+
+        for key, val in parsed_args.items():
+            self.set(key, val)
+
         self.set("ALGORITHM_ID_DIR", str(os.path.join(self.get("ROOT_FOLDER"), str(self.get("ALGORITHM_ID")))))
 
         Output.mkdirs(self.get("ALGORITHM_ID_DIR"))
 
-        self.set("EXPERIMENT_ID", args[2])
+
         self.set("EXPERIMENT_ID_DIR",
                  str(os.path.join(
                      self.get("ALGORITHM_ID_DIR"),
                      self.get("DATA_NAME"),
                      str(self.get("EXPERIMENT_ID")))))
         Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
-
-        self.set("NUM_PARALLEL_CORES", int(args[3]))
-        self.set("TRAIN_FILE", args[4])
-        self.set("TEST_FILE", args[5])
-        self.set("IS_MULTI_LABEL", False)
-
-        self._load(args)
-
-    @abstractmethod
-    def _load(self, args):
-        pass

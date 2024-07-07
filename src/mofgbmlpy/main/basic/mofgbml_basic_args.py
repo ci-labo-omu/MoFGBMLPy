@@ -5,5 +5,4 @@ import os
 
 
 class MoFGBMLBasicArgs(Arguments):
-    def _load(self, args):
-        pass
+    pass

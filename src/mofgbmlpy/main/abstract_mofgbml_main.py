@@ -96,9 +96,10 @@ class AbstractMoFGBMLMain(ABC):
         for i in range(len(res.F)):
             plot_data[i] = [int(res.F[i][1]), res.F[i][0]]
 
-        plot = Scatter(labels=["Number of rules", "Error rate"])
-        plot.add(plot_data, color="red")
-        plot.show()
+        if not self._mofgbml_args.get("NO_PLOT"):
+            plot = Scatter(labels=["Number of rules", "Error rate"])
+            plot.add(plot_data, color="red")
+            plot.show()
 
         # f_archive = np.empty((len(res.archive), res.F.shape[1]), dtype=object)
         # for i in range(len(res.archive)):
