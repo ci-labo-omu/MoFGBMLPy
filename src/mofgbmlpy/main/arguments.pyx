@@ -7,12 +7,14 @@ import argparse
 
 class Arguments(ABC):
     __values = None
-    __required_args = None
-    __bool_args = None
+    _required_args = None
+    _bool_args = None
+    _int_args = None
+    _float_args = None
 
     def __init__(self):
         self.__values = {}
-        self.__required_args = [
+        self._required_args = [
             "data-name",
             "algorithm-id",
             "experiment-id",
@@ -20,11 +22,36 @@ class Arguments(ABC):
             "train-file",
             "test-file"
         ]
-        self.__bool_args = [
+        self._bool_args = [
             "is-dont-care-probability",
             "is-multi-label",
             "no-plot",
             "pretty-xml"
+        ]
+
+
+        self._int_args = [
+            "population-size",
+            "offspring-population-size",
+            "terminate-generation",
+            "terminate-evaluation",
+            "rand-seed",
+            "antecedent-num-dont-care",
+            "initiation-rule-num",
+            "max-num_rules",
+            "min_num_rules",
+            "data-size",
+            "attribute-number"
+        ]
+
+        self._float_args = [
+            "dont-care-rt",
+            "hybrid-cross-rt",
+            "michigan-ope-rt",
+            "rule-change-rt",
+            "michigan-cross-rt",
+            "pittsburgh-cross-rt",
+            "fuzzy-grade",
         ]
 
         # TODO: Check if those parameters are all useful
@@ -70,15 +97,9 @@ class Arguments(ABC):
         self.__values["ALGORITHM_ID_DIR"] = "ALGORITHM_ID"
         self.__values["EXPERIMENT_ID_DIR"] = "EXPERIMENT_ID"
 
-        # Index
-        # self.__values["TRAIN"] = 0
-        # self.__values["TEST"] = 1
-        # self.__values["XML_FILE_NAME"] = "results_XML"
-
         # Dataset info
         self.__values["DATA_SIZE"] = 0
         self.__values["ATTRIBUTE_NUMBER"] = 0
-        # self.__values["CLASS_LABEL_NUMBER"] = 0
         self.__values["IS_MULTI_LABEL"] = False
         self.__values["TRAIN_FILE"] = None
         self.__values["TEST_FILE"] = None
@@ -112,15 +133,20 @@ class Arguments(ABC):
         args_dict_keys = [Arguments.key_to_arg(key) for key in self.__values.keys()]
 
         for arg in args_dict_keys:
-            if arg in self.__required_args:
+            if arg in self._required_args:
                 is_required = True
             else:
                 is_required = False
 
-            if arg in self.__bool_args:
+            if arg in self._bool_args:
                 parser.add_argument("--" + arg, required=is_required, action="store_true"),
             else:
-                parser.add_argument("--"+arg, required=is_required)
+                if arg in self._float_args:
+                    parser.add_argument("--"+arg, required=is_required, type=float)
+                elif arg in self._int_args:
+                    parser.add_argument("--" + arg, required=is_required, type=int)
+                else:
+                    parser.add_argument("--" + arg, required=is_required)
 
 
         # Remove not specified args and return a dict of the args

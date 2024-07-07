@@ -11,3 +11,7 @@ class MoFGBMLMOEADArgs(Arguments):
         self.set("NEIGHBORHOOD_SELECTION_PROBABILITY", 1)
         self.set("MAXIMUM_NUMBER_OF_REPLACED_SOLUTIONS", 10)
         self.set("NEIGHBORHOOD_SIZE", 10)
+
+        self._int_args.append("neighbour-selection-probability")
+        self._int_args.append("maximum-number-of-replaced-solutions")
+        self._int_args.append("neighborhood-size")
