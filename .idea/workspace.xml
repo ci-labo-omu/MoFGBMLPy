@@ -5,25 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecabbc7-d586-435b-95fb-fd6ed8f56d1b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/data/output.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/data/output.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/dont_care_fuzzy_set.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/dont_care_fuzzy_set.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/linguistic_variable.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/triangular_fuzzy_set.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/triangular_fuzzy_set.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory_2_3_4_5.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory_2_3_4_5.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory_2_3_4_5.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/homo_triangle_knowledge_factory_2_3_4_5.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/main/abstract_mofgbml_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/main/abstract_mofgbml_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/main/arguments.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/main/arguments.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_mofgbml_basic_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mofgbml_basic_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -42,7 +42,7 @@ setup(
         cython_files,
         compiler_directives={"language_level": "3", "profile": True}
     ),
-    name="mofgbml-python",
+    name="mofgbmlpython",
     version="1.0.0",
     description="MoFGBML in Python",
     long_description=long_description,
