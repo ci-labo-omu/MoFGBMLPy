@@ -32,3 +32,4 @@ cdef class AbstractRule:
     cpdef double get_fitness_value(self, double[:] attribute_vector)
     cpdef get_knowledge(self)
     cpdef get_antecedent_plot_data(self, dim_index)
+    cpdef int get_antecedent_array_size(self)

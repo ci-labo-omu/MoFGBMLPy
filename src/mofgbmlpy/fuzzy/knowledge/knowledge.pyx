@@ -169,4 +169,10 @@ cdef class Knowledge:
         ax = plt.gca()
         self.draw_one_fuzzy_set(dim_index, fuzzy_set_index, ax)
         line = ax.lines[0]
-        return line.get_xydata()
+
+        return {
+            "y_label":ax.yaxis.get_label().get_text(),
+            "x_label":ax.xaxis.get_label().get_text(),
+            "title":ax.get_title(),
+            "points":line.get_xydata(),
+        }
