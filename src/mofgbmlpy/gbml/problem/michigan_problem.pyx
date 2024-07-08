@@ -53,4 +53,4 @@ class MichiganProblem(Problem):
 
         # Objective 2
         for i in range(len(X)):
-            out["F"][i][1] = X[i, 0].get_rule_length()  # num rules
+            out["F"][i][1] = X[i, 0].get_length()  # num rules

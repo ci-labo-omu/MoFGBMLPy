@@ -28,5 +28,6 @@ cdef class AbstractRule:
     cdef object get_rule_weight_value(self)
     cdef set_rule_weight_value(self, object rule_weight_value)
     cdef set_class_label_value(self, object class_label_value)
-    cpdef int get_rule_length(self)
+    cpdef int get_length(self)
     cpdef double get_fitness_value(self, double[:] attribute_vector)
+    cpdef get_antecedent_plot_data(self, dim_index, knowledge)

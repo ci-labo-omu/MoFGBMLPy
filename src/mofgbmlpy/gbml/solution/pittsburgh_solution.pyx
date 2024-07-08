@@ -47,7 +47,7 @@ cdef class PittsburghSolution(AbstractSolution):
         return coverage
 
     cpdef int get_total_rule_length(self):
-        return self.__classifier.get_rule_length(self._vars)
+        return self.__classifier.get_length(self._vars)
 
     cpdef double get_average_rule_weight(self):
         cdef double total_rule_weight = 0

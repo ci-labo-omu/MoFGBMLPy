@@ -164,3 +164,9 @@ cdef class Knowledge:
             root.append(var)
 
         return root
+
+    cpdef get_fuzzy_set_plot_data(self, dim_index, fuzzy_set_index):
+        ax = plt.gca()
+        self.draw_one_fuzzy_set(dim_index, fuzzy_set_index, ax)
+        line = ax.lines[0]
+        return line.get_xydata()

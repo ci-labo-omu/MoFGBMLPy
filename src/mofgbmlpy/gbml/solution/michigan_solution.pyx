@@ -56,8 +56,8 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef double get_fitness_value(self, double[:] in_vector):
         return self._rule.get_fitness_value(in_vector)
 
-    cpdef int get_rule_length(self):
-        return self._rule.get_rule_length()
+    cpdef int get_length(self):
+        return self._rule.get_length()
 
     cpdef get_class_label(self):
         return self._rule.get_class_label()

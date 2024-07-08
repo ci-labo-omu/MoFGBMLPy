@@ -56,7 +56,7 @@ cdef class AbstractRule:
     cdef set_class_label_value(self, object class_label_value):
         self.get_consequent().set_class_label_value(class_label_value)
 
-    cpdef int get_rule_length(self):
+    cpdef int get_length(self):
         return self.get_antecedent().get_length()
 
     cpdef double get_fitness_value(self, double[:] attribute_vector):
@@ -75,3 +75,7 @@ cdef class AbstractRule:
         root.append(self._consequent.to_xml())
 
         return root
+
+    cpdef get_antecedent_plot_data(self, dim_index, knowledge):
+        fuzzy_set_index = self.get_antecedent().get_antecedent_indices()[dim_index]
+        return knowledge.get_fuzzy_set_plot_data(dim_index, fuzzy_set_index)

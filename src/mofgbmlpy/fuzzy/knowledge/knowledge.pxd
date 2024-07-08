@@ -19,3 +19,4 @@ cdef class Knowledge:
     cpdef int get_num_dim(self)
     cpdef void clear(self)
     cpdef double get_support(self, int dim, int fuzzy_set_id)
+    cpdef get_fuzzy_set_plot_data(self, dim_index, fuzzy_set_index)

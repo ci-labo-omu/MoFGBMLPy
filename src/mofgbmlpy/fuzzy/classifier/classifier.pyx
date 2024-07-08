@@ -30,10 +30,10 @@ cdef class Classifier:
         return new_object
 
     @staticmethod
-    def get_rule_length(michigan_solution_list):
+    def get_length(michigan_solution_list):
         length = 0
         for item in michigan_solution_list:
-            length += item.get_rule_length()
+            length += item.get_length()
         return length
 
     cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):

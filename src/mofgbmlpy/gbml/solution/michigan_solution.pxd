@@ -23,7 +23,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef void create_rule(self, Pattern pattern=?)
     cpdef void learning(self)
     cpdef double get_fitness_value(self, double[:] in_vector)
-    cpdef int get_rule_length(self)
+    cpdef int get_length(self)
     cpdef get_class_label(self)
     cdef AbstractRuleWeight get_rule_weight(self)
     cpdef AbstractRuleWeight get_rule_weight_py(self)
