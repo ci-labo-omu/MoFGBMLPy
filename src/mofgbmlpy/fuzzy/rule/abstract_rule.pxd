@@ -30,4 +30,5 @@ cdef class AbstractRule:
     cdef set_class_label_value(self, object class_label_value)
     cpdef int get_length(self)
     cpdef double get_fitness_value(self, double[:] attribute_vector)
-    cpdef get_antecedent_plot_data(self, dim_index, knowledge)
+    cpdef get_knowledge(self)
+    cpdef get_antecedent_plot_data(self, dim_index)

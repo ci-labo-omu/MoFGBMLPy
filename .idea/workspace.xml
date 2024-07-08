@@ -5,18 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecabbc7-d586-435b-95fb-fd6ed8f56d1b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/test_knowledge.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/classifier/classifier.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/michigan_problem.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/michigan_problem.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/michigan_solution.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/solution/pittsburgh_solution.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/antecedent/antecedent.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_knowledge.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_knowledge.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

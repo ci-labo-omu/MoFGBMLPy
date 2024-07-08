@@ -120,3 +120,6 @@ cdef class Antecedent:
             fuzzy_set_id.set("dimension", str(dim_i))
             fuzzy_set_id.text = str(self.__antecedent_indices[dim_i])
         return root
+
+    cpdef get_knowledge(self):
+        return self.__knowledge

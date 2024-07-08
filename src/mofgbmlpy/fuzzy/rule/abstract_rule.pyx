@@ -76,6 +76,9 @@ cdef class AbstractRule:
 
         return root
 
-    cpdef get_antecedent_plot_data(self, dim_index, knowledge):
+    cpdef get_knowledge(self):
+        return self._antecedent.get_knowledge()
+
+    cpdef get_antecedent_plot_data(self, dim_index):
         fuzzy_set_index = self.get_antecedent().get_antecedent_indices()[dim_index]
-        return knowledge.get_fuzzy_set_plot_data(dim_index, fuzzy_set_index)
+        return self.get_knowledge().get_fuzzy_set_plot_data(dim_index, fuzzy_set_index)
