@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 cimport numpy as cnp
+
+from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
@@ -79,9 +81,9 @@ cdef class AbstractRule:
 
         return root
 
-    cpdef get_knowledge(self):
+    cpdef Knowledge get_knowledge(self):
         return self._antecedent.get_knowledge()
 
-    cpdef get_antecedent_plot_data(self, dim_index):
+    cpdef dict get_antecedent_plot_data(self, int dim_index):
         fuzzy_set_index = self.get_antecedent().get_antecedent_indices()[dim_index]
         return self.get_knowledge().get_fuzzy_set_plot_data(dim_index, fuzzy_set_index)

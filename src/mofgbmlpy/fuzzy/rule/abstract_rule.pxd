@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 cimport numpy as cnp
+
+from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
@@ -30,6 +32,6 @@ cdef class AbstractRule:
     cdef set_class_label_value(self, object class_label_value)
     cpdef int get_length(self)
     cpdef double get_fitness_value(self, double[:] attribute_vector)
-    cpdef get_knowledge(self)
-    cpdef get_antecedent_plot_data(self, dim_index)
+    cpdef Knowledge get_knowledge(self)
+    cpdef dict get_antecedent_plot_data(self, int dim_index)
     cpdef int get_antecedent_array_size(self)

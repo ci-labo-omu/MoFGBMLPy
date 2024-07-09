@@ -15,6 +15,6 @@ def test_get_fuzzy_set_plot_data():
     antecedent = Antecedent(np.array([0, 1, 2]), knowledge)
     consequent = Consequent(ClassLabelBasic(1), RuleWeightBasic(0.3))
     rule = RuleBasic(antecedent, consequent)
-    print(rule.get_antecedent_plot_data(0))
+    print(rule.get_antecedent_plot_data(1))
     # TODO
     assert True
