@@ -44,4 +44,4 @@ cdef class TriangularMF(AbstractMF):
         return root
 
     cpdef double[:,:] get_plot_points(self):
-        return np.array([self.__left,0],[self.__center,1], [self.__right,0], dtype=np.float64)
+        return np.array([[self.__left,0],[self.__center,1], [self.__right,0]], dtype=np.float64)
