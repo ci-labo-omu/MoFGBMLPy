@@ -1,5 +1,7 @@
 import xml.etree.cElementTree as xml_tree
 
+import numpy as np
+
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 cdef class DontCareMF(AbstractMF):
@@ -13,3 +15,6 @@ cdef class DontCareMF(AbstractMF):
         root = xml_tree.Element("membershipFunction")
         root.text = "Dont care"
         return root
+
+    cpdef double[:,:] get_plot_points(self):
+        return np.array([[0,1],[1,1]], dtype=np.float64)

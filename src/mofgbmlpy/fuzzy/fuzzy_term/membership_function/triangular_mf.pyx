@@ -1,5 +1,7 @@
 import xml.etree.cElementTree as xml_tree
 
+import numpy as np
+
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 
@@ -40,3 +42,6 @@ cdef class TriangularMF(AbstractMF):
             i += 1
 
         return root
+
+    cpdef double[:,:] get_plot_points(self):
+        return np.array([self.__left,0],[self.__center,1], [self.__right,0], dtype=np.float64)

@@ -6,10 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="9ecabbc7-d586-435b-95fb-fd6ed8f56d1b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/fuzzy_set.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/abstract_mf.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/dont_care_mf.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/fuzzy_term/membership_function/triangular_mf.pyx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/knowledge/knowledge.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pxd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/fuzzy/rule/abstract_rule.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/michigan_problem.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mofgbmlpy/gbml/problem/michigan_problem.pyx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +91,7 @@
       <recent name="C:\Users\Robin\Documents\MoFGBML_python\MoFGBML_Python\src\mofgbmlpy" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.setup">
+  <component name="RunManager" selected="Python tests.pytest for test_knowledge.test_get_fuzzy_set_plot_data">
     <configuration name="clean" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MoFGBML_Python" />
       <option name="ENV_FILES" value="" />
@@ -247,9 +252,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.pytest for test_knowledge.test_get_fuzzy_set_plot_data" />
+        <item itemvalue="Python tests.pytest for test_mofgbml_basic_main.test_main" />
         <item itemvalue="Python.test_knowledge.pxd" />
         <item itemvalue="Python tests.pytest for test_homo_triangle_knowledge_factory.test_create2_3_4_5_plot" />
-        <item itemvalue="Python tests.pytest for test_mofgbml_basic_main.test_main" />
         <item itemvalue="Python.clean" />
       </list>
     </recent_temporary>
@@ -290,16 +295,16 @@
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mf_test_mf.coverage" NAME="pytest for test_mf.test_mf Coverage Results" MODIFIED="1719146716574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_fuzzy_test_pittsburgh_solution_test_to_xml.coverage" NAME="pytest for fuzzy.test_pittsburgh_solution.test_to_xml Coverage Results" MODIFIED="1719993992006" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$test_knowledge_pxd.coverage" NAME="test_knowledge Coverage Results" MODIFIED="1720423851743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$setup.coverage" NAME="setup Coverage Results" MODIFIED="1720427525551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$setup.coverage" NAME="setup Coverage Results" MODIFIED="1720486191232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler.coverage" NAME="profiler basic Coverage Results" MODIFIED="1719936313256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_knowledge_test_get_fuzzy_set_plot_data.coverage" NAME="pytest for test_knowledge.test_get_fuzzy_set_plot_data Coverage Results" MODIFIED="1720427435066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_knowledge_test_get_fuzzy_set_plot_data.coverage" NAME="pytest for test_knowledge.test_get_fuzzy_set_plot_data Coverage Results" MODIFIED="1720486196828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_fuzzy_test_abstract_rule_test_to_xml.coverage" NAME="pytest for fuzzy.test_abstract_rule.test_to_xml Coverage Results" MODIFIED="1719993718629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_in_profilerTEST_py.coverage" NAME="pytest in profilerTEST.py Coverage Results" MODIFIED="1719128023363" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mofgbml_moead_main_test_main.coverage" NAME="pytest for test_mofgbml_moead_main.test_main Coverage Results" MODIFIED="1720319648515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler_moead.coverage" NAME="profiler moead Coverage Results" MODIFIED="1719936593973" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_fuzzy_test_abstract_rule_test_to_xmml.coverage" NAME="pytest for fuzzy.test_abstract_rule.test_to_xmml Coverage Results" MODIFIED="1719992775388" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$clean.coverage" NAME="clean Coverage Results" MODIFIED="1720328306027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mofgbml_basic_main_test_main.coverage" NAME="pytest for test_mofgbml_basic_main.test_main Coverage Results" MODIFIED="1720403493095" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_test_mofgbml_basic_main_test_main.coverage" NAME="pytest for test_mofgbml_basic_main.test_main Coverage Results" MODIFIED="1720427619464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profile_temp.coverage" NAME="profile_temp Coverage Results" MODIFIED="1719128883947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$profiler__1_.coverage" NAME="profiler (1) Coverage Results" MODIFIED="1719126549207" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MoFGBML_Python$pytest_for_fuzzy_test_pittsburgh_solution_test_to_xmml.coverage" NAME="pytest for fuzzy.test_pittsburgh_solution.test_to_xmml Coverage Results" MODIFIED="1719992778923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />

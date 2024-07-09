@@ -4,3 +4,4 @@ import cython
 
 cdef class DontCareMF(AbstractMF):
     cdef double get_value(self, double _)
+    cpdef double[:,:] get_plot_points(self)

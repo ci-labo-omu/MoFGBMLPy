@@ -7,3 +7,4 @@ cdef class TriangularMF(AbstractMF):
     cdef double __right
 
     cdef double get_value(self, double x)
+    cpdef double[:,:] get_plot_points(self)

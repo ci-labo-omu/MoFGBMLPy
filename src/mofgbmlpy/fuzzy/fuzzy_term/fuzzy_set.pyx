@@ -21,6 +21,9 @@ cdef class FuzzySet:
     cpdef int get_id(self):
         return self.__id
 
+    cpdef double[:,:] get_membership_function_points(self):
+        return self.__function.get_plot_points()
+
     def to_xml(self):
         root = xml_tree.Element("fuzzyTerm")
         term_xml = xml_tree.SubElement(root, "fuzzyTermID")

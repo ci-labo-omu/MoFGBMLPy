@@ -168,11 +168,12 @@ cdef class Knowledge:
     cpdef get_fuzzy_set_plot_data(self, dim_index, fuzzy_set_index):
         ax = plt.gca()
         self.draw_one_fuzzy_set(dim_index, fuzzy_set_index, ax)
-        line = ax.lines[0]
+        fuzzy_set = self.get_fuzzy_set(dim_index, fuzzy_set_index)
+        points = fuzzy_set.get_membership_function_points()
 
         return {
             "y_label":ax.yaxis.get_label().get_text(),
             "x_label":ax.xaxis.get_label().get_text(),
             "title":ax.get_title(),
-            "points":line.get_xydata(),
+            "points":points,
         }

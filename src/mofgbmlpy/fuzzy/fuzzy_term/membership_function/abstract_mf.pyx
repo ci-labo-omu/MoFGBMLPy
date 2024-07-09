@@ -8,3 +8,6 @@ cdef class AbstractMF:
 
     def to_xml(self):
         raise Exception("This class is abstract")
+
+    cpdef double[:,:] get_plot_points(self):
+        raise Exception("This class is abstract")
