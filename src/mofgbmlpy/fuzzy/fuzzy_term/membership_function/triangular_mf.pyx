@@ -63,12 +63,10 @@ cdef class TriangularMF(AbstractMF):
         return new_object
 
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self):
-        points = []
-        if self._params[0] != 0:
-            points.append([0,0])
-        points.append([self._params[0],0])
-        points.append([self._params[1],1])
-        points.append([self._params[2],0])
-        if self._params[2] != 1:
-            points.append([1,0])
-        return np.array(points)
+        return np.array([
+            [0,0],
+            [self._params[0], 0],
+            [self._params[1], 1],
+            [self._params[2], 0],
+            [1, 0],
+        ])

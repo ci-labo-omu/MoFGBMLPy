@@ -43,11 +43,9 @@ cdef class RectangularMF(AbstractMF):
         return new_object
 
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self):
-        points = []
-        if self._params[0] != 0:
-            points.append([0,0])
-        for i in range(self._params.shape[0]):
-            points.append([self._params[i],1])
-        if self._params[1] != 1:
-            points.append([1,0])
-        return np.array(points)
+        return np.array([
+            [0, 0],
+            [self._params[0], 1],
+            [self._params[1], 1],
+            [1, 0],
+        ])
