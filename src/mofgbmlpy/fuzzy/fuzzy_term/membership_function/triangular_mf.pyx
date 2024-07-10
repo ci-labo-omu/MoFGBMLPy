@@ -35,9 +35,9 @@ cdef class TriangularMF(AbstractMF):
         if index == 0:
             return np.array([0, self._params[1]])
         elif index == 1:
-            return np.array([self._params[0], self._params[2]])
+            return np.array([self._params[1], self._params[2]])
         elif index == 2:
-            return np.array([self._params[1], 1])
+            return np.array([self._params[2], 1])
         else:
             raise Exception("Invalid index for rectangular MF")
 
