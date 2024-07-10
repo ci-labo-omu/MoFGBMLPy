@@ -1,5 +1,4 @@
 numpy<2.0.0
-jupyter
 matplotlib<3.9
 scikit-learn
 pymoo

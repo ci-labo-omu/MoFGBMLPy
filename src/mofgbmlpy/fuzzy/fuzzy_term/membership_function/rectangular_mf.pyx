@@ -25,15 +25,14 @@ cdef class RectangularMF(AbstractMF):
             raise Exception("Invalid index for rectangular MF")
 
     cpdef bint is_param_value_valid(self, int index, double value):
-        if index != 0 or index != 1:
-            return False
-
         if index == 0:
             if value > self._params[1]:
                 return False
         elif index == 1:
             if self._params[1] > value:
                 return False
+        else:
+            return False
 
         return value >= 0 and value <= 1
 
