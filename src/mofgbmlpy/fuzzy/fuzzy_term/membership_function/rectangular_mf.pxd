@@ -2,7 +2,8 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport Abstract
 import cython
 cimport numpy as cnp
 
-cdef class TriangularMF(AbstractMF):
+
+cdef class RectangularMF(AbstractMF):
     cdef double get_value(self, double x)
     cpdef cnp.ndarray[double, ndim=1] get_params(self)
     cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index)

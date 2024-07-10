@@ -10,6 +10,7 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable cimport LinguisticVariable
 import simpful
 
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf import AbstractMF
 from mofgbmlpy.fuzzy.fuzzy_term.simpful_linguistic_variable_adaptor import SimpfulLinguisticVariableAdaptor
 
 cdef class Knowledge:
@@ -165,15 +166,3 @@ cdef class Knowledge:
 
         return root
 
-    cpdef dict get_fuzzy_set_plot_data(self, int dim_index, int fuzzy_set_index):
-        ax = plt.gca()
-        self.draw_one_fuzzy_set(dim_index, fuzzy_set_index, ax)
-        fuzzy_set = self.get_fuzzy_set(dim_index, fuzzy_set_index)
-        points = np.array(fuzzy_set.get_membership_function_points())
-
-        return {
-            "y_label":ax.yaxis.get_label().get_text(),
-            "x_label":ax.xaxis.get_label().get_text(),
-            "title":ax.get_title(),
-            "points":points,
-        }

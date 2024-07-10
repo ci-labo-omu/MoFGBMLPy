@@ -10,5 +10,5 @@ cdef class FuzzySet:
     cdef double get_membership_value(self, double x)
     cpdef get_term(self)
     cpdef get_function_callable(self)
-    cpdef double[:,:] get_membership_function_points(self)
     cpdef int get_id(self)
+    cpdef AbstractMF get_function(self)
