@@ -28,6 +28,8 @@ cdef class AbstractMF:
         return root
 
     cpdef cnp.ndarray[double, ndim=1] get_params(self):
+        if self._params is None:
+            return np.empty(0)
         return np.array(self._params)
 
     cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index):
