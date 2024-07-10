@@ -5,6 +5,7 @@ from pymoo.util.archive import MultiObjectiveArchive
 from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+from mofgbmlpy.gbml.mo_archive_without_sorting import MoArchiveWithoutSorting
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -100,7 +101,7 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=False,
-                          archive=MultiObjectiveArchive(duplicate_elimination=False,
+                          archive=MoArchiveWithoutSorting(duplicate_elimination=False,
                                                         max_size=None, truncate_size=None))
 
         res = minimize(problem,

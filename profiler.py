@@ -19,9 +19,9 @@ def run_profiler(mofgbml_class_name):
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--num-parallel-cores", "1",
-        "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
-        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
-        # "--no-plot",
+        "--train-file", "dataset/iris/a0_0_iris-10tra.dat",
+        "--test-file", "dataset/iris/a0_0_iris-10tst.dat",
+        "--terminate-evaluation", "30000"
     ]
 
     cProfile.runctx(f"{mofgbml_class_name}(HomoTriangleKnowledgeFactory_2_3_4_5).main(args)", globals(), locals(), "Profile.pstats")

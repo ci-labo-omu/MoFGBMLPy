@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
+from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
@@ -78,9 +79,15 @@ class AbstractMoFGBMLMain(ABC):
         print("Execution time: ", exec_time)
 
         non_dominated_solutions = res.X
-        archive_population = np.empty((len(res.archive), res.X.shape[1]), dtype=object)
-        for i in range(len(res.archive)):
-            archive_population[i] = res.archive[i].X
+
+        archive_objectives = res.archive.get("F")
+        non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
+        non_dominated_archive_pop = res.archive[non_dominated_mask]
+
+        archive_solutions = np.empty((len(non_dominated_archive_pop), res.X.shape[1]), dtype=object)
+        for i in range(len(non_dominated_archive_pop)):
+            archive_solutions[i] = non_dominated_archive_pop[i].X
+
 
         #
         # with Recorder(Video("ga.mp4")) as rec:
@@ -113,7 +120,7 @@ class AbstractMoFGBMLMain(ABC):
         results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
-        results_data = AbstractMoFGBMLMain.get_results_data(archive_population, knowledge, train, test)
+        results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
         
         results_xml = self.get_results_xml(knowledge, res.pop)

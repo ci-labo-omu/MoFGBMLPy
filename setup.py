@@ -43,7 +43,7 @@ setup(
         compiler_directives={"language_level": "3", "profile": True}
     ),
     name="mofgbmlpy",
-    version="1.0.0",
+    version="1.0.1",
     description="MoFGBML in Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
