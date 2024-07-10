@@ -47,7 +47,7 @@ setup(
     description="MoFGBML in Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/RobinMeneustOMU/MoFGBML_Python",  # Optional
+    url="https://github.com/RobinMeneustOMU/MoFGBMLPy",  # Optional
     author="Robin Meneust",
     author_email="sc24209q@st.omu.ac.jp",
     # classifiers=[  # Optional

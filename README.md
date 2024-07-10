@@ -1,4 +1,4 @@
-# MoFGBML_Python
+# MoFGBMLPy
 
 ## Install
 
