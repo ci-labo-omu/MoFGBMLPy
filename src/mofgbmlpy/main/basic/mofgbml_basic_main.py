@@ -6,6 +6,8 @@ from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import Ho
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.mo_archive_without_sorting import MoArchiveWithoutSorting
+from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
+from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -45,12 +47,11 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
         super().__init__(MoFGBMLBasicArgs(), MoFGBMLBasicMain.hybrid_style_mofgbml, knowledge_factory_class)
 
     @staticmethod
-    def hybrid_style_mofgbml(train, args, knowledge):
+    def hybrid_style_mofgbml(train, args, knowledge, objectives):
         num_objectives_michigan = 1
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
-        num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
         # rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
@@ -73,7 +74,7 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,
-                                    num_objectives_pittsburgh,
+                                    objectives,
                                     num_constraints_pittsburgh,
                                     train,
                                     michigan_solution_builder,

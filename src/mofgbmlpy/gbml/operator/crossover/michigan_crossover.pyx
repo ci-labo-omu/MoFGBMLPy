@@ -7,6 +7,8 @@ from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
 
+from mofgbmlpy.gbml.objectives.michigan.num_wins import NumWins
+from mofgbmlpy.gbml.objectives.michigan.rule_length import RuleLength
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring import UniformCrossoverSingleOffspring
 from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.NaryTournamentSelectionOnFitness import NaryTournamentSelectionOnFitness
@@ -101,7 +103,7 @@ class MichiganCrossover(Crossover):
 
             if num_ga > 0:
                 michigan_problem = MichiganProblem(num_dim,
-                                                   problem.get_num_objectives(),
+                                                   [], # No used
                                                    problem.get_num_constraints(),
                                                    problem.get_training_set(),
                                                    problem.get_rule_builder())

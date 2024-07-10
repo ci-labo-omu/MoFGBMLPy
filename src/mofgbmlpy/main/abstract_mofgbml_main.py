@@ -8,6 +8,8 @@ from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
+from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -73,7 +75,8 @@ class AbstractMoFGBMLMain(ABC):
         knowledge = self._knowledge_factory_class(train.get_num_dim()).create()
 
         # Run the algo
-        res = self._algo(train, self._mofgbml_args, knowledge)
+        objectives = [NumRules(), ErrorRate(train)]
+        res = self._algo(train, self._mofgbml_args, knowledge, objectives)
         exec_time = res.exec_time
 
         print("Execution time: ", exec_time)
@@ -102,7 +105,7 @@ class AbstractMoFGBMLMain(ABC):
 
         plot_data = np.empty(res.F.shape, dtype=object)
         for i in range(len(res.F)):
-            plot_data[i] = [int(res.F[i][1]), res.F[i][0]]
+            plot_data[i] = [res.F[i][0], res.F[i][1]]
 
         if not self._mofgbml_args.get("NO_PLOT"):
             plot = Scatter(labels=["Number of rules", "Error rate"])

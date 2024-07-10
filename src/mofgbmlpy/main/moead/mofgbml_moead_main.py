@@ -47,12 +47,11 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
         super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.hybrid_style_mofgbml, knowledge_factory_class)
 
     @staticmethod
-    def hybrid_style_mofgbml(train, args, knowledge):
+    def hybrid_style_mofgbml(train, args, knowledge, objectives):
         num_objectives_michigan = 2
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
-        num_objectives_pittsburgh = 2
         num_constraints_pittsburgh = 0
 
         # rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
@@ -75,7 +74,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,
-                                    num_objectives_pittsburgh,
+                                    objectives,
                                     num_constraints_pittsburgh,
                                     train,
                                     michigan_solution_builder,

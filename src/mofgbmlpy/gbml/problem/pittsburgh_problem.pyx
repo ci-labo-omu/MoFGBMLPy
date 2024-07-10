@@ -10,46 +10,44 @@ import cython
 
 class PittsburghProblem(Problem):
     __num_vars = 0
-    __num_objectives = None
     __num_constraints = None
     __training_ds = None
     __michigan_solution_builder = None
     __classifier = None
+    __objectives = None
 
     def __init__(self,
                  num_vars,
-                 num_objectives,
+                 objectives,
                  num_constraints,
                  training_dataset,
                  michigan_solution_builder,
                  classifier):
 
-        super().__init__(n_var=1, n_obj=num_objectives)  # 1 var because we consider one solution object
+        super().__init__(n_var=1, n_obj=len(objectives))  # 1 var because we consider one solution object
         self.__training_ds = training_dataset
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classifier = classifier
-        self.__num_objectives = num_objectives
-        self.____num_constraints = num_constraints
+        self.__objectives = objectives
+        self.__num_constraints = num_constraints
+        if len(objectives) == 0:
+            raise Exception("At least one objective is needed")
 
     def create_solution(self):
         pittsburgh_solution = PittsburghSolution(self.__num_vars,
-                                                 self.__num_objectives,
+                                                 self.get_num_objectives(),
                                                  self.__num_constraints,
                                                  copy.deepcopy(self.__michigan_solution_builder),
                                                  copy.deepcopy(self.__classifier))
 
         return pittsburgh_solution
 
-    # def __evaluate_one(self, solution):
-    #     print(type(solution))
-    #     return [solution.get_error_rate(self.__training_ds), solution.get_num_vars()]
-
     def get_num_vars(self):
         return self.__num_vars
 
     def get_num_objectives(self):
-        return self.__num_objectives
+        return len(self.__objectives)
 
     def get_num_constraints(self):
         return self.__num_constraints
@@ -61,18 +59,11 @@ class PittsburghProblem(Problem):
         self.__michigan_solution_builder.get_rule_builder()
 
     def _evaluate(self, X, out, *args, **kwargs):
-        cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), 2), dtype=np.float64)
+        cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)
         cdef int i
 
-        for i in range(len(X)):
-            # training error rate
-            eval_values[i][0] = X[i, 0].get_error_rate(self.__training_ds)
-            X[i, 0].set_objective(0, eval_values[i][0])
-
-            # num rules
-            eval_values[i][1] = X[i, 0].get_num_vars()
-            X[i, 0].set_objective(1, eval_values[i][1])
-
+        for i in range(len(self.__objectives)):
+            self.__objectives[i].run(X[:, 0], i, eval_values[:,i])
         out["F"] = eval_values
 
 
