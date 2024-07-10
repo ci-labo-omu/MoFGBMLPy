@@ -11,7 +11,7 @@ from mofgbmlpy.gbml.objectives.michigan.num_wins import NumWins
 from mofgbmlpy.gbml.objectives.michigan.rule_length import RuleLength
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring import UniformCrossoverSingleOffspring
 from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
-from mofgbmlpy.gbml.operator.selection.NaryTournamentSelectionOnFitness import NaryTournamentSelectionOnFitness
+from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
 from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurvival
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution

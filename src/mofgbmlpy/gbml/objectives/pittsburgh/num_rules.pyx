@@ -1,4 +1,4 @@
-from mofgbmlpy.gbml.objectives.ObjectiveFunction cimport ObjectiveFunction
+from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
@@ -14,3 +14,6 @@ cdef class NumRules(ObjectiveFunction):
                 sol.set_objective(obj_index, out[i])
         else:
             raise Exception("Solution must be of type PittsburghSolution")
+
+    def __repr__(self):
+        return "Number of rules"

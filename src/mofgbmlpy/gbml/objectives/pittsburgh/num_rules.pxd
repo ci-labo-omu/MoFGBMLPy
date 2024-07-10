@@ -1,4 +1,4 @@
-from mofgbmlpy.gbml.objectives.ObjectiveFunction cimport ObjectiveFunction
+from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 
 cdef class NumRules(ObjectiveFunction):

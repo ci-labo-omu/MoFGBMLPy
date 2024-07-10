@@ -37,7 +37,7 @@ from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriang
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from mofgbmlpy.gbml.BasicDuplicateElimination import BasicDuplicateElimination
+from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 

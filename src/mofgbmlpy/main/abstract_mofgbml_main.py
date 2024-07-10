@@ -38,7 +38,7 @@ from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriang
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from mofgbmlpy.gbml.BasicDuplicateElimination import BasicDuplicateElimination
+from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
@@ -128,6 +128,8 @@ class AbstractMoFGBMLMain(ABC):
         
         results_xml = self.get_results_xml(knowledge, res.pop)
         Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')), args=self._mofgbml_args)
+        res.objectives_name = [str(obj) for obj in objectives]
+        print(res.objectives_name)
 
         return res
 
