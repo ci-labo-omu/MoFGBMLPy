@@ -20,7 +20,8 @@ class Arguments(ABC):
             "experiment-id",
             "num-parallel-cores",
             "train-file",
-            "test-file"
+            "test-file",
+            "objectives"
         ]
         self._bool_args = [
             "is-dont-care-probability",
@@ -52,6 +53,10 @@ class Arguments(ABC):
             "michigan-cross-rt",
             "pittsburgh-cross-rt",
             "fuzzy-grade",
+        ]
+
+        self._list_args = [
+            "objectives"
         ]
 
         # TODO: Check if those parameters are all useful
@@ -91,6 +96,8 @@ class Arguments(ABC):
         self.__values["MICHIGAN_CROSS_RT"] = 0.9
         self.__values["PITTSBURGH_CROSS_RT"] = 0.9
         self.__values["FUZZY_GRADE"] = 1.0
+        self.__values["OBJECTIVES"] = []
+
 
         # Folders' Name
         self.__values["ROOT_FOLDER"] = "results"
@@ -145,6 +152,8 @@ class Arguments(ABC):
                     parser.add_argument("--"+arg, required=is_required, type=float)
                 elif arg in self._int_args:
                     parser.add_argument("--" + arg, required=is_required, type=int)
+                elif arg in self._list_args:
+                    parser.add_argument("--" + arg, nargs='+', required=is_required)
                 else:
                     parser.add_argument("--" + arg, required=is_required)
 

@@ -12,7 +12,8 @@ def test_main():
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         # "--no-plot",
         "--pretty-xml",
-        "--terminate-evaluation", "1000"
+        "--terminate-evaluation", "1000",
+        "--objectives", "num-rules", "error-rate"
     ]
 
     runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)

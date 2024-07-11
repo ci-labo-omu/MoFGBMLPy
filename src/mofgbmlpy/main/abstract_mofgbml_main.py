@@ -75,7 +75,14 @@ class AbstractMoFGBMLMain(ABC):
         knowledge = self._knowledge_factory_class(train.get_num_dim()).create()
 
         # Run the algo
-        objectives = [NumRules(), ErrorRate(train)]
+        objectives = []
+        for obj_key in self._mofgbml_args.get("OBJECTIVES"):
+            if obj_key == "error-rate":
+                objectives.append(ErrorRate(train))
+            elif obj_key == "num-rules":
+                objectives.append(NumRules())
+            else:
+                raise Exception("Unknown objective name", obj_key)
         res = self._algo(train, self._mofgbml_args, knowledge, objectives)
         exec_time = res.exec_time
 
@@ -91,7 +98,9 @@ class AbstractMoFGBMLMain(ABC):
         for i in range(len(non_dominated_archive_pop)):
             archive_solutions[i] = non_dominated_archive_pop[i].X
 
+        # TODO: use save_history instead of archive ?
 
+        # TODO: Re-enable it using arguments like no-plot arg
         #
         # with Recorder(Video("ga.mp4")) as rec:
         #     # for each algorithm object in the history
@@ -103,22 +112,13 @@ class AbstractMoFGBMLMain(ABC):
         #         # finally record the current visualization to the video
         #         rec.record()
 
-        plot_data = np.empty(res.F.shape, dtype=object)
-        for i in range(len(res.F)):
-            plot_data[i] = [res.F[i][0], res.F[i][1]]
-
         if not self._mofgbml_args.get("NO_PLOT"):
-            plot = Scatter(labels=["Number of rules", "Error rate"])
-            plot.add(plot_data, color="red")
-            plot.show()
+            if len(objectives) <= 1:
+                raise Exception("At least 2 objectives are required to plot")
 
-        # f_archive = np.empty((len(res.archive), res.F.shape[1]), dtype=object)
-        # for i in range(len(res.archive)):
-        #     f_archive[i] = res.archive[i].F[[1, 0]]
-        #
-        # plot = Scatter()
-        # plot.add(f_archive, color="red")
-        # plot.show()
+            plot = Scatter(labels=self._mofgbml_args.get("OBJECTIVES"))
+            plot.add(res.F, color="red")
+            plot.show()
 
         results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
