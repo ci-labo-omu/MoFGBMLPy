@@ -33,6 +33,7 @@ Run `python profiler.py MoFGBMLBasicMain` (or replace MoFGBMLBasicMain with the 
 
 #### Manually
 
-1. Generate a pstats profiler results file
-2. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
-3. `dot Profile.dot -Tpng -o Profile.png`
+1. Install `gprof2dot`
+2. Generate a pstats profiler results file
+3. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
+4. `dot Profile.dot -Tpng -o Profile.png`
