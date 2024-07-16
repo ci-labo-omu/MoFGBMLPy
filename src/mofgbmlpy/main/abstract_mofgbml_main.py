@@ -8,8 +8,6 @@ from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
-from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
-from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -27,7 +25,7 @@ from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 import sys
 import os
 from pymoo.visualization.scatter import Scatter
-
+from importlib import import_module
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
 import random
@@ -41,6 +39,8 @@ from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
+
+from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_case
 
 
 class AbstractMoFGBMLMain(ABC):
@@ -77,12 +77,17 @@ class AbstractMoFGBMLMain(ABC):
         # Run the algo
         objectives = []
         for obj_key in self._mofgbml_args.get("OBJECTIVES"):
+            class_name = dash_case_to_class_name(obj_key)
+            module_name = "mofgbmlpy.gbml.objectives.pittsburgh." + dash_case_to_snake_case(obj_key)
+            imported_module = import_module(module_name)
+            print("MODULE",imported_module)
+            objective_class = getattr(imported_module, class_name)
+            # except ModuleNotFoundError:
+
             if obj_key == "error-rate":
-                objectives.append(ErrorRate(train))
-            elif obj_key == "num-rules":
-                objectives.append(NumRules())
+                objectives.append(objective_class(train))
             else:
-                raise Exception("Unknown objective name", obj_key)
+                objectives.append(objective_class())
         res = self._algo(train, self._mofgbml_args, knowledge, objectives)
         exec_time = res.exec_time
 

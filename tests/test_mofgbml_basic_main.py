@@ -13,7 +13,7 @@ def test_main():
         # "--no-plot",
         "--pretty-xml",
         "--terminate-evaluation", "1000",
-        "--objectives", "num-rules", "error-rate"
+        "--objectives", "num-rules", "error-rate", "rule-interpretation"
     ]
 
     runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)
