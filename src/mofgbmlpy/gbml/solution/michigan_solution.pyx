@@ -1,3 +1,4 @@
+import random
 import xml.etree.cElementTree as xml_tree
 import copy
 
@@ -25,13 +26,22 @@ cdef class MichiganSolution(AbstractSolution):
         if do_init_vars:
             cnt = 0
             is_rejected = True
-            while is_rejected:
-                cnt += 1
-                self.create_rule(pattern=pattern)
-                is_rejected = self._rule.is_rejected_class_label()
-                if cnt > 1000:
-                    # with cython.gil:
-                    raise Exception("Exceeded maximum number of trials to generate rule")
+            if pattern is None:
+                while is_rejected:
+                    cnt += 1
+                    self.create_rule()
+                    is_rejected = self._rule.is_rejected_class_label()
+                    if cnt > 1000:
+                        raise Exception("Exceeded maximum number of trials to generate rule")
+            else:
+                training_data_set = self.get_rule_builder().get_training_dataset()
+                size_training_data_set = training_data_set.get_size()
+                while is_rejected:
+                    cnt += 1
+                    self.create_rule(training_data_set.get_pattern(random.randint(0, size_training_data_set-1)))
+                    is_rejected = self._rule.is_rejected_class_label()
+                    if cnt > 1000:
+                        raise Exception("Exceeded maximum number of trials to generate rule")
 
     cdef void create_rule(self, Pattern pattern=None):
         cdef int[:] antecedent_indices
@@ -42,7 +52,6 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef void learning(self):
         cdef Antecedent antecedent_object
         if self._vars is None:
-            # with cython.gil:
             raise Exception("Vars is not defined")
 
         if self._rule is None or self._rule.get_antecedent() is None:

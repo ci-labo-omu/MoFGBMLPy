@@ -73,7 +73,6 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
     cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern=None):
         if pattern is None:
-            # with cython.gil:
             raise Exception("Pattern cannot be None")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 

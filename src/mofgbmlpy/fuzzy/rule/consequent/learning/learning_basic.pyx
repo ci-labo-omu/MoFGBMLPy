@@ -21,7 +21,6 @@ cdef class LearningBasic(AbstractLearning):
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
-
         return Consequent(class_label, rule_weight)
 
     cdef double[:] calc_confidence(self, Antecedent antecedent):

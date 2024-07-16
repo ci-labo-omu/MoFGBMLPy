@@ -38,3 +38,6 @@ cdef class RuleBuilderCore:
 
     cpdef Knowledge get_knowledge(self):
         return self._knowledge
+
+    cpdef Dataset get_training_dataset(self):
+        return self._consequent_factory.get_training_set()
