@@ -2,32 +2,16 @@ import xml.etree.cElementTree as xml_tree
 from abc import ABC, abstractmethod
 
 import numpy as np
-from pymoo.termination import get_termination
-from pymoo.util.archive import MultiObjectiveArchive
+
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
-from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
-from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
-from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
-from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
-from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
-from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
-from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
-
-from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
-from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
-import sys
+
 import os
 from pymoo.visualization.scatter import Scatter
 from importlib import import_module
-from pymoo.algorithms.moo.nsga2 import NSGA2
-from pymoo.optimize import minimize
+
 import random
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
@@ -80,7 +64,6 @@ class AbstractMoFGBMLMain(ABC):
             class_name = dash_case_to_class_name(obj_key)
             module_name = "mofgbmlpy.gbml.objectives.pittsburgh." + dash_case_to_snake_case(obj_key)
             imported_module = import_module(module_name)
-            print("MODULE",imported_module)
             objective_class = getattr(imported_module, class_name)
             # except ModuleNotFoundError:
 
