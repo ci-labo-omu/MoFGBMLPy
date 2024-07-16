@@ -91,7 +91,7 @@ class MichiganCrossover(Crossover):
 
                 if lack_size > 0:
                     new_patterns = np.random.choice(self.__training_set.get_patterns(), lack_size)
-                    error_patterns = np.concatenate(error_patterns, new_patterns)
+                    error_patterns = np.concatenate((error_patterns, new_patterns))
                 selected_error_patterns = np.random.choice(error_patterns, num_heuristic, replace=False)
 
                 for j in range(num_heuristic):
