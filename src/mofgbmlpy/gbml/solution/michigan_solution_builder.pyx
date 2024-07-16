@@ -18,8 +18,6 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
         for i in range(num_solutions):
             solutions[i] = MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder,
                                             pattern=pattern)
-            # solutions[i].set_attribute(attribute_id, 0) # TODO: check usage in java version
-            # solutions[i].set_attribute(attribute_id_fitness, 0)
 
         return solutions
 

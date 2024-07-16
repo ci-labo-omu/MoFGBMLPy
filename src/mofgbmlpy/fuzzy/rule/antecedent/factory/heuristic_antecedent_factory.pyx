@@ -39,7 +39,6 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                 continue
 
             # Categorical judge
-            # TODO: Check back later if it's used in the code
             if attribute_array[dim_i] < 0:
                 antecedent_indices[dim_i] = int(attribute_array[dim_i])
                 continue

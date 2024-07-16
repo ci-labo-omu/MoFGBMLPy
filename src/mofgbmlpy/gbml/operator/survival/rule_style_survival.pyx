@@ -20,7 +20,7 @@ cdef class RuleStyleSurvival:
         new_shape = (pop.shape[0] + len(offspring) - num_replacements,) + pop.shape[1:]
         new_pop = np.empty(new_shape, dtype=object)
 
-        # TODO: remove fitness class attribute in michigan solution and use objectives array instead
+        # TODO: remove fitness class attribute in michigan solution and use objectives array instead ?
 
         # Sort by fitness (objective 0)
         RuleStyleSurvival.sort_by_fitness(pop)

@@ -1,3 +1,4 @@
+import sys
 import copy
 
 from pymoo.core.population import Population
@@ -80,7 +81,6 @@ class PittsburghProblem(Problem):
             for j in range(num_vars):
                 # if r == 1:
                 #     break # Only one solution
-                # print(j, num_vars, sol.get_var(k).get_num_wins())
                 if sol.get_var(k).get_num_wins() < 1:
                     sol.remove_var(k)
                     r -= 1
