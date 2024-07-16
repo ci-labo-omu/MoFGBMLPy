@@ -11,9 +11,9 @@ cdef class AbstractSolution:
 
     cpdef double[:] get_objectives(self)
     # cpdef double[:] get_constraints(self)
-    cpdef void set_attribute(self, int id, object value)
-    cpdef object get_attribute(self, int id)
-    cpdef cnp.npy_bool has_attribute(self, int  id)
+    cpdef void set_attribute(self, str key, object value)
+    cpdef object get_attribute(self, str key)
+    cpdef cnp.npy_bool has_attribute(self, str key)
     cpdef void set_objective(self, int index, double value)
     cpdef double get_objective(self, int index)
     cpdef int get_num_vars(self)

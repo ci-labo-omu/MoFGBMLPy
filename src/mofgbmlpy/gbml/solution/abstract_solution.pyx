@@ -15,14 +15,14 @@ cdef class AbstractSolution:
     # cpdef double[:] get_constraints(self):
     #     return self.__constraints
 
-    cpdef void set_attribute(self, int id, object value):
-        self._attributes[id] = value
+    cpdef void set_attribute(self, str key, object value):
+        self._attributes[key] = value
 
-    cpdef object get_attribute(self, int id):
-        return self._attributes[id]
+    cpdef object get_attribute(self, str key):
+        return self._attributes[key]
 
-    cpdef cnp.npy_bool has_attribute(self, int id):
-        return id in self._attributes
+    cpdef cnp.npy_bool has_attribute(self, str key):
+        return key in self._attributes
 
     cpdef void set_objective(self, int index, double value):
         self._objectives[index] = value

@@ -71,8 +71,8 @@ class PittsburghCrossover(Crossover):
             Y[0,i,0] = copy.deepcopy(p1)
 
 
-            # Y[0,i,0].clear_vars()
-            Y[0,i,0].clear_attributes()
+            Y[0,i,0].clear_vars()
+            # Y[0,i,0].clear_attributes()
 
             num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), n_var)
             rules_idx_from_p1 = np.random.choice(np.arange(p1.get_num_vars(), dtype=int), num_rules_from_p1, replace=False)

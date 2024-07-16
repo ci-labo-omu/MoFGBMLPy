@@ -110,11 +110,9 @@ class AbstractMoFGBMLMain(ABC):
 
         results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
-        res.metrics = results_data
 
         results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
-        res.metrics_arc = results_data
 
         results_xml = self.get_results_xml(knowledge, res.pop)
         Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')), args=self._mofgbml_args)
@@ -145,6 +143,14 @@ class AbstractMoFGBMLMain(ABC):
             results_data[i]["training_error_rate"] = sol.get_error_rate(train)
             results_data[i]["test_error_rate"] = sol.get_error_rate(test)
             results_data[i]["num_rules"] = sol.get_num_vars()
+
+            sol.set_attribute("id", i)
+            sol.set_attribute("total_coverage", total_coverage)
+            sol.set_attribute("total_rule_length", sol.get_total_rule_length())
+            sol.set_attribute("average_rule_weight", sol.get_average_rule_weight())
+            sol.set_attribute("training_error_rate", sol.get_error_rate(train))
+            sol.set_attribute("test_error_rate", sol.get_error_rate(test))
+            sol.set_attribute("num_rules", sol.get_num_vars())
         return results_data
 
     def get_results_xml(self, knowledge, pop):

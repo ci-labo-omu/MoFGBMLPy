@@ -17,7 +17,6 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolution[:] _vars
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
-    cpdef void clear_attributes(self)
     cdef void learning(self)
     cdef AbstractSolution classify(self, Pattern pattern)
     cpdef double get_error_rate(self, dataset)

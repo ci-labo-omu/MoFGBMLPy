@@ -180,7 +180,7 @@ cdef class MichiganSolution(AbstractSolution):
         # for i in range(self.get_num_constraints()):
         #     txt += f"{self._objectives[i]} "
 
-        txt += f"] Algorithm Attributes: {self._attributes}"
+        txt += f"] Attributes: {self._attributes}"
 
         return txt
 

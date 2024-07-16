@@ -23,8 +23,6 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
         return self.__michigan_solution_builder
 
-    cpdef void clear_attributes(self):
-        self._attributes = {}
 
     cdef void learning(self):
         for var in self._vars:
@@ -127,7 +125,7 @@ cdef class PittsburghSolution(AbstractSolution):
         # for i in range(self.get_num_constraints()):
         #     txt += f"{self._objectives[i]} "
 
-        txt += f"] Algorithm Attributes: {self._attributes}"
+        txt += f"] Attributes: {self._attributes}"
 
         return txt
 
