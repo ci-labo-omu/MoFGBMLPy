@@ -68,14 +68,15 @@ cdef class Antecedent:
             val = attribute_vector[i]
             if antecedent_indices[i] < 0 and val < 0:
                 # categorical
-                grade_value *= 1.0 if antecedent_indices[i] == round(val) else 0.0
+                if antecedent_indices[i] != round(val):
+                    grade_value = 0.0
             elif antecedent_indices[i] > 0 and val >= 0:
                 # numerical
                 grade_value *= self.__knowledge.get_membership_value(val, i, antecedent_indices[i])
             elif antecedent_indices[i] == 0:
                 continue
             else:
-                return -1
+                raise Exception("Invalid antecedent_indices")
 
         return grade_value
 
