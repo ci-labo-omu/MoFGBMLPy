@@ -21,7 +21,7 @@ cdef class AbstractSolution:
     cpdef object get_attribute(self, str key):
         return self._attributes[key]
 
-    cpdef cnp.npy_bool has_attribute(self, str key):
+    cpdef bint has_attribute(self, str key):
         return key in self._attributes
 
     cpdef void set_objective(self, int index, double value):

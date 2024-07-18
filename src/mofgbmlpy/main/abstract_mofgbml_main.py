@@ -16,7 +16,7 @@ import random
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling

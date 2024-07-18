@@ -1,9 +1,7 @@
-from time import sleep
-
 import numpy as np
 
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent import Consequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic

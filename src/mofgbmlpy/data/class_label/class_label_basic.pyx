@@ -11,17 +11,17 @@ cdef class ClassLabelBasic(AbstractClassLabel):
     def __eq__(self, other):
         if not isinstance(other, ClassLabelBasic):
             return False
-        return other.get_class_label_value() == self.get_class_label_value()
+        return other.get_class_label_value() == self.__class_label
 
     def __deepcopy__(self, memo={}):
-        new_object = ClassLabelBasic(self.get_class_label_value())
+        new_object = ClassLabelBasic(self.__class_label)
         memo[id(self)] = new_object
         return new_object
 
     def __str__(self):
-        if self.get_class_label_value() is None:
+        if self.__class_label is None:
             raise Exception("class label value is None")
-        return f"{self.get_class_label_value():2d}"
+        return f"{self.__class_label:2d}"
 
     cpdef object get_class_label_value(self):
         return self.__class_label

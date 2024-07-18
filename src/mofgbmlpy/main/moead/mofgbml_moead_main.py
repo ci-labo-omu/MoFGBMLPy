@@ -4,7 +4,7 @@ from pymoo.termination import get_termination
 from pymoo.util.archive import MultiObjectiveArchive
 from pymoo.util.ref_dirs import get_reference_directions
 
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.mo_archive_without_sorting import MoArchiveWithoutSorting
@@ -33,7 +33,7 @@ import random
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling

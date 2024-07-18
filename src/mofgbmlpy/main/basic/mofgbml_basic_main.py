@@ -1,13 +1,8 @@
-import numpy as np
 from pymoo.termination import get_termination
-from pymoo.util.archive import MultiObjectiveArchive
 
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
-from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.mo_archive_without_sorting import MoArchiveWithoutSorting
-from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
-from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -15,31 +10,20 @@ from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutat
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 
 from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.classifier.classifier import Classifier
-from mofgbmlpy.data.input import Input
-from mofgbmlpy.data.output import Output
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
 from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 import sys
-import os
-from pymoo.visualization.scatter import Scatter
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
-import random
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
-from pyrecorder.recorder import Recorder
-from pyrecorder.writers.video import Video
 
 
 class MoFGBMLBasicMain(AbstractMoFGBMLMain):

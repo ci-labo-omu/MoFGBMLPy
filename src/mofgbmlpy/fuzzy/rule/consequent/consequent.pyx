@@ -21,7 +21,7 @@ cdef class Consequent:
     def __eq__(self, other):
         return self.get_class_label_value() == other.get_class_label_value()
 
-    cpdef cnp.npy_bool is_rejected(self):
+    cpdef bint is_rejected(self):
         return self.get_class_label().is_rejected()
 
     cpdef void set_rejected(self):

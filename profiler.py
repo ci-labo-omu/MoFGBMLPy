@@ -10,7 +10,7 @@ if new_path not in sys.path:
 from src.mofgbmlpy.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
 from src.mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
 from mofgbmlpy.data.output import Output
-from mofgbmlpy.fuzzy.knowledge.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 
 
 def run_profiler(mofgbml_class_name):

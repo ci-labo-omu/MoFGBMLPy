@@ -76,9 +76,19 @@ class Input:
 
     @staticmethod
     def get_train_test_files(arguments):
+        if (arguments is None or
+                not arguments.has_key("TRAIN_FILE") or
+                not arguments.has_key("TEST_FILE") or
+                not arguments.has_key("IS_MULTI_LABEL")):
+            raise ValueError("Invalid arguments")
+
         train_file_name = arguments.get("TRAIN_FILE")
         test_file_name = arguments.get("TEST_FILE")
         is_multi_label = arguments.get("IS_MULTI_LABEL")
+
+        if train_file_name is None or test_file_name is None or is_multi_label is None:
+            raise ValueError("Invalid arguments")
+
         # manager = DataSetManager.get_instance()
 
         training_data = Input.input_data_set(train_file_name, is_multi_label)

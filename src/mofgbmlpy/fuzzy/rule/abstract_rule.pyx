@@ -38,10 +38,10 @@ cdef class AbstractRule:
     cpdef object get_class_label_value(self):
         return self._consequent.get_class_label_value()
 
-    cdef cnp.npy_bool equals_class_label(self, AbstractRule other):
+    cdef bint equals_class_label(self, AbstractRule other):
         return self._consequent().get_class_label() == other.get_consequent().get_class_label()
 
-    cpdef cnp.npy_bool is_rejected_class_label(self):
+    cpdef bint is_rejected_class_label(self):
         return self._consequent.get_class_label().is_rejected()
 
     cdef AbstractRuleWeight get_rule_weight(self):
