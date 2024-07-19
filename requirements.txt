@@ -5,4 +5,3 @@ pymoo
 pytest
 Cython
 pyrecorder
-simpful

@@ -1,7 +1,16 @@
 import xml.etree.cElementTree as xml_tree
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
+
 
 cdef class FuzzySet:
-    def __init__(self, function, id, division_type, term=""):
+    def __init__(self, AbstractMF function, int id, int division_type, str term=""):
+        if function is None or id is None or division_type is None or term is None:
+            raise ValueError("function, id, division_type and term can't be none")
+
+        if id < 0 or division_type < 0 or division_type >= len(DivisionType):
+            raise ValueError("Invalid DivisionType constant value")
+
         self.__function = function
         self.__term = term
         self.__id = id
@@ -42,3 +51,12 @@ cdef class FuzzySet:
         root.append(self.__function.to_xml())
 
         return root
+
+    def __eq__(self, other):
+        if not isinstance(other, FuzzySet):
+            return False
+
+        return (self.__id == other.get_id() and
+                self.__function == other.get_function() and
+                self.__term == other.get_term()
+                and self.__division_type == other.get_division_type())

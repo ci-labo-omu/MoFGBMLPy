@@ -14,10 +14,10 @@ cdef class DontCareMF(AbstractMF):
     def __str__(self):
         return "<Dont Care MF>"
 
-    cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index):
-        return np.empty(0)
+    cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index, double x_min=0, double x_max=1):
+        return np.empty(0, dtype=np.float64)
 
-    cpdef bint is_param_value_valid(self, int index, double value):
+    cpdef bint is_param_value_valid(self, int index, double value, double x_min=0, double x_max=1):
         return False # Can't be edited
 
     def __deepcopy__(self, memo={}):
@@ -25,5 +25,5 @@ cdef class DontCareMF(AbstractMF):
         memo[id(self)] = new_object
         return new_object
 
-    cpdef cnp.ndarray[double, ndim=2] get_plot_points(self):
+    cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=0, double x_max=1):
         return np.array([[0,1], [1,1]])

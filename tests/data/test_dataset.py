@@ -102,7 +102,7 @@ def test_eq_true():
 
 def test_eq_false_different_patterns_order():
     p1 = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
-    p2 = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
+    p2 = Pattern(0, np.array([0.0, 2.0, 1.0]), ClassLabelBasic(0))
 
     ds1 = Dataset(2, 3, 1, np.array([p1, p2], dtype=object))
     ds2 = Dataset(2, 3, 1, np.array([p2, p1], dtype=object))

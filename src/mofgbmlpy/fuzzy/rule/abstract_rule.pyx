@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 cimport numpy as cnp
 
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
@@ -89,5 +89,5 @@ cdef class AbstractRule:
         fuzzy_set_index = self.get_antecedent().get_antecedent_indices()[dim_index]
         return self.get_knowledge().get_fuzzy_set(dim_index, fuzzy_set_index)
 
-    cpdef str get_var_concept(self, int dim_index):
-        return self.get_knowledge().get_fuzzy_variable(dim_index).get_concept()
+    cpdef str get_var_name(self, int dim_index):
+        return self.get_knowledge().get_fuzzy_variable(dim_index).get_name()

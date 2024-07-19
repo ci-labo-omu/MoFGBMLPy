@@ -5,7 +5,7 @@ cimport numpy as cnp
 from libcpp cimport queue as cqueue
 from libcpp cimport vector as cvector
 from libc cimport math as cmath
-from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable cimport LinguisticVariable
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
@@ -18,7 +18,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
         self.__knowledge = knowledge
 
-    cdef void generate_antecedents_indices(self, LinguisticVariable[:] fuzzy_sets):
+    cdef void generate_antecedents_indices(self, FuzzyVariable[:] fuzzy_sets):
         cdef int i
         cdef int j
         cdef int k = 0
@@ -26,7 +26,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef cqueue.queue[cvector.vector[int]] indices_queue
         cdef int num_generated_indices = 1
         cdef cvector.vector[int] tmp
-        cdef LinguisticVariable var
+        cdef FuzzyVariable var
 
         for i in range(self.__dimension):
             var = fuzzy_sets[i]

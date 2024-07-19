@@ -1,13 +1,12 @@
 import numpy as np
-import cython
 
-from mofgbmlpy.fuzzy.fuzzy_term.dont_care_fuzzy_set import DontCareFuzzySet
-from mofgbmlpy.fuzzy.fuzzy_term.linguistic_variable import LinguisticVariable
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.factory.abstract_knowledge_factory cimport AbstractKnowledgeFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 cimport numpy as cnp
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
-from mofgbmlpy.fuzzy.fuzzy_term.triangular_fuzzy_set import TriangularFuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 
 cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
     def __init__(self, num_divisions, var_names, fuzzy_set_names):
@@ -74,6 +73,6 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
                     else:
                         current_support_values.append(2 / (self.__num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets[dim_i] = LinguisticVariable(np.array(current_set, dtype=object), self.__var_names[dim_i], np.array(current_support_values))
+            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), self.__var_names[dim_i], np.array(current_support_values))
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge

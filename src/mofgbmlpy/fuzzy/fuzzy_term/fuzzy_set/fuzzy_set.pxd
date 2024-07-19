@@ -1,5 +1,3 @@
-import cython
-from mofgbmlpy.fuzzy.fuzzy_term.division_type cimport DivisionType
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 
@@ -7,7 +5,7 @@ cdef class FuzzySet:
     cdef AbstractMF __function
     cdef str __term
     cdef int __id
-    cdef DivisionType __division_type
+    cdef int __division_type
 
     cdef double get_membership_value(self, double x)
     cpdef get_term(self)

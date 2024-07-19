@@ -1,6 +1,6 @@
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.dont_care_mf import DontCareMF
-from mofgbmlpy.fuzzy.fuzzy_term.division_type cimport DivisionType
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
 
 cdef class DontCareFuzzySet(FuzzySet):

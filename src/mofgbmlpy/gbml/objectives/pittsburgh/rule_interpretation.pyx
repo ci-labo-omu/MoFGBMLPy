@@ -2,7 +2,7 @@ from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
-from mofgbmlpy.fuzzy.fuzzy_term.division_type cimport DivisionType
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
 
 cdef class RuleInterpretation(ObjectiveFunction):

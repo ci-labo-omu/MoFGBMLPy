@@ -32,7 +32,7 @@ def test_to_xml():
     rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge), LearningBasic(training_data_set), knowledge)
     michigan_builder = MichiganSolutionBuilder(2, 0, rule_builder)
     classifier = Classifier(SingleWinnerRuleSelection())
-    problem = PittsburghProblem(3, 2, 0, training_data_set, michigan_builder, classifier)
+    problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classifier)
     sol = problem.create_solution()
     reparsed = minidom.parseString(xml_tree.tostring(sol.to_xml()))
     pretty_xml = reparsed.toprettyxml(indent="  ")
