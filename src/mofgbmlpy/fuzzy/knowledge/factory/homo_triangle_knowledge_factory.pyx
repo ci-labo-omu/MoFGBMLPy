@@ -9,7 +9,7 @@ from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 
 cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
-    def __init__(self, num_divisions, var_names, fuzzy_set_names):
+    def __init__(self, int[:,:] num_divisions, var_names, fuzzy_set_names):
         self.__num_divisions = num_divisions
         self.__var_names = var_names
         self.__fuzzy_set_names = fuzzy_set_names
@@ -49,11 +49,12 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         cdef Knowledge knowledge
 
         cdef int set_id = 0
+        cdef int dim_i
+        cdef int j
 
         knowledge = Knowledge()
         fuzzy_sets = np.empty(len(self.__num_divisions), dtype=object)
 
-        #TODO: use numpy
         for dim_i in range(len(self.__num_divisions)):
             current_support_values = [1]
             current_set = [DontCareFuzzySet(id=set_id)]
@@ -73,6 +74,6 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
                     else:
                         current_support_values.append(2 / (self.__num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), self.__var_names[dim_i], np.array(current_support_values))
+            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), str(self.__var_names[dim_i]), np.array(current_support_values))
         knowledge.set_fuzzy_sets(fuzzy_sets)
         return knowledge
