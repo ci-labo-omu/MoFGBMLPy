@@ -98,8 +98,8 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef double compute_coverage(self):
         coverage = 1
         dim_i = 0
-        for fuzzy_set_id in self._vars:
-            coverage *= self._rule_builder.get_knowledge().get_support(dim_i, fuzzy_set_id)
+        for fuzzy_set_index in self._vars:
+            coverage *= self._rule_builder.get_knowledge().get_support(dim_i, fuzzy_set_index)
             dim_i += 1
         return coverage
 

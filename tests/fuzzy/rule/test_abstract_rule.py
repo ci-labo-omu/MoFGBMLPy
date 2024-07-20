@@ -11,15 +11,16 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWei
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
 
 
-def test_to_xml():
+def test_to_xml_run():
+    # Only test if it doesn't return an exception
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent = Antecedent(np.array([0, 1, 2]), knowledge)
     consequent = Consequent(ClassLabelBasic(1), RuleWeightBasic(0.3))
     rule = RuleBasic(antecedent, consequent)
 
     reparsed = minidom.parseString(xml_tree.tostring(rule.to_xml()))
-    pretty_xml = reparsed.toprettyxml(indent="  ")
-    print(pretty_xml)
+    _ = reparsed.toprettyxml(indent="  ")
+
     assert True
 
 

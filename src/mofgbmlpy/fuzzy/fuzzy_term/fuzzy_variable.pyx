@@ -52,10 +52,10 @@ cdef class FuzzyVariable:
             raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         return self.__fuzzy_sets[fuzzy_set_index]
 
-    cpdef double get_support(self, int fuzzy_set_id):
-        if fuzzy_set_id >= self.__support_values.shape[0]:
-            raise Exception(f"{fuzzy_set_id} is out of range (>= {len(self.__fuzzy_sets)})")
-        return self.__support_values[fuzzy_set_id]
+    cpdef double get_support(self, int fuzzy_set_index):
+        if fuzzy_set_index >= self.__support_values.shape[0]:
+            raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
+        return self.__support_values[fuzzy_set_index]
 
     cpdef get_fuzzy_sets(self):
         return self.__fuzzy_sets

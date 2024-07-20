@@ -20,7 +20,8 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBu
 from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
 
 
-def test_to_xml():
+def test_to_xml_run():
+    # Only test if it doesn't return an exception
     args = MoFGBMLBasicArgs()
 
     args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
@@ -35,8 +36,8 @@ def test_to_xml():
     problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classifier)
     sol = problem.create_solution()
     reparsed = minidom.parseString(xml_tree.tostring(sol.to_xml()))
-    pretty_xml = reparsed.toprettyxml(indent="  ")
-    print(pretty_xml)
+    _ = reparsed.toprettyxml(indent="  ")
+
     assert True
 
 

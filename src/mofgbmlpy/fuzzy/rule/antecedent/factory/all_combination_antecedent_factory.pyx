@@ -15,7 +15,7 @@ import numpy as np
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, knowledge):
         self.__dimension = knowledge.get_num_dim()
-        self.generate_antecedents_indices(knowledge.get_fuzzy_sets())
+        self.generate_antecedents_indices(knowledge.get_fuzzy_vars())
         self.__knowledge = knowledge
 
     cdef void generate_antecedents_indices(self, FuzzyVariable[:] fuzzy_sets):

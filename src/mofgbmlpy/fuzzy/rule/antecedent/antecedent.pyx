@@ -9,9 +9,6 @@ from cython.parallel import prange
 from libc.math cimport round
 
 cdef class Antecedent:
-    # cdef public object __antecedent_indices
-    # cdef public Knowledge __knowledge
-
     def __init__(self, int[:] antecedent_indices, Knowledge knowledge):
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge

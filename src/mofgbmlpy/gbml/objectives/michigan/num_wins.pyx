@@ -9,6 +9,7 @@ cdef class NumWins(ObjectiveFunction):
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
         cdef int i = 0
+        cdef int k = 0
         cdef MichiganSolution sol
 
         if isinstance(solutions[0], MichiganSolution):
@@ -25,7 +26,8 @@ cdef class NumWins(ObjectiveFunction):
                         winner_rules_indices[i] = j
 
             for i in range(len(self.__data_set)):
-                out[winner_rules_indices[i]] += 1
+                k = winner_rules_indices[i]
+                out[k] += 1
 
             for i in range(len(solutions)):
                 sol = solutions[i]

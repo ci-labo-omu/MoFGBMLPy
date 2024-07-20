@@ -3,8 +3,12 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory cimport H
 
 cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
     def __init__(self, num_dims, var_names = None):
+        if num_dims <= 0:
+            raise Exception("num_dims must be positive")
+
         num_divisions = np.zeros((num_dims, 4), dtype=np.int_)
         fuzzy_set_names = np.zeros((num_dims, 4), dtype=list)
+
         for i in range(num_dims):
             num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int_)
             fuzzy_set_names[i] = np.array([
@@ -16,5 +20,7 @@ cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
 
         if var_names is None:
             var_names = np.array([f"x{i}" for i in range(num_dims)], dtype=str)
+        elif len(var_names) != num_dims:
+            raise Exception(f"var_names must be of a size equals to num_dims (i.e. {num_dims})")
 
         super().__init__(num_divisions, var_names, fuzzy_set_names)

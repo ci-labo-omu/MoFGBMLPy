@@ -42,15 +42,15 @@ class PittsburghMutation(Mutation):
 
                     current_michigan_solution = X[0][i].get_var(michigan_sol_i)
                     # print(mutated_dim, current_michigan_solution.get_num_vars(), current_michigan_solution)
-                    current_fuzzy_set_id = current_michigan_solution.get_var(mutated_dim)
-                    new_fuzzy_set_id = random.randint(0, num_candidate_values - 2)
+                    current_fuzzy_set_index = current_michigan_solution.get_var(mutated_dim)
+                    new_fuzzy_set_index = random.randint(0, num_candidate_values - 2)
 
                     # Prevent the value from staying the same
-                    if new_fuzzy_set_id >= current_fuzzy_set_id:
-                        new_fuzzy_set_id += 1
+                    if new_fuzzy_set_index >= current_fuzzy_set_index:
+                        new_fuzzy_set_index += 1
 
                     new_michigan_solution = copy.deepcopy(current_michigan_solution)
-                    new_michigan_solution.set_var(mutated_dim, new_fuzzy_set_id)
+                    new_michigan_solution.set_var(mutated_dim, new_fuzzy_set_index)
                     new_michigan_solution.learning()
 
                     if not new_michigan_solution.get_consequent().is_rejected():

@@ -13,7 +13,7 @@ cdef class FuzzyVariable:
     cdef double get_membership_value(self, int fuzzy_set_index, double x)
     cpdef int get_length(self)
     cpdef FuzzySet get_fuzzy_set(self, int fuzzy_set_index)
-    cpdef double get_support(self, int fuzzy_set_id)
+    cpdef double get_support(self, int fuzzy_set_index)
     cpdef get_fuzzy_sets(self)
     cpdef get_support_values(self)
     cpdef get_domain(self)

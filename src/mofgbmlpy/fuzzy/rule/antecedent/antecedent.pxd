@@ -3,8 +3,8 @@ cimport numpy as cnp
 import cython
 
 cdef class Antecedent:
-    cdef public object __antecedent_indices
-    cdef public Knowledge __knowledge
+    cdef object __antecedent_indices
+    cdef Knowledge __knowledge
 
     cpdef int get_array_size(self)
     cpdef int[:] get_antecedent_indices(self)
