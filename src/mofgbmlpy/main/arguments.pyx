@@ -82,7 +82,7 @@ class Arguments(ABC):
         # self.__values["UNIX"] = 1        # Mac or Linux
 
         # Fuzzy Classifier
-        self.__values["IS_DONT_CARE_PROBABILITY"] = False
+        self.__values["IS_DONT_CARE_PROBABILITY"] = True
         self.__values["ANTECEDENT_NUM_NOT_DONT_CARE"] = 5
         self.__values["DONT_CARE_RT"] = 0.8
         self.__values["INITIATION_RULE_NUM"] = 30

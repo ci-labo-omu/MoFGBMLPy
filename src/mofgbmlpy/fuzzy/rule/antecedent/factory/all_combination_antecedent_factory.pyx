@@ -14,11 +14,16 @@ import numpy as np
 
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, knowledge):
-        self.__dimension = knowledge.get_num_dim()
-        self.generate_antecedents_indices(knowledge.get_fuzzy_vars())
-        self.__knowledge = knowledge
+        if knowledge is None or knowledge.get_num_dim() == 0:
+            raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
-    cdef void generate_antecedents_indices(self, FuzzyVariable[:] fuzzy_sets):
+        self.__knowledge = knowledge
+        self.__antecedents_indices = self.generate_antecedents_indices()
+
+    def get_num_antecedents(self):
+        return len(self.__antecedents_indices)
+
+    cdef int[:,:] generate_antecedents_indices(self):
         cdef int i
         cdef int j
         cdef int k = 0
@@ -27,12 +32,14 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int num_generated_indices = 1
         cdef cvector.vector[int] tmp
         cdef FuzzyVariable var
-
-        for i in range(self.__dimension):
-            var = fuzzy_sets[i]
+        cdef int dimension = self.__knowledge.get_num_dim()
+        cdef FuzzyVariable[:] fuzzy_vars = self.__knowledge.get_fuzzy_vars()
+        
+        for i in range(dimension):
+            var = fuzzy_vars[i]
             num_generated_indices *= var.get_length()
 
-        cdef int[:,:] indices = (np.empty((num_generated_indices, self.__dimension), dtype=int))
+        cdef int[:,:] indices = (np.empty((num_generated_indices, dimension), dtype=int))
 
         indices_queue.push(cvector.vector[int]())
 
@@ -41,8 +48,8 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             buffer = indices_queue.front()
             indices_queue.pop()
             current_dim = buffer.size()
-            if current_dim < self.__dimension:
-                var = fuzzy_sets[current_dim]
+            if current_dim < dimension:
+                var = fuzzy_vars[current_dim]
                 for i in range(var.get_length()):
                     tmp = cvector.vector[int]()
 
@@ -52,15 +59,18 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
                     indices_queue.push(tmp)
             else:
                 # print(indices.shape[0], k)
-                for i in range(self.__dimension):
+                for i in range(dimension):
                     indices[k][i] = buffer[i]
                 k += 1
 
-        self.__antecedents_indices = indices
+        return indices
+
+    def generate_antecedents_indices_py(self):
+        self.generate_antecedents_indices()
 
     cdef Antecedent[:] create(self, int num_rules=1):
-        cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
+        cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
         cdef int i
         cdef Antecedent new_antecedent_obj
 
@@ -70,19 +80,23 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
 
         return antecedent_objects
 
+    def create_py(self, int num_rules=1):
+        return self.create(num_rules)
+
+
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
         cdef int i
         cdef int j
         cdef int[:] chosen_list
 
+        if num_rules <= 0:
+            raise Exception("num_rules must be positive")
+
         num_rules = min(num_rules, self.__antecedents_indices.shape[0])
 
         # Return an antecedent
-        if self.__antecedents_indices is None:
-            # with cython.gil:
-            raise Exception("AllCombinationAntecedentFactory hasn't been initialised")
         cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
-        cdef int[:,:] new_indices = np.empty((num_rules, self.__dimension), dtype=int)
+        cdef int[:,:] new_indices = np.empty((num_rules, self.__knowledge.get_num_dim()), dtype=int)
 
         for i in range(chosen_indices_lists.shape[0]):
             chosen_list = self.__antecedents_indices[chosen_indices_lists[i]]
@@ -90,12 +104,24 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
                 new_indices[i][j] = chosen_list[j]
         return new_indices
 
+    def create_antecedent_indices_py(self, int num_rules=1):
+        return self.create_antecedent_indices(num_rules)
+
     def __str__(self):
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
-            self.__dimension) + "]"
+            self.__knowledge.get_num_dim()) + "]"
+
+    def __eq__(self, other):
+        if not isinstance(other, AllCombinationAntecedentFactory):
+            return False
+
+        return self.__knowledge == other.get_knowledge()
 
     def __deepcopy__(self, memo={}):
         new_object = AllCombinationAntecedentFactory(self.__knowledge)
 
         memo[id(self)] = new_object
         return new_object
+
+    cpdef Knowledge get_knowledge(self):
+        return self.__knowledge

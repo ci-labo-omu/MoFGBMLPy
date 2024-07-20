@@ -7,17 +7,11 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 
 
 cdef class FuzzyVariable:
-    def __init__(self, FuzzySet[:] fuzzy_sets=None, str name="unnamed_var", double[:] support_values=None, domain=None):
+    def __init__(self, FuzzySet[:] fuzzy_sets, double[:] support_values, str name="unnamed_var", domain=None):
         if name is None:
             raise Exception("name can't be done")
-        if fuzzy_sets is None or len(fuzzy_sets) == 0:
-            fuzzy_sets = np.empty(0, dtype=object)
-            support_values = np.empty(0, dtype=np.float64)
-        elif support_values is None:
-            raise TypeError('Support value cannot be None if fuzzy_sets is not None and not empty')
-
-        if len(fuzzy_sets) != len(support_values):
-            raise Exception("Fuzzy sets list and support values list must have the same size")
+        if fuzzy_sets is None or len(fuzzy_sets) == 0 or support_values is None or len(support_values) != len(fuzzy_sets):
+            raise Exception("fuzzy_sets and support_values must have the same length and at least one element")
 
         self.__support_values = support_values
         self.__fuzzy_sets = fuzzy_sets
@@ -81,7 +75,7 @@ cdef class FuzzyVariable:
         for i in range(fuzzy_sets_copy.shape[0]):
             fuzzy_sets_copy[i] = copy.deepcopy(self.__fuzzy_sets[i])
 
-        cdef FuzzyVariable new_object = FuzzyVariable(fuzzy_sets_copy, self.__name, support_values_copy)
+        cdef FuzzyVariable new_object = FuzzyVariable(fuzzy_sets_copy, support_values_copy, self.__name, np.copy(self.__domain))
         memo[id(self)] = new_object
         return new_object
 

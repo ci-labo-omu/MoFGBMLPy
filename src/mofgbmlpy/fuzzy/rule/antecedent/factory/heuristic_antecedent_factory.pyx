@@ -8,34 +8,53 @@ import cython
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    def __init__(self, training_set, knowledge, is_dc_probability, dc_rate, antecedent_num_not_dont_care):
-        self.__dimension = knowledge.get_num_dim()
+    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_num_not_dont_care):
+        if knowledge is None or knowledge.get_num_dim() == 0:
+            raise Exception("knowledge can't be None and must have at least one fuzzy variable")
+
+        if training_set is None or training_set.get_size() == 0 or knowledge.get_num_dim() != training_set.get_num_dim():
+            raise Exception("training set must have at least one element and with the same number of dimensions as in the knowledge")
+
+        if dc_rate < 0 or dc_rate > 1:
+            raise Exception("dc rate must be between 0 and 1")
+
+        if antecedent_num_not_dont_care < 0:
+            raise Exception(f"antecedent num not dont care must not be negative")
+
+
         self.__training_set = training_set
         self.__knowledge = knowledge
         self.__is_dc_probability = is_dc_probability
-        self.__dc_rate = dc_rate
         self.__antecedent_num_not_dont_care = antecedent_num_not_dont_care
 
-    cdef int[:] select_antecedent_part(self, int index):
+        if self.__is_dc_probability:
+            self.__dc_rate = dc_rate
+        else:
+            self.__dc_rate = max((self.__knowledge.get_num_dim() - self.__antecedent_num_not_dont_care) / self.__knowledge.get_num_dim(), dc_rate)
+
+    cdef int[:] __select_antecedent_part(self, int index):
         pattern = self.__training_set.get_pattern(index)
         return self.calculate_antecedent_part(pattern)
 
     cdef int[:] calculate_antecedent_part(self, Pattern pattern):
+        if pattern is None:
+            raise Exception("Pattern can't be none")
+
         cdef double[:] attribute_array = pattern.get_attributes_vector()
         cdef int dim_i
         cdef int h
+        cdef int dimension = self.__knowledge.get_num_dim()
 
-        if self.__is_dc_probability:
-            dc_rate = self.__dc_rate
-        else:
-            dc_rate = max((self.__dimension - self.__antecedent_num_not_dont_care) / self.__dimension, self.__dc_rate)
+        if pattern.get_num_dim() != dimension:
+            raise Exception("Pattern dimension must be the same as the current knowledge")
 
-        antecedent_indices = np.zeros(self.__dimension, dtype=np.int_)
 
-        for dim_i in range(self.__dimension):
+        antecedent_indices = np.zeros(dimension, dtype=np.int_)
+
+        for dim_i in range(dimension):
             # DC
-            if random.random() < dc_rate:
-                antecedent_indices[dim_i] = 0  # The first fuzzy set is don't care
+            if random.random() < self.__dc_rate:
+                antecedent_indices[dim_i] = 0  # The first fuzzy set (index = 0) is don't care
                 continue
 
             # Categorical judge
@@ -64,7 +83,12 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         return antecedent_indices
 
+    def calculate_antecedent_part_py(self, Pattern pattern):
+        return self.calculate_antecedent_part(pattern)
+
     cdef Antecedent[:] create(self, int num_rules=1):
+        if num_rules <= 0:
+            raise Exception("num_rules must be positive")
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
         cdef int i
         cdef Antecedent[:] antecedent_objects = np.array([Antecedent(indices[i], self.__knowledge) for i in range(num_rules)], dtype=object)
@@ -86,7 +110,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         if num_rules is None or num_rules == 1:
             pattern_index = random.randint(0, data_size - 1)
-            return np.array([self.select_antecedent_part(pattern_index)], dtype=int)
+            return np.array([self.__select_antecedent_part(pattern_index)], dtype=int)
 
         if num_rules <= self.__training_set.get_size():
             pattern_indices = np.random.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
@@ -100,13 +124,13 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                                                  replace=False)
             pattern_indices = np.concatenate((pattern_indices, remaining_indices))
 
-        new_antecedent_indices = np.empty((num_rules, self.__dimension), dtype=int)
+        new_antecedent_indices = np.empty((num_rules, self.__knowledge.get_num_dim()), dtype=int)
         for i in range(num_rules):
-            new_antecedent_indices[i] = self.select_antecedent_part(pattern_indices[i])
+            new_antecedent_indices[i] = self.__select_antecedent_part(pattern_indices[i])
         return new_antecedent_indices
 
     def __str__(self):
-        return "HeuristicAntecedentFactory [dimension=" + str(self.__dimension) + "]"
+        return "HeuristicAntecedentFactory [dimension=" + str(self.__knowledge.get_num_dim()) + "]"
 
     def __deepcopy__(self, memo={}):
         new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_num_not_dont_care)

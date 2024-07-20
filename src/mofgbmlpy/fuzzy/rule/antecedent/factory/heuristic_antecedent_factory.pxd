@@ -9,14 +9,13 @@ import cython
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    cdef int __dimension
     cdef Dataset __training_set
     cdef Knowledge __knowledge
-    cdef double __is_dc_probability
+    cdef bint __is_dc_probability
     cdef double __dc_rate
     cdef int __antecedent_num_not_dont_care
 
-    cdef int[:] select_antecedent_part(self, int index)
+    cdef int[:] __select_antecedent_part(self, int index)
     cdef int[:] calculate_antecedent_part(self, Pattern pattern)
     cdef Antecedent[:] create(self, int num_rules=?)
     cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern=?)

@@ -7,11 +7,11 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 
 
 cdef class Knowledge:
-    def __init__(self, fuzzy_sets=None):
-        if fuzzy_sets is None:
+    def __init__(self, fuzzy_vars=None):
+        if fuzzy_vars is None:
             self.__fuzzy_vars = np.empty(0, dtype=object)
         else:
-            self.__fuzzy_vars = fuzzy_sets
+            self.__fuzzy_vars = fuzzy_vars
 
     cpdef FuzzyVariable get_fuzzy_variable(self, int dim):
         return self.__fuzzy_vars[dim]
@@ -48,6 +48,9 @@ cdef class Knowledge:
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         if fuzzy_vars.shape[0] == 0:
             raise Exception("Knowledge is not yet initialized (no fuzzy set)")
+        if dim < 0 or dim >= fuzzy_vars.shape[0]:
+            raise Exception("The dim index is out of bounds for the current knowledge")
+
         cdef FuzzyVariable var = fuzzy_vars[dim]
         return var.get_membership_value(fuzzy_set_index, attribute_value)
 

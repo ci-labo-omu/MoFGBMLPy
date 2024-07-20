@@ -9,9 +9,9 @@ import numpy as np
 
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     cdef int[:,:] __antecedents_indices
-    cdef int __dimension
     cdef Knowledge __knowledge
 
-    cdef void generate_antecedents_indices(self, FuzzyVariable[:] fuzzy_sets)
+    cdef int[:,:] generate_antecedents_indices(self)
     cdef Antecedent[:] create(self, int num_rules=?)
     cdef int[:,:] create_antecedent_indices(self, int num_rules=?)
+    cpdef Knowledge get_knowledge(self)

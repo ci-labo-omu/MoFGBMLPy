@@ -10,6 +10,9 @@ from libc.math cimport round
 
 cdef class Antecedent:
     def __init__(self, int[:] antecedent_indices, Knowledge knowledge):
+        if antecedent_indices is None or knowledge is None:
+            raise Exception("Parameters can't be None")
+
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge
 
@@ -20,6 +23,8 @@ cdef class Antecedent:
         return self.__antecedent_indices
 
     cpdef void set_antecedent_indices(self, int[:] new_indices):
+        if new_indices is None:
+            raise Exception("new_indices can't be None")
         self.__antecedent_indices = new_indices
 
     cpdef double[:] get_compatible_grade(self, double[:] attribute_vector):
@@ -28,9 +33,11 @@ cdef class Antecedent:
         cdef double[:] grade = np.zeros(size, dtype=np.float64)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
-        if size != attribute_vector.shape[0]:
-            # with cython.gil:
-            raise ValueError("antecedent_indices and attribute_vector must have the same length")
+        if attribute_vector is None or size != attribute_vector.shape[0]:
+            raise ValueError("antecedent_indices must not be None and must have the same length as attribute_vector")
+
+        if size > self.__knowledge.get_num_dim():
+            raise Exception("The given number of dimensions is out of bounds for the current knowledge")
 
         for i in range(size):
             val = attribute_vector[i]
@@ -44,7 +51,6 @@ cdef class Antecedent:
                 # don't care
                 grade[i] = 1.0
             else:
-                # with cython.gil:
                 raise ValueError("Illegal argument")
 
         return grade
@@ -59,6 +65,9 @@ cdef class Antecedent:
         if size != attribute_vector.shape[0]:
             # with cython.gil:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
+
+        if size > self.__knowledge.get_num_dim():
+            raise Exception("The given number of dimensions is out of bounds for the current knowledge")
 
         for i in range(size):
         # for i in prange(size, nogil=True):
@@ -77,12 +86,8 @@ cdef class Antecedent:
 
         return grade_value
 
-    cpdef double get_compatible_grade_value_py(self, double[:] attribute_vector):
-        cdef double compatible_grade_value = self.get_compatible_grade_value(attribute_vector)
-        if compatible_grade_value == -1:
-            # Error code
-            # with cython.gil:
-            raise ValueError("Illegal argument")
+    def get_compatible_grade_value_py(self, double[:] attribute_vector):
+            return self.get_compatible_grade_value(attribute_vector)
 
     cpdef int get_length(self):
         return np.count_nonzero(self.__antecedent_indices)
@@ -99,7 +104,7 @@ cdef class Antecedent:
         return new_antecedent
 
     def __eq__(self, other):
-        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.__knowledge
+        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
 
     def __repr__(self):
         txt = "["

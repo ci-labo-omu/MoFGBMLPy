@@ -107,6 +107,6 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
                     else:
                         current_support_values.append(2 / (self.__num_divisions[dim_i][j] - 1))
 
-            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), str(self.__var_names[dim_i]), np.array(current_support_values))
+            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), np.array(current_support_values), str(self.__var_names[dim_i]))
         knowledge.set_fuzzy_vars(fuzzy_sets)
         return knowledge

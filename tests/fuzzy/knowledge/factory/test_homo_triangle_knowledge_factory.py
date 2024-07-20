@@ -163,8 +163,7 @@ def test_make_triangle_knowledge_params_valid(num_partition):
     params = HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(num_partition)
     precision = 1e-6
 
-    if params.shape[0] != num_partition and params.shape[1] != 3:
-        assert False
+    assert params.shape[0] == num_partition and params.shape[1] == 3
 
     half_triangle_base_size = 1/(num_partition-1)
 
@@ -182,10 +181,9 @@ def test_make_triangle_knowledge_params_valid(num_partition):
             start = (i - 1) * half_triangle_base_size
             middle = i * half_triangle_base_size
             end = (i + 1) * half_triangle_base_size
-        if (abs(params[i][0] - start) >= precision or
-                abs(params[i][1] - middle) >= precision or
-                abs(params[i][2] - end) >= precision):
-            assert False
+        assert (abs(params[i][0] - start) < precision and
+                abs(params[i][1] - middle) < precision and
+                abs(params[i][2] - end) < precision)
 
 
 def create_factory(num_divisions):
@@ -210,12 +208,11 @@ def test_create(exec_run):
     num_divisions = np.random.randint(2, 7, (5, 2))
     factory = create_factory(num_divisions)
     knowledge = factory.create()
-    if knowledge.get_num_dim() != len(num_divisions):
-        assert False
+    assert knowledge.get_num_dim() == len(num_divisions)
+
     for i in range(len(num_divisions)):
         num_fuzzy_sets = 1  # Don't care fuzzy set
         for num_partitions in num_divisions[i]:
             num_fuzzy_sets += num_partitions
 
-        if knowledge.get_num_fuzzy_sets(i) != num_fuzzy_sets:
-            assert False
+        assert knowledge.get_num_fuzzy_sets(i) == num_fuzzy_sets

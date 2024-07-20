@@ -11,6 +11,5 @@ cdef class Antecedent:
     cpdef void set_antecedent_indices(self, int[:] new_indices)
     cpdef double[:] get_compatible_grade(self, double[:] attribute_vector)
     cdef double get_compatible_grade_value(self, double[:] attribute_vector)
-    cpdef double get_compatible_grade_value_py(self, double[:] attribute_vector)
     cpdef int get_length(self)
     cpdef get_knowledge(self)

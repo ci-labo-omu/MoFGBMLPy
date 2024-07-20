@@ -84,7 +84,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
 
         ref_dirs = get_reference_directions("uniform",
                                             problem.get_num_objectives(),
-                                            n_partitions=args.get("POPULATION_SIZE")-1)
+                                            n_partitions=args.get("POPULATION_SIZE")-1) # TODO: works for 2 objectivs, but change it for 1 or 3 and more objectives
 
         #TODO: check "variation" in the java code
 
