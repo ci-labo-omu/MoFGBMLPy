@@ -11,7 +11,7 @@ def test_main():
         "--num-parallel-cores", "1",
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
-        # "--train-file", "../dataset/yeast_multi/yeast-10-1tra.dat",
+        # "--train-file", "../dataset/yeast_multi/yeast-10-1tra.dat", #TODO
         # "--test-file", "../dataset/yeast_multi/yeast-10-1tst.dat",
         # "--is-multi-label",
         # "--no-plot",
