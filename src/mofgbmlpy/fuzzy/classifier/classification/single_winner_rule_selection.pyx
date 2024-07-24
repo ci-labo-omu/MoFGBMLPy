@@ -1,9 +1,9 @@
 # distutils: language = c++
 
-from libcpp cimport map as cmap
-from libcpp cimport vector as cvector
-from libcpp cimport queue as cqueue
-from libcpp cimport pair as cpair
+# from cython.operator import dereference, postincrement
+from libcpp.unordered_map cimport unordered_map as cmap
+from libcpp.list cimport list as clist
+from libcpp.pair cimport pair as cpair
 import time
 import cython
 import numpy as np
@@ -17,48 +17,60 @@ from collections import OrderedDict
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
     def __init__(self, int num_patterns):
-        self.__max_num_solutions_cached = 1000
-        self.__cache_current_solution_index = np.zeros(num_patterns, int)
+        self.__max_num_solutions_cached = 30
         cdef int i
 
         for i in range(num_patterns):
-            self.__cache.push_back(cmap.map[int, double]())
-            self.__cache_order.push_back(cqueue.queue[int]())
+            self.__cache.push_back(cmap[int, double]())
+            # self.__cache_order.push_back(clist[int]())
 
-    cpdef __get_cache(self, MichiganSolution solution, Pattern pattern):
+    cdef __get_cache(self, MichiganSolution solution, Pattern pattern):
         cdef int solution_hash = hash(solution)
         cdef int pattern_id = pattern.get_id()
-        cdef cmap.map[int, double] pattern_cache = self.__cache[pattern_id]
-        cdef cqueue.queue[int] pattern_cache_order = self.__cache_order[pattern_id]
+        cdef cmap[int, double] pattern_cache = self.__cache[pattern_id]
+        # cdef clist[int] pattern_cache_order = self.__cache_order[pattern_id]
+        cdef double value
+        cdef int key
 
-        if pattern_cache.count(solution_hash) != 0:
+        if pattern_cache.find(solution_hash) != pattern_cache.end():
             value = pattern_cache[solution_hash]
 
-            # Put it back at the back of the queue
-            key = pattern_cache_order.front()
-            pattern_cache_order.pop()
-            pattern_cache_order.push(key)
-
+            # Put it back at the back of the "queue" because we don't want it to be deleted soon since it's maybe often used
+            # list_start = pattern_cache_order.begin()
+            #
+            # while dereference(list_start) != solution_hash and list_start != self.__cache_order[pattern_id].end():
+            #     postincrement(list_start)
+            #
+            # if list_start != self.__cache_order[pattern_id].end():
+            #     key = dereference(list_start)
+            #     pattern_cache_order.erase(list_start)
+            #     pattern_cache_order.push_back(key)
+            # else:
+            #     raise Exception("Cache data structures (orders and values) are not synced")
             # print("###")
             return value
         # print("___")
+
         return None
 
-    cpdef __set_cache(self, MichiganSolution solution, Pattern pattern, value):
-        cdef int solution_hash = hash(solution)
+    cdef __set_cache(self, MichiganSolution solution, Pattern pattern, value):
+        cdef long int solution_hash = hash(solution)
         cdef int pattern_id = pattern.get_id()
 
-        if self.__cache_current_solution_index[pattern_id] == self.__max_num_solutions_cached:
+        if self.__cache[pattern_id].size() == self.__max_num_solutions_cached:
             # Cache is full so remove the cached item at the front
-            key = self.__cache_order[pattern_id].front()
-            self.__cache_order[pattern_id].pop()
-            self.__cache[pattern_id].erase(key)
+
+            # 1. Update cache order
+            # key = self.__cache_order[pattern_id].front()
+            # self.__cache_order[pattern_id].pop_front()
+            # self.__cache_order[pattern_id].push_back(solution_hash)
+
+            # 2. Update cache content
+            self.__cache[pattern_id].erase(self.__cache[pattern_id].begin())
             self.__cache[pattern_id].insert(cpair.pair[int, double](solution_hash, value))
-            self.__cache_order[pattern_id].push(solution_hash)
         else:
             self.__cache[pattern_id][solution_hash] = value
-            self.__cache_order[pattern_id].push(solution_hash)
-            self.__cache_current_solution_index[pattern_id] += 1
+            # self.__cache_order[pattern_id].push_back(solution_hash)
 
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
         cdef double max = -INFINITY
@@ -98,7 +110,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             return None
 
     def __deepcopy__(self, memo={}):
-        new_object = SingleWinnerRuleSelection(len(self.__cache_current_solution_index))
+        new_object = SingleWinnerRuleSelection(len(self.__cache))
         memo[id(self)] = new_object
         return new_object
 

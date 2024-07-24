@@ -2,8 +2,8 @@
 
 import copy
 cimport numpy as cnp
-from libcpp cimport queue as cqueue
-from libcpp cimport vector as cvector
+from libcpp.queue cimport queue as cqueue
+from libcpp.vector cimport vector as cvector
 from libc cimport math as cmath
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
@@ -28,9 +28,9 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int j
         cdef int k = 0
         cdef int current_dim
-        cdef cqueue.queue[cvector.vector[int]] indices_queue
+        cdef cqueue[cvector[int]] indices_queue
         cdef int num_generated_indices = 1
-        cdef cvector.vector[int] tmp
+        cdef cvector[int] tmp
         cdef FuzzyVariable var
         cdef int dimension = self.__knowledge.get_num_dim()
         cdef FuzzyVariable[:] fuzzy_vars = self.__knowledge.get_fuzzy_vars()
@@ -41,7 +41,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
 
         cdef int[:,:] indices = (np.empty((num_generated_indices, dimension), dtype=int))
 
-        indices_queue.push(cvector.vector[int]())
+        indices_queue.push(cvector[int]())
 
         # Generate all combination of fuzzy sets indices
         while indices_queue.size() > 0:
@@ -51,7 +51,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             if current_dim < dimension:
                 var = fuzzy_vars[current_dim]
                 for i in range(var.get_length()):
-                    tmp = cvector.vector[int]()
+                    tmp = cvector[int]()
 
                     for j in range(current_dim):
                         tmp.push_back(buffer[j])

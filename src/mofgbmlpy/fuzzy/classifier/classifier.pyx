@@ -8,7 +8,7 @@ from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 import cython
 import numpy as np
-from libcpp cimport vector as cvector
+from libcpp.vector cimport vector as cvector
 cimport numpy as cnp
 
 cdef class Classifier:
@@ -40,7 +40,7 @@ cdef class Classifier:
         cdef int num_errors = 0
         cdef int dataset_size = dataset.get_size()
         cdef int i
-        cdef cvector.vector[int] errored_patterns_indices
+        cdef cvector[int] errored_patterns_indices
         cdef object[:] errored_patterns
         cdef Pattern pattern
         cdef AbstractSolution winner_solution

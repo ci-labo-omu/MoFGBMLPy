@@ -160,7 +160,7 @@ cdef class MichiganSolution(AbstractSolution):
         cdef int hash_val = 13
 
         for i in range(len(self._vars)):
-            hash_val += hash_val * 17 + self._vars[i] * 17
+            hash_val += hash_val * 17 + self._vars[i]
         return hash_val
 
     cdef void clear_vars(self):
