@@ -89,7 +89,12 @@ cdef class PittsburghSolution(AbstractSolution):
         return self.__deepcopy__() # pymoo use copy so it causes issues
 
     def __hash__(self):
-        return hash(self._vars)
+        cdef int i
+        cdef int hash_val = 13
+
+        for i in range(len(self._vars)):
+            hash_val += hash_val * 17 + hash(self._vars[i]) * 17
+        return hash_val
 
     cpdef void remove_var(self, int index):
         self._vars = np.delete(self._vars, index)

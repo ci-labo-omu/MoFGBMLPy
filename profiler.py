@@ -15,13 +15,13 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 
 def run_profiler(mofgbml_class_name):
     args = [
-        "--data-name", "iris",
+        "--data-name", "pima",
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--num-parallel-cores", "1",
-        "--train-file", "dataset/iris/a0_0_iris-10tra.dat",
-        "--test-file", "dataset/iris/a0_0_iris-10tst.dat",
-        "--terminate-evaluation", "30000",
+        "--train-file", "dataset/pima/a0_0_pima-10tra.dat",
+        "--test-file", "dataset/pima/a0_0_pima-10tst.dat",
+        "--terminate-evaluation", "5000",
         "--objectives", "num-rules", "error-rate"
     ]
 

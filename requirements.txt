@@ -5,3 +5,4 @@ pymoo
 pytest
 Cython
 pyrecorder
+gprof2dot

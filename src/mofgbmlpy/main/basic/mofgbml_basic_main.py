@@ -54,7 +54,7 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
                                                             num_constraints_michigan,
                                                             rule_builder)
 
-        classification = SingleWinnerRuleSelection()
+        classification = SingleWinnerRuleSelection(train.get_size())
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,
