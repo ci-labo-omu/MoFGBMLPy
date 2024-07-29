@@ -8,15 +8,15 @@ from mofgbmlpy.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
 def test_main():
     start = time.time()
     args = [
-        # "--data-name", "pima",
-        "--data-name", "iris",
+        "--data-name", "pima",
+        # "--data-name", "iris",
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--num-parallel-cores", "1",
-        # "--train-file", "../dataset/pima/a0_0_pima-10tra.dat",
-        # "--test-file", "../dataset/pima/a0_0_pima-10tst.dat",
-        "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
-        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
+        "--train-file", "../dataset/pima/a0_0_pima-10tra.dat",
+        "--test-file", "../dataset/pima/a0_0_pima-10tst.dat",
+        # "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
+        # "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         # "--pretty-xml",
         "--terminate-evaluation", "30000",
         "--objectives", "num-rules", "error-rate"

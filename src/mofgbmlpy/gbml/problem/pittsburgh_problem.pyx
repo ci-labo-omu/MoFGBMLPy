@@ -40,7 +40,7 @@ class PittsburghProblem(Problem):
                                                  self.get_num_objectives(),
                                                  self.__num_constraints,
                                                  copy.deepcopy(self.__michigan_solution_builder),
-                                                 copy.deepcopy(self.__classifier))
+                                                 self.__classifier)
 
         return pittsburgh_solution
 

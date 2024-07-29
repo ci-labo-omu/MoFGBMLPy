@@ -13,64 +13,29 @@ from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
 from libc.math cimport INFINITY
 from collections import OrderedDict
+from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
-    def __init__(self, int num_patterns):
-        self.__max_num_solutions_cached = 30
+    def __init__(self, int num_patterns, cache_size_per_pattern=128):
         cdef int i
 
         for i in range(num_patterns):
-            self.__cache.push_back(cmap[int, double]())
-            # self.__cache_order.push_back(clist[int]())
+            self.__cache.push_back(LRUCache(cache_size_per_pattern))
 
-    cdef __get_cache(self, MichiganSolution solution, Pattern pattern):
+    cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern):
         cdef int solution_hash = hash(solution)
         cdef int pattern_id = pattern.get_id()
-        cdef cmap[int, double] pattern_cache = self.__cache[pattern_id]
-        # cdef clist[int] pattern_cache_order = self.__cache_order[pattern_id]
         cdef double value
-        cdef int key
 
-        if pattern_cache.find(solution_hash) != pattern_cache.end():
-            value = pattern_cache[solution_hash]
-
-            # Put it back at the back of the "queue" because we don't want it to be deleted soon since it's maybe often used
-            # list_start = pattern_cache_order.begin()
-            #
-            # while dereference(list_start) != solution_hash and list_start != self.__cache_order[pattern_id].end():
-            #     postincrement(list_start)
-            #
-            # if list_start != self.__cache_order[pattern_id].end():
-            #     key = dereference(list_start)
-            #     pattern_cache_order.erase(list_start)
-            #     pattern_cache_order.push_back(key)
-            # else:
-            #     raise Exception("Cache data structures (orders and values) are not synced")
+        if self.__cache[pattern_id].has(solution_hash):
             # print("###")
-            return value
-        # print("___")
-
-        return None
-
-    cdef __set_cache(self, MichiganSolution solution, Pattern pattern, value):
-        cdef long int solution_hash = hash(solution)
-        cdef int pattern_id = pattern.get_id()
-
-        if self.__cache[pattern_id].size() == self.__max_num_solutions_cached:
-            # Cache is full so remove the cached item at the front
-
-            # 1. Update cache order
-            # key = self.__cache_order[pattern_id].front()
-            # self.__cache_order[pattern_id].pop_front()
-            # self.__cache_order[pattern_id].push_back(solution_hash)
-
-            # 2. Update cache content
-            self.__cache[pattern_id].erase(self.__cache[pattern_id].begin())
-            self.__cache[pattern_id].insert(cpair.pair[int, double](solution_hash, value))
+            return self.__cache[pattern_id].get(solution_hash)
         else:
-            self.__cache[pattern_id][solution_hash] = value
-            # self.__cache_order[pattern_id].push_back(solution_hash)
+            value = solution.get_fitness_value(pattern.get_attributes_vector())
+            self.__cache[pattern_id].put(solution_hash, value)
+            # print("___", self.__cache[pattern_id].get_size(), self.__cache[pattern_id].get_max_size())
+            return value
 
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
         cdef double max = -INFINITY
@@ -85,15 +50,11 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
 
         for solution in michigan_solution_list:
             if solution.get_class_label().is_rejected():
-                # with cython.gil:
                 raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
 
-            cached_value = self.__get_cache(solution, pattern)
-            if cached_value is not None:
-                value = cached_value
-            else:
-                value = solution.get_fitness_value(pattern.get_attributes_vector())
-                self.__set_cache(solution, pattern, value)
+
+            value = self.get_fitness_value(solution, pattern)
+            # value = solution.get_fitness_value(pattern.get_attributes_vector())
 
             if value > max:
                 max = value
@@ -110,7 +71,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             return None
 
     def __deepcopy__(self, memo={}):
-        new_object = SingleWinnerRuleSelection(len(self.__cache))
+        new_object = SingleWinnerRuleSelection(self.__cache.size())
         memo[id(self)] = new_object
         return new_object
 

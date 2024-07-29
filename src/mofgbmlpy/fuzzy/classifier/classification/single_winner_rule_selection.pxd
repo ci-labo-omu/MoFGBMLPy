@@ -10,12 +10,10 @@ from mofgbmlpy.fuzzy.classifier.classification.abstract_classification cimport A
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 cimport numpy as cnp
+from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
-    cdef cvector[cmap[int, double]] __cache
-    # cdef cvector[clist[int]] __cache_order
-    cdef int __max_num_solutions_cached
+    cdef cvector[LRUCache] __cache
 
-    cdef __get_cache(self, MichiganSolution solution, Pattern pattern)
-    cdef __set_cache(self, MichiganSolution solution, Pattern pattern, value)
+    cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern)
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern)
