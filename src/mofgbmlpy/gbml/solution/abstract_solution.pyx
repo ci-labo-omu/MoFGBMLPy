@@ -6,7 +6,7 @@ cimport numpy as cnp
 cdef class AbstractSolution:
     def __init__(self, num_objectives, num_constraints=0):
         self._attributes = {}
-        self._objectives = np.empty(num_objectives, dtype=np.float64)
+        self._objectives = np.zeros(num_objectives, dtype=np.float64)
         # self.__constraints = np.empty(num_constraints, dtype=np.float64)
 
     cpdef double[:] get_objectives(self):

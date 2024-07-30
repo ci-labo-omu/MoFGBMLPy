@@ -12,13 +12,14 @@ def test_main():
         # "--data-name", "iris",
         "--algorithm-id", "1",
         "--experiment-id", "2",
-        "--num-parallel-cores", "1",
+        # "--num-parallel-cores", "1",
         "--train-file", "../dataset/pima/a0_0_pima-10tra.dat",
         "--test-file", "../dataset/pima/a0_0_pima-10tst.dat",
         # "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         # "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         # "--pretty-xml",
-        "--terminate-evaluation", "30000",
+        # "--terminate-evaluation", "30000",
+        "--terminate-generation", "100",
         "--objectives", "num-rules", "error-rate"
     ]
 

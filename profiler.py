@@ -18,7 +18,7 @@ def run_profiler(mofgbml_class_name):
         "--data-name", "pima",
         "--algorithm-id", "1",
         "--experiment-id", "2",
-        "--num-parallel-cores", "1",
+        # "--num-parallel-cores", "1",
         "--train-file", "dataset/pima/a0_0_pima-10tra.dat",
         "--test-file", "dataset/pima/a0_0_pima-10tst.dat",
         "--terminate-evaluation", "1000",

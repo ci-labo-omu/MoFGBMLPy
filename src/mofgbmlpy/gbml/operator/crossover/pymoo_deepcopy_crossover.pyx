@@ -1,3 +1,9 @@
+########
+# This class is needed because Pymoo doesn't work with object initially so when it does a shallow copy of an array it's enough
+# But that's not the case here.
+########
+
+
 import copy
 
 import numpy as np

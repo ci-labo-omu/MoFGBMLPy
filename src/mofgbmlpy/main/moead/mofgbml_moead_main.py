@@ -44,25 +44,17 @@ from pyrecorder.writers.video import Video
 
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.hybrid_style_mofgbml, knowledge_factory_class)
+        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.run, knowledge_factory_class, crossover)
 
     @staticmethod
-    def hybrid_style_mofgbml(train, args, knowledge, objectives):
+    def run(train, args, knowledge, objectives, termination, antecedent_factory):
         num_objectives_michigan = 2
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
         num_constraints_pittsburgh = 0
 
-        # rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
-        #                                 LearningBasic(train),
-        #                                 knowledge)
-        #
-        rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
-                                                                   knowledge,
-                                                                   args.get("IS_DONT_CARE_PROBABILITY"),
-                                                                   args.get("DONT_CARE_RT"),
-                                                                   args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+        rule_builder = RuleBuilderBasic(antecedent_factory,
                                         LearningBasic(train),
                                         knowledge)
 
@@ -70,7 +62,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
                                                             num_constraints_michigan,
                                                             rule_builder)
 
-        classification = SingleWinnerRuleSelection()
+        classification = SingleWinnerRuleSelection(train.get_size())
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,
@@ -94,19 +86,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             n_neighbors=args.get("NEIGHBORHOOD_SIZE"),
             prob_neighbor_mating=args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
             sampling=HybridGBMLSampling(train),
-            crossover=HybridGBMLCrossover(args.get("MICHIGAN_OPE_RT"),
-                                          MichiganCrossover(
-                                              args.get("RULE_CHANGE_RT"),
-                                              train,
-                                              knowledge,
-                                              args.get("MAX_NUM_RULES"),
-                                              args.get("MICHIGAN_CROSS_RT")
-                                          ),
-                                          PittsburghCrossover(
-                                              args.get("MIN_NUM_RULES"),
-                                              args.get("MAX_NUM_RULES"),
-                                              args.get("PITTSBURGH_CROSS_RT")),
-                                          crossover_probability),
+            crossover=crossover,
             repair=PittsburghRepair(),
             mutation=PittsburghMutation(train, knowledge),
             archive=MoArchiveWithoutSorting(duplicate_elimination=False,
@@ -114,8 +94,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
 
         res = minimize(problem,
                        algorithm,
-                       # termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
-                       termination=get_termination("n_eval", args.get("TERMINATE_EVALUATION")),
+                       termination,
                        seed=1,
                        # save_history=True,
                        verbose=True)

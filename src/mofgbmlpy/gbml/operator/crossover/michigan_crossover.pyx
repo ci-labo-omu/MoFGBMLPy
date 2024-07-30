@@ -86,7 +86,7 @@ class MichiganCrossover(Crossover):
             # 3. Heuristic Rule Generation
 
             if num_heuristic > 0:
-                error_patterns = parent.get_errored_patterns()
+                error_patterns = parent.get_errored_patterns(self.__training_set)
                 lack_size = num_heuristic - len(error_patterns)
 
                 if lack_size > 0:

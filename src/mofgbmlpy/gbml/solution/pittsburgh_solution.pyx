@@ -4,6 +4,8 @@ import time
 
 import numpy as np
 cimport numpy as cnp
+
+from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classifier.classifier cimport Classifier
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
@@ -31,12 +33,11 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef AbstractSolution classify(self, Pattern pattern):
         return self.__classifier.classify(self.get_vars(), pattern)
 
-    cpdef double get_error_rate(self, dataset):
-        error_rate, self.__errored_patterns = self.__classifier.get_error_rate(self.get_vars(), dataset)
-        return error_rate
+    cpdef double get_error_rate(self, Dataset dataset):
+        return self.__classifier.get_error_rate(self.get_vars(), dataset)
 
-    cpdef Pattern[:] get_errored_patterns(self):
-        return self.__errored_patterns
+    cpdef object[:] get_errored_patterns(self, Dataset dataset):
+        return self.__classifier.get_errored_patterns(self.get_vars(), dataset)
 
     cpdef double compute_coverage(self):
         coverage = 0
@@ -68,7 +69,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
         cdef MichiganSolution[:] vars_copy = np.empty(self.get_num_vars(), dtype=object)
         cdef double[:] objectives_copy = np.empty(self.get_num_objectives())
-        cdef Pattern[:] errored_patterns_copy = np.copy(self.__errored_patterns) # shallow copy
         cdef int i
 
         for i in range(vars_copy.shape[0]):
@@ -79,7 +79,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
         new_solution._vars = vars_copy
         new_solution._objectives = objectives_copy
-        new_solution.__errored_patterns = errored_patterns_copy
 
         memo[id(self)] = new_solution
 

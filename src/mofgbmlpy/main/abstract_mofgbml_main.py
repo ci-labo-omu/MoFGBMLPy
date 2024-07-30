@@ -1,7 +1,8 @@
 import xml.etree.cElementTree as xml_tree
-from abc import ABC, abstractmethod
+from abc import ABC
 
 import numpy as np
+from pymoo.termination import get_termination
 
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
@@ -14,16 +15,15 @@ from importlib import import_module
 
 import random
 
-from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory import HomoTriangleKnowledgeFactory
 
-from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
-from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
+from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
+from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
+from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_case
 
 
@@ -33,9 +33,6 @@ class AbstractMoFGBMLMain(ABC):
     _knowledge_factory_class = None
 
     def __init__(self, mofgbml_args, algo, knowledge_factory_class):
-        random.seed(mofgbml_args.get("RAND_SEED"))
-        np.random.seed(mofgbml_args.get("RAND_SEED"))
-
         self._mofgbml_args = mofgbml_args
         self._algo = algo
         self._knowledge_factory_class = knowledge_factory_class
@@ -45,6 +42,8 @@ class AbstractMoFGBMLMain(ABC):
 
         # set command arguments
         self._mofgbml_args.load(args)
+        random.seed(self._mofgbml_args.get("RAND_SEED"))
+        np.random.seed(self._mofgbml_args.get("RAND_SEED"))
 
         Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
 
@@ -65,13 +64,53 @@ class AbstractMoFGBMLMain(ABC):
             module_name = "mofgbmlpy.gbml.objectives.pittsburgh." + dash_case_to_snake_case(obj_key)
             imported_module = import_module(module_name)
             objective_class = getattr(imported_module, class_name)
-            # except ModuleNotFoundError:
 
             if obj_key == "error-rate":
                 objectives.append(objective_class(train))
             else:
                 objectives.append(objective_class())
-        res = self._algo(train, self._mofgbml_args, knowledge, objectives)
+
+        antecedent_factory_name = self._mofgbml_args.get("ANTECEDENT_FACTORY")
+        if antecedent_factory_name == "all-combination-antecedent-factory":
+            antecedent_factory = AllCombinationAntecedentFactory(knowledge)
+        elif antecedent_factory_name == "heuristic-antecedent-factory":
+            antecedent_factory = HeuristicAntecedentFactory(train,
+                                                            knowledge,
+                                                            self._mofgbml_args.get("IS_DONT_CARE_PROBABILITY"),
+                                                            self._mofgbml_args.get("DONT_CARE_RT"),
+                                                            self._mofgbml_args.get("ANTECEDENT_NUM_NOT_DONT_CARE"))
+        else:
+            Exception("Unsupported antecedent factory")
+
+        if self._mofgbml_args.has_key("TERMINATE_EVALUATION") and self._mofgbml_args.get(
+                "TERMINATE_EVALUATION") is not None:
+            termination = get_termination("n_eval", self._mofgbml_args.get("TERMINATE_EVALUATION"))
+        elif self._mofgbml_args.has_key("TERMINATE_GENERATION") and self._mofgbml_args.get(
+                "TERMINATE_GENERATION") is not None:
+            termination = get_termination("n_gen", self._mofgbml_args.get("TERMINATE_GENERATION"))
+        else:
+            raise Exception("Termination criterion not given or not recognized")
+
+        pittsburgh_crossover = PittsburghCrossover(self._mofgbml_args.get("MIN_NUM_RULES"),
+                                        self._mofgbml_args.get("MAX_NUM_RULES"),
+                                        self._mofgbml_args.get("PITTSBURGH_CROSS_RT"))
+
+        if self._mofgbml_args.get("CROSSOVER_TYPE") == "hybrid-gbml-crossover":
+            crossover_probability = self._mofgbml_args.get("HYBRID_CROSS_RT")
+            crossover = HybridGBMLCrossover(self._mofgbml_args.get("MICHIGAN_OPE_RT"),
+                                            MichiganCrossover(
+                                                self._mofgbml_args.get("RULE_CHANGE_RT"),
+                                                train,
+                                                knowledge,
+                                                self._mofgbml_args.get("MAX_NUM_RULES"),
+                                                self._mofgbml_args.get("MICHIGAN_CROSS_RT")
+                                            ),
+                                            pittsburgh_crossover,
+                                            crossover_probability)
+        elif self._mofgbml_args.get("CROSSOVER_TYPE") == "pittsburgh-crossover":
+            crossover = pittsburgh_crossover
+
+        res = self._algo(train, self._mofgbml_args, knowledge, objectives, termination, antecedent_factory, crossover)
         exec_time = res.exec_time
 
         print("Execution time: ", exec_time)
@@ -86,36 +125,20 @@ class AbstractMoFGBMLMain(ABC):
         for i in range(len(non_dominated_archive_pop)):
             archive_solutions[i] = non_dominated_archive_pop[i].X
 
-        # TODO: use save_history instead of archive ?
-
-        # TODO: Re-enable it using arguments like no-plot arg
-        #
-        # with Recorder(Video("ga.mp4")) as rec:
-        #     # for each algorithm object in the history
-        #     for entry in res.history:
-        #         sc = Scatter(title=("Gen %s" % entry.n_gen))
-        #         sc.add(entry.pop.get("F"))
-        #         sc.do()
-        #
-        #         # finally record the current visualization to the video
-        #         rec.record()
-
         if not self._mofgbml_args.get("NO_PLOT"):
-            if len(objectives) <= 1:
-                raise Exception("At least 2 objectives are required to plot")
-
-            plot = Scatter(labels=self._mofgbml_args.get("OBJECTIVES"))
-            plot.add(res.F, color="red")
-            plot.show()
+            self.get_plot(res.opt)
+            self.save_video(res.archive, "mofgbml.mp4")
 
         results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
         Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
         results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, knowledge, train, test)
-        Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
+        Output.save_results(results_data,
+                            str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 
         results_xml = self.get_results_xml(knowledge, res.pop)
-        Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')), args=self._mofgbml_args)
+        Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
+                            args=self._mofgbml_args)
         res.objectives_name = [str(obj) for obj in objectives]
 
         return res
@@ -162,3 +185,25 @@ class AbstractMoFGBMLMain(ABC):
             population.append(ind.X[0].to_xml())
 
         return xml_tree.ElementTree(root)
+
+    def save_video(self, archive_population, filename):
+        with Recorder(Video(filename)) as rec:
+            populations_objectives = np.split(archive_population.get("F"), self._mofgbml_args.get("POPULATION_SIZE"))
+            for i in range(len(populations_objectives)):
+                sc = Scatter(title=(f"Gen {i}"))
+                sc.add(populations_objectives[i])
+                sc.do()
+
+                # finally record the current visualization to the video
+                rec.record()
+
+    def get_plot(self, population):
+        objectives = population.get("F")
+
+        if objectives.shape[1] <= 1:
+            raise Exception("At least 2 objectives are required to plot")
+
+        plot = Scatter(labels=self._mofgbml_args.get("OBJECTIVES"))
+        plot.add(objectives, color="red")
+        return plot
+

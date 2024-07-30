@@ -9,4 +9,5 @@ cdef class Classifier:
     cdef AbstractClassification _classification
 
     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern)
-    cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset)
+    cdef double get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset)
+    cdef object[:] get_errored_patterns(self, MichiganSolution[:] michigan_solution_list, Dataset dataset)

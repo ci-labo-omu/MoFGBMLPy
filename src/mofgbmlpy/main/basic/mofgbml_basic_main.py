@@ -28,25 +28,17 @@ from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 
 class MoFGBMLBasicMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLBasicArgs(), MoFGBMLBasicMain.hybrid_style_mofgbml, knowledge_factory_class)
+        super().__init__(MoFGBMLBasicArgs(), MoFGBMLBasicMain.run, knowledge_factory_class)
 
     @staticmethod
-    def hybrid_style_mofgbml(train, args, knowledge, objectives):
+    def run(train, args, knowledge, objectives, termination, antecedent_factory, crossover):
         num_objectives_michigan = 1
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
         num_constraints_pittsburgh = 0
 
-        # rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge),
-        #                                 LearningBasic(train),
-        #                                 knowledge)
-        #
-        rule_builder = RuleBuilderBasic(HeuristicAntecedentFactory(train,
-                                                                   knowledge,
-                                                                   args.get("IS_DONT_CARE_PROBABILITY"),
-                                                                   args.get("DONT_CARE_RT"),
-                                                                   args.get("ANTECEDENT_NUM_NOT_DONT_CARE")),
+        rule_builder = RuleBuilderBasic(antecedent_factory,
                                         LearningBasic(train),
                                         knowledge)
 
@@ -64,35 +56,19 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
                                     michigan_solution_builder,
                                     classifier)
 
-        crossover_probability = args.get("HYBRID_CROSS_RT")
-
         algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(train),
-                          # crossover=PittsburghCrossover(args.get("MIN_NUM_RULES"),
-                          #                               args.get("MAX_NUM_RULES")),
-                          crossover=HybridGBMLCrossover(args.get("MICHIGAN_OPE_RT"),
-                                                        MichiganCrossover(
-                                                            args.get("RULE_CHANGE_RT"),
-                                                            train,
-                                                            knowledge,
-                                                            args.get("MAX_NUM_RULES"),
-                                                            args.get("MICHIGAN_CROSS_RT")
-                                                        ),
-                                                        PittsburghCrossover(
-                                                            args.get("MIN_NUM_RULES"),
-                                                            args.get("MAX_NUM_RULES"),
-                                                            args.get("PITTSBURGH_CROSS_RT")),
-                                                        crossover_probability),
+                          crossover=crossover,
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=False,
                           archive=MoArchiveWithoutSorting(duplicate_elimination=False,
-                                                        max_size=None, truncate_size=None))
+                                                        max_size=None, truncate_size=None),
+                          n_offsprings=args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(problem,
                        algorithm,
-                       # termination=get_termination("n_eval", args.get("TERMINATE_GENERATION")),
-                       termination=get_termination("n_eval", args.get("TERMINATE_EVALUATION")),
+                       termination=termination,
                        seed=1,
                        # save_history=True,
                        verbose=True)

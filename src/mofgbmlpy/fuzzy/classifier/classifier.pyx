@@ -36,13 +36,10 @@ cdef class Classifier:
             length += item.get_length()
         return length
 
-    cdef tuple[double, object] get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+    cdef double get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
         cdef int num_errors = 0
         cdef int dataset_size = dataset.get_size()
         cdef int i
-        cdef cvector[int] errored_patterns_indices
-        cdef object[:] errored_patterns
-        cdef Pattern pattern
         cdef AbstractSolution winner_solution
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef Pattern p
@@ -57,22 +54,37 @@ cdef class Classifier:
 
             if winner_solution is None:
                 num_errors += 1
-                errored_patterns_indices.push_back(i)
                 continue
 
             winner_solution.inc_num_wins()
 
             if p.get_target_class() != winner_solution.get_class_label():
                 num_errors += 1
-                errored_patterns_indices.push_back(i)
             else:
                 winner_solution.inc_fitness()
+
+        return num_errors / dataset_size
+
+    cdef object[:] get_errored_patterns(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+        cdef int i
+        cdef cvector[int] errored_patterns_indices
+        cdef object[:] errored_patterns
+        cdef AbstractSolution winner_solution
+        cdef Pattern[:] patterns = dataset.get_patterns()
+        cdef Pattern p
+
+        for i in range(dataset.get_size()):
+            p = patterns[i]
+            winner_solution = self.classify(michigan_solution_list, p)
+
+            if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
+                errored_patterns_indices.push_back(i)
 
         errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
         for i in range(errored_patterns_indices.size()):
             errored_patterns[i] = patterns[errored_patterns_indices[i]]
 
-        return num_errors / dataset_size, errored_patterns
+        return errored_patterns
 
     @staticmethod
     def get_rule_num(michigan_solution_list):
