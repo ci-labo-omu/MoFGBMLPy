@@ -13,8 +13,9 @@ Use the compiled version of pymoo to reduce computation time
 5. `cd pymoo`
 6. `make compile`
 7. `pip install .`
+8. Check if the installation was successful: `python -c "from pymoo.util.function_loader import is_compiled;print('Compiled Extensions: ', is_compiled())"`
 
-### Use without access to the source code
+### If you don't need to modify the source code
 
 If you don't need to edit the source code of this library you can just use :
 
@@ -36,18 +37,106 @@ If you don't need to edit the source code of this library you can just use :
 
 ## Usage
 
-Please use the notebooks in examples/.
+Please read the notebooks in examples/.
 
 ### Arguments
 
-|Name|Required|Num parameters|
+```
+usage: ipykernel_launcher.py [-h] --experiment-id EXPERIMENT_ID --algorithm-id
+                             ALGORITHM_ID [--population-size POPULATION_SIZE]
+                             (--terminate-generation TERMINATE_GENERATION | --terminate-evaluation TERMINATE_EVALUATION)
+                             [--rand-seed RAND_SEED]
+                             [--is-probability-dont-care]
+                             [--antecedent-num-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE]
+                             [--dont-care-rt DONT_CARE_RT]
+                             [--initiation-rule-num INITIATION_RULE_NUM]
+                             [--max-num-rules MAX_NUM_RULES]
+                             [--min-num-rules MIN_NUM_RULES]
+                             [--antecedent-factory ANTECEDENT_FACTORY]
+                             [--crossover-type CROSSOVER_TYPE]
+                             [--hybrid-cross-rt HYBRID_CROSS_RT]
+                             [--michigan-ope-rt MICHIGAN_OPE_RT]
+                             [--rule-change-rt RULE_CHANGE_RT]
+                             [--michigan-cross-rt MICHIGAN_CROSS_RT]
+                             [--pittsburgh-cross-rt PITTSBURGH_CROSS_RT]
+                             --objectives OBJECTIVES [OBJECTIVES ...]
+                             [--root-folder ROOT_FOLDER] [--is-multi-label]
+                             --train-file TRAIN_FILE --test-file TEST_FILE
+                             --data-name DATA_NAME [--no-plot] [--pretty-xml]
+                             [--offspring-population-size OFFSPRING_POPULATION_SIZE]
 
-| Name | Num parameters | Required | Type | Description |
-|------|----------------|----------|------|-------------|
-|      |                |          |      |             |
-|      |                |          |      |             |
-|      |                |          |      |             |
-
+options:
+  -h, --help            show this help message and exit
+  --experiment-id EXPERIMENT_ID
+                        Experiment ID (Used to create the path where results
+                        are saved)
+  --algorithm-id ALGORITHM_ID
+                        Algorithm ID (Used to create the path where results
+                        are saved)
+  --population-size POPULATION_SIZE
+                        Population size (Number of individuals per generation)
+  --terminate-generation TERMINATE_GENERATION
+                        Set the termination criterion to the number of
+                        generation, and set the max value
+  --terminate-evaluation TERMINATE_EVALUATION
+                        Set the termination criterion to the number of
+                        objective function evaluations, and set the max value
+  --rand-seed RAND_SEED
+                        The seed for random operations
+  --is-probability-dont-care
+                        If True then use the don't care rate for the
+                        antecedent factory, otherwise compute it from
+                        antecedent num not don't care
+  --antecedent-num-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE
+                        Number of indices that are not 0 (which is don't care)
+                        in an antecedent. Used by the antecedent factory
+  --dont-care-rt DONT_CARE_RT
+                        Don't care probability for antecedent indices in
+                        antecedent factory
+  --initiation-rule-num INITIATION_RULE_NUM
+                        Number of rules in Pittsburgh solutions in the initial
+                        population
+  --max-num-rules MAX_NUM_RULES
+                        Maximum number of rules in Pittsburgh solutions
+  --min-num-rules MIN_NUM_RULES
+                        Minimum number of rules in Pittsburgh solutions
+  --antecedent-factory ANTECEDENT_FACTORY
+                        Antecedent factory used for fuzzy rule generation. If
+                        crossover-type is hybrid then
+  --crossover-type CROSSOVER_TYPE
+                        Crossover used in the GA algorithm
+  --hybrid-cross-rt HYBRID_CROSS_RT
+                        Probability that a (hybrid) crossover occurs
+  --michigan-ope-rt MICHIGAN_OPE_RT
+                        Probability that Michigan mating operators are used
+                        instead of a Pittsburgh one
+  --rule-change-rt RULE_CHANGE_RT
+                        Ratio of the rules that are changed in a Michigan
+                        crossover
+  --michigan-cross-rt MICHIGAN_CROSS_RT
+                        Probability that a Michigan crossover occurs
+  --pittsburgh-cross-rt PITTSBURGH_CROSS_RT
+                        Probability that a Pittsburgh crossover occurs
+  --objectives OBJECTIVES [OBJECTIVES ...]
+                        List of the objectives. Accepted values: 'error-rate',
+                        'rule-interpretation', 'num-rules', 'total-rule-length
+  --root-folder ROOT_FOLDER
+                        Path where results are saved
+  --is-multi-label      Must be True if the dataset is a multi label one and
+                        False otherwise, which is the default
+  --train-file TRAIN_FILE
+                        Path of the training dataset file
+  --test-file TEST_FILE
+                        Path of the test dataset file
+  --data-name DATA_NAME
+                        Dataset name. It's used to create the path where
+                        results are saved
+  --no-plot             Don't generate matplotlib plots
+  --pretty-xml          Save results in a pretty XML file (formated with
+                        indentation)
+  --offspring-population-size OFFSPRING_POPULATION_SIZE
+                        Number of offsprings generated per generation
+```
 
 ## Profiling
 
