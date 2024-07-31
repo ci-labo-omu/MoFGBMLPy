@@ -8,7 +8,7 @@ import cython
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_num_not_dont_care):
+    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care):
         if knowledge is None or knowledge.get_num_dim() == 0:
             raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
@@ -18,19 +18,19 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         if dc_rate < 0 or dc_rate > 1:
             raise Exception("dc rate must be between 0 and 1")
 
-        if antecedent_num_not_dont_care < 0:
+        if antecedent_number_do_not_dont_care < 0:
             raise Exception(f"antecedent num not dont care must not be negative")
 
 
         self.__training_set = training_set
         self.__knowledge = knowledge
         self.__is_dc_probability = is_dc_probability
-        self.__antecedent_num_not_dont_care = antecedent_num_not_dont_care
+        self.__antecedent_number_do_not_dont_care = antecedent_number_do_not_dont_care
 
         if self.__is_dc_probability:
             self.__dc_rate = dc_rate
         else:
-            self.__dc_rate = max((self.__knowledge.get_num_dim() - self.__antecedent_num_not_dont_care) / self.__knowledge.get_num_dim(), dc_rate)
+            self.__dc_rate = max((self.__knowledge.get_num_dim() - self.__antecedent_number_do_not_dont_care) / self.__knowledge.get_num_dim(), dc_rate)
 
     cdef int[:] __select_antecedent_part(self, int index):
         pattern = self.__training_set.get_pattern(index)
@@ -133,7 +133,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__knowledge.get_num_dim()) + "]"
 
     def __deepcopy__(self, memo={}):
-        new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_num_not_dont_care)
+        new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_number_do_not_dont_care)
 
         memo[id(self)] = new_object
         return new_object

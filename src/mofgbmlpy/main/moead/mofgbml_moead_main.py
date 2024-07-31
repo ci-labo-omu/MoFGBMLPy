@@ -44,10 +44,10 @@ from pyrecorder.writers.video import Video
 
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.run, knowledge_factory_class, crossover)
+        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.run, knowledge_factory_class)
 
     @staticmethod
-    def run(train, args, knowledge, objectives, termination, antecedent_factory):
+    def run(train, args, knowledge, objectives, termination, antecedent_factory, crossover):
         num_objectives_michigan = 2
         num_constraints_michigan = 0
 

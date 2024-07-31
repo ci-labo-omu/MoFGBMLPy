@@ -76,9 +76,9 @@ class AbstractMoFGBMLMain(ABC):
         elif antecedent_factory_name == "heuristic-antecedent-factory":
             antecedent_factory = HeuristicAntecedentFactory(train,
                                                             knowledge,
-                                                            self._mofgbml_args.get("IS_DONT_CARE_PROBABILITY"),
+                                                            self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
                                                             self._mofgbml_args.get("DONT_CARE_RT"),
-                                                            self._mofgbml_args.get("ANTECEDENT_NUM_NOT_DONT_CARE"))
+                                                            self._mofgbml_args.get("ANTECEDENT_NUMBER_DO_NOT_DONT_CARE"))
         else:
             Exception("Unsupported antecedent factory")
 

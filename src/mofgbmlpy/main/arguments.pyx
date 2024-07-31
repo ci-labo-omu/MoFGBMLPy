@@ -1,6 +1,10 @@
+import copy
 import xml.etree.cElementTree as xml_tree
 import os
 from abc import ABC, abstractmethod
+
+import numpy as np
+from jproperties import Properties
 
 from mofgbmlpy.data.output import Output
 import argparse
@@ -72,13 +76,13 @@ class Arguments(ABC):
             },
 
             # Fuzzy Classifier
-            "is-dont-care-probability": {
-                "default": True,
-                "help": "If True then use the don't care rate for the antecedent factory, otherwise compute it from antecedent num not don't care",
+            "is-probability-dont-care": {
+                "default": False,
+                "help": "If specified then use the don't care rate for the antecedent factory, otherwise compute it from antecedent num not don't care",
                 "type": "bool",
                 "required": False,
             },
-            "antecedent-num-not-dont-care": {
+            "antecedent-number-do-not-dont-care": {
                 "default": 5,
                 "help": "Number of indices that are not 0 (which is don't care) in an antecedent. Used by the antecedent factory",
                 "type": "int",
@@ -162,10 +166,10 @@ class Arguments(ABC):
             #     "required": False,
             # },
             "objectives": {
-                "default": [],
+                "default": ["num-rules", "error-rate"],
                 "help": "List of the objectives. Accepted values: 'error-rate', 'rule-interpretation', 'num-rules', 'total-rule-length",
                 "type": "list",
-                "required": True,
+                "required": False,
             },
 
             # Folders' Name
@@ -179,7 +183,7 @@ class Arguments(ABC):
             # Dataset info
             "is-multi-label": {
                 "default": False,
-                "help": "Must be True if the dataset is a multi label one and False otherwise, which is the default",
+                "help": "Must be specified if the dataset is a multi label one and not specified otherwise, which is the default",
                 "type": "bool",
                 "required": False,
             },
@@ -236,7 +240,7 @@ class Arguments(ABC):
     def has_key(self, key):
         return key in self.__values
 
-    def __str__(self):
+    def __repr__(self):
         txt = ""
         for key, value in self.__values.items():
             txt += f"{key} = {value}\n"
@@ -257,7 +261,7 @@ class Arguments(ABC):
         elif arg_definition["type"] == "int":
             parser.add_argument("--" + arg, required=arg_definition["required"], type=int, default=arg_definition["default"], help=arg_definition["help"])
         elif arg_definition["type"] == "list":
-            parser.add_argument("--" + arg, nargs='+', required=arg_definition["required"], help=arg_definition["help"])
+            parser.add_argument("--" + arg, nargs='+', required=arg_definition["required"], default=arg_definition["default"], help=arg_definition["help"])
         else:
             parser.add_argument("--" + arg, required=arg_definition["required"], default=arg_definition["default"], help=arg_definition["help"])
 
@@ -275,8 +279,65 @@ class Arguments(ABC):
     def arg_to_key(arg):
         return arg.upper().replace("-", "_")
 
+    @staticmethod
+    def key_to_arg(arg):
+        return arg.lower().replace("_", "-")
+
+    def get_args_from_jproperties(self):
+        root_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        file_path = root_folder + '/consts.properties'
+
+        if not os.path.exists(file_path):
+            return []
+
+        configs = Properties()
+        with open(file_path, 'rb') as read_prop:
+            configs.load(read_prop)
+
+        prop_view = configs.items()
+
+        args = []
+
+        #--max-rule-num 60 --min-rule-num 1
+
+        for item in prop_view:
+            key = Arguments.key_to_arg(item[0])
+            value = str(item[1].data)
+            
+            # Translate Java version args format to this version format
+            if key == "antecedent-len":
+                key = "antecedent-number-do-not-dont-care"
+            elif key == "max-rule-num":
+                key = "max-num-rules"
+            elif key == "min-rule-num":
+                key = "min-num-rules"
+
+            if value == "true":
+                args = args + ["--"+key]
+            elif value == "false":
+                continue
+            else:
+                args = args + ["--"+key, value]
+
+        return args
+
     def load(self, args):
-        parsed_args = self.parse_args(args)
+        new_args = copy.deepcopy(args)
+        args_from_jproperties = self.get_args_from_jproperties()
+
+        # Add arg in args_from_properties to args if they are not already present
+        i = 0
+        while i < len(args_from_jproperties):
+            if args_from_jproperties[i] not in args:
+                new_args.append(args_from_jproperties[i])
+                i += 1
+                while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
+                    new_args.append(args_from_jproperties[i])
+                    i += 1
+                i -= 1
+            i += 1
+
+        parsed_args = self.parse_args(new_args)
 
         for key, val in parsed_args.items():
             self.set(key, val)

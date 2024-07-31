@@ -20,6 +20,13 @@ class MoFGBMLMOEADArgs(Arguments):
                 "help": "Number of neighbors, for each vector, considered per mating",
                 "type": "int",
                 "required": False,
+            },
+            "offspring-population-size": {
+                "default": None,
+                "help": "This argument has been kept for compatibility with the Java version jproperties file format, "
+                        "but it's ignored",
+                "type": "int",
+                "required": False,
             }
         }
 
