@@ -29,6 +29,11 @@ def test_main():
         "--experiment-id", "2",
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
+        "--terminate-generation", "50",
+        "--objectives", "num-rules", "error-rate",
+        # "--crossover-type", "pittsburgh-crossover",
+        # "--antecedent-factory", "all-combination-antecedent-factory",
+        "--no-plot"
     ]
 
     runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)

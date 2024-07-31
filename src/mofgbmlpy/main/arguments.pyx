@@ -335,6 +335,12 @@ class Arguments(ABC):
                     new_args.append(args_from_jproperties[i])
                     i += 1
                 i -= 1
+            else:
+                i += 1
+                while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
+                    i += 1
+                    continue
+                i -= 1
             i += 1
 
         parsed_args = self.parse_args(new_args)
