@@ -150,3 +150,26 @@ Run `python profiler.py MoFGBMLBasicMain` (or replace MoFGBMLBasicMain with the 
 2. Generate a pstats profiler results file
 3. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
 4. `dot Profile.dot -Tpng -o Profile.png`
+
+
+## Documentation
+
+### Requirements (NOT in requirements.txt)
+
+- sphinx
+- myst_parser
+- rst2pdf
+- sphinx-mdinclude
+
+### Generation
+
+
+#### Setup
+
+1. Generate the rst files from the code: `sphinx-apidoc`
+2. Generate the documentation from the rst files 
+   - In HTML: `docs/make.bat html`
+   - In PDF: `docs/make.bat pdf`
+3. Open the documentation:
+   - HTML: Open `docs/_build/html/index.html`
+   - PDF: Open `docs/_build/pdf/MoFGBMLPy.pdf`

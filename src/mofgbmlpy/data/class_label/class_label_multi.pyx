@@ -13,6 +13,14 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         super().__init__()
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, ClassLabelMulti):
             return False
 
@@ -42,6 +50,14 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         return self.__class_label.shape[0]
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef int[:] value_copy = None
         if self.__class_label is not None:
             value_copy = np.copy(self.__class_label)

@@ -13,6 +13,14 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         return RuleWeightMulti(self.get_value())
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef double[:] values_copy = np.empty(self.get_length())
         cdef int i
 
@@ -50,6 +58,14 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         self.__rule_weight = rule_weight
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return np.array_equal(self.__rule_weight, other.get_value())
 
     def to_xml(self):

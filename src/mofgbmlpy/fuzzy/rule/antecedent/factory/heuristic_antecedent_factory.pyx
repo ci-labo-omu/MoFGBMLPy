@@ -133,6 +133,14 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return "HeuristicAntecedentFactory [dimension=" + str(self.__knowledge.get_num_dim()) + "]"
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_number_do_not_dont_care)
 
         memo[id(self)] = new_object

@@ -62,12 +62,25 @@ cdef class Knowledge:
         return self.get_fuzzy_variable(dim).get_support(fuzzy_set_index)
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = ""
         for i in range(self.get_num_dim()):
             txt = f"{txt}{str(self.__fuzzy_vars[i])}\n"
         return txt
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         cdef FuzzyVariable[:] fuzzy_vars_copy = np.empty(fuzzy_vars.shape[0], dtype=object)
         cdef int i
@@ -81,6 +94,14 @@ cdef class Knowledge:
         return new_knowledge
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, Knowledge):
             return False
         return np.array_equal(self.__fuzzy_vars, other.get_fuzzy_vars())

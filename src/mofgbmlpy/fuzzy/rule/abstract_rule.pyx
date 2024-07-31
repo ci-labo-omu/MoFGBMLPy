@@ -69,6 +69,14 @@ cdef class AbstractRule:
         Exception("AbstractRule is abstract")
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return self._antecedent == other.get_antecedent() and self._consequent == other.get_consequent()
 
     def __str__(self):

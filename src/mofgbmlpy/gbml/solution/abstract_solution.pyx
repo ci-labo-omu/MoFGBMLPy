@@ -51,9 +51,22 @@ cdef class AbstractSolution:
         return 0
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         raise Exception("This class is abstract")
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, AbstractSolution):
             return False
         return np.array_equal(self.get_vars(), other.get_vars())

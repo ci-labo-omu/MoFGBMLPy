@@ -9,11 +9,27 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         self.__class_label = class_label
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, ClassLabelBasic):
             return False
         return other.get_class_label_value() == self.__class_label
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_object = ClassLabelBasic(self.__class_label)
         memo[id(self)] = new_object
         return new_object

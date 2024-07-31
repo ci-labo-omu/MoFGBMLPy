@@ -13,6 +13,14 @@ cdef class RuleBuilderBasic(RuleBuilderCore):
         return RuleBasic(antecedent, consequent)
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_object = RuleBuilderBasic(self._antecedent_factory, self._consequent_factory, self._knowledge)
 
         memo[id(self)] = new_object

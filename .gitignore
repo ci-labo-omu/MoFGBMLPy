@@ -174,3 +174,7 @@ java_version_results
 py_version_results
 Profile.pstats
 !src/mofgbmlpy/utility/lru_cache.cpp
+
+# DOCS
+docs/_build
+docs/source

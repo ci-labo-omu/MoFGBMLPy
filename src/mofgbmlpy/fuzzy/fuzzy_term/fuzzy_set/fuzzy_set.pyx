@@ -17,6 +17,11 @@ cdef class FuzzySet:
         self.__division_type = division_type
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"Fuzzy set {self.__term}"
 
     cdef double get_membership_value(self, double x):
@@ -53,6 +58,14 @@ cdef class FuzzySet:
         return root
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, FuzzySet):
             return False
 

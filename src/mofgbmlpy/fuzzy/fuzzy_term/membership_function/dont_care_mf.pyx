@@ -21,6 +21,14 @@ cdef class DontCareMF(AbstractMF):
         return False # Can't be edited
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_object = DontCareMF()
         memo[id(self)] = new_object
         return new_object

@@ -93,6 +93,14 @@ cdef class Antecedent:
         return np.count_nonzero(self.__antecedent_indices)
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
         cdef int i
 
@@ -104,9 +112,22 @@ cdef class Antecedent:
         return new_antecedent
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = "["
         for i in range(self.__antecedent_indices.shape[0]):
             txt += f"{self.__antecedent_indices[i]} "

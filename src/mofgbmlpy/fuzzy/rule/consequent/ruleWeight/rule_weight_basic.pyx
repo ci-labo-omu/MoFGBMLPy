@@ -7,6 +7,14 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         self.__rule_weight = rule_weight
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_object = RuleWeightBasic(self.get_value())
         memo[id(self)] = new_object
         return new_object
@@ -24,6 +32,14 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         self.__rule_weight = rule_weight
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return self.__rule_weight == other.get_value()
 
     def to_xml(self):

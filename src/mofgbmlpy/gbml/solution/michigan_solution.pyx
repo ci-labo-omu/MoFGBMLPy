@@ -122,9 +122,22 @@ cdef class MichiganSolution(AbstractSolution):
         return self.__fitness
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"(MichiganSolution) {self._rule}"
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef int i
         new_solution = MichiganSolution(self.get_num_objectives(),
                                         self.get_num_constraints(),
@@ -182,6 +195,11 @@ cdef class MichiganSolution(AbstractSolution):
         return self._vars.shape[0]
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = "(Michigan Solution) Variables: ["
         for i in range(self.get_num_vars()):
             txt += f"{self._vars[i]} "

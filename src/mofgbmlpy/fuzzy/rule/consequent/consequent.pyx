@@ -19,6 +19,14 @@ cdef class Consequent:
         return self._class_label.get_class_label_value()
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return self.get_class_label_value() == other.get_class_label_value()
 
     cpdef bint is_rejected(self):
@@ -34,6 +42,14 @@ cdef class Consequent:
         self._rule_weight = rule_weight
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_consequent = Consequent(copy.deepcopy(self._class_label), copy.deepcopy(self._rule_weight))
         memo[id(self)] = new_consequent
         return new_consequent
@@ -42,6 +58,14 @@ cdef class Consequent:
         return f"class:[{self._class_label}]: weight:[{self._rule_weight}]"
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
 
     def to_xml(self):

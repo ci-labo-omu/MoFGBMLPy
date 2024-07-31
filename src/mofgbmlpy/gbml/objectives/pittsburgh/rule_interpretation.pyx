@@ -36,4 +36,9 @@ cdef class RuleInterpretation(ObjectiveFunction):
             raise Exception("Solution must be of type PittsburghSolution")
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "Rule interpretation"

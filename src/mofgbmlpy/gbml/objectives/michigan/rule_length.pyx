@@ -16,4 +16,9 @@ cdef class RuleLength(ObjectiveFunction):
             raise Exception("Solution must be of type MichiganSolution")
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "Rule length"

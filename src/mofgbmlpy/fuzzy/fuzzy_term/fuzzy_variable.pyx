@@ -61,6 +61,11 @@ cdef class FuzzyVariable:
         return self.__domain
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = f"Fuzzy variable for {self.__name}:\n"
         cdef int i
         for i in range(len(self.__fuzzy_sets)):
@@ -68,6 +73,14 @@ cdef class FuzzyVariable:
         return txt
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         cdef double[:] support_values_copy = np.copy(self.__support_values)
         cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.shape[0], dtype=object)
         cdef int i
@@ -89,6 +102,14 @@ cdef class FuzzyVariable:
 
 
     def __eq__(self, other):
+        """Check if another object is equal to this one
+        
+        Args:
+            other (object): Object compared to this one 
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
         if not isinstance(other, FuzzyVariable):
             return False
 

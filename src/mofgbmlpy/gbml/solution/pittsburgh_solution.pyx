@@ -60,6 +60,14 @@ cdef class PittsburghSolution(AbstractSolution):
         return total_rule_weight/self._vars.shape[0]
 
     def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            Deep copy of this object
+        """
         new_solution = PittsburghSolution(self.get_num_vars(),
                                           self.get_num_objectives(),
                                           self.get_num_constraints(),
@@ -117,6 +125,11 @@ cdef class PittsburghSolution(AbstractSolution):
         return self._vars.shape[0]
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = "(Pittsburgh Solution) Variables: ["
         for i in range(self.get_num_vars()):
             txt += f"{self._vars[i]} "

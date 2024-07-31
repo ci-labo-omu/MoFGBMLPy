@@ -241,6 +241,11 @@ class Arguments(ABC):
         return key in self.__values
 
     def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         txt = ""
         for key, value in self.__values.items():
             txt += f"{key} = {value}\n"
