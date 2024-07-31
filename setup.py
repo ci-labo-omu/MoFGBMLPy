@@ -19,10 +19,6 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 
-requirements_file = "requirements.txt"
-with open(requirements_file) as f:
-    install_requires = f.read().splitlines()
-
 cython_files = []
 for root, dirs, files in os.walk('src'):
     for file in files:
@@ -34,8 +30,6 @@ for root, dirs, files in os.walk('src'):
                                           [path],
                                           extra_compile_args=[openmp_arg]))
 
-
-# print(cython_files)
 
 setup(
     ext_modules=cythonize(
@@ -86,7 +80,17 @@ setup(
 
     include_dirs=[numpy.get_include()],
 
-    install_requires=install_requires,  # Optional
+    install_requires=[
+        'numpy<2.0.0',
+        'matplotlib<3.9',
+        'scikit-learn',
+        'pymoo',
+        'pytest',
+        'Cython',
+        'pyrecorder',
+        'gprof2dot',
+        'jproperties',
+    ],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
     # syntax, for example:
@@ -101,9 +105,9 @@ setup(
     # },
     # If there are data files included in your packages that need to be
     # installed, specify them here.
-    package_data={  # Optional
-        "mofgbmlpy.utility": ["lru_cache.h", "lru_cache.cpp"],
-    },
+    # package_data={  # Optional
+    #     "mofgbmlpy.utility": ["lru_cache.h", "lru_cache.cpp"],
+    # },
     # Entry points. The following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
     # entry_points={  # Optional
