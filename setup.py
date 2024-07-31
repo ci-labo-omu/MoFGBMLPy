@@ -8,8 +8,10 @@ import sys
 
 if sys.platform.startswith("win"):
     openmp_arg = '/openmp'
+    optimization_arg = "/Ox"
 else:
     openmp_arg = '-fopenmp'
+    optimization_arg = "-Ox"
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -28,7 +30,7 @@ for root, dirs, files in os.walk('src'):
             name = ".".join(path_without_extension.split(os.sep)[1:])
             cython_files.append(Extension(name,
                                           [path],
-                                          extra_compile_args=[openmp_arg]))
+                                          extra_compile_args=[openmp_arg, optimization_arg]))
 
 
 setup(
