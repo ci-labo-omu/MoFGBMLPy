@@ -17,7 +17,7 @@ from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
-    def __init__(self, int num_patterns, cache_size_per_pattern=32):
+    def __init__(self, int num_patterns, cache_size_per_pattern=16):
         cdef int i
 
         for i in range(num_patterns):
@@ -54,8 +54,8 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
                 raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
 
 
-            # value = self.get_fitness_value(solution, pattern)
-            value = solution.get_fitness_value(pattern.get_attributes_vector())
+            value = self.get_fitness_value(solution, pattern)
+            # value = solution.get_fitness_value(pattern.get_attributes_vector())
 
             if value > max:
                 max = value

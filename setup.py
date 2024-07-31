@@ -43,7 +43,7 @@ setup(
         compiler_directives={"language_level": "3", "profile": True}
     ),
     name="mofgbmlpy",
-    version="1.0.1",
+    version="1.0.2",
     description="MoFGBML in Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -101,9 +101,9 @@ setup(
     # },
     # If there are data files included in your packages that need to be
     # installed, specify them here.
-    # package_data={  # Optional
-    #     "sample": ["package_data.dat"],
-    # },
+    package_data={  # Optional
+        "mofgbmlpy.utility": ["lru_cache.h", "lru_cache.cpp"],
+    },
     # Entry points. The following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
     # entry_points={  # Optional
