@@ -100,7 +100,12 @@ cdef class LearningBasic(AbstractLearning):
     cpdef Dataset get_training_set(self):
         return self._train_ds
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"MoFGBML_Learning [defaultLimit={AbstractLearning._default_reject_threshold}]"
 
     def __deepcopy__(self, memo={}):
@@ -110,7 +115,7 @@ cdef class LearningBasic(AbstractLearning):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = LearningBasic(self._train_ds)
 

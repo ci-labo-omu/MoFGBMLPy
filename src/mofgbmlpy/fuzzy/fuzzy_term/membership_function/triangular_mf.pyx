@@ -31,7 +31,12 @@ cdef class TriangularMF(AbstractMF):
             return (self._params[2] - x) / (self._params[2] - self._params[1])
 
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "<Triangular MF (%f, %f, %f)>" % (self._params[0], self._params[1], self._params[2])
 
     cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index, double x_min=0, double x_max=1):
@@ -55,7 +60,7 @@ cdef class TriangularMF(AbstractMF):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = TriangularMF(left=self._params[0], center=self._params[1], right=self._params[2])
         memo[id(self)] = new_object

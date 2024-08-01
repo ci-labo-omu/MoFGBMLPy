@@ -11,7 +11,12 @@ cdef class DontCareMF(AbstractMF):
     cdef double get_value(self, double _):
         return 1.0
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "<Dont Care MF>"
 
     cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index, double x_min=0, double x_max=1):
@@ -27,7 +32,7 @@ cdef class DontCareMF(AbstractMF):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = DontCareMF()
         memo[id(self)] = new_object

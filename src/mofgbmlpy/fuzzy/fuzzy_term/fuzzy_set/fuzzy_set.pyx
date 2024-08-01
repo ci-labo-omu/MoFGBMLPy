@@ -43,6 +43,11 @@ cdef class FuzzySet:
         return self.__division_type
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("fuzzyTerm")
         term_xml = xml_tree.SubElement(root, "fuzzyTermID")
         term_xml.text = str(self.get_id())

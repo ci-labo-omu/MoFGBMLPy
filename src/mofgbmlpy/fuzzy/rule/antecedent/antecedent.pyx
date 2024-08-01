@@ -99,7 +99,7 @@ cdef class Antecedent:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
         cdef int i
@@ -134,6 +134,11 @@ cdef class Antecedent:
         return txt + "]"
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("antecedent")
         # for dim_i in range(len(self.__antecedent_indices)):
         #     root.append(self.__knowledge.get_fuzzy_set(dim_i, self.__antecedent_indices[dim_i]).to_xml())

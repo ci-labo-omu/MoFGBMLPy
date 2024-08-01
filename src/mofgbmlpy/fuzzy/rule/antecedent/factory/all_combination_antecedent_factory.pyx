@@ -107,7 +107,12 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def create_antecedent_indices_py(self, int num_rules=1):
         return self.create_antecedent_indices(num_rules)
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "AllCombinationAntecedentFactory [antecedents=" + str(self.__antecedents_indices) + ", dimension=" + str(
             self.__knowledge.get_num_dim()) + "]"
 
@@ -132,7 +137,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = AllCombinationAntecedentFactory(self.__knowledge)
 

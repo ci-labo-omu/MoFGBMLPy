@@ -17,24 +17,25 @@ from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
-    def __init__(self, int num_patterns, cache_size_per_pattern=16):
-        cdef int i
-
-        for i in range(num_patterns):
-            self.__cache.push_back(LRUCache(cache_size_per_pattern))
+    def __init__(self, cache_size=0): # TODO: Check cache performance
+        if cache_size <= 0:
+            self.__cache_size = 0
+        else:
+            self.__cache = LRUCache(cache_size)
+            self.__cache_size = cache_size
 
     cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern):
         cdef int solution_hash = hash(solution)
         cdef int pattern_id = pattern.get_id()
         cdef double value
 
-        if self.__cache[pattern_id].has(solution_hash):
+        if self.__cache.has(pattern_id, solution_hash):
             # print("###")
-            return self.__cache[pattern_id].get(solution_hash)
+            return self.__cache.get(pattern_id, solution_hash)
         else:
             value = solution.get_fitness_value(pattern.get_attributes_vector())
-            self.__cache[pattern_id].put(solution_hash, value)
-            # print("___", self.__cache[pattern_id].get_size(), self.__cache[pattern_id].get_max_size())
+            self.__cache.put(pattern_id, solution_hash, value)
+            # print("___", self.__cache.get_size(), self.__cache.get_max_size())
             return value
 
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
@@ -53,9 +54,10 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             if solution.get_class_label().is_rejected():
                 raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
 
-
-            value = self.get_fitness_value(solution, pattern)
-            # value = solution.get_fitness_value(pattern.get_attributes_vector())
+            if self.__cache_size == 0:  # No cache
+                value = solution.get_fitness_value(pattern.get_attributes_vector())
+            else:
+                value = self.get_fitness_value(solution, pattern)
 
             if value > max:
                 max = value
@@ -78,11 +80,16 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
-        new_object = SingleWinnerRuleSelection(self.__cache.size())
+        new_object = SingleWinnerRuleSelection(self.__cache_size)
         memo[id(self)] = new_object
         return new_object
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return self.__class__.__name__

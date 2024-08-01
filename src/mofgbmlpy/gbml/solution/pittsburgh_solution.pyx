@@ -66,7 +66,7 @@ cdef class PittsburghSolution(AbstractSolution):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_solution = PittsburghSolution(self.get_num_vars(),
                                           self.get_num_objectives(),
@@ -147,6 +147,11 @@ cdef class PittsburghSolution(AbstractSolution):
         return txt
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("pittsburghSolution")
         for sol in self._vars:
             root.append(sol.to_xml())

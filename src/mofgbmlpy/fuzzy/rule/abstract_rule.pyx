@@ -79,10 +79,20 @@ cdef class AbstractRule:
         """
         return self._antecedent == other.get_antecedent() and self._consequent == other.get_consequent()
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"Antecedent: {self._antecedent} => Consequent: {self._consequent}"
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("rule")
 
         root.append(self._antecedent.to_xml())

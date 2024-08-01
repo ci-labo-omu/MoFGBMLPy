@@ -16,10 +16,20 @@ cdef class AbstractMF:
     def get_value_py(self, double x):
         return self.get_value(x)
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "Abstract membership function"
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("membershipFunction")
 
         if len(self._params) != 0:
@@ -58,7 +68,7 @@ cdef class AbstractMF:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         raise Exception("This class is abstract")
 

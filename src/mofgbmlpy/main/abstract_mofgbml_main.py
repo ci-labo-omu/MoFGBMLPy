@@ -130,14 +130,14 @@ class AbstractMoFGBMLMain(ABC):
             self.save_video(res.archive, "mofgbml.mp4")
 
         results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
-        Output.save_results(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
+        Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
         results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, knowledge, train, test)
-        Output.save_results(results_data,
+        Output.save_data(results_data,
                             str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 
         results_xml = self.get_results_xml(knowledge, res.pop)
-        Output.save_results(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
+        Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
                             args=self._mofgbml_args)
         res.objectives_name = [str(obj) for obj in objectives]
 

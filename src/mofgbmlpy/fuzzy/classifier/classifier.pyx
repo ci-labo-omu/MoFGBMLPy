@@ -31,7 +31,7 @@ cdef class Classifier:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = Classifier(copy.deepcopy(self._classification))
         memo[id(self)] = new_object

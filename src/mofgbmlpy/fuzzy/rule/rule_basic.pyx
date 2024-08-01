@@ -16,7 +16,7 @@ cdef class RuleBasic(AbstractRule):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_rule = RuleBasic(copy.deepcopy(self.get_antecedent()), copy.deepcopy(self.get_consequent()))
         memo[id(self)] = new_rule
@@ -29,6 +29,11 @@ cdef class RuleBasic(AbstractRule):
         cf = self.get_rule_weight().get_value()
         return membership * cf
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"Rule_Basic [antecedent={self.get_antecedent()}, consequent={self.get_consequent()}]"
 

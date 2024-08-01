@@ -10,6 +10,7 @@ from mofgbmlpy.data.output import Output
 import argparse
 
 class Arguments(ABC):
+    __exclusive_groups = None
     __values = None
     _parser = None
 
@@ -222,6 +223,7 @@ class Arguments(ABC):
         }
 
         self.__values = {}
+        self.__exclusive_groups = args_definition["exclusive-groups"]
         self._parser = argparse.ArgumentParser()
 
         for arg, arg_definition in args_definition.items():
@@ -333,20 +335,34 @@ class Arguments(ABC):
         # Add arg in args_from_properties to args if they are not already present
         i = 0
         while i < len(args_from_jproperties):
-            if args_from_jproperties[i] not in args:
+            do_skip = False
+            if args_from_jproperties[i] not in new_args:
+
+                # Check if this argument can't be used simultaneously with another one
+                for exclusive_group in self.__exclusive_groups:
+                    keys = [f"--{k}" for k in exclusive_group.keys()]
+                    print(keys)
+                    if args_from_jproperties[i] in keys:
+                        for key in keys:
+                            if key in new_args:
+                                # Already in the given args, so we can't add it since it's mutually exclusive
+                                do_skip = True
+                                break
+                        break
+            else:
+                do_skip = True
+
+            if do_skip:
+                i += 1
+                while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
+                    i += 1
+                    continue
+            else:
                 new_args.append(args_from_jproperties[i])
                 i += 1
                 while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
                     new_args.append(args_from_jproperties[i])
                     i += 1
-                i -= 1
-            else:
-                i += 1
-                while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
-                    i += 1
-                    continue
-                i -= 1
-            i += 1
 
         parsed_args = self.parse_args(new_args)
 
@@ -367,6 +383,11 @@ class Arguments(ABC):
 
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("consts")
         for key, value in self.__values.items():
             term_xml = xml_tree.SubElement(root, key)

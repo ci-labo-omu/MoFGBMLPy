@@ -12,15 +12,20 @@ LRUCache::LRUCache(int maxSize) : maxSize(maxSize), dataMap(unordered_map<int,do
 
 LRUCache::LRUCache() : LRUCache(128) {}
 
-bool LRUCache::has(int key) {
-    return this->dataMap.find(key) != this->dataMap.end();
+inline int LRUCache::combine_keys(int key1, int key2) {
+    return key1 ^ (key2 + 9152909 + (key1 << 5) + (key2 >> 3));
 }
 
-double LRUCache::get(int key) {
-    return this->dataMap.at(key);
+bool LRUCache::has(int key1, int key2) {
+    return this->dataMap.find(combine_keys(key1, key2)) != this->dataMap.end();
 }
 
-void LRUCache::put(int key, double value) {
+double LRUCache::get(int key1, int key2) {
+    return this->dataMap.at(combine_keys(key1, key2));
+}
+
+void LRUCache::put(int key1, int key2, double value) {
+    int key = combine_keys(key1, key2);
     if(this->dataMap.size() >= this->maxSize) {
         //      Cache is full so remove the least recently used item (back)
         //      1. Update cache order

@@ -16,7 +16,7 @@ cdef class RuleMulti(AbstractRule):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_rule = RuleMulti(copy.deepcopy(self.get_antecedent()), copy.deepcopy(self.get_consequent()))
         memo[id(self)] = new_rule
@@ -27,5 +27,9 @@ cdef class RuleMulti(AbstractRule):
         cf_mean = np.mean(self.get_consequent().get_rule_weight_value())
         return membership * cf_mean
 
-    def __str__(self):
+    """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"Rule_MultiClass [antecedent={self.get_antecedent()}, consequent={self.get_consequent()}]"

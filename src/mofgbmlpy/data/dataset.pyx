@@ -35,7 +35,7 @@ cdef class Dataset:
             index (int): Index of the pattern to be fetched 
 
         Returns:
-            (Pattern) 
+            (Pattern) Pattern at the given index
         """
         return self.__patterns[index]
 
@@ -43,7 +43,7 @@ cdef class Dataset:
         """Get all the patterns in the dataset
 
         Returns:
-            (Pattern[:]) The patterns in the dataset
+            (Pattern[]) The patterns in the dataset
         """
         return self.__patterns
 
@@ -91,7 +91,7 @@ cdef class Dataset:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         cdef Pattern[:] patterns_copy = np.empty(self.__size, dtype=object)
         for i in range(self.__size):

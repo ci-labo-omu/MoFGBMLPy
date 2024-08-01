@@ -13,13 +13,18 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = RuleWeightBasic(self.get_value())
         memo[id(self)] = new_object
         return new_object
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         if self.get_value() is None:
             # with cython.gil:
             raise ValueError("Rule weight is None")
@@ -43,6 +48,11 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         return self.__rule_weight == other.get_value()
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("ruleWeight")
         root.text = str(self)
 

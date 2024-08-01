@@ -79,7 +79,7 @@ cdef class Knowledge:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         cdef FuzzyVariable[:] fuzzy_vars_copy = np.empty(fuzzy_vars.shape[0], dtype=object)
@@ -107,6 +107,11 @@ cdef class Knowledge:
         return np.array_equal(self.__fuzzy_vars, other.get_fuzzy_vars())
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("knowledgeBase")
         for i in range(self.get_num_dim()):
             var = self.get_fuzzy_variable(i).to_xml()

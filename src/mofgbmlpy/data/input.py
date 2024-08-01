@@ -9,6 +9,15 @@ import csv
 class Input:
     @staticmethod
     def input_data_set(file_name, is_multi_label):
+        """Load a dataset from a file name
+
+        Args:
+            file_name (str): Name of the file containing the dataset
+            is_multi_label (bool):  True if the dataset is multi label and False otherwise
+
+        Returns:
+            (Dataset) Dataset read from the file
+        """
         if is_multi_label:
             return Input.input_data_set_multi(file_name)
         else:
@@ -16,6 +25,14 @@ class Input:
 
     @staticmethod
     def input_data_set_multi(file_name):
+        """Load a multi label dataset from a file name
+
+        Args:
+            file_name (str): Name of the file containing the dataset
+
+        Returns:
+            (Dataset) Dataset read from the file
+        """
         with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
@@ -48,6 +65,14 @@ class Input:
 
     @staticmethod
     def input_data_set_basic(file_name):
+        """ Load a (mono label) dataset from a file name
+
+        Args:
+            file_name (str): Name of the file containing the dataset
+
+        Returns:
+            (Dataset) Dataset read from the file
+        """
         with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
@@ -76,6 +101,15 @@ class Input:
 
     @staticmethod
     def get_train_test_files(arguments):
+        """Load the train and test datasets from filenames specified in an Arguments object
+
+        Args:
+            arguments (Arguments): Object containing the TRAIN_FILE, TEST_FILE and IS_MULTI_LABEL keys
+
+        Returns:
+            (Dataset) Training dataset read from the file
+            (Dataset) Test dataset read from the file
+        """
         if (arguments is None or
                 not arguments.has_key("TRAIN_FILE") or
                 not arguments.has_key("TEST_FILE") or
@@ -89,15 +123,11 @@ class Input:
         if train_file_name is None or test_file_name is None or is_multi_label is None:
             raise ValueError("Invalid arguments")
 
-        # manager = DataSetManager.get_instance()
-
         training_data = Input.input_data_set(train_file_name, is_multi_label)
-        # manager.add_train(training_data)
 
         arguments.set("DATA_SIZE", training_data.get_size())
         arguments.set("ATTRIBUTE_NUMBER", training_data.get_num_dim())
         arguments.set("CLASS_LABEL_NUMBER", training_data.get_num_classes())
 
         test_data = Input.input_data_set(test_file_name, is_multi_label)
-        # manager.add_test(test_data)
         return training_data, test_data

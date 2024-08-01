@@ -136,7 +136,7 @@ cdef class MichiganSolution(AbstractSolution):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         cdef int i
         new_solution = MichiganSolution(self.get_num_objectives(),
@@ -217,6 +217,11 @@ cdef class MichiganSolution(AbstractSolution):
         return txt
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("michiganSolution")
         root.append(self._rule.to_xml())
         attributes = xml_tree.SubElement(root, "attributes")

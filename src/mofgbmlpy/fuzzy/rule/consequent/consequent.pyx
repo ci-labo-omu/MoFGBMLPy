@@ -48,13 +48,18 @@ cdef class Consequent:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_consequent = Consequent(copy.deepcopy(self._class_label), copy.deepcopy(self._rule_weight))
         memo[id(self)] = new_consequent
         return new_consequent
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return f"class:[{self._class_label}]: weight:[{self._rule_weight}]"
 
     def __eq__(self, other):
@@ -69,6 +74,11 @@ cdef class Consequent:
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
 
     def to_xml(self):
+        """Get the XML representation of this object.
+
+        Returns:
+            (xml.etree.ElementTree) XML element representing this object
+        """
         root = xml_tree.Element("consequent")
         root.append(self._class_label.to_xml())
         root.append(self._rule_weight.to_xml())

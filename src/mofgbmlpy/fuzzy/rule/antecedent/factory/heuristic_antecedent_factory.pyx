@@ -129,7 +129,12 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             new_antecedent_indices[i] = self.__select_antecedent_part(pattern_indices[i])
         return new_antecedent_indices
 
-    def __str__(self):
+    def __repr__(self):
+        """Return a string representation of this object
+
+        Returns:
+            (str) String representation
+        """
         return "HeuristicAntecedentFactory [dimension=" + str(self.__knowledge.get_num_dim()) + "]"
 
     def __deepcopy__(self, memo={}):
@@ -139,7 +144,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            Deep copy of this object
+            (object) Deep copy of this object
         """
         new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_number_do_not_dont_care)
 
