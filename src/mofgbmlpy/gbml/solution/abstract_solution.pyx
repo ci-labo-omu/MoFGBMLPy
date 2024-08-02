@@ -67,9 +67,7 @@ cdef class AbstractSolution:
         Returns:
             (bool) True if they are equal and False otherwise
         """
-        if not isinstance(other, AbstractSolution):
-            return False
-        return np.array_equal(self.get_vars(), other.get_vars())
+        raise Exception("This class is abstract")
 
     def __hash__(self):
         raise Exception("This class is abstract")

@@ -194,6 +194,28 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef int get_num_vars(self):
         return self._vars.shape[0]
 
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
+        if not isinstance(other, MichiganSolution):
+            return False
+
+        cdef int i
+        cdef int[:] other_vars = other.get_vars()
+        if self._vars.shape[0] != other_vars.shape[0]:
+            return False
+
+        for i in range(len(self._vars)):
+            if self._vars[i] != other_vars[i]:
+                return False
+        return True
+
     def __repr__(self):
         """Return a string representation of this object
 

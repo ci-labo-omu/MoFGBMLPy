@@ -62,7 +62,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
                                                             num_constraints_michigan,
                                                             rule_builder)
 
-        classification = SingleWinnerRuleSelection()
+        classification = SingleWinnerRuleSelection(args.get("CACHE_SIZE"))
         classifier = Classifier(classification)
 
         problem = PittsburghProblem(num_vars_pittsburgh,

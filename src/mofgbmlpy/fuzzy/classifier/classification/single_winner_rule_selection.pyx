@@ -29,9 +29,15 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         cdef int pattern_id = pattern.get_id()
         cdef double value
 
+        # print(pattern_id, solution_hash, self.__cache.combine_keys(pattern_id, solution_hash))
+
         if self.__cache.has(pattern_id, solution_hash):
             # print("###")
             return self.__cache.get(pattern_id, solution_hash)
+            # cached_value = self.__cache.get(pattern_id, solution_hash)
+            # computed_value = solution.get_fitness_value(pattern.get_attributes_vector())
+            # if cached_value != computed_value:
+            #     raise Exception(f"DIFFERENT VALUE for pattern {pattern_id} sol {solution_hash} : {cached_value} != {computed_value}")
         else:
             value = solution.get_fitness_value(pattern.get_attributes_vector())
             self.__cache.put(pattern_id, solution_hash, value)

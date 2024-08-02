@@ -18,13 +18,19 @@ class Arguments(ABC):
         # TODO: change antecedent factory and other args via these params
 
         args_definition = {
-            # Parallelization
+            # Optimization
             # "num-parallel-cores": {
             #     "default": 1,
             #     "help": "Number of cores used for parallelization",
             #     "type": "int",
             #     "required": False
             # },
+            "cache-size": {
+                "default": 128,
+                "help": "Thid argument has been left for test purposes but it's not recommended to use it since the hashing function has collisions. Cache size for fitness values computation. A big cache might deteriorate performance and increase RAM usage",
+                "type": "int",
+                "required": False
+            },
 
             # Experimental Settings
             "experiment-id": {
@@ -341,7 +347,6 @@ class Arguments(ABC):
                 # Check if this argument can't be used simultaneously with another one
                 for exclusive_group in self.__exclusive_groups:
                     keys = [f"--{k}" for k in exclusive_group.keys()]
-                    print(keys)
                     if args_from_jproperties[i] in keys:
                         for key in keys:
                             if key in new_args:
