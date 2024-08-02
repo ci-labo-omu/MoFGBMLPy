@@ -73,4 +73,4 @@ cdef class TriangularMF(AbstractMF):
             [self._params[1], 1],
             [self._params[2], 0],
             [1, 0],
-        ])
+        ], np.float64)

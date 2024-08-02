@@ -84,3 +84,6 @@ cdef class Consequent:
         root.append(self._rule_weight.to_xml())
 
         return root
+
+    cpdef str get_linguistic_representation(self):
+        return "Class is " + str(self._class_label)

@@ -142,7 +142,7 @@ options:
 
 ### Automatically
 
-Run `python profiler.py MoFGBMLBasicMain` (or replace MoFGBMLBasicMain with the method you want to use)
+Run `python profiler.py MoFGBMLNSGAIIMain` (or replace MoFGBMLNSGAIIMain with the method you want to use)
 
 ### Manually
 

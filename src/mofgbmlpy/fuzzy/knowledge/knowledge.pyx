@@ -1,5 +1,7 @@
 import xml.etree.cElementTree as xml_tree
 from copy import deepcopy
+
+import matplotlib.pyplot as plt
 import numpy as np
 
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
@@ -120,3 +122,9 @@ cdef class Knowledge:
 
         return root
 
+
+    def plot_fuzzy_variables(self):
+        for i in range(self.get_num_dim()):
+            ax = plt.axes()
+            ax = self.get_fuzzy_variable(i).get_plot(ax)
+            plt.show()

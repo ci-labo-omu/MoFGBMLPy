@@ -87,6 +87,9 @@ cdef class AbstractRule:
         """
         return f"Antecedent: {self._antecedent} => Consequent: {self._consequent}"
 
+    cpdef str get_linguistic_representation(self):
+        return f"IF\t{self._antecedent.get_linguistic_representation()} THEN {self._consequent.get_linguistic_representation()} RW: {self.get_rule_weight()}"
+
     def to_xml(self):
         """Get the XML representation of this object.
 

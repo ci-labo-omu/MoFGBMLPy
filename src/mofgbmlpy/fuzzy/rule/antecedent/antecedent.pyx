@@ -2,6 +2,7 @@ import xml.etree.cElementTree as xml_tree
 import copy
 
 import numpy as np
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 cimport cython
 cimport numpy as cnp
@@ -132,6 +133,22 @@ cdef class Antecedent:
         for i in range(self.__antecedent_indices.shape[0]):
             txt += f"{self.__antecedent_indices[i]} "
         return txt + "]"
+
+    cpdef str get_linguistic_representation(self):
+        txt = ""
+        cdef int i
+        cdef FuzzyVariable var
+
+        for i in range(self.get_array_size()):
+            var = self.__knowledge.get_fuzzy_variable(i)
+
+            if self.__antecedent_indices[i] != 0:
+                txt = f" {txt} {var.get_name()} IS {var.get_fuzzy_set(self.__antecedent_indices[i]).get_term()} AND"
+
+        if txt == "":
+            txt = "[don't care]"
+
+        return txt[:-4] # Remove the last "AND "
 
     def to_xml(self):
         """Get the XML representation of this object.

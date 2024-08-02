@@ -2,7 +2,7 @@ import time
 
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
-from mofgbmlpy.main.basic.mofgbml_basic_main import MoFGBMLBasicMain
+from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 
 
 def test_main():
@@ -36,7 +36,7 @@ def test_main():
         "--no-plot"
     ]
 
-    runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     results = runner.main(args)
     elapsed = time.time() - start
 

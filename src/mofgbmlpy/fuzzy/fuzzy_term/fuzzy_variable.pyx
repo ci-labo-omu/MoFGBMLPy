@@ -60,6 +60,19 @@ cdef class FuzzyVariable:
     cpdef get_domain(self):
         return self.__domain
 
+    def get_plot(self, ax):
+        cdef int i
+        cdef FuzzySet fuzzy_set
+        cdef cnp.ndarray[double, ndim=2] points
+
+        ax.set_title(self.get_name())
+        for i in range(self.get_length()):
+            fuzzy_set = self.get_fuzzy_set(i)
+            points = fuzzy_set.get_function().get_plot_points()
+            ax.plot(points[:,0], points[:,1])
+
+        return ax
+
     def __repr__(self):
         """Return a string representation of this object
 

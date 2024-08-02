@@ -2,6 +2,8 @@ import xml.etree.cElementTree as xml_tree
 from abc import ABC
 
 import numpy as np
+from matplotlib import pyplot as plt
+from pymoo.core.population import Population
 from pymoo.termination import get_termination
 
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
@@ -31,6 +33,7 @@ class AbstractMoFGBMLMain(ABC):
     _mofgbml_args = None
     _algo = None
     _knowledge_factory_class = None
+    __knowledge = None
 
     def __init__(self, mofgbml_args, algo, knowledge_factory_class):
         self._mofgbml_args = mofgbml_args
@@ -55,7 +58,7 @@ class AbstractMoFGBMLMain(ABC):
         train, test = Input.get_train_test_files(self._mofgbml_args)
 
         # Create knowledge object
-        knowledge = self._knowledge_factory_class(train.get_num_dim()).create()
+        self.__knowledge = self._knowledge_factory_class(train.get_num_dim()).create()
 
         # Run the algo
         objectives = []
@@ -72,10 +75,10 @@ class AbstractMoFGBMLMain(ABC):
 
         antecedent_factory_name = self._mofgbml_args.get("ANTECEDENT_FACTORY")
         if antecedent_factory_name == "all-combination-antecedent-factory":
-            antecedent_factory = AllCombinationAntecedentFactory(knowledge)
+            antecedent_factory = AllCombinationAntecedentFactory(self.__knowledge)
         elif antecedent_factory_name == "heuristic-antecedent-factory":
             antecedent_factory = HeuristicAntecedentFactory(train,
-                                                            knowledge,
+                                                            self.__knowledge,
                                                             self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
                                                             self._mofgbml_args.get("DONT_CARE_RT"),
                                                             self._mofgbml_args.get("ANTECEDENT_NUMBER_DO_NOT_DONT_CARE"))
@@ -101,7 +104,7 @@ class AbstractMoFGBMLMain(ABC):
                                             MichiganCrossover(
                                                 self._mofgbml_args.get("RULE_CHANGE_RT"),
                                                 train,
-                                                knowledge,
+                                                self.__knowledge,
                                                 self._mofgbml_args.get("MAX_NUM_RULES"),
                                                 self._mofgbml_args.get("MICHIGAN_CROSS_RT")
                                             ),
@@ -110,12 +113,16 @@ class AbstractMoFGBMLMain(ABC):
         elif self._mofgbml_args.get("CROSSOVER_TYPE") == "pittsburgh-crossover":
             crossover = pittsburgh_crossover
 
-        res = self._algo(train, self._mofgbml_args, knowledge, objectives, termination, antecedent_factory, crossover)
+        res = self._algo(train, self._mofgbml_args, self.__knowledge, objectives, termination, antecedent_factory, crossover)
         exec_time = res.exec_time
 
         print("Execution time: ", exec_time)
 
         non_dominated_solutions = res.X
+
+        res.archive = Population.empty()
+        for i in range(len(res.history)):
+            res.archive = Population.merge(res.archive, res.history[i].pop)
 
         archive_objectives = res.archive.get("F")
         non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
@@ -125,21 +132,22 @@ class AbstractMoFGBMLMain(ABC):
         for i in range(len(non_dominated_archive_pop)):
             archive_solutions[i] = non_dominated_archive_pop[i].X
 
-        if not self._mofgbml_args.get("NO_PLOT"):
-            self.get_plot(res.opt)
-            self.save_video(res.archive, "mofgbml.mp4")
-
-        results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, knowledge, train, test)
+        results_data = AbstractMoFGBMLMain.get_results_data(non_dominated_solutions, self.__knowledge, train, test)
         Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
-        results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, knowledge, train, test)
+        results_data = AbstractMoFGBMLMain.get_results_data(archive_solutions, self.__knowledge, train, test)
         Output.save_data(results_data,
                             str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 
-        results_xml = self.get_results_xml(knowledge, res.pop)
+        results_xml = self.get_results_xml(self.__knowledge, res.pop)
         Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
                             args=self._mofgbml_args)
         res.objectives_name = [str(obj) for obj in objectives]
+
+        if not self._mofgbml_args.get("NO_PLOT"):
+            self.plot_pareto_front(res.opt)
+            self.save_video(res.history, "mofgbml.mp4")
+            self.plot_line_interpretability_acc_tradeoff(res.opt)
 
         return res
 
@@ -167,13 +175,13 @@ class AbstractMoFGBMLMain(ABC):
             results_data[i]["test_error_rate"] = sol.get_error_rate(test)
             results_data[i]["num_rules"] = sol.get_num_vars()
 
-            sol.set_attribute("id", i)
-            sol.set_attribute("total_coverage", total_coverage)
-            sol.set_attribute("total_rule_length", sol.get_total_rule_length())
-            sol.set_attribute("average_rule_weight", sol.get_average_rule_weight())
-            sol.set_attribute("training_error_rate", sol.get_error_rate(train))
-            sol.set_attribute("test_error_rate", sol.get_error_rate(test))
-            sol.set_attribute("num_rules", sol.get_num_vars())
+            sol.set_attribute("id", results_data[i]["id"])
+            sol.set_attribute("total_coverage", results_data[i]["total_coverage"])
+            sol.set_attribute("total_rule_length", results_data[i]["total_rule_length"])
+            sol.set_attribute("average_rule_weight", results_data[i]["average_rule_weight"])
+            sol.set_attribute("training_error_rate", results_data[i]["training_error_rate"])
+            sol.set_attribute("test_error_rate", results_data[i]["test_error_rate"])
+            sol.set_attribute("num_rules", results_data[i]["num_rules"])
         return results_data
 
     def get_results_xml(self, knowledge, pop):
@@ -186,18 +194,16 @@ class AbstractMoFGBMLMain(ABC):
 
         return xml_tree.ElementTree(root)
 
-    def save_video(self, archive_population, filename):
+    def save_video(self, history, filename):
         with Recorder(Video(filename)) as rec:
-            populations_objectives = np.split(archive_population.get("F"), self._mofgbml_args.get("POPULATION_SIZE"))
-            for i in range(len(populations_objectives)):
-                sc = Scatter(title=(f"Gen {i}"))
-                sc.add(populations_objectives[i])
+            for i in range(len(history)):
+                sc = Scatter(title=(f"Gen {i+1}"))
+                sc.add(history[i].pop.get("F"))
                 sc.do()
 
-                # finally record the current visualization to the video
                 rec.record()
 
-    def get_plot(self, population):
+    def get_pareto_front_plot(self, population):
         objectives = population.get("F")
 
         if objectives.shape[1] <= 1:
@@ -205,5 +211,46 @@ class AbstractMoFGBMLMain(ABC):
 
         plot = Scatter(labels=self._mofgbml_args.get("OBJECTIVES"))
         plot.add(objectives, color="red")
+        # In a Notebook the plot doesn't show if we don't use show directly inside,
+        # hence we have to return the plot instead of showing it
         return plot
 
+
+    @staticmethod
+    def plot_line_interpretability_acc_tradeoff(population):
+        acc_train = []
+        acc_test = []
+
+        for solution in population.get("X")[:, 0]:
+            acc_train.append(
+                (solution.get_attribute("total_rule_length"), 1 - solution.get_attribute("training_error_rate")))
+            acc_test.append(
+                (solution.get_attribute("total_rule_length"), 1 - solution.get_attribute("test_error_rate")))
+
+        acc_train = list(set(acc_train))
+        acc_train.sort()
+        for i in range(len(acc_train)):
+            acc_train[i] = list(acc_train[i])  # tuple to list
+        acc_train = np.array(acc_train)
+
+        acc_test = list(set(acc_test))
+        acc_test.sort()
+        for i in range(len(acc_test)):
+            acc_test[i] = list(acc_test[i])  # tuple to list
+        acc_test = np.array(acc_test)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(acc_train[:, 0], acc_train[:, 1], c='darkorange', marker='o', label="Train")
+        plt.plot(acc_test[:, 0], acc_test[:, 1], c='blue', marker='o', label="Test")
+        plt.xlabel('total rule length')
+
+        plt.ylabel('accuracy')
+        plt.ylim(0, 1)
+        plt.legend(loc="upper left")
+        plt.show()
+
+    def plot_fuzzy_variables(self):
+        self.__knowledge.plot_fuzzy_variables()
+
+    def show_args(self):
+        print(str(self._mofgbml_args))

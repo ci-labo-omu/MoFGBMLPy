@@ -299,7 +299,7 @@ classDiagram
         class ExperienceParameters {
         }
 
-        class MofgbmlBasicMain {
+        class MoFGBMLNSGAIIMain {
         }
     }
 

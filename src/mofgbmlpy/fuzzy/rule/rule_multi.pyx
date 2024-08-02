@@ -27,7 +27,8 @@ cdef class RuleMulti(AbstractRule):
         cf_mean = np.mean(self.get_consequent().get_rule_weight_value())
         return membership * cf_mean
 
-    """Return a string representation of this object
+    def __repr__(self):
+        """Return a string representation of this object
 
         Returns:
             (str) String representation

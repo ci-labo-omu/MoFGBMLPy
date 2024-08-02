@@ -14,12 +14,12 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
+from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
 
 
 def test_hash():
     # Only test if it doesn't return an exception
-    args = MoFGBMLBasicArgs()
+    args = MoFGBMLNSGAIIArgs()
 
     args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
     args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")

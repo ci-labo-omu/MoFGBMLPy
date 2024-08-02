@@ -12,4 +12,5 @@ cdef class Antecedent:
     cpdef double[:] get_compatible_grade(self, double[:] attribute_vector)
     cdef double get_compatible_grade_value(self, double[:] attribute_vector)
     cpdef int get_length(self)
+    cpdef str get_linguistic_representation(self)
     cpdef get_knowledge(self)

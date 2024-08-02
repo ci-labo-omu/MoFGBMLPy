@@ -51,4 +51,4 @@ cdef class RectangularMF(AbstractMF):
             [self._params[0], 1],
             [self._params[1], 1],
             [1, 0],
-        ])
+        ], np.float64)

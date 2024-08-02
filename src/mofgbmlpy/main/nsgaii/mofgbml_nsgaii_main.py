@@ -2,7 +2,6 @@ from pymoo.termination import get_termination
 
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
-from mofgbmlpy.gbml.mo_archive_without_sorting import MoArchiveWithoutSorting
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -14,7 +13,7 @@ from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection impo
 from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
-from mofgbmlpy.main.basic.mofgbml_basic_args import MoFGBMLBasicArgs
+from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
 import sys
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
@@ -26,9 +25,9 @@ from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 
 
-class MoFGBMLBasicMain(AbstractMoFGBMLMain):
+class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLBasicArgs(), MoFGBMLBasicMain.run, knowledge_factory_class)
+        super().__init__(MoFGBMLNSGAIIArgs(), MoFGBMLNSGAIIMain.run, knowledge_factory_class)
 
     @staticmethod
     def run(train, args, knowledge, objectives, termination, antecedent_factory, crossover):
@@ -62,8 +61,7 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(train, knowledge),
                           eliminate_duplicates=False,
-                          archive=MoArchiveWithoutSorting(duplicate_elimination=False,
-                                                        max_size=None, truncate_size=None),
+                          save_history=True,
                           n_offsprings=args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(problem,
@@ -76,5 +74,5 @@ class MoFGBMLBasicMain(AbstractMoFGBMLMain):
 
 
 if __name__ == '__main__':
-    runner = MoFGBMLBasicMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     runner.main(sys.argv[1:])

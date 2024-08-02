@@ -37,3 +37,4 @@ cdef class AbstractRule:
     cpdef FuzzySet get_fuzzy_set_object(self, int dim_index)
     cpdef int get_antecedent_array_size(self)
     cpdef str get_var_name(self, int dim_index)
+    cpdef str get_linguistic_representation(self)

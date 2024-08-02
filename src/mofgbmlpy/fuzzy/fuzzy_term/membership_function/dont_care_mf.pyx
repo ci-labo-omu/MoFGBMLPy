@@ -39,4 +39,4 @@ cdef class DontCareMF(AbstractMF):
         return new_object
 
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=0, double x_max=1):
-        return np.array([[0,1], [1,1]])
+        return np.array([[0,1], [1,1]], np.float64)

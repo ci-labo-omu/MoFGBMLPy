@@ -26,8 +26,8 @@ class Arguments(ABC):
             #     "required": False
             # },
             "cache-size": {
-                "default": 128,
-                "help": "Thid argument has been left for test purposes but it's not recommended to use it since the hashing function has collisions. Cache size for fitness values computation. A big cache might deteriorate performance and increase RAM usage",
+                "default": 0,
+                "help": "Third argument has been left for test purposes but it's not recommended to use it since the hashing function has collisions. Cache size for fitness values computation. A big cache might deteriorate performance and increase RAM usage",
                 "type": "int",
                 "required": False
             },

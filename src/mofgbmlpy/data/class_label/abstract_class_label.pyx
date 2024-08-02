@@ -20,7 +20,7 @@ cdef class AbstractClassLabel:
         """Set the class label value. Must be overridden.
         
         Args:
-            class_label (object): New class label value, either a int or an array of int depending on the label type (multi or basic) 
+            class_label (object): New class label value, either a int or an array of int depending on the label type (multi or nsgaii) 
         """
         raise Exception("AbstractClassLabel is abstract")
 

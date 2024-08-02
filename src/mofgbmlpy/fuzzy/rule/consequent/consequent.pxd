@@ -15,3 +15,4 @@ cdef class Consequent:
     cpdef void set_rejected(self)
     cpdef object get_rule_weight(self)
     cpdef void set_rule_weight(self, object rule_weight)
+    cpdef str get_linguistic_representation(self)

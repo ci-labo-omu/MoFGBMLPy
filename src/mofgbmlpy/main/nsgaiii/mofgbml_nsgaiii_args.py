@@ -4,7 +4,7 @@ from mofgbmlpy.data.output import Output
 import os
 
 
-class MoFGBMLBasicArgs(Arguments):
+class MoFGBMLNSGAIIIArgs(Arguments):
     def __init__(self):
         super().__init__()
 
