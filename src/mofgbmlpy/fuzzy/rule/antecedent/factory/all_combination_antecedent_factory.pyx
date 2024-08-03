@@ -11,6 +11,7 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 
+from mofgbmlpy.utility.random import get_random_gen
 
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, knowledge):
@@ -88,6 +89,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int i
         cdef int j
         cdef int[:] chosen_list
+        random_gen = get_random_gen()
 
         if num_rules <= 0:
             raise Exception("num_rules must be positive")
@@ -95,7 +97,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         num_rules = min(num_rules, self.__antecedents_indices.shape[0])
 
         # Return an antecedent
-        cdef int[:] chosen_indices_lists = np.random.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
+        cdef int[:] chosen_indices_lists = random_gen.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
         cdef int[:,:] new_indices = np.empty((num_rules, self.__knowledge.get_num_dim()), dtype=int)
 
         for i in range(chosen_indices_lists.shape[0]):

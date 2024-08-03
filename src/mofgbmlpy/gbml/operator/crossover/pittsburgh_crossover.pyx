@@ -2,10 +2,8 @@ import copy
 
 from pymoo.core.crossover import Crossover
 import numpy as np
-import random
 
-import time
-import concurrent.futures
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class PittsburghCrossover(Crossover):
@@ -18,8 +16,9 @@ class PittsburghCrossover(Crossover):
         self.__max_num_rules = max_num_rules
 
     def get_num_rules_from_parents(self, num_rules_p1, num_rules_p2, n_vars):
-        num_rules_from_p1 = random.randint(0, num_rules_p1 - 1)
-        num_rules_from_p2 = random.randint(0, num_rules_p2 - 1)
+        random_gen = get_random_gen()
+        num_rules_from_p1 = random_gen.integers(0, num_rules_p1)
+        num_rules_from_p2 = random_gen.integers(0, num_rules_p2)
         sum_num_rules = num_rules_from_p1 + num_rules_from_p2
 
         if sum_num_rules > self.__max_num_rules:
@@ -27,7 +26,7 @@ class PittsburghCrossover(Crossover):
             num_deletions = sum_num_rules - self.__max_num_rules
             for j in range(num_deletions):
                 if num_rules_from_p1 > 0 and num_rules_from_p2 > 0:
-                    if random.random() < 0.5:
+                    if random_gen.random() < 0.5:
                         num_rules_from_p1 -= 1
                     else:
                         num_rules_from_p2 -= 1
@@ -45,7 +44,7 @@ class PittsburghCrossover(Crossover):
 
             for j in range(num_additions):
                 if num_rules_from_p1 < max_per_parent and num_rules_from_p2 < max_per_parent:
-                    if random.random() < 0.5:
+                    if random_gen.random() < 0.5:
                         num_rules_from_p1 += 1
                     else:
                         num_rules_from_p2 += 1
@@ -61,6 +60,7 @@ class PittsburghCrossover(Crossover):
     def _do(self, problem, X, **kwargs):
         _, n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
+        random_gen = get_random_gen()
 
         for i in range(n_matings):
             p1 = X[0,i,0]
@@ -73,8 +73,8 @@ class PittsburghCrossover(Crossover):
             Y[0,i,0].clear_attributes()
 
             num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), n_var)
-            rules_idx_from_p1 = np.random.choice(np.arange(p1.get_num_vars(), dtype=int), num_rules_from_p1, replace=False)
-            rules_idx_from_p2 = np.random.choice(np.arange(p2.get_num_vars(), dtype=int), num_rules_from_p2, replace=False)
+            rules_idx_from_p1 = random_gen.choice(np.arange(p1.get_num_vars(), dtype=int), num_rules_from_p1, replace=False)
+            rules_idx_from_p2 = random_gen.choice(np.arange(p2.get_num_vars(), dtype=int), num_rules_from_p2, replace=False)
 
             new_vars = np.empty(num_rules_from_p1 + num_rules_from_p2, dtype=object)
             j = 0

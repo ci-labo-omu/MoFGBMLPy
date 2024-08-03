@@ -1,12 +1,7 @@
 import copy
-import time
-
 from pymoo.core.mutation import Mutation
-
-from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
-from mofgbmlpy.gbml.solution import michigan_solution
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-import random
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class PittsburghMutation(Mutation):
@@ -21,6 +16,7 @@ class PittsburghMutation(Mutation):
         self.__knowledge = knowledge
 
     def _do(self, problem, X, **kwargs):
+        random_gen = get_random_gen()
         # for each individual
         training_set = self.__learner.get_training_set()
         training_set_size = training_set.get_size()
@@ -29,10 +25,10 @@ class PittsburghMutation(Mutation):
         for i in range(len(X[0])):
             # for each michigan solution (rule)
             for michigan_sol_i in range(X[0][i].get_num_vars()):
-                mutated_dim = random.randint(0, dim-1)
+                mutated_dim = random_gen.integers(0, dim)
 
                 # Check if the mutated dim is categorical (<0) or numerical (>=0)
-                var_of_random_pattern = (training_set.get_pattern(random.randint(0, training_set_size-1))
+                var_of_random_pattern = (training_set.get_pattern(random_gen.integers(0, training_set_size))
                                          .get_attribute_value(mutated_dim))
 
                 if var_of_random_pattern >= 0:
@@ -43,7 +39,7 @@ class PittsburghMutation(Mutation):
                     current_michigan_solution = X[0][i].get_var(michigan_sol_i)
                     # print(mutated_dim, current_michigan_solution.get_num_vars(), current_michigan_solution)
                     current_fuzzy_set_index = current_michigan_solution.get_var(mutated_dim)
-                    new_fuzzy_set_index = random.randint(0, num_candidate_values - 2)
+                    new_fuzzy_set_index = random_gen.integers(0, num_candidate_values - 1)
 
                     # Prevent the value from staying the same
                     if new_fuzzy_set_index >= current_fuzzy_set_index:

@@ -1,4 +1,3 @@
-import random
 import xml.etree.cElementTree as xml_tree
 import copy
 
@@ -14,12 +13,15 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport Abs
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
 
+from mofgbmlpy.utility.random import get_random_gen
 
 cdef class MichiganSolution(AbstractSolution):
     def __init__(self, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True):
         self._rule_builder = rule_builder
         self.__num_wins = 0
         self.__fitness = 0
+
+        random_gen = get_random_gen()
 
         super().__init__(num_objectives, num_constraints)
 
@@ -38,7 +40,7 @@ cdef class MichiganSolution(AbstractSolution):
                 size_training_data_set = training_data_set.get_size()
                 while is_rejected:
                     cnt += 1
-                    self.create_rule(training_data_set.get_pattern(random.randint(0, size_training_data_set-1)))
+                    self.create_rule(training_data_set.get_pattern(random_gen.integers(0, size_training_data_set)))
                     is_rejected = self._rule.is_rejected_class_label()
                     if cnt > 1000:
                         raise Exception("Exceeded maximum number of trials to generate rule")

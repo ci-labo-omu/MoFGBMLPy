@@ -15,9 +15,6 @@ import os
 from pymoo.visualization.scatter import Scatter
 from importlib import import_module
 
-import random
-
-
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
@@ -26,6 +23,7 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from mofgbmlpy.utility.random import init_random_gen, get_random_gen
 from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_case
 
 
@@ -45,8 +43,7 @@ class AbstractMoFGBMLMain(ABC):
 
         # set command arguments
         self._mofgbml_args.load(args)
-        random.seed(self._mofgbml_args.get("RAND_SEED"))
-        np.random.seed(self._mofgbml_args.get("RAND_SEED"))
+        init_random_gen(self._mofgbml_args.get("RAND_SEED"))
 
         Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
 

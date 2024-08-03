@@ -28,7 +28,6 @@ from pymoo.visualization.scatter import Scatter
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
-import random
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
@@ -90,7 +89,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
         res = minimize(problem,
                        algorithm,
                        termination,
-                       seed=1,
+                       seed=args.get("RAND_SEED"),
                        # save_history=True,
                        verbose=True)
         return res

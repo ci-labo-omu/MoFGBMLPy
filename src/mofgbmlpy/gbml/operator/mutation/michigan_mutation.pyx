@@ -3,9 +3,9 @@ from pymoo.core.mutation import Mutation
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-import random
 
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class MichiganMutation(Mutation):
@@ -19,6 +19,7 @@ class MichiganMutation(Mutation):
         self.__mutation_rt = mutation_rt
 
     def _do(self, problem, X, **kwargs):
+        random_gen = get_random_gen()
         # for each individual
         cdef MichiganSolution sol
 
@@ -30,16 +31,16 @@ class MichiganMutation(Mutation):
             # for each var
             indices = sol.get_antecedent().get_antecedent_indices()
             for j in range(sol.get_num_vars()):
-                if random.random() > self.__mutation_rt:
+                if random_gen.random() > self.__mutation_rt:
                     continue
 
                 # Check if the mutated dim is categorical (<0) or numerical (>=0)
-                var_of_random_pattern = (training_set.get_pattern(random.randint(0, training_set_size - 1))
+                var_of_random_pattern = (training_set.get_pattern(random_gen.integers(0, training_set_size))
                                          .get_attribute_value(j))
 
                 if var_of_random_pattern >= 0:
                     num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j)
-                    new_fuzzy_set = random.randint(0, num_fuzzy_sets - 2)
+                    new_fuzzy_set = random_gen.integers(0, num_fuzzy_sets - 1)
 
                     # To avoid getting the same value again we do the following
                     if new_fuzzy_set < indices[j]:

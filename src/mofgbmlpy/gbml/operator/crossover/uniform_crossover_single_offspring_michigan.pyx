@@ -1,9 +1,10 @@
 import copy
-import random
 
 import numpy as np
 from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.util.misc import crossover_mask
+
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
@@ -12,13 +13,14 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
         super().__init__(2, 1, prob=prob, **kwargs)
 
     def _do(self, _, X, **kwargs):
+        random_gen = get_random_gen()
         n_parents, n_matings, _ = X.shape
 
         if n_parents != 2:
             raise Exception("Error: 2 parents are needed for this crossover")
 
         n_vars = X[0, 0, 0].get_num_vars()
-        mask = np.random.random((n_matings, n_vars)) < 0.5
+        mask = random_gen.random((n_matings, n_vars)) < 0.5
 
         new_shape = (1,) + X.shape[1:]
         offspring = np.empty(new_shape, dtype=X.dtype)
@@ -37,7 +39,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
                     indices_2[j] = tmp
 
             # Select one offspring randomly
-            if random.random() < 0.5:
+            if random_gen.random() < 0.5:
                 offspring[0, i, 0] = child_1
             else:
                 offspring[0, i, 0] = child_2

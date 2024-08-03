@@ -3,9 +3,7 @@ from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
-import numpy as np
-import random
-import cython
+
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):

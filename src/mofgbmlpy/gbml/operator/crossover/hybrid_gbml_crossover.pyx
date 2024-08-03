@@ -2,9 +2,8 @@ import copy
 
 from pymoo.core.crossover import Crossover
 import numpy as np
-import random
 
-import time
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class HybridGBMLCrossover(Crossover):
@@ -18,6 +17,7 @@ class HybridGBMLCrossover(Crossover):
         self.__pittsburgh_crossover = pittsburgh_crossover
 
     def _do(self, problem, X, **kwargs):
+        random_gen = get_random_gen()
         _, n_matings, n_var = X.shape
 
         michigan_crossover_mask = np.empty(n_matings, dtype=np.bool_)
@@ -32,7 +32,7 @@ class HybridGBMLCrossover(Crossover):
                 if not at_least_one_michigan_crossover:
                     at_least_one_michigan_crossover = True
             else:
-                michigan_crossover_mask[i] = random.random() < self.__michigan_crossover_probability
+                michigan_crossover_mask[i] = random_gen.random() < self.__michigan_crossover_probability
                 if not at_least_one_michigan_crossover and michigan_crossover_mask[i]:
                     at_least_one_michigan_crossover = True
                 elif not at_least_one_pittsburgh_crossover and not michigan_crossover_mask[i]:

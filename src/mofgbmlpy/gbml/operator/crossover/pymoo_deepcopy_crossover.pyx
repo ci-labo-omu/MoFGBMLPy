@@ -12,6 +12,8 @@ from pymoo.core.operator import Operator
 from pymoo.core.population import Population
 from pymoo.core.variable import Real, get
 
+from mofgbmlpy.utility.random import get_random_gen
+
 
 class PymooDeepcopyCrossover(Operator):
 
@@ -26,6 +28,7 @@ class PymooDeepcopyCrossover(Operator):
         self.prob = Real(prob, bounds=(0.5, 1.0), strict=(0.0, 1.0))
 
     def do(self, problem, pop, parents=None, **kwargs):
+        random_gen = get_random_gen()
 
         # if a parents with array with mating indices is provided -> transform the input first
         if parents is not None:
@@ -47,7 +50,7 @@ class PymooDeepcopyCrossover(Operator):
         prob = get(self.prob, size=n_matings)
 
         # a boolean mask when crossover is actually executed
-        cross = np.random.random(n_matings) < prob
+        cross = random_gen.random(n_matings) < prob
 
         # the design space from the parents used for the crossover
         if np.any(cross):
@@ -59,13 +62,13 @@ class PymooDeepcopyCrossover(Operator):
         # now set the parents whenever NO crossover has been applied
         for k in np.flatnonzero(~cross):
             if n_offsprings < n_parents:
-                s = np.random.choice(np.arange(self.n_parents), size=n_offsprings, replace=False)
+                s = random_gen.choice(np.arange(self.n_parents), size=n_offsprings, replace=False)
             elif n_offsprings == n_parents:
                 s = np.arange(n_parents)
             else:
                 s = []
                 while len(s) < n_offsprings:
-                    s.extend(np.random.permutation(n_parents))
+                    s.extend(random_gen.permutation(n_parents))
                 s = s[:n_offsprings]
 
             Xp[:, k] = copy.deepcopy(X[s, k])

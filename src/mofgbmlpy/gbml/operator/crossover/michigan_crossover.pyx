@@ -1,21 +1,15 @@
 import copy
-import random
-import time
 
 import numpy as np
-from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
 
-from mofgbmlpy.gbml.objectives.michigan.num_wins import NumWins
-from mofgbmlpy.gbml.objectives.michigan.rule_length import RuleLength
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import UniformCrossoverSingleOffspringMichigan
 from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
 from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurvival
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
+from mofgbmlpy.utility.random import get_random_gen
 
 
 class MichiganCrossover(Crossover):
@@ -63,6 +57,7 @@ class MichiganCrossover(Crossover):
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
         num_dim = X[0, 0].get_var(0).get_num_vars()
+        random_gen = get_random_gen()
 
         for i in range(n_matings):
             generated_solutions = []
@@ -79,7 +74,7 @@ class MichiganCrossover(Crossover):
             if num_generating_rules % 2 == 0:
                 num_heuristic = num_generating_rules // 2
             else:
-                num_heuristic = (num_generating_rules - 1) // 2 + random.randint(0, 1)
+                num_heuristic = (num_generating_rules - 1) // 2 + random_gen.integers(0, 2)
 
             # 3. Heuristic Rule Generation
 
@@ -88,9 +83,9 @@ class MichiganCrossover(Crossover):
                 lack_size = num_heuristic - len(error_patterns)
 
                 if lack_size > 0:
-                    new_patterns = np.random.choice(self.__training_set.get_patterns(), lack_size)
+                    new_patterns = random_gen.choice(self.__training_set.get_patterns(), lack_size)
                     error_patterns = np.concatenate((error_patterns, new_patterns))
-                selected_error_patterns = np.random.choice(error_patterns, num_heuristic, replace=False)
+                selected_error_patterns = random_gen.choice(error_patterns, num_heuristic, replace=False)
 
                 for j in range(num_heuristic):
                     generated_solutions.append(

@@ -67,7 +67,7 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
         res = minimize(problem,
                        algorithm,
                        termination=termination,
-                       seed=1,
+                       seed=args.get("RAND_SEED"),
                        # save_history=True,
                        verbose=True)
         return res
