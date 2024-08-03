@@ -32,3 +32,4 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef void set_var(self, int index, MichiganSolution value)
     cpdef void set_vars(self, MichiganSolution[:] new_vars)
     cpdef int get_num_vars(self)
+    cpdef bint are_rules_valid(self)

@@ -23,5 +23,5 @@ cdef class AbstractSolution:
     cpdef int get_num_objectives(self)
     cpdef int get_num_constraints(self)
     cpdef object get_attributes(self)
-    cdef void clear_attributes(self)
+    cpdef void clear_attributes(self)
     cpdef double compute_coverage(self)

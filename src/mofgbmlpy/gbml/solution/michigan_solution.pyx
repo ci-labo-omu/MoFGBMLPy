@@ -127,7 +127,22 @@ cdef class MichiganSolution(AbstractSolution):
         Returns:
             (str) String representation
         """
-        return f"(MichiganSolution) {self._rule}"
+        txt = "(MichiganSolution) Variables: ["
+        cdef int i
+        for i in range(self.get_num_vars()):
+            txt = f"{txt}{self._vars[i]} "
+
+        txt = f"{txt}], Rule weight: {self._rule.get_rule_weight()}, Class label: {self._rule.get_class_label()}"
+
+        txt = f"{txt}], Objectives: ["
+        for i in range(self.get_num_objectives()):
+            txt = f"{txt}{self._objectives[i]} "
+
+        txt = f"{txt}], Attributes: {{Number of classifier patterns: {self.__fitness}, Number of wins: {self.__num_wins}, "
+        for key, val in self._attributes.items():
+            txt = f"{txt}{key}: {val}, "
+        txt = f"{txt}}}"
+        return txt
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -215,28 +230,6 @@ cdef class MichiganSolution(AbstractSolution):
             if self._vars[i] != other_vars[i]:
                 return False
         return True
-
-    def __repr__(self):
-        """Return a string representation of this object
-
-        Returns:
-            (str) String representation
-        """
-        txt = "(Michigan Solution) Variables: ["
-        for i in range(self.get_num_vars()):
-            txt += f"{self._vars[i]} "
-
-        txt += "] Objectives "
-        for i in range(self.get_num_objectives()):
-            txt += f"{self._objectives[i]} "
-
-        # txt += "] Constraints "
-        # for i in range(self.get_num_constraints()):
-        #     txt += f"{self._objectives[i]} "
-
-        txt += f"] Attributes: {self._attributes}"
-
-        return txt
 
     def to_xml(self):
         """Get the XML representation of this object.

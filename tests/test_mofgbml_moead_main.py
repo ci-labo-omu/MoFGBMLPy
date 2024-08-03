@@ -10,7 +10,7 @@ def test_main():
         # "--num-parallel-cores", "1",
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
-        # "--no-plot",
+        "--gen-plot",
         # "--objectives", "num-rules", "error-rate",
         # "--terminate-evaluation", "30000",
     ]

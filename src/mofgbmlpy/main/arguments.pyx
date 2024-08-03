@@ -166,7 +166,7 @@ class Arguments(ABC):
                 "type": "float",
                 "required": False,
             },
-            # "FUZZY-GRADE": { # TODO: not yet implemented
+            # "FUZZY-GRADE": { # TODO: not yet implemented. It seems to be used for entropy division, which is used by trapezoidal fuzzy sets
             #     "default": 1.0,
             #     "help": "",
             #     "type": "float",
@@ -214,9 +214,9 @@ class Arguments(ABC):
             },
 
             # Results and display
-            "no-plot": {
-                "default": True,
-                "help": "Don't generate matplotlib plots",
+            "gen-plot": {
+                "default": False,
+                "help": "Generate matplotlib plots",
                 "type": "bool",
                 "required": False,
             },

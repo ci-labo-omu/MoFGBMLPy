@@ -6,7 +6,7 @@ from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeep
 from pymoo.util.misc import crossover_mask
 
 
-class UniformCrossoverSingleOffspring(PymooDeepcopyCrossover):
+class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
 
     def __init__(self, prob, **kwargs):
         super().__init__(2, 1, prob=prob, **kwargs)
@@ -26,7 +26,7 @@ class UniformCrossoverSingleOffspring(PymooDeepcopyCrossover):
         for i in range(n_matings):
             child_1 = copy.deepcopy(X[0, i, 0])
             child_2 = copy.deepcopy(X[1, i, 0])
-            # TODO clear objectives ?
+
             indices_1 = child_1.get_vars()
             indices_2 = child_2.get_vars()
 
@@ -42,6 +42,7 @@ class UniformCrossoverSingleOffspring(PymooDeepcopyCrossover):
             else:
                 offspring[0, i, 0] = child_2
 
-            indices = offspring[0, i, 0].get_antecedent().get_antecedent_indices()
+            offspring[0, i, 0].reset_fitness()
+            offspring[0, i, 0].reset_num_wins()
 
         return offspring

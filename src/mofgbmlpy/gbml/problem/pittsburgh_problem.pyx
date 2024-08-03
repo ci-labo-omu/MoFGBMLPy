@@ -71,19 +71,14 @@ class PittsburghProblem(Problem):
     def remove_no_winner_michigan_solution(self, solutions):
         for i in range(len(solutions)):
             sol = solutions[i][0]
-            num_vars = sol.get_num_vars()
 
             # Update eval values
             sol.get_error_rate(self.__training_ds)
 
             k = 0
-            r = num_vars
-            for j in range(num_vars):
-                # if r == 1:
-                #     break # Only one solution
+            for j in range(sol.get_num_vars()):
                 if sol.get_var(k).get_num_wins() < 1:
                     sol.remove_var(k)
-                    r -= 1
                 else:
                     k += 1
 

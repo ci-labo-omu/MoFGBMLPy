@@ -75,7 +75,7 @@ cdef class AbstractSolution:
     cpdef object get_attributes(self):
         return self._attributes
 
-    cdef void clear_attributes(self):
+    cpdef void clear_attributes(self):
         self._attributes = {}
 
     cpdef double compute_coverage(self):

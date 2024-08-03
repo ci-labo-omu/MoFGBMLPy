@@ -62,7 +62,7 @@ usage: ipykernel_launcher.py [-h] --experiment-id EXPERIMENT_ID --algorithm-id
                              --objectives OBJECTIVES [OBJECTIVES ...]
                              [--root-folder ROOT_FOLDER] [--is-multi-label]
                              --train-file TRAIN_FILE --test-file TEST_FILE
-                             --data-name DATA_NAME [--no-plot] [--pretty-xml]
+                             --data-name DATA_NAME [--gen-plot] [--pretty-xml]
                              [--offspring-population-size OFFSPRING_POPULATION_SIZE]
 
 options:
@@ -131,7 +131,7 @@ options:
   --data-name DATA_NAME
                         Dataset name. It's used to create the path where
                         results are saved
-  --no-plot             Don't generate matplotlib plots
+  --gen-plot            Generate matplotlib plots
   --pretty-xml          Save results in a pretty XML file (formated with
                         indentation)
   --offspring-population-size OFFSPRING_POPULATION_SIZE

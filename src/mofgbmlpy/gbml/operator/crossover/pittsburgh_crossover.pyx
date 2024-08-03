@@ -62,8 +62,6 @@ class PittsburghCrossover(Crossover):
         _, n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
-        start = time.time()
-
         for i in range(n_matings):
             p1 = X[0,i,0]
             p2 = X[1,i,0]
@@ -72,7 +70,7 @@ class PittsburghCrossover(Crossover):
 
 
             Y[0,i,0].clear_vars()
-            # Y[0,i,0].clear_attributes()
+            Y[0,i,0].clear_attributes()
 
             num_rules_from_p1, num_rules_from_p2 = self.get_num_rules_from_parents(p1.get_num_vars(), p2.get_num_vars(), n_var)
             rules_idx_from_p1 = np.random.choice(np.arange(p1.get_num_vars(), dtype=int), num_rules_from_p1, replace=False)
@@ -88,6 +86,8 @@ class PittsburghCrossover(Crossover):
                 j += 1
 
             Y[0, i, 0].set_vars(new_vars)
+            if not Y[0, i, 0].are_rules_valid():
+                print("WARNING: Invalid rule generated in Pittsburgh crossover")
         return Y
 
     def execute(self, problem, X, **kwargs):

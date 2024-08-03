@@ -144,10 +144,13 @@ class AbstractMoFGBMLMain(ABC):
                             args=self._mofgbml_args)
         res.objectives_name = [str(obj) for obj in objectives]
 
-        if not self._mofgbml_args.get("NO_PLOT"):
-            self.plot_pareto_front(res.opt)
-            self.save_video(res.history, "mofgbml.mp4")
-            self.plot_line_interpretability_acc_tradeoff(res.opt)
+        if self._mofgbml_args.get("GEN_PLOT"):
+            pareto_front_plot = self.get_pareto_front_plot(res.opt)
+            pareto_front_plot.show()
+            pareto_front_plot.save(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'pareto_front.png')))
+
+            # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'mofgbml.mp4')))
+            self.plot_line_interpretability_acc_tradeoff(res.opt, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'accuracy_interpretability_tradeoff.png')))
 
         return res
 
@@ -217,7 +220,7 @@ class AbstractMoFGBMLMain(ABC):
 
 
     @staticmethod
-    def plot_line_interpretability_acc_tradeoff(population):
+    def plot_line_interpretability_acc_tradeoff(population, file_path=None):
         acc_train = []
         acc_test = []
 
@@ -248,6 +251,9 @@ class AbstractMoFGBMLMain(ABC):
         plt.ylim(0, 1)
         plt.legend(loc="upper left")
         plt.show()
+
+        if file_path is not None:
+            plt.savefig(file_path)
 
     def plot_fuzzy_variables(self):
         self.__knowledge.plot_fuzzy_variables()

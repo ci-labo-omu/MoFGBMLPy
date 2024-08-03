@@ -192,3 +192,15 @@ cdef class PittsburghSolution(AbstractSolution):
             attribute.text = str(value)
 
         return root
+
+    cpdef bint are_rules_valid(self):
+        if self.get_num_vars() < 1:
+            return False
+
+        cdef int i
+        cdef MichiganSolution sol
+        for i in range(self.get_num_vars()):
+            sol = self._vars[i]
+            if sol.get_rule().is_rejected_class_label():
+                return False
+        return True

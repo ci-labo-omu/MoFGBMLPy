@@ -92,7 +92,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
 
         if rule_weight_val <= reject_threshold:
-            class_label.set_rejected() # TODO: check if it's modified globally or locally only
+            class_label.set_rejected()
             return zero_weight
 
         return RuleWeightBasic(rule_weight_val)

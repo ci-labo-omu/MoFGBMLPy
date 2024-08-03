@@ -38,7 +38,7 @@ class MichiganMutation(Mutation):
                                          .get_attribute_value(j))
 
                 if var_of_random_pattern >= 0:
-                    num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j) # TODO: check if _vars and antecedent indices are the same array object
+                    num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j)
                     new_fuzzy_set = random.randint(0, num_fuzzy_sets - 2)
 
                     # To avoid getting the same value again we do the following

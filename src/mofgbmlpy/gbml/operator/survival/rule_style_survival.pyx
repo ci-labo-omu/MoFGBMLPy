@@ -20,14 +20,15 @@ cdef class RuleStyleSurvival:
         new_shape = (pop.shape[0] + len(offspring) - num_replacements,) + pop.shape[1:]
         new_pop = np.empty(new_shape, dtype=object)
 
-        # Sort by fitness
-        pop = RuleStyleSurvival.sort_by_fitness(pop)
+        # Sort by fitness if we need to replace the worst individuals (if not we just have to append to the current pop)
+        if num_replacements > 0:
+            pop = RuleStyleSurvival.sort_by_fitness(pop)
 
         # Copy individuals that won't be replaced
         for i in range(len(pop)-num_replacements):
             new_pop[i] = pop[i]
 
-        # Replace the worst individuals in the current population with the offspring and add rules
+        # Replace the worst individuals in the current population with the offspring and add rules if there is still space
         k = 0
         for i in range(len(pop)-num_replacements, len(new_pop)):
             new_pop[i] = offspring[k]

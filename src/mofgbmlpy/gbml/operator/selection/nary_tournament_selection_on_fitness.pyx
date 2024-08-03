@@ -5,11 +5,11 @@ from pymoo.operators.selection.tournament import TournamentSelection
 class NaryTournamentSelectionOnFitness(TournamentSelection):
     @staticmethod
     def nary_fitness_tournament(pop, P, **kwargs):
-        n_tournaments, n_parents = P.shape
+        n_tournaments, n_candidates = P.shape
 
-        if n_parents < 0:
+        if n_candidates < 0:
             raise ValueError("tournament_size must be positive")
-        elif n_parents == 1:
+        elif n_candidates == 1:
             return P # TODO: test this conditional branch
 
         S = np.full(n_tournaments, np.nan)
@@ -18,7 +18,7 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
             winner = None
             winner_fitness = -1
 
-            for j in range(n_parents):
+            for j in range(n_candidates):
                 fitness = pop[P[i, j]].X[0].get_fitness()
                 if fitness > winner_fitness:
                     winner_fitness = fitness

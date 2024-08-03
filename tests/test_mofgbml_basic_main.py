@@ -33,7 +33,7 @@ def test_main():
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
-        "--no-plot"
+        "--gen-plot"
     ]
 
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
