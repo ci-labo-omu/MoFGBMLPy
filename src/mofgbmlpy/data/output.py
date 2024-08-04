@@ -29,16 +29,16 @@ class Output:
             f.write(txt)
 
     @staticmethod
-    def save_data(data, path, args=None):
+    def save_data(data, path, pretty_xml=None):
         """Save the given data to a file
 
         Args:
             data (dict | xml.etree.ElementTree): data to be saved
             path (str): Path of the file where the data will be saved
-            args (Arguments): Arguments object. Can be used to specify arguments like PRETTY_XML
+            pretty_xml (bool): If True then add indent and line breaks to the XML file content (if the data is not an XML element it's ignored)
         """
         if isinstance(data, xml_tree.ElementTree):
-            if args is not None and args.has_key("PRETTY_XML") and args.get("PRETTY_XML"):
+            if pretty_xml is not None and pretty_xml:
                 xml_tree.indent(data, space="\t", level=0)
             data.write(path, encoding="utf-8", xml_declaration=True)
         elif isinstance(data, np.ndarray):

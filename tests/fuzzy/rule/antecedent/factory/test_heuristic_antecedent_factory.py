@@ -11,8 +11,10 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.main.arguments import Arguments
 
+from mofgbmlpy.utility.random import init_random_gen
 
-# (self, training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care):
+init_random_gen(2020)
+
 
 def get_training_set():
     args = Arguments()

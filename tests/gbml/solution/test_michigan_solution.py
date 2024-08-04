@@ -15,6 +15,9 @@ from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
+from mofgbmlpy.utility.random import init_random_gen
+
+init_random_gen(2020)
 
 
 def test_hash():

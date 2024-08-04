@@ -6,6 +6,9 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.utility.random import init_random_gen
+
+init_random_gen(2020)
 
 
 def test_none_knowledge():

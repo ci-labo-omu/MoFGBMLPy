@@ -27,48 +27,22 @@ from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 
 class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLNSGAIIArgs(), MoFGBMLNSGAIIMain.run, knowledge_factory_class)
+        super().__init__(MoFGBMLNSGAIIArgs(), knowledge_factory_class)
 
-    @staticmethod
-    def run(train, args, knowledge, objectives, termination, antecedent_factory, crossover):
-        num_objectives_michigan = 1
-        num_constraints_michigan = 0
-
-        num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
-        num_constraints_pittsburgh = 0
-
-        rule_builder = RuleBuilderBasic(antecedent_factory,
-                                        LearningBasic(train),
-                                        knowledge)
-
-        michigan_solution_builder = MichiganSolutionBuilder(num_objectives_michigan,
-                                                            num_constraints_michigan,
-                                                            rule_builder)
-
-        classification = SingleWinnerRuleSelection(args.get("CACHE_SIZE"))
-        classifier = Classifier(classification)
-
-        problem = PittsburghProblem(num_vars_pittsburgh,
-                                    objectives,
-                                    num_constraints_pittsburgh,
-                                    train,
-                                    michigan_solution_builder,
-                                    classifier)
-
-        algorithm = NSGA2(pop_size=args.get("POPULATION_SIZE"),
-                          sampling=HybridGBMLSampling(train),
-                          crossover=crossover,
+    def run(self):
+        algorithm = NSGA2(pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
+                          sampling=HybridGBMLSampling(self._train),
+                          crossover=self._crossover,
                           repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(train, knowledge),
+                          mutation=PittsburghMutation(self._train, self._knowledge),
                           eliminate_duplicates=False,
                           save_history=True,
-                          n_offsprings=args.get("OFFSPRING_POPULATION_SIZE"))
+                          n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
-        res = minimize(problem,
+        res = minimize(self._problem,
                        algorithm,
-                       termination=termination,
-                       seed=args.get("RAND_SEED"),
-                       # save_history=True,
+                       termination=self._termination,
+                       seed=self._mofgbml_args.get("RAND_SEED"),
                        verbose=True)
         return res
 

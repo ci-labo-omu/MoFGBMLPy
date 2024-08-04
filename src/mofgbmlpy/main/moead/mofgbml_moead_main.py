@@ -42,56 +42,30 @@ from pyrecorder.writers.video import Video
 
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
     def __init__(self, knowledge_factory_class):
-        super().__init__(MoFGBMLMOEADArgs(), MoFGBMLMOEADMain.run, knowledge_factory_class)
+        super().__init__(MoFGBMLMOEADArgs(), knowledge_factory_class)
 
-    @staticmethod
-    def run(train, args, knowledge, objectives, termination, antecedent_factory, crossover):
-        num_objectives_michigan = 2
-        num_constraints_michigan = 0
-
-        num_vars_pittsburgh = args.get("INITIATION_RULE_NUM")
-        num_constraints_pittsburgh = 0
-
-        rule_builder = RuleBuilderBasic(antecedent_factory,
-                                        LearningBasic(train),
-                                        knowledge)
-
-        michigan_solution_builder = MichiganSolutionBuilder(num_objectives_michigan,
-                                                            num_constraints_michigan,
-                                                            rule_builder)
-
-        classification = SingleWinnerRuleSelection(args.get("CACHE_SIZE"))
-        classifier = Classifier(classification)
-
-        problem = PittsburghProblem(num_vars_pittsburgh,
-                                    objectives,
-                                    num_constraints_pittsburgh,
-                                    train,
-                                    michigan_solution_builder,
-                                    classifier)
-
+    def run(self):
         ref_dirs = get_reference_directions("uniform",
-                                            problem.get_num_objectives(),
-                                            n_partitions=args.get("POPULATION_SIZE")-1) # TODO: works for 2 objectives, but change it for 1 or 3 and more objectives
+                                            self._problem.get_num_objectives(),
+                                            n_partitions=self._mofgbml_args.get("POPULATION_SIZE")-1) # TODO: works for 2 objectives, but change it for 1 or 3 and more objectives
 
 
         # Note: if num_obj <=2, pymoo uses Tschebyscheff
         algorithm = MOEAD(
             ref_dirs,
-            n_neighbors=args.get("NEIGHBORHOOD_SIZE"),
-            prob_neighbor_mating=args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
-            sampling=HybridGBMLSampling(train),
-            crossover=crossover,
+            n_neighbors=self._mofgbml_args.get("NEIGHBORHOOD_SIZE"),
+            prob_neighbor_mating=self._mofgbml_args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
+            sampling=HybridGBMLSampling(self._train),
+            crossover=self._crossover,
             repair=PittsburghRepair(),
-            mutation=PittsburghMutation(train, knowledge),
-            save_history=True)
+            mutation=PittsburghMutation(self._train, self._knowledge))
 
-        res = minimize(problem,
+        res = minimize(self._problem,
                        algorithm,
-                       termination,
-                       seed=args.get("RAND_SEED"),
-                       # save_history=True,
-                       verbose=True)
+                       self._termination,
+                       seed=self._mofgbml_args.get("RAND_SEED"),
+                       verbose=True,
+                       save_history=True)
         return res
 
 

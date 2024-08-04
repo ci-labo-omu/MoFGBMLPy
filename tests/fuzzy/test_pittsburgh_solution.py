@@ -18,6 +18,9 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
+from mofgbmlpy.utility.random import init_random_gen
+
+init_random_gen(2020)
 
 
 def test_to_xml_run():
