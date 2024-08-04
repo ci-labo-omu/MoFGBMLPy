@@ -257,3 +257,6 @@ class AbstractMoFGBMLMain(ABC):
 
     def show_args(self):
         print(str(self._mofgbml_args))
+
+    def get_args(self):
+        return self._mofgbml_args

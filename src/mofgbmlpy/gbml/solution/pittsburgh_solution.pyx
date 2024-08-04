@@ -26,7 +26,7 @@ cdef class PittsburghSolution(AbstractSolution):
         return self.__michigan_solution_builder
 
 
-    cdef void learning(self):
+    cpdef void learning(self):
         for var in self._vars:
             var.learning()
 
