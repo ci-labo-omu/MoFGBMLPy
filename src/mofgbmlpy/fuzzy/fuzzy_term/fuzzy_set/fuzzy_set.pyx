@@ -1,3 +1,4 @@
+import copy
 import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
@@ -78,3 +79,17 @@ cdef class FuzzySet:
                 self.__function == other.get_function() and
                 self.__term == other.get_term()
                 and self.__division_type == other.get_division_type())
+
+    def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            (object) Deep copy of this object
+        """
+        cdef FuzzySet new_object = FuzzySet(copy.deepcopy(self.__function), self.__id, self.__division_type, self.__term)
+
+        memo[id(self)] = new_object
+        return new_object

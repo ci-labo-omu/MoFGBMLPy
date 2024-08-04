@@ -169,3 +169,6 @@ cdef class Antecedent:
 
     cpdef get_knowledge(self):
         return self.__knowledge
+
+    cpdef set_knowledge(self, Knowledge new_knowledge):
+        self.__knowledge = new_knowledge

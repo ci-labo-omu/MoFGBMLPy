@@ -248,3 +248,7 @@ cdef class MichiganSolution(AbstractSolution):
             attribute.text = str(value)
 
         return root
+
+
+    cpdef void set_antecedent_knowledge(self, Knowledge new_knowledge):
+        self.get_antecedent().set_knowledge(new_knowledge)

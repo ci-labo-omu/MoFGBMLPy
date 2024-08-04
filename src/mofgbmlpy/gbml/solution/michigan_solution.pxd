@@ -46,3 +46,4 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef void set_var(self, int index, int value)
     cpdef void set_vars(self, int[:] new_vars)
     cpdef int get_num_vars(self)
+    cpdef void set_antecedent_knowledge(self, Knowledge knowledge)

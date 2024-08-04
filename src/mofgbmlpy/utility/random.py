@@ -8,6 +8,7 @@ def init_random_gen(seed_val):
 
 
 def get_random_gen():
+    global random_gen
     if random_gen is None:
         raise ValueError('Random generator not initialized')
     return random_gen

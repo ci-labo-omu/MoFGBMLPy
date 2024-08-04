@@ -14,3 +14,4 @@ cdef class Antecedent:
     cpdef int get_length(self)
     cpdef str get_linguistic_representation(self)
     cpdef get_knowledge(self)
+    cpdef set_knowledge(self, Knowledge new_knowledge)
