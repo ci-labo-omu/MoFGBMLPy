@@ -110,3 +110,16 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
             fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), np.array(current_support_values), str(self.__var_names[dim_i]))
         knowledge.set_fuzzy_vars(fuzzy_sets)
         return knowledge
+
+    def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            (object) Deep copy of this object
+        """
+        cdef HomoTriangleKnowledgeFactory new_object = HomoTriangleKnowledgeFactory(np.copy(self.__num_divisions.shape), self.__var_names, self.__fuzzy_set_names)
+        memo[id(self)] = new_object
+        return new_object

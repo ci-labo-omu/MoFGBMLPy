@@ -11,15 +11,14 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 
-from mofgbmlpy.utility.random import get_random_gen
-
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
-    def __init__(self, knowledge):
+    def __init__(self, knowledge, random_gen):
         if knowledge is None or knowledge.get_num_dim() == 0:
             raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
         self.__knowledge = knowledge
         self.__antecedents_indices = self.generate_antecedents_indices()
+        self._random_gen = random_gen
 
     def get_num_antecedents(self):
         return len(self.__antecedents_indices)
@@ -89,7 +88,6 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int i
         cdef int j
         cdef int[:] chosen_list
-        random_gen = get_random_gen()
 
         if num_rules <= 0:
             raise Exception("num_rules must be positive")
@@ -97,7 +95,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         num_rules = min(num_rules, self.__antecedents_indices.shape[0])
 
         # Return an antecedent
-        cdef int[:] chosen_indices_lists = random_gen.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
+        cdef int[:] chosen_indices_lists = self._random_gen.choice(np.arange(self.__antecedents_indices.shape[0], dtype=int), num_rules, replace=False)
         cdef int[:,:] new_indices = np.empty((num_rules, self.__knowledge.get_num_dim()), dtype=int)
 
         for i in range(chosen_indices_lists.shape[0]):
@@ -141,7 +139,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         Returns:
             (object) Deep copy of this object
         """
-        new_object = AllCombinationAntecedentFactory(self.__knowledge)
+        new_object = AllCombinationAntecedentFactory(self.__knowledge, self._random_gen)
 
         memo[id(self)] = new_object
         return new_object

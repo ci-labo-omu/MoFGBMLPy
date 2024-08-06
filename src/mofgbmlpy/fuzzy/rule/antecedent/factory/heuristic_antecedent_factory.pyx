@@ -4,10 +4,9 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 
-from mofgbmlpy.utility.random import get_random_gen
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care):
+    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
         if knowledge is None or knowledge.get_num_dim() == 0:
             raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
@@ -25,6 +24,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         self.__knowledge = knowledge
         self.__is_dc_probability = is_dc_probability
         self.__antecedent_number_do_not_dont_care = antecedent_number_do_not_dont_care
+        self._random_gen = random_gen
 
         if self.__is_dc_probability:
             self.__dc_rate = dc_rate
@@ -36,7 +36,6 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return self.calculate_antecedent_part(pattern)
 
     cdef int[:] calculate_antecedent_part(self, Pattern pattern):
-        random_gen = get_random_gen()
         if pattern is None:
             raise Exception("Pattern can't be none")
 
@@ -53,7 +52,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         for dim_i in range(dimension):
             # DC
-            if random_gen.random() < self.__dc_rate:
+            if self._random_gen.random() < self.__dc_rate:
                 antecedent_indices[dim_i] = 0  # The first fuzzy set (index = 0) is don't care
                 continue
 
@@ -74,7 +73,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                 sum_mb_values += self.__knowledge.get_membership_value_py(attribute_array[dim_i], dim_i, h+1)
                 mb_values_inc_sums[h] = sum_mb_values
 
-            arrow = random_gen.random() * sum_mb_values
+            arrow = self._random_gen.random() * sum_mb_values
 
             for h in range(num_fuzzy_sets_not_dc):
                 if arrow < mb_values_inc_sums[h]:
@@ -107,21 +106,20 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         cdef int[:] pattern_indices
         cdef int num_remaining_indices
         cdef int[:,:] new_antecedent_indices
-        random_gen = get_random_gen()
 
         if num_rules is None or num_rules == 1:
-            pattern_index = random_gen.integers(0, data_size)
+            pattern_index = self._random_gen.integers(0, data_size)
             return np.array([self.__select_antecedent_part(pattern_index)], dtype=int)
 
         if num_rules <= self.__training_set.get_size():
-            pattern_indices = random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
+            pattern_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
 
         else:
             # TODO: this function seems invalid (indices is maybe an array of copies and the concatenation is maybe between incompatible types (int and array)
             pattern_indices = [i for i in range(data_size)] * (num_rules // data_size)
 
             num_remaining_indices = num_rules % data_size
-            remaining_indices = random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_remaining_indices,
+            remaining_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_remaining_indices,
                                                  replace=False)
             pattern_indices = np.concatenate((pattern_indices, remaining_indices))
 
@@ -147,7 +145,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         Returns:
             (object) Deep copy of this object
         """
-        new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_number_do_not_dont_care)
+        new_object = HeuristicAntecedentFactory(self.__training_set, self.__knowledge, self.__is_dc_probability, self.__dc_rate, self.__antecedent_number_do_not_dont_care, self._random_gen)
 
         memo[id(self)] = new_object
         return new_object

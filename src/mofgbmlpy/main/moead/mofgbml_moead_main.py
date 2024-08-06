@@ -58,13 +58,13 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             sampling=HybridGBMLSampling(self._train),
             crossover=self._crossover,
             repair=PittsburghRepair(),
-            mutation=PittsburghMutation(self._train, self._knowledge))
+            mutation=PittsburghMutation(self._train, self._knowledge, self._random_gen))
 
         res = minimize(self._problem,
                        algorithm,
                        self._termination,
                        seed=self._mofgbml_args.get("RAND_SEED"),
-                       verbose=True,
+                       verbose=self._verbose,
                        save_history=True)
         return res
 

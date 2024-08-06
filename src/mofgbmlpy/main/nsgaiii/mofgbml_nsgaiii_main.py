@@ -38,7 +38,7 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
                           sampling=HybridGBMLSampling(self._train),
                           crossover=self._crossover,
                           repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(self._train, self._knowledge),
+                          mutation=PittsburghMutation(self._train, self._knowledge, self._random_gen),
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(self._problem,
@@ -46,7 +46,7 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
                        termination=self._termination,
                        seed=self._mofgbml_args.get("RAND_SEED"),
                        save_history=True,
-                       verbose=True)
+                       verbose=self._verbose)
         return res
 
 

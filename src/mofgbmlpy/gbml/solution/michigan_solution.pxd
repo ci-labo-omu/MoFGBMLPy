@@ -19,6 +19,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef int[:] _vars
     cdef int __num_wins
     cdef int __fitness
+    cdef object _random_gen
 
     cdef void create_rule(self, Pattern pattern=?)
     cpdef void learning(self)

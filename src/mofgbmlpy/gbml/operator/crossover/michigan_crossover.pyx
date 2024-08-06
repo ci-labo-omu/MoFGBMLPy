@@ -9,7 +9,6 @@ from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
 from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurvival
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
-from mofgbmlpy.utility.random import get_random_gen
 
 
 class MichiganCrossover(Crossover):
@@ -18,13 +17,14 @@ class MichiganCrossover(Crossover):
     __knowledge = None
     __crossover_rate = None
 
-    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, prob=0.9):
+    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, random_gen, prob=0.9):
         super().__init__(1, 1, 1)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
         self.__training_set = training_set
         self.__knowledge = knowledge
         self.__max_num_rules = max_num_rules
+        self._random_gen = random_gen
 
     def ga_rules_gen(self, crossover, mutation, selection, pop, problem, mating_pool_size, n_parents, num_ga):
         mating_pop = selection.do(problem, pop, mating_pool_size, n_parents, to_pop=False)
@@ -57,7 +57,6 @@ class MichiganCrossover(Crossover):
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
         num_dim = X[0, 0].get_var(0).get_num_vars()
-        random_gen = get_random_gen()
 
         for i in range(n_matings):
             generated_solutions = []
@@ -74,7 +73,7 @@ class MichiganCrossover(Crossover):
             if num_generating_rules % 2 == 0:
                 num_heuristic = num_generating_rules // 2
             else:
-                num_heuristic = (num_generating_rules - 1) // 2 + random_gen.integers(0, 2)
+                num_heuristic = (num_generating_rules - 1) // 2 + self._random_gen.integers(0, 2)
 
             # 3. Heuristic Rule Generation
 
@@ -83,9 +82,9 @@ class MichiganCrossover(Crossover):
                 lack_size = num_heuristic - len(error_patterns)
 
                 if lack_size > 0:
-                    new_patterns = random_gen.choice(self.__training_set.get_patterns(), lack_size)
+                    new_patterns = self._random_gen.choice(self.__training_set.get_patterns(), lack_size)
                     error_patterns = np.concatenate((error_patterns, new_patterns))
-                selected_error_patterns = random_gen.choice(error_patterns, num_heuristic, replace=False)
+                selected_error_patterns = self._random_gen.choice(error_patterns, num_heuristic, replace=False)
 
                 for j in range(num_heuristic):
                     generated_solutions.append(
@@ -101,10 +100,10 @@ class MichiganCrossover(Crossover):
                                                    problem.get_training_set(),
                                                    problem.get_rule_builder())
 
-                crossover = UniformCrossoverSingleOffspringMichigan(self.__crossover_rate)
+                crossover = UniformCrossoverSingleOffspringMichigan(self._random_gen, self.__crossover_rate)
 
                 mutation_rt = 1/self.__training_set.get_num_dim()
-                mutation = MichiganMutation(self.__training_set, self.__knowledge, mutation_rt)
+                mutation = MichiganMutation(self.__training_set, self.__knowledge, mutation_rt, self._random_gen)
 
                 if parent.get_num_vars() == 1:
                     tournament_size = 1

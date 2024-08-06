@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 import pytest
 
@@ -11,10 +13,7 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.main.arguments import Arguments
 
-from mofgbmlpy.utility.random import init_random_gen
-
-init_random_gen(2020)
-
+random_gen = np.random.Generator(np.random.MT19937(seed=2022))
 
 def get_training_set():
     args = Arguments()
@@ -33,7 +32,7 @@ def test_none_knowledge():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_no_fuzzy_vars_knowledge():
@@ -44,7 +43,7 @@ def test_no_fuzzy_vars_knowledge():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_none_training_set():
@@ -54,7 +53,7 @@ def test_none_training_set():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
     with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_different_num_dim_training_set():
@@ -65,7 +64,7 @@ def test_different_num_dim_training_set():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_is_dc_probability_none():
@@ -75,7 +74,7 @@ def test_is_dc_probability_none():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+    HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 @pytest.mark.parametrize("value", np.random.uniform(-1, 1, 5))
@@ -88,9 +87,9 @@ def test_dc_rate(value):
 
     if dc_rate < 0 or dc_rate > 1:
         with pytest.raises(Exception):
-            HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+            HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
     else:
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_antecedent_number_do_not_dont_care_negative():
@@ -101,12 +100,12 @@ def test_antecedent_number_do_not_dont_care_negative():
     antecedent_number_do_not_dont_care = -1
 
     with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 def create_example(is_dc_probability=True, dc_rate=0.5, antecedent_number_do_not_dont_care=1):
     training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
-    return HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care)
+    return HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_calculate_antecedent_part_none_pattern():
@@ -166,3 +165,10 @@ def test_calculate_antecedent_part():
 
     with pytest.raises(Exception):
         factory.calculate_antecedent_part(pattern)
+
+
+def test_deep_copy():
+    # Just check if it raises an exception
+    _ = copy.deepcopy(create_example(antecedent_number_do_not_dont_care=0, is_dc_probability=False))
+
+    assert True

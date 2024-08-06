@@ -73,6 +73,12 @@ class Arguments(ABC):
             #     "type": "int",
             #     "required": False,
             # },
+            "verbose": {
+                "default": False,
+                "help": "If True then display for each generation some information",
+                "type": "bool",
+                "required": False,
+            },
 
             # Random Number Seed
             "rand-seed": {

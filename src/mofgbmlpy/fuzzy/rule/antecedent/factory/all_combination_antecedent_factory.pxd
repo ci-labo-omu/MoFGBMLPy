@@ -10,6 +10,7 @@ import numpy as np
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     cdef int[:,:] __antecedents_indices
     cdef Knowledge __knowledge
+    cdef object _random_gen
 
     cdef int[:,:] generate_antecedents_indices(self)
     cdef Antecedent[:] create(self, int num_rules=?)

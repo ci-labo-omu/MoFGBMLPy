@@ -1,5 +1,3 @@
-import copy
-
 from pymoo.core.problem import Problem
 import numpy as np
 cimport numpy as cnp
@@ -27,14 +25,6 @@ class MichiganProblem(Problem):
         self.__num_vars = num_vars
         self.__rule_builder = rule_builder
         self.__objectives = objectives
-
-    # def create_solution(self):
-    #     michigan_solution = MichiganSolution(self.__num_vars,
-    #                                          self.__num_objectives_pittsburgh,
-    #                                          self.__num_constraints_pittsburgh,
-    #                                          copy.copy(self.__rule_builder))
-    #
-    #     return michigan_solution
 
     def _evaluate(self, X, out, *args, **kwargs):
         cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)

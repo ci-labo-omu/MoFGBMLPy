@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
@@ -15,12 +17,11 @@ from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
-from mofgbmlpy.utility.random import init_random_gen
-
-init_random_gen(2020)
 
 
 def test_hash():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+
     # Only test if it doesn't return an exception
     args = MoFGBMLNSGAIIArgs()
 
@@ -31,14 +32,32 @@ def test_hash():
     training_data_set, _ = Input.get_train_test_files(args)
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
 
-    antecedent_factory = AllCombinationAntecedentFactory(knowledge)
+    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
     consequent_factory = LearningBasic(training_data_set)
-    sol1 = MichiganSolution(2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
-    sol2 = MichiganSolution(2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
-    sol3 = MichiganSolution(2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    sol1 = MichiganSolution(random_gen, 2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    sol2 = MichiganSolution(random_gen, 2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    sol3 = MichiganSolution(random_gen, 2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
 
     sol1.set_vars(np.array([0, 1, 2, 3], int))
     sol2.set_vars(np.array([0, 1, 2, 3], int))
     sol3.set_vars(np.array([0, 1, 3, 2], int))
 
     assert hash(sol1) == hash(sol2) and hash(sol1) != hash(sol3)
+
+def test_deep_copy():
+    # Just check if it raises an exception
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+
+    args = MoFGBMLNSGAIIArgs()
+
+    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
+    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
+    args.set("IS_MULTI_LABEL", False)
+
+    training_data_set, _ = Input.get_train_test_files(args)
+    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
+
+    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
+    consequent_factory = LearningBasic(training_data_set)
+    obj = MichiganSolution(random_gen, 2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    _ = copy.deepcopy(obj)

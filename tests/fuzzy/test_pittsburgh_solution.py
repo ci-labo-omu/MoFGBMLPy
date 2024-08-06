@@ -18,9 +18,8 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
-from mofgbmlpy.utility.random import init_random_gen
 
-init_random_gen(2020)
+random_gen = np.random.Generator(np.random.MT19937(seed=2022))
 
 
 def test_to_xml_run():
@@ -33,8 +32,8 @@ def test_to_xml_run():
 
     training_data_set, _ = Input.get_train_test_files(args)
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
-    rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge), LearningBasic(training_data_set), knowledge)
-    michigan_builder = MichiganSolutionBuilder(2, 0, rule_builder)
+    rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge, random_gen), LearningBasic(training_data_set), knowledge)
+    michigan_builder = MichiganSolutionBuilder(random_gen, 2, 0, rule_builder)
     classifier = Classifier(SingleWinnerRuleSelection())
     problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classifier)
     sol = problem.create_solution()

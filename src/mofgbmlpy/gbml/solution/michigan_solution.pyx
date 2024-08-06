@@ -13,15 +13,13 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport Abs
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
 
-from mofgbmlpy.utility.random import get_random_gen
 
 cdef class MichiganSolution(AbstractSolution):
-    def __init__(self, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True):
+    def __init__(self, random_gen, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True):
         self._rule_builder = rule_builder
         self.__num_wins = 0
         self.__fitness = 0
-
-        random_gen = get_random_gen()
+        self._random_gen = random_gen
 
         super().__init__(num_objectives, num_constraints)
 
@@ -156,7 +154,8 @@ cdef class MichiganSolution(AbstractSolution):
             (object) Deep copy of this object
         """
         cdef int i
-        new_solution = MichiganSolution(self.get_num_objectives(),
+        new_solution = MichiganSolution(self._random_gen,
+                                        self.get_num_objectives(),
                                         self.get_num_constraints(),
                                         copy.deepcopy(self._rule_builder),
                                         do_init_vars=False)

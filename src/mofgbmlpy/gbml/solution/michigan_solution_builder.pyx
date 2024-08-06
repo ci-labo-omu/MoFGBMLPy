@@ -8,7 +8,8 @@ from mofgbmlpy.gbml.solution.solution_builder_core cimport SolutionBuilderCore
 cimport numpy as cnp
 
 cdef class MichiganSolutionBuilder(SolutionBuilderCore):
-    def __init__(self, num_objectives, num_constraints, rule_builder):
+    def __init__(self, random_gen, num_objectives, num_constraints, rule_builder):
+        self._random_gen = random_gen
         super().__init__(num_objectives, num_constraints, rule_builder)
 
     cpdef MichiganSolution[:] create(self, int num_solutions=1, Pattern pattern=None):
@@ -16,7 +17,7 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
         cdef int i
 
         for i in range(num_solutions):
-            solutions[i] = MichiganSolution(self._num_objectives, self._num_constraints, self._rule_builder,
+            solutions[i] = MichiganSolution(self._random_gen, self._num_objectives, self._num_constraints, self._rule_builder,
                                             pattern=pattern)
 
         return solutions
@@ -32,7 +33,8 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
         """
         cdef int i
 
-        new_object = MichiganSolutionBuilder(self._num_objectives,
+        new_object = MichiganSolutionBuilder(self._random_gen,
+                                             self._num_objectives,
                                              self._num_constraints,
                                              copy.deepcopy(self._rule_builder))
 
