@@ -23,8 +23,11 @@ cdef class RuleMulti(AbstractRule):
         return new_rule
 
     cpdef double get_fitness_value(self, double[:] attribute_vector):
+        cdef double membership
+        cdef double cf
+        cdef double cf_mean
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)
-        cf_mean = np.mean(self.get_consequent().get_rule_weight_value())
+        cf_mean = np.mean(self.get_rule_weight().get_value())
         return membership * cf_mean
 
     def __repr__(self):

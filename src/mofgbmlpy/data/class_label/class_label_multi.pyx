@@ -80,7 +80,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         if self.__class_label is None:
             raise Exception("class label value is None")
         cdef int[:] label_value = self.__class_label
-        txt = f"{self.label_value[0]:2d}"
+        txt = f"{label_value[0]:2d}"
 
         if self.get_length() > 1:
             for i in range(1, self.get_length()):
@@ -90,11 +90,18 @@ cdef class ClassLabelMulti(AbstractClassLabel):
 
     cpdef object get_class_label_value(self):
         """Get the class label values
-        
+
         Returns:
             (int[]) Class label values
         """
         return self.__class_label
+
+    cpdef int get_class_label_value_at(self, int index):
+        """Get the class label value at the given index
+
+        Returns:
+            (int) Class label value
+        """
 
     cpdef void set_class_label_value(self, object class_label):
         """Set the class label values

@@ -23,7 +23,9 @@ from mofgbmlpy.fuzzy.classifier.classifier import Classifier
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMulti
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
@@ -44,6 +46,8 @@ class AbstractMoFGBMLMain(ABC):
     _crossover = None
     _verbose = None
     _random_gen = None
+    _is_multi_label = None
+
 
     def __init__(self, mofgbml_args, knowledge_factory_class):
         self._mofgbml_args = mofgbml_args
@@ -64,6 +68,8 @@ class AbstractMoFGBMLMain(ABC):
 
         # Load dataset
         self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
+
+        self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
 
         # Create knowledge object
         self._knowledge = self._knowledge_factory_class(self._train.get_num_dim()).create()
@@ -135,9 +141,14 @@ class AbstractMoFGBMLMain(ABC):
         num_vars_pittsburgh = self._mofgbml_args.get("INITIATION_RULE_NUM")
         num_constraints_pittsburgh = 0
 
-        rule_builder = RuleBuilderBasic(antecedent_factory,
-                                        LearningBasic(self._train),
-                                        self._knowledge)
+        if self._is_multi_label:
+            rule_builder = RuleBuilderMulti(antecedent_factory,
+                                            LearningMulti(self._train),
+                                            self._knowledge)
+        else:
+            rule_builder = RuleBuilderBasic(antecedent_factory,
+                                            LearningBasic(self._train),
+                                            self._knowledge)
 
         michigan_solution_builder = MichiganSolutionBuilder(self._random_gen,
                                                             num_objectives_michigan,
@@ -230,9 +241,9 @@ class AbstractMoFGBMLMain(ABC):
             pareto_front_plot.save(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'pareto_front.png')))
 
             # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'mofgbml.mp4')))
-            self.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0],
+            AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0],
                                                          str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"),
-                                                                          'accuracy_interpretability_tradeoff.png')))
+                                                                          'error_rate_interpretability_tradeoff.png')))
 
         return res
 
@@ -297,20 +308,27 @@ class AbstractMoFGBMLMain(ABC):
         return plot
 
     @staticmethod
-    def plot_line_interpretability_error_rate_tradeoff(solutions, file_path=None, title=None, xlim=None, grid=True):
+    def plot_line_interpretability_error_rate_tradeoff(solutions, file_path=None, title=None, xlim=None, grid=True, x_key="total_rule_length"):
         err_train = []
         err_test = []
 
+        if x_key == "total_rule_length":
+            x_label = "Total rule length"
+        elif x_key == "num_rules":
+            x_label = "Num rules"
+        else:
+            raise Exception("only total_rule_length and num_rules are accepted for the x_key")
+
         for solution in solutions:
-            err_train.append((solution.get_attribute("total_rule_length"),
+            err_train.append((solution.get_attribute(x_key),
                               solution.get_attribute("training_error_rate")))
-            err_test.append((solution.get_attribute("total_rule_length"),
+            err_test.append((solution.get_attribute(x_key),
                              solution.get_attribute("test_error_rate")))
 
-        AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, file_path, title, xlim, grid)
+        AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label=x_label, y_label="Error rate", file_path=file_path, title=title, xlim=xlim, grid=grid)
 
     @staticmethod
-    def plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label='total rule length', y_label='Error rate', file_path=None, title=None, xlim=None, grid=True):
+    def plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label='Total rule length', y_label='Error rate', file_path=None, title=None, xlim=None, grid=True):
         err_train = list(set(err_train))
         err_train.sort()
         for i in range(len(err_train)):

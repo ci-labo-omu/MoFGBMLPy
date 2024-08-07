@@ -106,7 +106,7 @@ cdef class LearningBasic(AbstractLearning):
         Returns:
             (str) String representation
         """
-        return f"MoFGBML_Learning [defaultLimit={AbstractLearning._default_reject_threshold}]"
+        return f"MoFGBML_Learning"
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object

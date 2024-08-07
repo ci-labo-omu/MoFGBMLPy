@@ -12,20 +12,12 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.main.arguments import Arguments
+from util import get_a0_0_iris_train_test
 
 random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-
-def get_training_set():
-    args = Arguments()
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-    train, _ = Input.get_train_test_files(args)
-    return train
-
+training_set, _ = get_a0_0_iris_train_test()
 
 def test_none_knowledge():
-    training_set = get_training_set()
     knowledge = None
     is_dc_probability = True
     dc_rate = 0.5
@@ -36,7 +28,6 @@ def test_none_knowledge():
 
 
 def test_no_fuzzy_vars_knowledge():
-    training_set = get_training_set()
     knowledge = Knowledge()
     is_dc_probability = True
     dc_rate = 0.5
@@ -47,7 +38,6 @@ def test_no_fuzzy_vars_knowledge():
 
 
 def test_none_training_set():
-    training_set = None
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(1).create()
     is_dc_probability = True
     dc_rate = 0.5
@@ -57,7 +47,6 @@ def test_none_training_set():
 
 
 def test_different_num_dim_training_set():
-    training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(1).create()
     is_dc_probability = True
     dc_rate = 0.5
@@ -68,7 +57,6 @@ def test_different_num_dim_training_set():
 
 
 def test_is_dc_probability_none():
-    training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
     is_dc_probability = None  # will be converted to False
     dc_rate = 0.5
@@ -79,7 +67,6 @@ def test_is_dc_probability_none():
 
 @pytest.mark.parametrize("value", np.random.uniform(-1, 1, 5))
 def test_dc_rate(value):
-    training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
     is_dc_probability = True
     dc_rate = value
@@ -93,7 +80,6 @@ def test_dc_rate(value):
 
 
 def test_antecedent_number_do_not_dont_care_negative():
-    training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
     is_dc_probability = True
     dc_rate = 0.5
@@ -103,7 +89,6 @@ def test_antecedent_number_do_not_dont_care_negative():
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 def create_example(is_dc_probability=True, dc_rate=0.5, antecedent_number_do_not_dont_care=1):
-    training_set = get_training_set()
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
     return HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 

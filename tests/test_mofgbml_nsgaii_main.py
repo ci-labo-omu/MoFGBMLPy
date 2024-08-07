@@ -49,3 +49,22 @@ def test_main():
     Output.writeln("../py_version_results/basic_main_iris_30000.txt", txt)
 
     assert True
+
+
+def test_main_multiclass():
+    args = [
+        "--data-name", "flags",
+        "--algorithm-id", "1",
+        "--experiment-id", "2",
+        "--rand-seed", "2020",
+        "--train-file", "../dataset/flags/a0_0_flags-10tra.dat",
+        "--test-file", "../dataset/flags/a0_0_flags-10tst.dat",
+        "--terminate-evaluation", "1000",
+        "--objectives", "num-rules", "error-rate",
+        "--is-multi-label",
+    ]
+
+    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    runner.main(args)
+
+    assert True

@@ -39,6 +39,13 @@ If you don't need to edit the source code of this library you can just use :
 
 Please read the notebooks in examples/.
 
+### Dataset
+
+- Put your datasets in a dataset/ folder in the root of this project (where this README is)
+- As in the Java version, the following format must be respected:
+  - Values must be normalized (values of all numerical attributes must be between 0 and 1)
+  - Categorical values must be negative
+
 ### Arguments
 
 ```

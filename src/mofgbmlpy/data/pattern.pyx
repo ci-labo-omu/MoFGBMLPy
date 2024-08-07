@@ -76,7 +76,7 @@ cdef class Pattern:
         if self.get_attributes_vector() is None or self.get_target_class() is None:
             return "null"
 
-        return f"[id:{self.get_id()}, input:{{{self.get_attributes_vector()}}}, Class:{self.get_target_class()}]"
+        return f"[id:{self.get_id()}, input:{{{np.asarray(self.get_attributes_vector())}}}, Class:{self.get_target_class()}]"
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
