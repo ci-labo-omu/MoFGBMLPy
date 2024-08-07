@@ -2,6 +2,9 @@ import csv
 import math
 import os
 
+from mofgbmlpy.data.input import Input
+from mofgbmlpy.main.arguments import Arguments
+
 
 def get_datasets(datasets_dir="../dataset"):
     datasets = {}
@@ -26,3 +29,12 @@ def get_datasets(datasets_dir="../dataset"):
 
             datasets[folder] += files
     return datasets
+
+
+def get_a0_0_iris_train_test():
+    args = Arguments()
+    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
+    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tst.dat")
+    args.set("IS_MULTI_LABEL", False)
+
+    return Input.get_train_test_files(args)

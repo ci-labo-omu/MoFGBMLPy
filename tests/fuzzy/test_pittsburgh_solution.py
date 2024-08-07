@@ -18,19 +18,13 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
+from util import get_a0_0_iris_train_test
 
-random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-
+training_data_set, _ = get_a0_0_iris_train_test()
 
 def test_to_xml_run():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     # Only test if it doesn't return an exception
-    args = MoFGBMLNSGAIIArgs()
-
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-
-    training_data_set, _ = Input.get_train_test_files(args)
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
     rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge, random_gen), LearningBasic(training_data_set), knowledge)
     michigan_builder = MichiganSolutionBuilder(random_gen, 2, 0, rule_builder)

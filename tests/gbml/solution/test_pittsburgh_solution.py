@@ -18,19 +18,14 @@ from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
+from util import get_a0_0_iris_train_test
+
+training_data_set, _ = get_a0_0_iris_train_test()
 
 
 def test_deep_copy():
     # Just check if it raises an exception
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-
-    args = MoFGBMLNSGAIIArgs()
-
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-
-    training_data_set, _ = Input.get_train_test_files(args)
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
 
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)

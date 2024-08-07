@@ -16,28 +16,21 @@ from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.arguments import Arguments
-
-
-def get_training_set():
-    args = Arguments()
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-    train, _ = Input.get_train_test_files(args)
-    return train
+from util import get_a0_0_iris_train_test
 
 
 def test_deep_copy():
     # Just check if it raises an exception
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+    train, _ = get_a0_0_iris_train_test()
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
-    consequent_factory = LearningBasic(get_training_set())
+    consequent_factory = LearningBasic(train)
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, 1,0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
     classifier = Classifier(SingleWinnerRuleSelection())
 
-    obj = PittsburghProblem(1, np.array([NumRules()]), 0, get_training_set(), michigan_solution_builder, classifier)
+    obj = PittsburghProblem(1, np.array([NumRules()]), 0, train, michigan_solution_builder, classifier)
     _ = copy.deepcopy(obj)
 
     assert True

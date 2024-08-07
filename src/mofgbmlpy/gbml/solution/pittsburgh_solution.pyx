@@ -8,6 +8,7 @@ cimport numpy as cnp
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classifier.classifier cimport Classifier
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
@@ -55,7 +56,10 @@ cdef class PittsburghSolution(AbstractSolution):
 
         for i in range(self._vars.shape[0]):
             var = self._vars[i]
-            total_rule_weight += var.get_rule_weight_py().get_value()
+            if isinstance(var.get_rule_weight(), RuleWeightMulti):
+                total_rule_weight += np.mean(var.get_rule_weight().get_value())
+            else:
+                total_rule_weight += var.get_rule_weight().get_value()
 
         return total_rule_weight/self._vars.shape[0]
 

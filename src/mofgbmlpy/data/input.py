@@ -50,7 +50,7 @@ class Input:
 
                 j = num_dim
                 for i in range(len(c_vector)):
-                    c_vector[i] = int(row[j])
+                    c_vector[i] = int(float(row[j]))
                     j += 1
 
                 class_labels = ClassLabelMulti(c_vector)

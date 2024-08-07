@@ -4,6 +4,7 @@ from mofgbmlpy.fuzzy.rule.abstract_rule cimport AbstractRule
 import numpy as np
 cimport numpy as cnp
 
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi cimport RuleWeightMulti
 
 cdef class RuleMulti(AbstractRule):
     def __init__(self, antecedent, consequent):
@@ -23,8 +24,15 @@ cdef class RuleMulti(AbstractRule):
         return new_rule
 
     cpdef double get_fitness_value(self, double[:] attribute_vector):
+        cdef double membership
+        cdef double cf
+        cdef double cf_mean
+        cdef RuleWeightMulti rule_weight
+
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)
-        cf_mean = np.mean(self.get_consequent().get_rule_weight_value())
+        rule_weight = self.get_rule_weight()
+        cf_mean = rule_weight.get_mean()
+
         return membership * cf_mean
 
     def __repr__(self):

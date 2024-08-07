@@ -1,6 +1,3 @@
-# def test_input_data_set_multi():
-#     dataset = Input.input_data_set_multi("../dataset/yeast_multi/yeast-10-1tra.dat")
-#     assert True
 import os
 
 import numpy as np
@@ -13,11 +10,11 @@ from util import get_datasets
 
 datasets = get_datasets()
 
-datasets_multi = datasets["yeast_multi"]
-del datasets["yeast_multi"]
+# datasets_multi = datasets[""]
+# del datasets[""]
 datasets = np.concatenate(list(datasets.values()))
-
 #
+# #
 # @pytest.mark.parametrize("file_name", datasets_multi)
 # def test_input_data_set_multi(file_name):
 #     _ = Input.input_data_set(file_name, True)

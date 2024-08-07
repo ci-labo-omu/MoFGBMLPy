@@ -10,3 +10,4 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
     cpdef int get_length(self)
     cpdef object get_value(self)
     cpdef void set_value(self, object rule_weight)
+    cdef double get_mean(self)

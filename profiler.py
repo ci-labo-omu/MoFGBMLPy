@@ -25,6 +25,26 @@ def run_profiler(mofgbml_class_name):
         "--objectives", "total-rule-length", "error-rate"
     ]
 
+    # args = [
+    #     # "--data-name", "flags",
+    #     # "--data-name", "richromatic",
+    #     "--data-name", "german",
+    #     "--algorithm-id", "1",
+    #     "--experiment-id", "2",
+    #     "--rand-seed", "2020",
+    #     # "--train-file", "../dataset/flags/a0_0_flags-10tra.dat",
+    #     # "--test-file", "../dataset/flags/a0_0_flags-10tst.dat",
+    #     # "--train-file", "../dataset/richromatic/a0_0_richromatic-10tra.dat",
+    #     # "--test-file", "../dataset/richromatic/a0_0_richromatic-10tst.dat",
+    #     "--train-file", "dataset/german/a0_0_german-10tra.dat",
+    #     "--test-file", "dataset/german/a0_0_german-10tst.dat",
+    #     "--terminate-evaluation", "200",
+    #     "--objectives", "num-rules", "error-rate",
+    #     "--is-multi-label",
+    #     "--gen-plot",
+    #     "--verbose",
+    # ]
+
     cProfile.runctx(f"{mofgbml_class_name}(HomoTriangleKnowledgeFactory_2_3_4_5).main(args)", globals(), locals(), "Profile.pstats")
     os.system("gprof2dot -f pstats Profile.pstats -o Profile.dot -n 0.3 --color-nodes-by-selftime --node-label=self-time-percentage --node-label=total-time --node-label=total-time-percentage")
 

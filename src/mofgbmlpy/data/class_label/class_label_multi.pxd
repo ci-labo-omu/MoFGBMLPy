@@ -8,4 +8,5 @@ cdef class ClassLabelMulti(AbstractClassLabel):
     cpdef int get_length(self)
 
     cpdef object get_class_label_value(self)
+    cpdef int get_class_label_value_at(self, int index)
     cpdef void set_class_label_value(self, object class_label)

@@ -83,3 +83,12 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         root.text = str(self)
 
         return root
+
+    cdef double get_mean(self):
+        cdef int i
+        cdef double sum = 0
+        cdef int arr_length = self.__rule_weight.shape[0]
+
+        for i in range(arr_length):
+            sum += self.__rule_weight[i]
+        return sum/arr_length

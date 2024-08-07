@@ -12,15 +12,9 @@ from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.main.arguments import Arguments
+from util import get_a0_0_iris_train_test
 
-
-def get_training_set():
-    args = Arguments()
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-    train, _ = Input.get_train_test_files(args)
-    return train
+train, _ = get_a0_0_iris_train_test()
 
 
 def test_deep_copy():
@@ -29,9 +23,9 @@ def test_deep_copy():
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
-    consequent_factory = LearningBasic(get_training_set())
+    consequent_factory = LearningBasic(train)
 
-    obj = MichiganProblem(1, np.array([NumRules()]), 0, get_training_set(), RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    obj = MichiganProblem(1, np.array([NumRules()]), 0, train, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
     _ = copy.deepcopy(obj)
 
     assert True

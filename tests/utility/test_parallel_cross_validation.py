@@ -21,4 +21,4 @@ def test_runs_iris():
 
     run_cross_validation(args, dataset_root)
     results = get_results(results_root_folder, algorithm_id, data_name)
-    show_results_box_plot(results)
+    show_results_box_plot(results, "num_rules")

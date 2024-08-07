@@ -17,15 +17,9 @@ from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_multi import RuleMulti
 from mofgbmlpy.main.arguments import Arguments
+from util import get_a0_0_iris_train_test
 
-
-def get_training_set():
-    args = Arguments()
-    args.set("TRAIN_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("TEST_FILE", "../dataset/iris/a0_0_iris-10tra.dat")
-    args.set("IS_MULTI_LABEL", False)
-    train, _ = Input.get_train_test_files(args)
-    return train
+train, _ = get_a0_0_iris_train_test()
 
 
 def test_deep_copy():
@@ -34,7 +28,7 @@ def test_deep_copy():
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
-    consequent_factory = LearningBasic(get_training_set())
+    consequent_factory = LearningBasic(train)
 
     obj = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
     _ = copy.deepcopy(obj)
