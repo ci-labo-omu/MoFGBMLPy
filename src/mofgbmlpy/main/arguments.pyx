@@ -226,6 +226,12 @@ class Arguments(ABC):
                 "type": "bool",
                 "required": False,
             },
+            "no-csv-xml-output": {
+                "default": False,
+                "help": "Don't save results in CSV and XML files",
+                "type": "bool",
+                "required": False,
+            },
             "pretty-xml": {
                 "default": False,
                 "help": "Save results in a pretty XML file (formated with indentation)",

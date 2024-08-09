@@ -231,7 +231,9 @@ class AbstractMoFGBMLMain(ABC):
         self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
         self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
                                  id_start=len(res.archive))
-        self.save_results_to_files(res)
+
+        if not self._mofgbml_args.get("NO_CSV_XML_OUTPUT"):
+            self.save_results_to_files(res)
 
         # print(res.history[0].pop.get("X"))
 
