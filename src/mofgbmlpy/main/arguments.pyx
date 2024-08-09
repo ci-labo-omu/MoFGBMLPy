@@ -388,15 +388,15 @@ class Arguments(ABC):
 
         self.set("ALGORITHM_ID_DIR", str(os.path.join(self.get("ROOT_FOLDER"), str(self.get("ALGORITHM_ID")))))
 
-        Output.mkdirs(self.get("ALGORITHM_ID_DIR"))
-
 
         self.set("EXPERIMENT_ID_DIR",
                  str(os.path.join(
                      self.get("ALGORITHM_ID_DIR"),
                      self.get("DATA_NAME"),
                      str(self.get("EXPERIMENT_ID")))))
-        Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
+
+        if not self.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
 
 
     def to_xml(self):

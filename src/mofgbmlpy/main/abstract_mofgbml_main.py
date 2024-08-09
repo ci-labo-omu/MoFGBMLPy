@@ -58,12 +58,11 @@ class AbstractMoFGBMLMain(ABC):
         self._mofgbml_args.load(args)
         self._random_gen = np.random.Generator(np.random.MT19937(seed=self._mofgbml_args.get("RAND_SEED")))
 
-        Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
-
         self._verbose = self._mofgbml_args.get("VERBOSE")
 
         # Save params
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
             file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
             Output.writeln(file_name, str(self._mofgbml_args), False)
 
@@ -243,12 +242,10 @@ class AbstractMoFGBMLMain(ABC):
             pareto_front_plot.show()
             pareto_front_plot.save(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'pareto_front.png')))
 
-            plot_file_path = None
-            if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
-                plot_file_path = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR")))
-
             # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'mofgbml.mp4')))
-            AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0], plot_file_path)
+            AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0],
+                                                         str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"),
+                                                                          'error_rate_interpretability_tradeoff.png')))
         return res
 
     @staticmethod
