@@ -226,9 +226,9 @@ class Arguments(ABC):
                 "type": "bool",
                 "required": False,
             },
-            "no-csv-xml-output": {
+            "no-output-files": {
                 "default": False,
-                "help": "Don't save results in CSV and XML files",
+                "help": "Don't save results in files (plots, solutions, arguments...)",
                 "type": "bool",
                 "required": False,
             },

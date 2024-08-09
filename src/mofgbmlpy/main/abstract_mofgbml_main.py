@@ -63,8 +63,9 @@ class AbstractMoFGBMLMain(ABC):
         self._verbose = self._mofgbml_args.get("VERBOSE")
 
         # Save params
-        file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
-        Output.writeln(file_name, str(self._mofgbml_args), False)
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
+            Output.writeln(file_name, str(self._mofgbml_args), False)
 
         # Load dataset
         self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
@@ -232,7 +233,7 @@ class AbstractMoFGBMLMain(ABC):
         self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
                                  id_start=len(res.archive))
 
-        if not self._mofgbml_args.get("NO_CSV_XML_OUTPUT"):
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
             self.save_results_to_files(res)
 
         # print(res.history[0].pop.get("X"))
@@ -242,10 +243,12 @@ class AbstractMoFGBMLMain(ABC):
             pareto_front_plot.show()
             pareto_front_plot.save(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'pareto_front.png')))
 
+            plot_file_path = None
+            if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+                plot_file_path = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR")))
+
             # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'mofgbml.mp4')))
-            AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0],
-                                                         str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"),
-                                                                          'error_rate_interpretability_tradeoff.png')))
+            AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0], plot_file_path)
         return res
 
     @staticmethod
