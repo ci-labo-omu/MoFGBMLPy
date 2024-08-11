@@ -5,6 +5,14 @@ import cython
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 
 cdef class Pattern:
+    """Pattern (row) of a dataset. Contains a vector of attributes and a class label
+
+    Attributes:
+        __id (int): ID of the pattern
+        __attributes_vector (double[]): Array of the attributes. The size of this array is the number of dimensions
+        __target_class (AbstractClassLabel): Class label associated to this pattern
+    """
+
     def __init__(self, int pattern_id, double[:] attributes_vector, AbstractClassLabel target_class):
         """Constructor
 
@@ -28,7 +36,7 @@ cdef class Pattern:
         """Get the ID
         
         Returns:
-            (int) ID of the pattern
+            int: ID of the pattern
         """
         return self.__id
 
@@ -36,7 +44,7 @@ cdef class Pattern:
         """Get the attributes vector
         
         Returns:
-            (double[]) Array of attributes values
+            double[]: Array of attributes values
         """
         return self.__attributes_vector
 
@@ -47,15 +55,17 @@ cdef class Pattern:
             index (int): Index of the attribute whose value is returned 
 
         Returns:
-            (double) Attribute value
+            double: Attribute value
         """
+        if index < 0 or index >= self.__attributes_vector.shape[0]:
+            Exception("Index is out of bounds")
         return self.__attributes_vector[index]
 
     cpdef object get_target_class(self):
         """Get the target class label of this pattern
         
         Returns:
-            (object) Target class label. Either a int or an array of int (multi label)
+            object: Target class label. Either a int or an array of int (multi label)
         """
         return self.__target_class
 
@@ -63,7 +73,7 @@ cdef class Pattern:
         """Get the number of dimensions of the attribute vector
         
         Returns:
-            (int) Number of dimensoin
+            int: Number of dimensions
         """
         return len(self.__attributes_vector)
 
@@ -71,7 +81,7 @@ cdef class Pattern:
         """Return a string representation of this object
 
         Returns:
-            (str) String representation
+            str: String representation
         """
         if self.get_attributes_vector() is None or self.get_target_class() is None:
             return "null"
@@ -85,7 +95,7 @@ cdef class Pattern:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef double[:] vector_copy = np.copy(self.__attributes_vector)
         cdef Pattern new_object = Pattern(self.__id, vector_copy, copy.deepcopy(self.__target_class))
@@ -99,7 +109,7 @@ cdef class Pattern:
             other (object): Object compared to this one 
 
         Returns:
-            (bool) True if they are equal and False otherwise
+            bool: True if they are equal and False otherwise
         """
         return (self.__id == other.get_id() and
                 self.__target_class == other.get_target_class() and

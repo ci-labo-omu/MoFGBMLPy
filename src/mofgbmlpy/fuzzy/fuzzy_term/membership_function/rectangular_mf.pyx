@@ -39,7 +39,7 @@ cdef class RectangularMF(AbstractMF):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = RectangularMF(left=self._params[0], right=self._params[1])
         memo[id(self)] = new_object

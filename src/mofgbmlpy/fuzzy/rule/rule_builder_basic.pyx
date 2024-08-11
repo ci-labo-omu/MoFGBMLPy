@@ -19,7 +19,7 @@ cdef class RuleBuilderBasic(RuleBuilderCore):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = RuleBuilderBasic(self._antecedent_factory, self._consequent_factory, self._knowledge)
 

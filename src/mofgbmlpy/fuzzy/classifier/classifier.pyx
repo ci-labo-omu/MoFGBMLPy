@@ -12,17 +12,30 @@ from libcpp.vector cimport vector as cvector
 cimport numpy as cnp
 
 cdef class Classifier:
-    def __init__(self, classification):
-        if classification is None or not isinstance(classification, AbstractClassification):
-            # with cython.gil:
-            raise Exception("Invalid classification method")
+    def __init__(self, AbstractClassification classification):
+        if classification is None:
+            raise Exception("Classification method can't be None")
         self._classification = classification
 
     cdef AbstractSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
         return self._classification.classify(michigan_solution_list, pattern)
 
-    def __copy__(self):
-        return Classifier(self._classification)
+    cpdef AbstractSolution classify_py(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
+        return self.classify(michigan_solution_list, pattern)
+
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            bool: True if they are equal and False otherwise
+        """
+        if not isinstance(other, Classifier):
+            return False
+        return other.get_classification() == self._classification
+
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -31,20 +44,24 @@ cdef class Classifier:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = Classifier(copy.deepcopy(self._classification))
         memo[id(self)] = new_object
         return new_object
 
     @staticmethod
-    def get_length(michigan_solution_list):
+    def get_length(MichiganSolution[:] michigan_solution_list):
         length = 0
-        for item in michigan_solution_list:
-            length += item.get_length()
+        if michigan_solution_list is not None:
+            for item in michigan_solution_list:
+                length += item.get_length()
         return length
 
     cdef double get_error_rate(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+        if michigan_solution_list is None or dataset is None:
+            raise Exception("Michigan solutions list and dataset can't be None")
+
         cdef int num_errors = 0
         cdef int dataset_size = dataset.get_size()
         cdef int i
@@ -59,7 +76,6 @@ cdef class Classifier:
         for i in range(dataset.get_size()):
             p = patterns[i]
             winner_solution = self.classify(michigan_solution_list, p)
-
             if winner_solution is None:
                 num_errors += 1
                 continue
@@ -73,7 +89,13 @@ cdef class Classifier:
 
         return num_errors / dataset_size
 
+    cpdef double get_error_rate_py(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+        return self.get_error_rate(michigan_solution_list, dataset)
+
     cdef object[:] get_errored_patterns(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+        if michigan_solution_list is None or dataset is None:
+            raise Exception("Michigan solutions list and dataset can't be None")
+
         cdef int i
         cdef cvector[int] errored_patterns_indices
         cdef object[:] errored_patterns
@@ -94,6 +116,8 @@ cdef class Classifier:
 
         return errored_patterns
 
-    @staticmethod
-    def get_rule_num(michigan_solution_list):
-        return len(michigan_solution_list)
+    cpdef object[:] get_errored_patterns_py(self, MichiganSolution[:] michigan_solution_list, Dataset dataset):
+        return self.get_errored_patterns(michigan_solution_list, dataset)
+
+    cpdef AbstractClassification get_classification(self):
+        return self._classification

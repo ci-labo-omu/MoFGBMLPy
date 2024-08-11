@@ -92,7 +92,7 @@ cdef class FuzzyVariable:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef double[:] support_values_copy = np.copy(self.__support_values)
         cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.shape[0], dtype=object)

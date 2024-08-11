@@ -7,6 +7,13 @@ cdef class AbstractLearning:
     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
         Exception("This class is abstract")
 
+    def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
 
-    def __copy__(self):
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            object: Deep copy of this object
+        """
         Exception("This class is abstract")

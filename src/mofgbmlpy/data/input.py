@@ -7,6 +7,7 @@ import csv
 
 
 class Input:
+    """Class of static methods used to read files and load datasets """
     @staticmethod
     def input_data_set(file_name, is_multi_label):
         """Load a dataset from a file name
@@ -16,7 +17,7 @@ class Input:
             is_multi_label (bool):  True if the dataset is multi label and False otherwise
 
         Returns:
-            (Dataset) Dataset read from the file
+            Dataset: Dataset read from the file
         """
         if is_multi_label:
             return Input.input_data_set_multi(file_name)
@@ -31,7 +32,7 @@ class Input:
             file_name (str): Name of the file containing the dataset
 
         Returns:
-            (Dataset) Dataset read from the file
+            Dataset: Dataset read from the file
         """
         with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -71,7 +72,7 @@ class Input:
             file_name (str): Name of the file containing the dataset
 
         Returns:
-            (Dataset) Dataset read from the file
+            Dataset: Dataset read from the file
         """
         with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -107,8 +108,8 @@ class Input:
             arguments (Arguments): Object containing the TRAIN_FILE, TEST_FILE and IS_MULTI_LABEL keys
 
         Returns:
-            (Dataset) Training dataset read from the file
-            (Dataset) Test dataset read from the file
+            Dataset: Training dataset read from the file
+            Dataset: Test dataset read from the file
         """
         if (arguments is None or
                 not arguments.has_key("TRAIN_FILE") or

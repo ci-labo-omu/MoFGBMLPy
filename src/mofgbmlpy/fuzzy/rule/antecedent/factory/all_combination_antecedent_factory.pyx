@@ -11,6 +11,9 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 import numpy as np
 
+cdef extern from "limits.h":
+    cdef int INT_MAX
+
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     def __init__(self, knowledge, random_gen):
         if knowledge is None or knowledge.get_num_dim() == 0:
@@ -34,12 +37,25 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef FuzzyVariable var
         cdef int dimension = self.__knowledge.get_num_dim()
         cdef FuzzyVariable[:] fuzzy_vars = self.__knowledge.get_fuzzy_vars()
-        
+        cdef int var_length
+
         for i in range(dimension):
             var = fuzzy_vars[i]
-            num_generated_indices *= var.get_length()
+            var_length = var.get_length()
+            if num_generated_indices > INT_MAX / var_length:
+                print("WARNING: Too many antecedent indices to be generated, not all combinations will be generated")
+                num_generated_indices = INT_MAX
+                break
+            num_generated_indices *= var_length
 
-        cdef int[:,:] indices = (np.empty((num_generated_indices, dimension), dtype=int))
+        cdef int[:,:] indices
+
+        try:
+            indices = (np.empty((num_generated_indices, dimension), dtype=int))
+        except MemoryError:
+            raise Exception("The number of variables and/or the number of fuzzy sets is too big,"
+                            " the antecedents list memory can't be allocated."
+                            "Please use another antecedent factory")
 
         indices_queue.push(cvector[int]())
 
@@ -58,10 +74,12 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
                     tmp.push_back(i)
                     indices_queue.push(tmp)
             else:
-                # print(indices.shape[0], k)
+                # A list of antecedent indices is full so we can add it
                 for i in range(dimension):
                     indices[k][i] = buffer[i]
                 k += 1
+                if k >= num_generated_indices:
+                    break
 
         return indices
 
@@ -137,7 +155,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = AllCombinationAntecedentFactory(self.__knowledge, self._random_gen)
 

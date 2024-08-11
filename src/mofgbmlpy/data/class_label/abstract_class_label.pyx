@@ -2,9 +2,14 @@ cimport numpy as cnp
 import cython
 
 cdef class AbstractClassLabel:
+    """Abstract class for class labels
+
+    Attributes
+        __is_rejected (bool): If True then the class label is rejected (it can't be used for classification)
+    """
+
     def __init__(self):
         """Constructor of this class. Initialize is_rejected to False
-
         """
         self.__is_rejected = False
 
@@ -12,7 +17,7 @@ cdef class AbstractClassLabel:
         """Get the class label value (array of int if it's a multilabel and int if it's not). Must be overridden.
         
         Returns:
-            (object) Class label value
+            object: Class label value
         """
         raise Exception("AbstractClassLabel is abstract")
 
@@ -28,7 +33,7 @@ cdef class AbstractClassLabel:
         """Check if the class label is rejected
         
         Returns:
-            (bool) True if it's rejected and False otherwise
+            bool: True if it's rejected and False otherwise
         """
         return self.__is_rejected
 
@@ -42,6 +47,6 @@ cdef class AbstractClassLabel:
         """Get the XML representation of this object. Must be overridden.
 
         Returns:
-            (xml.etree.ElementTree) XML element representing this object
+            :xml.etree.ElementTree: XML element representing this object
         """
         raise Exception("AbstractClassLabel is abstract")

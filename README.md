@@ -167,13 +167,16 @@ Run `python profiler.py MoFGBMLNSGAIIMain` (or replace MoFGBMLNSGAIIMain with th
 - myst_parser
 - rst2pdf
 - sphinx-mdinclude
+- sphinx_rtd_theme
+
+
+`pip install sphinx myst_parser rst2pdf sphinx-mdinclude sphinx_rtd_theme`
 
 ### Generation
 
-
 #### Setup
 
-1. Generate the rst files from the code: `sphinx-apidoc`
+1. Generate the rst files from the code: ` sphinx-apidoc -o docs/source/ src/mofgbmlpy`
 2. Generate the documentation from the rst files 
    - In HTML: `docs/make.bat html`
    - In PDF: `docs/make.bat pdf`

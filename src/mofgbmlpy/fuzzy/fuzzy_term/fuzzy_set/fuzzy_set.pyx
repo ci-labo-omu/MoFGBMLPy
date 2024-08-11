@@ -87,7 +87,7 @@ cdef class FuzzySet:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef FuzzySet new_object = FuzzySet(copy.deepcopy(self.__function), self.__id, self.__division_type, self.__term)
 

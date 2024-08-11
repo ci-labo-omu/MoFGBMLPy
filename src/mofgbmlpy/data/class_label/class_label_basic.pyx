@@ -4,6 +4,12 @@ import cython
 
 
 cdef class ClassLabelBasic(AbstractClassLabel):
+    """Class label class for single label classification (one integer associated to a class)
+
+    Attributes:
+        __class_label (int): Class label
+    """
+
     def __init__(self, int class_label):
         """Constructor
 
@@ -20,7 +26,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
             other (object): Object compared to this one 
 
         Returns:
-            (bool) True if they are equal and False otherwise
+            bool: True if they are equal and False otherwise
         """
         if not isinstance(other, ClassLabelBasic):
             return False
@@ -33,7 +39,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = ClassLabelBasic(self.__class_label)
         memo[id(self)] = new_object
@@ -43,7 +49,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         """Return a string representation of this object
 
         Returns:
-            (str) String representation
+            str: String representation
         """
         if self.__class_label is None:
             raise Exception("class label value is None")
@@ -53,7 +59,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         """Get the class label value
 
             Returns:
-                (int) Class label value
+                int: Class label value
             """
         return self.__class_label
 
@@ -70,7 +76,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         """Get the XML representation of this object.
 
         Returns:
-            (xml.etree.ElementTree) XML element representing this object
+            xml.etree.ElementTree: XML element representing this object
         """
         root = xml_tree.Element("classLabel")
         root.text = str(self)

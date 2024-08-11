@@ -81,7 +81,7 @@ cdef class Knowledge:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         cdef FuzzyVariable[:] fuzzy_vars_copy = np.empty(fuzzy_vars.shape[0], dtype=object)

@@ -118,7 +118,7 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef HomoTriangleKnowledgeFactory new_object = HomoTriangleKnowledgeFactory(np.copy(self.__num_divisions.shape), self.__var_names, self.__fuzzy_set_names)
         memo[id(self)] = new_object

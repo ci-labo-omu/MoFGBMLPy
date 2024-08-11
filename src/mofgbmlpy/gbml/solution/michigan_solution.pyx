@@ -75,7 +75,7 @@ cdef class MichiganSolution(AbstractSolution):
         return self._rule.get_rule_weight()
 
     cpdef AbstractRuleWeight get_rule_weight_py(self):
-        return self._rule.get_rule_weight_py()
+        return self.get_rule_weight()
 
     cpdef AbstractRule get_rule(self):
         return self._rule
@@ -151,7 +151,7 @@ cdef class MichiganSolution(AbstractSolution):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef int i
         new_solution = MichiganSolution(self._random_gen,
@@ -181,8 +181,6 @@ cdef class MichiganSolution(AbstractSolution):
 
         return new_solution
 
-    def __copy__(self):
-        return self.__deepcopy__() # pymoo use copy so it causes issues
 
     def __hash__(self):
         cdef int i

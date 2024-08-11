@@ -7,6 +7,8 @@ import numpy as np
 
 
 class Output:
+    """Class of static methods used to write data to files """
+
     @staticmethod
     def mkdirs(dir_name):
         """Make a new directory if it doesn't exist yet

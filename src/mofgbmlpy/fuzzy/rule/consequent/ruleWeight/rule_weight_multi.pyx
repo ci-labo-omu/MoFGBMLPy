@@ -9,9 +9,6 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
     def __init__(self, double[:] rule_weight):
         self.__rule_weight = rule_weight
 
-    def __copy__(self):
-        return RuleWeightMulti(self.get_value())
-
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
 
@@ -19,7 +16,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef double[:] values_copy = np.empty(self.get_length())
         cdef int i

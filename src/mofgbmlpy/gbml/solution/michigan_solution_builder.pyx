@@ -29,7 +29,7 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef int i
 

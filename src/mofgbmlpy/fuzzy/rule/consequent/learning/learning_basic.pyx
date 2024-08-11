@@ -88,7 +88,7 @@ cdef class LearningBasic(AbstractLearning):
             return zero_weight
 
         cdef int label_value = class_label.get_class_label_value()
-        cdef double sum_confidence = np.sum(confidence)
+        cdef double sum_confidence = 1.0 # np.sum(confidence) # TODO Check the effect of this modification on the results and recheck it's validity
         cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
 
         if rule_weight_val <= reject_threshold:
@@ -115,7 +115,7 @@ cdef class LearningBasic(AbstractLearning):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = LearningBasic(self._train_ds)
 

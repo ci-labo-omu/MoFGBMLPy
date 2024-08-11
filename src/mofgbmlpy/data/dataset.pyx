@@ -6,6 +6,14 @@ from mofgbmlpy.data.pattern cimport Pattern
 import cython
 
 cdef class Dataset:
+    """Dataset object containing patterns
+
+    Attributes:
+        __size (int): Number of patterns in the dataset (used, like the other parameters, to check if the file was loaded properly)
+        __num_dim (int): Number of attributes (dimensions) in all the patterns of this dataset
+        __num_classes (int): Number of class in the dataset
+        __patterns (Patterns[:]): Array of patterns in the dataset
+    """
     def __init__(self, int size, int n_dim, int c_num, Pattern[:] patterns):
         """ Constructor of the class Dataset
 
@@ -35,15 +43,17 @@ cdef class Dataset:
             index (int): Index of the pattern to be fetched 
 
         Returns:
-            (Pattern) Pattern at the given index
+            Pattern: Pattern at the given index
         """
+        if index < 0 or index >= self.__size:
+            raise Exception("Index is out of bounds")
         return self.__patterns[index]
 
     cpdef Pattern[:] get_patterns(self):
         """Get all the patterns in the dataset
 
         Returns:
-            (Pattern[]) The patterns in the dataset
+            Pattern[]: The patterns in the dataset
         """
         return self.__patterns
 
@@ -51,7 +61,7 @@ cdef class Dataset:
         """Return a string representation of this object
 
         Returns:
-            (str) String representation
+            str: String representation
         """
         if len(self.__patterns) == 0:
             return "null"
@@ -64,7 +74,7 @@ cdef class Dataset:
         """Get the number of dimensions (attributes) of the patterns in this dataset
 
         Returns:
-            (int) Number of dimensions
+            int: Number of dimensions
         """
         return self.__num_dim
 
@@ -72,7 +82,7 @@ cdef class Dataset:
         """Get the number of classes in this dataset
 
         Returns:
-            (int) Number of classes
+            int: Number of classes
         """
         return self.__num_classes
 
@@ -80,7 +90,7 @@ cdef class Dataset:
         """Get the number of patterns in this dataset
 
         Returns:
-            (int) Number of patterns
+            int: Number of patterns
         """
         return self.__size
 
@@ -91,7 +101,7 @@ cdef class Dataset:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef Pattern[:] patterns_copy = np.empty(self.__size, dtype=object)
         for i in range(self.__size):
@@ -108,7 +118,7 @@ cdef class Dataset:
             other (object): Object compared to this one 
 
         Returns:
-            (bool) True if they are equal and False otherwise
+            bool: True if they are equal and False otherwise
         """
         return (self.__size == other.get_size() and
             self.__num_dim == other.get_num_dim() and

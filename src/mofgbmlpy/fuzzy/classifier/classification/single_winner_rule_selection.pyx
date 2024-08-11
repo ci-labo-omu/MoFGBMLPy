@@ -16,6 +16,8 @@ from libc.math cimport INFINITY
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
+    """Method"""
+
     # def __init__(self, cache_size=0): # TODO: Check cache performance
         # if cache_size <= 0:
         #     self.__cache_size = 0
@@ -54,8 +56,15 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             raise Exception("argument [michigan_solution_list] must contain at least 1 item")
         winner =  michigan_solution_list[0]
 
+        if pattern is None:
+            raise Exception("Pattern is None")
+
         for i in range(michigan_solution_list.shape[0]):
             solution = michigan_solution_list[i]
+
+            if solution is None:
+                raise Exception("A solution is None in the list")
+
             if solution.get_class_label().is_rejected():
                 raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
 
@@ -70,7 +79,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
                 can_classify = True
             elif value == max:
                 # There are 2 best solutions with the same fitness value
-                if not solution.get_class_label() == winner.get_class_label():
+                if solution.get_class_label() != winner.get_class_label():
                     can_classify = False
 
         if can_classify and max >= 0:
@@ -78,18 +87,19 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         else:
             return None
 
-    # def __deepcopy__(self, memo={}):
-    #     """Return a deepcopy of this object
-    #
-    #     Args:
-    #         memo (dict): Dictionary of objects already copied during the current copying pass;
-    #
-    #     Returns:
-    #         (object) Deep copy of this object
-    #     """
-    #     new_object = SingleWinnerRuleSelection(self.__cache_size)
-    #     memo[id(self)] = new_object
-    #     return new_object
+    def __deepcopy__(self, memo={}):
+        """Return a deepcopy of this object
+
+        Args:
+            memo (dict): Dictionary of objects already copied during the current copying pass;
+
+        Returns:
+            object: Deep copy of this object
+        """
+        # new_object = SingleWinnerRuleSelection(self.__cache_size)
+        new_object = SingleWinnerRuleSelection()
+        memo[id(self)] = new_object
+        return new_object
 
     def __repr__(self):
         """Return a string representation of this object
@@ -98,3 +108,14 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             (str) String representation
         """
         return self.__class__.__name__
+
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            bool: True if they are equal and False otherwise
+        """
+        return isinstance(other, SingleWinnerRuleSelection)

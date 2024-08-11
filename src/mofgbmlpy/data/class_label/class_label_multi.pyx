@@ -8,6 +8,12 @@ import cython
 
 
 cdef class ClassLabelMulti(AbstractClassLabel):
+    """Class label class for multi labels classification (array of integers)
+
+    Attributes:
+        __class_label (int[]): Values associated to class labels
+    """
+
     def __init__(self, int[:] class_label):
         """Constructor
 
@@ -24,7 +30,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             other (object): Object compared to this one 
 
         Returns:
-            (bool) True if they are equal and False otherwise
+            bool: True if they are equal and False otherwise
         """
         if not isinstance(other, ClassLabelMulti):
             return False
@@ -50,6 +56,11 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         return True
 
     cpdef int get_length(self):
+        """Returns the length of the array of class label values
+        
+        Returns:
+            int: Length of the class label values array
+        """
         if self.__class_label is None:
             raise Exception("class label value is None")
         return self.__class_label.shape[0]
@@ -61,7 +72,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef int[:] value_copy = None
         if self.__class_label is not None:
@@ -75,7 +86,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         """Return a string representation of this object
 
         Returns:
-            (str) String representation
+            str: String representation
         """
         if self.__class_label is None:
             raise Exception("class label value is None")
@@ -92,7 +103,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         """Get the class label values
 
         Returns:
-            (int[]) Class label values
+            int[]: Class label values
         """
         return self.__class_label
 
@@ -100,7 +111,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         """Get the class label value at the given index
 
         Returns:
-            (int) Class label value
+            int: Class label value
         """
 
     cpdef void set_class_label_value(self, object class_label):
@@ -116,7 +127,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         """Get the XML representation of this object.
 
         Returns:
-            (xml.etree.ElementTree) XML element representing this object
+            xml.etree.ElementTree: XML element representing this object
         """
         root = xml_tree.Element("classLabel")
         root.text = str(self)

@@ -70,7 +70,7 @@ cdef class PittsburghSolution(AbstractSolution):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_solution = PittsburghSolution(self.get_num_vars(),
                                           self.get_num_objectives(),
@@ -96,8 +96,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
         return new_solution
 
-    def __copy__(self):
-        return self.__deepcopy__() # pymoo use copy so it causes issues
 
     def __hash__(self):
         cdef int i

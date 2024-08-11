@@ -88,7 +88,7 @@ cdef class Antecedent:
         return grade_value
 
     def get_compatible_grade_value_py(self, double[:] attribute_vector):
-            return self.get_compatible_grade_value(attribute_vector)
+        return self.get_compatible_grade_value(attribute_vector)
 
     cpdef int get_length(self):
         return np.count_nonzero(self.__antecedent_indices)
@@ -100,7 +100,7 @@ cdef class Antecedent:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
         cdef int i

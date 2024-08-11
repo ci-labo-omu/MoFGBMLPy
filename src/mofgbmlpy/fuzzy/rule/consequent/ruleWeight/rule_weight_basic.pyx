@@ -13,7 +13,7 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_object = RuleWeightBasic(self.get_value())
         memo[id(self)] = new_object

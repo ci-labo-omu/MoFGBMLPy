@@ -48,7 +48,7 @@ cdef class Consequent:
             memo (dict): Dictionary of objects already copied during the current copying pass;
 
         Returns:
-            (object) Deep copy of this object
+            object: Deep copy of this object
         """
         new_consequent = Consequent(copy.deepcopy(self._class_label), copy.deepcopy(self._rule_weight))
         memo[id(self)] = new_consequent
