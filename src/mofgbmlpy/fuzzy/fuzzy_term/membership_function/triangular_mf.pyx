@@ -68,9 +68,9 @@ cdef class TriangularMF(AbstractMF):
 
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=0, double x_max=1):
         return np.array([
-            [0,0],
+            [x_min,0],
             [self._params[0], 0],
             [self._params[1], 1],
             [self._params[2], 0],
-            [1, 0],
+            [x_max, 0],
         ], np.float64)

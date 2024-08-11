@@ -316,3 +316,18 @@ def test_to_xml_run():
     knowledge.to_xml()
 
     assert True
+
+
+def test_plot_fuzzy_variables_no_var():
+    knowledge = Knowledge(np.empty(0, object))
+    knowledge.plot_fuzzy_variables()
+
+
+def test_plot_fuzzy_variables_2_vars_1_set():
+    var1 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object),
+                         support_values=np.array([0.0]), name="x0")
+    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0.1, 0.5, 1.1, 1, "small")], object),
+                         support_values=np.array([0.5]), domain=np.array([0.0, 1.1]), name="x1")
+
+    knowledge = Knowledge(np.array([var1, var2], object))
+    knowledge.plot_fuzzy_variables()
