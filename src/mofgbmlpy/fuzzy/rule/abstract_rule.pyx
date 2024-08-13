@@ -77,6 +77,9 @@ cdef class AbstractRule:
         Returns:
             (bool) True if they are equal and False otherwise
         """
+        if not isinstance(other, AbstractRule):
+            return False
+
         return self._antecedent == other.get_antecedent() and self._consequent == other.get_consequent()
 
     def __repr__(self):

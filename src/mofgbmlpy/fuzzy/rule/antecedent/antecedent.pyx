@@ -121,6 +121,9 @@ cdef class Antecedent:
         Returns:
             (bool) True if they are equal and False otherwise
         """
+        if not isinstance(other, Antecedent):
+            return False
+
         return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
 
     def __repr__(self):

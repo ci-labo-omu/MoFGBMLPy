@@ -95,3 +95,7 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
         solution.get_rule().set_consequent(consequent)
 
     return solution
+
+
+def float_eq(value1, value2, precision=1e-6):
+    return abs(value1 - value2) < precision

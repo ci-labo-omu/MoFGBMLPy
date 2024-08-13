@@ -14,7 +14,9 @@ from cython.parallel import prange
 
 
 cdef class LearningBasic(AbstractLearning):
-    def __init__(self, training_dataset):
+    def __init__(self, Dataset training_dataset):
+        if training_dataset is None:
+            raise Exception("The training dataset cannot be None")
         self._train_ds = training_dataset
 
     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
@@ -25,7 +27,6 @@ cdef class LearningBasic(AbstractLearning):
 
     cdef double[:] calc_confidence(self, Antecedent antecedent):
         if antecedent is None:
-            # with cython.gil:
             raise ValueError('Antecedent cannot be None')
 
         cdef int num_classes = self._train_ds.get_num_classes()
@@ -62,10 +63,17 @@ cdef class LearningBasic(AbstractLearning):
 
         return confidence
 
+    cpdef double[:] calc_confidence_py(self, Antecedent antecedent):
+        return self.calc_confidence(antecedent)
+
+
     cpdef ClassLabelBasic calc_class_label(self, double[:] confidence):
         cdef double max_val = -INFINITY
         cdef int consequent_class = -1
         cdef int i
+
+        if confidence is confidence is None:
+            raise Exception("confidence can't be None")
 
         for i in range(confidence.shape[0]):
             if confidence[i] > max_val:
@@ -88,8 +96,12 @@ cdef class LearningBasic(AbstractLearning):
             return zero_weight
 
         cdef int label_value = class_label.get_class_label_value()
-        cdef double sum_confidence = 1.0 # np.sum(confidence) # TODO Check the effect of this modification on the results and recheck it's validity
-        cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
+
+        # TODO Check the effect of this modification on the results and recheck it's validity
+        # cdef double sum_confidence = np.sum(confidence)
+        # cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
+        cdef double rule_weight_val = (confidence[label_value] * 2) - 1
+
 
         if rule_weight_val <= reject_threshold:
             class_label.set_rejected()

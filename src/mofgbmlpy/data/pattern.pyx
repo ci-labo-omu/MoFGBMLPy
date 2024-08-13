@@ -111,6 +111,9 @@ cdef class Pattern:
         Returns:
             bool: True if they are equal and False otherwise
         """
+        if not isinstance(other, Pattern):
+            return False
+
         return (self.__id == other.get_id() and
                 self.__target_class == other.get_target_class() and
                 np.array_equal(self.__attributes_vector, other.get_attributes_vector()))

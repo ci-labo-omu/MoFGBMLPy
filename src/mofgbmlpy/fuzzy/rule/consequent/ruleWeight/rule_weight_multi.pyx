@@ -68,6 +68,9 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         Returns:
             (bool) True if they are equal and False otherwise
         """
+        if not isinstance(other, RuleWeightMulti):
+            return False
+
         return np.array_equal(self.__rule_weight, other.get_value())
 
     def to_xml(self):

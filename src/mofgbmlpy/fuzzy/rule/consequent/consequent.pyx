@@ -18,17 +18,6 @@ cdef class Consequent:
     cpdef object get_class_label_value(self):
         return self._class_label.get_class_label_value()
 
-    def __eq__(self, other):
-        """Check if another object is equal to this one
-        
-        Args:
-            other (object): Object compared to this one 
-
-        Returns:
-            (bool) True if they are equal and False otherwise
-        """
-        return self.get_class_label_value() == other.get_class_label_value()
-
     cpdef bint is_rejected(self):
         return self.get_class_label().is_rejected()
 
@@ -71,6 +60,9 @@ cdef class Consequent:
         Returns:
             (bool) True if they are equal and False otherwise
         """
+        if not isinstance(other, Consequent):
+            return False
+
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
 
     def to_xml(self):

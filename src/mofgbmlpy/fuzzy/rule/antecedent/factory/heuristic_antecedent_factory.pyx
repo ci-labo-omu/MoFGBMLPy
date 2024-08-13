@@ -70,7 +70,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             mb_values_inc_sums = np.zeros(num_fuzzy_sets_not_dc, dtype=np.float64)
             sum_mb_values = 0
             for h in range(num_fuzzy_sets_not_dc):
-                sum_mb_values += self.__knowledge.get_membership_value_py(attribute_array[dim_i], dim_i, h+1)
+                sum_mb_values += self.__knowledge.get_membership_value(attribute_array[dim_i], dim_i, h+1)
                 mb_values_inc_sums[h] = sum_mb_values
 
             arrow = self._random_gen.random() * sum_mb_values
@@ -82,7 +82,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         return antecedent_indices
 
-    def calculate_antecedent_part_py(self, Pattern pattern):
+    cpdef int[:] calculate_antecedent_part_py(self, Pattern pattern):
         return self.calculate_antecedent_part(pattern)
 
     cdef Antecedent[:] create(self, int num_rules=1):
@@ -94,18 +94,30 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         return antecedent_objects
 
-    cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern=None):
+    cpdef Antecedent[:] create_py(self, int num_rules=1):
+        return self.create(num_rules)
+
+    cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern):
         if pattern is None:
             raise Exception("Pattern cannot be None")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 
+
+    cpdef int[:,:] create_antecedent_indices_from_pattern_py(self, Pattern pattern):
+        return self.create_antecedent_indices_from_pattern(pattern)
+
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
         cdef int data_size = self.__training_set.get_size()
         cdef int i
+        cdef int j
+        cdef int k
         cdef int pattern_index
         cdef int[:] pattern_indices
         cdef int num_remaining_indices
         cdef int[:,:] new_antecedent_indices
+
+        if num_rules <= 0:
+            raise Exception("num_rules must be positive")
 
         if num_rules is None or num_rules == 1:
             pattern_index = self._random_gen.integers(0, data_size)
@@ -115,18 +127,29 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             pattern_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
 
         else:
-            # TODO: this function seems invalid (indices is maybe an array of copies and the concatenation is maybe between incompatible types (int and array)
-            pattern_indices = [i for i in range(data_size)] * (num_rules // data_size)
+            pattern_indices = np.empty(num_rules, int)
+
+            k = 0
+            for i in range(num_rules // data_size):
+                for j in range(data_size):
+                    pattern_indices[k] = j
+                    k += 1
 
             num_remaining_indices = num_rules % data_size
             remaining_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_remaining_indices,
                                                  replace=False)
-            pattern_indices = np.concatenate((pattern_indices, remaining_indices))
 
+            for i in range(num_remaining_indices):
+                pattern_indices[k] = remaining_indices[i]
+                k += 1
         new_antecedent_indices = np.empty((num_rules, self.__knowledge.get_num_dim()), dtype=int)
+
         for i in range(num_rules):
             new_antecedent_indices[i] = self.__select_antecedent_part(pattern_indices[i])
         return new_antecedent_indices
+
+    cpdef int[:,:] create_antecedent_indices_py(self, int num_rules=1):
+        return self.create_antecedent_indices(num_rules)
 
     def __repr__(self):
         """Return a string representation of this object
@@ -135,6 +158,25 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             (str) String representation
         """
         return "HeuristicAntecedentFactory [dimension=" + str(self.__knowledge.get_num_dim()) + "]"
+
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            bool: True if they are equal and False otherwise
+        """
+        if not isinstance(other, HeuristicAntecedentFactory):
+            return False
+
+        return (self.__training_set == other.get_training_set() and
+                self.__knowledge == other.get_knowledge() and
+                self.__is_dc_probability == other.get_dc_probability() and
+                self.__dc_rate == other.get_dc_rate() and
+                self.__antecedent_number_do_not_dont_care == other.get_antecedent_number_do_not_dont_care() and
+                self._random_gen == other.get_random_gen())
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -149,3 +191,22 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         memo[id(self)] = new_object
         return new_object
+
+    cpdef get_training_set(self):
+        return self.__training_set
+
+    cpdef get_knowledge(self):
+        return self.__knowledge
+
+    cpdef get_dc_probability(self):
+        return self.__is_dc_probability
+
+    cpdef get_dc_rate(self):
+        return self.__dc_rate
+
+    cpdef get_antecedent_number_do_not_dont_care(self):
+        return self.__antecedent_number_do_not_dont_care
+
+    cpdef get_random_gen(self):
+        return self._random_gen
+

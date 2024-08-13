@@ -45,6 +45,9 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         Returns:
             (bool) True if they are equal and False otherwise
         """
+        if not isinstance(other, RuleWeightBasic):
+            return False
+
         return self.__rule_weight == other.get_value()
 
     def to_xml(self):

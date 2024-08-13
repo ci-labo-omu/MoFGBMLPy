@@ -2,9 +2,9 @@ import numpy as np
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory cimport HomoTriangleKnowledgeFactory
 
 cdef class HomoTriangleKnowledgeFactory_5(HomoTriangleKnowledgeFactory):
-    def __init__(self, num_dims, var_names = None):
-        if num_dims <= 0:
-            raise Exception("num_dims must be positive")
+    def __init__(self, int num_dims, var_names = None):
+        if num_dims is None or num_dims <= 0:
+            raise Exception("num_dims must be a positive integer")
 
         num_divisions = np.zeros((num_dims, 1), dtype=np.int_)
         fuzzy_set_names = np.zeros((num_dims, 1, 5), dtype=object)

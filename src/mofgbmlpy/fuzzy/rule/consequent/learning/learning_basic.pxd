@@ -15,6 +15,7 @@ cdef class LearningBasic(AbstractLearning):
 
     cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=?)
     cdef double[:] calc_confidence(self, Antecedent antecedent)
+    cpdef double[:] calc_confidence_py(self, Antecedent antecedent)
     cpdef ClassLabelBasic calc_class_label(self, double[:] confidence)
     cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold)
     cpdef Dataset get_training_set(self)

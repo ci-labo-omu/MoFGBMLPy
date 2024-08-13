@@ -120,6 +120,9 @@ cdef class Dataset:
         Returns:
             bool: True if they are equal and False otherwise
         """
+        if not isinstance(other, Dataset):
+            return False
+
         return (self.__size == other.get_size() and
             self.__num_dim == other.get_num_dim() and
             self.__num_classes == other.get_num_classes() and
