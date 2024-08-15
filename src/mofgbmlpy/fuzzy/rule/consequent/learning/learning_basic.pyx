@@ -72,7 +72,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef int consequent_class = -1
         cdef int i
 
-        if confidence is confidence is None:
+        if confidence is None:
             raise Exception("confidence can't be None")
 
         for i in range(confidence.shape[0]):
@@ -90,6 +90,9 @@ cdef class LearningBasic(AbstractLearning):
         return class_label
 
     cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold):
+        if class_label is None or confidence is None or reject_threshold is None:
+            raise Exception("Class label, confidence and reject_threshold can't be None")
+
         cdef RuleWeightBasic zero_weight = RuleWeightBasic(0.0)
 
         if class_label.is_rejected():
@@ -121,7 +124,8 @@ cdef class LearningBasic(AbstractLearning):
         return f"MoFGBML_Learning"
 
     def __deepcopy__(self, memo={}):
-        """Return a deepcopy of this object
+        """Return a deepcopy of this object.
+        Note that the dataset is the same object (not deep copied)
 
         Args:
             memo (dict): Dictionary of objects already copied during the current copying pass;
@@ -133,3 +137,17 @@ cdef class LearningBasic(AbstractLearning):
 
         memo[id(self)] = new_object
         return new_object
+
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            (bool) True if they are equal and False otherwise
+        """
+        if not isinstance(other, LearningBasic):
+            return False
+
+        return self._train_ds == other.get_training_set()
