@@ -5,7 +5,9 @@ cimport numpy as cnp
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 
 cdef class RectangularMF(AbstractMF):
+    """Rectangular membership function"""
     def __init__(self, left=0, right=1):
+
         if left > right:
             raise Exception(f"Error in triangular membership function: left={left:.2f} should be < right={right:.2f}")
         super().__init__(np.array([left, right], dtype=np.float64))

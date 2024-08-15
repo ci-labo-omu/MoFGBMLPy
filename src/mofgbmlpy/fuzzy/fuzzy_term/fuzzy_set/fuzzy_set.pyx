@@ -5,6 +5,14 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
 
 cdef class FuzzySet:
+    """Fuzzy set
+
+    Attributes:
+        __function (AbstractMF): Membership function
+        __term (str): Name of the fuzzy set (e.g. small)
+        __id (int): ID of the fuzzy set
+        __division_type (int): Division type of this fuzzy set (e.g. EQUAL_DIVISION)
+    """
     def __init__(self, AbstractMF function, int id, int division_type, str term=""):
         if function is None or id is None or division_type is None or term is None:
             raise ValueError("function, id, division_type and term can't be none")
@@ -15,7 +23,7 @@ cdef class FuzzySet:
         self.__function = function
         self.__term = term
         self.__id = id
-        self.__division_type = division_type
+        self.__division_type = division_type  # TODO: not yet implemented
 
     def __repr__(self):
         """Return a string representation of this object
@@ -26,21 +34,55 @@ cdef class FuzzySet:
         return f"Fuzzy set {self.__term}"
 
     cdef double get_membership_value(self, double x):
+        """Get the membership value of a value for this fuzzy set
+        
+        Args:
+            x (double): Value whose membership value is calculated
+
+        Returns:
+            double: Membership value
+        """
         return self.__function.get_value(x)
 
     cpdef get_term(self):
+        """Get the name associated to the fuzzy set
+        
+        Returns:
+            str: Name associated to the fuzzy set
+        """
         return self.__term
 
     cpdef get_function_callable(self):
+        """Get the membership function object's function
+        
+        Returns:
+            function: Membership function
+        """
         return self.__function.get_value
 
     cpdef int get_id(self):
+        """Get th ID of Fuzzy set
+                
+        Returns:
+            int: Fuzzy set ID
+        """
         return self.__id
 
     cpdef AbstractMF get_function(self):
+        """Get the membership function object
+        
+        Returns:
+            AbstractMF: Membership function object
+        """
         return self.__function
 
     cpdef get_division_type(self):
+        """Get the division type of this fuzzy set
+        
+        Returns:
+            DivisionType: Division type
+
+        """
         return self.__division_type
 
     def to_xml(self):

@@ -69,7 +69,10 @@ cdef class FuzzyVariable:
         for i in range(self.get_length()):
             fuzzy_set = self.get_fuzzy_set(i)
             points = fuzzy_set.get_function().get_plot_points(self.__domain[0], self.__domain[1])
-            ax.plot(points[:,0], points[:,1])
+            ax.plot(points[:,0], points[:,1], label=fuzzy_set.get_term())
+
+        ax.legend(loc="upper right")
+        ax.set_xlim(self.get_domain())
 
         return ax
 

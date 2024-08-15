@@ -3,8 +3,12 @@ import copy
 import numpy as np
 import pytest
 
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
+    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 
 
@@ -330,4 +334,26 @@ def test_plot_fuzzy_variables_2_vars_1_set():
                          support_values=np.array([0.5]), domain=np.array([0.0, 1.1]), name="x1")
 
     knowledge = Knowledge(np.array([var1, var2], object))
+    knowledge.plot_fuzzy_variables()
+
+
+def test_plot_fuzzy_variables_homo_triangle_5():
+    knowledge = HomoTriangleKnowledgeFactory_5(1).create()
+    knowledge.plot_fuzzy_variables()
+
+
+def test_plot_fuzzy_variables_homo_triangle_2_3_4_5():
+    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(1).create()
+    knowledge.plot_fuzzy_variables()
+
+
+def test_plot_fuzzy_variables_1_var_4_sets():
+    var1 = FuzzyVariable(fuzzy_sets=np.array([DontCareFuzzySet(0),
+                                              TriangularFuzzySet(0, 0.5, 1, 1, "medium"),
+                                              TriangularFuzzySet(0, 0, 0.5, 0, "small"),
+                                              TriangularFuzzySet(0.5, 1, 1, 2, "large")
+                                              ], object),
+                         support_values=np.array([0.0, 0.0, 0.0, 0.0]), name="Petal Size")
+
+    knowledge = Knowledge(np.array([var1], object))
     knowledge.plot_fuzzy_variables()
