@@ -8,7 +8,7 @@ import time
 import cython
 import numpy as np
 from mofgbmlpy.data.pattern cimport Pattern
-from mofgbmlpy.fuzzy.classifier.classification.abstract_classification cimport AbstractClassification
+from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClassification
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
 from libc.math cimport INFINITY
@@ -16,7 +16,7 @@ from libc.math cimport INFINITY
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):
-    """Method"""
+    """Class containing a method to compute a winner rule for a given pattern using the single winner rule selection """
 
     # def __init__(self, cache_size=0): # TODO: Check cache performance
         # if cache_size <= 0:
@@ -46,6 +46,19 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
     #         return value
 
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
+        """Outputs the winner rule (the michigan solution) based on a single winner rule. 
+        The winner is the solution with the maximum fitness for the given pattern.
+        If there are 2 winner rules (same fitness values) with different conclusion classes then None or if there is 
+        no rule with a positive or null fitness value then None is returned.
+        If there are 2 winner rules (same fitness values) with the same conclusion class, then the first rule is returned
+        
+        Args:
+            michigan_solution_list (MichiganSolution[], Pattern): List of rules from where a winner will be determined
+            pattern (Pattern): Pattern used to compute the rules' fitness
+
+        Returns:
+            Winner rule or None if it can't be determined (negative fitness or 2 winners with different conclusion classes)
+        """
         cdef double max = -INFINITY
         cdef MichiganSolution winner
         cdef double value

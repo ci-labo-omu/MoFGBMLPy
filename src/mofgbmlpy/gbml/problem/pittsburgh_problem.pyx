@@ -14,7 +14,7 @@ class PittsburghProblem(Problem):
     __num_constraints = None
     __training_ds = None
     __michigan_solution_builder = None
-    __classifier = None
+    __classification = None
     __objectives = None
 
     def __init__(self,
@@ -23,13 +23,13 @@ class PittsburghProblem(Problem):
                  num_constraints,
                  training_dataset,
                  michigan_solution_builder,
-                 classifier):
+                 classification):
 
         super().__init__(n_var=1, n_obj=len(objectives))  # 1 var because we consider one solution object
         self.__training_ds = training_dataset
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
-        self.__classifier = classifier
+        self.__classification = classification
         self.__objectives = objectives
         self.__num_constraints = num_constraints
         if len(objectives) == 0:
@@ -40,7 +40,7 @@ class PittsburghProblem(Problem):
                                                  self.get_num_objectives(),
                                                  self.__num_constraints,
                                                  copy.deepcopy(self.__michigan_solution_builder),
-                                                 self.__classifier)
+                                                 self.__classification)
 
         return pittsburgh_solution
 

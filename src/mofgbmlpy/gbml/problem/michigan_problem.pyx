@@ -1,9 +1,6 @@
 from pymoo.core.problem import Problem
 import numpy as np
 cimport numpy as cnp
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 
 
 class MichiganProblem(Problem):

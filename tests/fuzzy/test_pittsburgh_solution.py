@@ -4,8 +4,7 @@ import xml.etree.cElementTree as xml_tree
 from xml.dom import minidom
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.input import Input
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
@@ -28,8 +27,8 @@ def test_to_xml_run():
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
     rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge, random_gen), LearningBasic(training_data_set), knowledge)
     michigan_builder = MichiganSolutionBuilder(random_gen, 2, 0, rule_builder)
-    classifier = Classifier(SingleWinnerRuleSelection())
-    problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classifier)
+    classification = SingleWinnerRuleSelection()
+    problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classification)
     sol = problem.create_solution()
     reparsed = minidom.parseString(xml_tree.tostring(sol.to_xml()))
     _ = reparsed.toprettyxml(indent="  ")

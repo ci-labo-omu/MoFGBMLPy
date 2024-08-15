@@ -15,8 +15,7 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import
 
 from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder

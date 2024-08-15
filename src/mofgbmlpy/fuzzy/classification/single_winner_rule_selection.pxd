@@ -1,7 +1,7 @@
 # distutils: language = c++
 
 from mofgbmlpy.data.pattern cimport Pattern
-from mofgbmlpy.fuzzy.classifier.classification.abstract_classification cimport AbstractClassification
+from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClassification
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 from mofgbmlpy.utility.lru_cache cimport LRUCache

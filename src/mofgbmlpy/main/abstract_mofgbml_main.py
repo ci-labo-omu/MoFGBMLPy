@@ -18,8 +18,7 @@ from importlib import import_module
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
@@ -157,14 +156,13 @@ class AbstractMoFGBMLMain(ABC):
 
         # classification = SingleWinnerRuleSelection(self._mofgbml_args.get("CACHE_SIZE"))
         classification = SingleWinnerRuleSelection()
-        classifier = Classifier(classification)
 
         self._problem = PittsburghProblem(num_vars_pittsburgh,
                                           self._objectives,
                                           num_constraints_pittsburgh,
                                           self._train,
                                           michigan_solution_builder,
-                                          classifier)
+                                          classification)
 
     @staticmethod
     def create_and_add_archives(res):

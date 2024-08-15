@@ -5,8 +5,7 @@ import numpy as np
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
-from mofgbmlpy.fuzzy.classifier.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.classifier.classifier import Classifier
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
