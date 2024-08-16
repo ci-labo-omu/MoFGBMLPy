@@ -52,7 +52,7 @@ class AbstractMoFGBMLMain(ABC):
         self._mofgbml_args = mofgbml_args
         self._knowledge_factory_class = knowledge_factory_class
 
-    def load_args(self, args):
+    def load_args(self, args, train=None, test=None):
         # set command arguments
         self._mofgbml_args.load(args)
         self._random_gen = np.random.Generator(np.random.MT19937(seed=self._mofgbml_args.get("RAND_SEED")))
@@ -66,7 +66,11 @@ class AbstractMoFGBMLMain(ABC):
             Output.writeln(file_name, str(self._mofgbml_args), False)
 
         # Load dataset
-        self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
+        if train is not None and test is not None:
+            self._train, self._test = train, test
+        else:
+            self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
+
 
         self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
 
@@ -206,10 +210,10 @@ class AbstractMoFGBMLMain(ABC):
         Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
                          pretty_xml=pretty_xml)
 
-    def main(self, args):
+    def main(self, args, train=None, test=None):
         # TODO: print information
 
-        self.load_args(args)
+        self.load_args(args, train, test)
 
         res = self.run()
         exec_time = res.exec_time
@@ -253,16 +257,15 @@ class AbstractMoFGBMLMain(ABC):
 
         sol_id = id_start
         for i in range(len(solutions)):
+            total_coverage = 0
             sol = solutions[i]
-            if sol.get_num_vars() != 0 and sol.get_var(0).get_num_vars() != 0:
-                total_coverage = 1
-            else:
-                total_coverage = 0
             for rule_i in range(sol.get_num_vars()):
                 michigan_solution = sol.get_var(rule_i)
                 fuzzy_set_indices = michigan_solution.get_vars()
+                coverage = 1
                 for dim_i in range(len(fuzzy_set_indices)):
-                    total_coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
+                    coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
+                total_coverage += coverage
 
             sol.set_attribute("id", sol_id)
             sol.set_attribute("total_coverage", total_coverage)

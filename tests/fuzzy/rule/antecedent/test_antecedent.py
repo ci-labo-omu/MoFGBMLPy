@@ -42,8 +42,7 @@ def test_get_compatible_grade_no_knowledge():
 
 
 def test_get_compatible_grade_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object),
-                                         support_values=np.array([0.0]))], object)
+    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
     vector = np.array([1.0, 2.0])
@@ -52,8 +51,7 @@ def test_get_compatible_grade_smaller_num_vars_knowledge():
 
 
 def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object),
-                                         support_values=np.array([0.0]))], object)
+    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
 
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)
@@ -106,8 +104,7 @@ def test_get_compatible_grade_value_no_knowledge():
 
 
 def test_get_compatible_grade_value_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object),
-                                         support_values=np.array([0.0]))], object)
+    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
     vector = np.array([1.0, 2.0])
@@ -116,8 +113,7 @@ def test_get_compatible_grade_value_smaller_num_vars_knowledge():
 
 
 def test_get_compatible_grade_value_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object),
-                                         support_values=np.array([0.0]))], object)
+    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
 
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)

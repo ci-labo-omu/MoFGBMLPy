@@ -13,3 +13,4 @@ cdef class AbstractMF:
     cpdef bint is_param_value_valid(self, int index, double value, double x_min=?, double x_max=?)
     cpdef void set_param_value(self, int index, double value, double x_min=?, double x_max=?)
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=?, double x_max=?)
+    cpdef double get_support(self, double x_min=?, double x_max=?)

@@ -89,7 +89,6 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         fuzzy_sets = np.empty(len(self.__num_divisions), dtype=object)
 
         for dim_i in range(len(self.__num_divisions)):
-            current_support_values = [1]
             current_set = [DontCareFuzzySet(id=set_id)]
             set_id += 1
 
@@ -100,14 +99,7 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
                     set_id += 1
                     current_set.append(new_fuzzy_set)
 
-                    if div_i == 0 or self.__num_divisions[dim_i][j] <= 1: # DC or one division
-                        current_support_values.append(1)
-                    elif div_i == 1 or div_i == self.__num_divisions[dim_i][j] - 1:
-                        current_support_values.append(1 / (self.__num_divisions[dim_i][j] - 1))
-                    else:
-                        current_support_values.append(2 / (self.__num_divisions[dim_i][j] - 1))
-
-            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), np.array(current_support_values), str(self.__var_names[dim_i]))
+            fuzzy_sets[dim_i] = FuzzyVariable(np.array(current_set, dtype=object), str(self.__var_names[dim_i]))
         knowledge.set_fuzzy_vars(fuzzy_sets)
         return knowledge
 

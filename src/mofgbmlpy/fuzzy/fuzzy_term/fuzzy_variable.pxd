@@ -4,7 +4,6 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 import cython
 
 cdef class FuzzyVariable:
-    cdef double[:] __support_values
     cdef FuzzySet[:] __fuzzy_sets
     cdef str __name
     cdef double[:] __domain

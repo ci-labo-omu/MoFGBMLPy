@@ -72,7 +72,7 @@ def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=Tru
                                                                                    y_label="error_rate",
                                                                                    xlim=xlim)
 
-def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True):
+def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title=None):
     data = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate", keep_empty_x_key_values=True,
                                 remove_rare_solutions=remove_rare_solutions)
 
@@ -82,8 +82,10 @@ def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True):
     plt.xlabel(x_key)
     plt.ylabel("training_error_rate")
     plt.ylim([0, 1])
-    plt.show()
+    if title is not None:
+        plt.title(title)
 
+    plt.show()
 
 def task(args):
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)

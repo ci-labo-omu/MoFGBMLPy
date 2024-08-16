@@ -13,3 +13,4 @@ cdef class FuzzySet:
     cpdef int get_id(self)
     cpdef AbstractMF get_function(self)
     cpdef get_division_type(self)
+    cpdef double get_support(self, double x_min=?, double x_max=?)

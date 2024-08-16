@@ -19,26 +19,28 @@ cdef class LearningBasic(AbstractLearning):
             raise Exception("The training dataset cannot be None")
         self._train_ds = training_dataset
 
-    cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
+    cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return Consequent(class_label, rule_weight)
 
-    cdef double[:] calc_confidence(self, Antecedent antecedent):
+    cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
+        if dataset is None:
+            dataset = self._train_ds
         if antecedent is None:
             raise ValueError('Antecedent cannot be None')
 
-        cdef int num_classes = self._train_ds.get_num_classes()
+        cdef int num_classes = dataset.get_num_classes()
         cdef double[:] confidence = np.zeros(num_classes)
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes)
-        cdef double[:] compatible_grades = np.zeros(self._train_ds.get_size())
-        cdef Pattern[:] patterns = self._train_ds.get_patterns()
+        cdef double[:] compatible_grades = np.zeros(dataset.get_size())
+        cdef Pattern[:] patterns = dataset.get_patterns()
         cdef int i
         cdef Pattern p
 
-        # for i in prange(self._train_ds.get_size(), nogil=True):
-        for i in range(self._train_ds.get_size()):
+        # for i in prange(dataset.get_size(), nogil=True):
+        for i in range(dataset.get_size()):
             p = patterns[i]
             compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())
 
@@ -50,7 +52,7 @@ cdef class LearningBasic(AbstractLearning):
         for c in range(num_classes):
             part_sum = 0
             # TODO: Add multithreading
-            for i in range(self._train_ds.get_size()):
+            for i in range(dataset.get_size()):
                 pattern = patterns[i]
                 if pattern.get_target_class().get_class_label_value() == c:
                     part_sum += compatible_grades[i]

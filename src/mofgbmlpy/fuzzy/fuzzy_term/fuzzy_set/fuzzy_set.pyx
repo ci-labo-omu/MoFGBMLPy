@@ -135,3 +135,15 @@ cdef class FuzzySet:
 
         memo[id(self)] = new_object
         return new_object
+
+    cpdef double get_support(self, double x_min=0, double x_max=0):
+        """Get the support value associated to this function: area covered by it function in the space "domain x [0, 1]"
+
+        Args:
+            x_min (double): Min value of the domain for the x axis
+            x_max (double): Max value of the domain for the x axis
+
+        Returns:
+            Support value
+        """
+        return self.__function.get_support(x_min, x_max)

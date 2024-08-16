@@ -8,6 +8,7 @@ import time
 import numpy as np
 cimport numpy as cnp
 
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classification.abstract_classification import AbstractClassification
@@ -17,6 +18,7 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionBuilder
+from mofgbmlpy.gbml.solution.pittsburgh_scikit_classifier import PittsburghScikitClassifier
 
 cdef class PittsburghSolution(AbstractSolution):
     def __init__(self, num_vars, num_objectives, num_constraints, michigan_solution_builder, classification, do_init_vars=True):
@@ -30,9 +32,9 @@ cdef class PittsburghSolution(AbstractSolution):
         return self.__michigan_solution_builder
 
 
-    cpdef void learning(self):
+    cpdef void learning(self, Dataset dataset=None):
         for var in self._vars:
-            var.learning()
+            var.learning(dataset)
 
     cpdef double compute_coverage(self):
         coverage = 0
@@ -206,6 +208,13 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef MichiganSolution classify_py(self, Pattern pattern):
        return self.classify(pattern)
 
+    cpdef AbstractClassLabel predict(self, Pattern pattern):
+        cdef MichiganSolution winner = self.classify(pattern)
+        if winner is None:
+            return None
+        else:
+            return winner.get_class_label()
+
     cpdef get_total_rule_length(self):
        length = 0
        if self._vars is not None:
@@ -272,3 +281,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
     cpdef AbstractClassification get_classification(self):
        return self.__classification
+
+    def create_scikit_classifier(self):
+        return PittsburghScikitClassifier(self)

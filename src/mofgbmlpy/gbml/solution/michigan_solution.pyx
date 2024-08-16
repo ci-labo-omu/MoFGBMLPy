@@ -3,6 +3,7 @@ import copy
 
 import numpy as np
 
+from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
@@ -49,7 +50,7 @@ cdef class MichiganSolution(AbstractSolution):
         self.set_vars(antecedent_indices)
         self.learning()
 
-    cpdef void learning(self):
+    cpdef void learning(self, Dataset dataset=None):
         cdef Antecedent antecedent_object
         if self._vars is None:
             raise Exception("Vars is not defined")
@@ -60,7 +61,7 @@ cdef class MichiganSolution(AbstractSolution):
         else:
             antecedent_object = self._rule.get_antecedent()
             antecedent_object.set_antecedent_indices(self._vars)
-            self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object))
+            self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object, dataset))
 
     cpdef double get_fitness_value(self, double[:] in_vector):
         return self._rule.get_fitness_value(in_vector)

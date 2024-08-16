@@ -74,7 +74,6 @@ def test_get_membership_value_empty_fuzzy_sets_array():
         var.get_membership_value_py(0, 0)
 
 
-
 def test_get_fuzzy_set_value_out_of_bounds_index_negative():
     with pytest.raises(Exception):
         var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
@@ -112,47 +111,33 @@ def test_get_support_empty_fuzzy_sets_array():
 
 
 def test_eq_true():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]),
-                        support_values=np.array([0.5]), name="x0")
-    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]),
-                        support_values=np.array([0.5]), name="x0")
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
+    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     assert var == var2
 
 
 def test_eq_different_fuzzy_sets_support_size():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"),TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
-                        support_values=np.array([0.5, 0]), name="x0")
-    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]),
-                        support_values=np.array([0.5]), name="x0")
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"), TriangularFuzzySet(0, 0.5, 1, 1, "small")]), name="x0")
+    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     assert var != var2
 
 
 def test_eq_different_fuzzy_sets_order():
     var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"),
-                                             TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
-                        support_values=np.array([0.5, 0]), name="x0")
+                                             TriangularFuzzySet(0, 0.5, 1, 1, "small")]), name="x0")
     var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 1, "small"),
-                                              TriangularFuzzySet(0, 0.5, 1, 0, "small")]),
-                        support_values=np.array([0.5, 0]), name="x0")
+                                              TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     assert var != var2
 
 
-def test_eq_different_support_values_order():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"),
-                                             TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
-                        support_values=np.array([0.5, 0]), name="x0")
-    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"),
-                                              TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
-                        support_values=np.array([0, 0.5]), name="x0")
-    assert var != var2
 
 
 def test_eq_different_name():
     fuzzy_sets1 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
     fuzzy_sets2 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
 
-    var = FuzzyVariable(fuzzy_sets1, np.array([0.0]), "x0")
-    var2 = FuzzyVariable(fuzzy_sets2, np.array([0.0]), "x1")
+    var = FuzzyVariable(fuzzy_sets1, "x0")
+    var2 = FuzzyVariable(fuzzy_sets2, "x1")
     assert var != var2
 
 
@@ -160,15 +145,13 @@ def test_eq_different_domain():
     fuzzy_sets1 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
     fuzzy_sets2 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
 
-    var = FuzzyVariable(fuzzy_sets1, np.array([0.0]), domain=np.array([0.0, 1.0]))
-    var2 = FuzzyVariable(fuzzy_sets2, np.array([0.0]), domain=np.array([0.1, 0.5]))
+    var = FuzzyVariable(fuzzy_sets1, domain=np.array([0.0, 1.0]))
+    var2 = FuzzyVariable(fuzzy_sets2, domain=np.array([0.1, 0.5]))
     assert var != var2
 
 
 def test_deepcopy():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]), name="x0")
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     var_copy = copy.deepcopy(var)
 
-    assert (var == var_copy and
-            id(var.get_support_values().base) != id(var_copy.get_support_values().base) and
-            id(var.get_fuzzy_sets().base) != id(var_copy.get_fuzzy_sets().base))
+    assert var == var_copy and id(var.get_fuzzy_sets().base) != id(var_copy.get_fuzzy_sets().base)

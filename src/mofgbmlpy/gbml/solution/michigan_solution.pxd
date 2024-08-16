@@ -2,6 +2,8 @@ import copy
 
 import numpy as np
 import cython
+
+from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
@@ -22,7 +24,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef object _random_gen
 
     cdef void create_rule(self, Pattern pattern=?)
-    cpdef void learning(self)
+    cpdef void learning(self, Dataset dataset=?)
     cpdef double get_fitness_value(self, double[:] in_vector)
     cpdef int get_length(self)
     cpdef get_class_label(self)

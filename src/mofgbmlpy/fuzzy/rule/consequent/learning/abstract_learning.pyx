@@ -1,10 +1,11 @@
+from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 
 
 
 cdef class AbstractLearning:
-    cpdef Consequent learning(self, Antecedent antecedent, double reject_threshold=0):
+    cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         Exception("This class is abstract")
 
     def __deepcopy__(self, memo={}):

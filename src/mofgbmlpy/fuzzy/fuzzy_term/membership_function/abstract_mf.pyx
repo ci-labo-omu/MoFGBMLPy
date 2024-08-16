@@ -157,3 +157,15 @@ cdef class AbstractMF:
             Points coordinates that define this function shape
         """
         raise Exception("This class is abstract")
+
+    cpdef double get_support(self, double x_min=0, double x_max=0):
+        """Get the support value associated to this function: area covered by it function in the space "domain x [0, 1]"
+        
+        Args:
+            x_min (double): Min value of the domain for the x axis
+            x_max (double): Max value of the domain for the x axis
+            
+        Returns:
+            Support value
+        """
+        raise Exception("This class is abstract")

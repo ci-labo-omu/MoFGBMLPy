@@ -7,7 +7,15 @@ cimport numpy as cnp
 
 
 cdef class TriangularMF(AbstractMF):
+    """Triangular membership function"""
     def __init__(self, left=0, center=0.5, right=1):
+        """Constructor
+
+        Args:
+            left (double): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 before it
+            center (double): X coordinate of the vertex in the center of the triangle: membership is equals to 1 at this point
+            right (double): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 after it
+        """
         if left is None or center is None or right is None:
             raise ValueError("Parameters can't be None")
         if left > center:
@@ -20,6 +28,14 @@ cdef class TriangularMF(AbstractMF):
         super().__init__(np.array([left,center,right], dtype=np.float64))
 
     cdef double get_value(self, double x):
+        """Get membership value (accessible only from Cython code)
+
+        Args:
+            x (double): Value whose membership value is calculated
+
+        Returns:
+            double: Membership value
+        """
         if x == self._params[1]:
             # For the case where left = center or center = right
             return 1
@@ -40,6 +56,16 @@ cdef class TriangularMF(AbstractMF):
         return "<Triangular MF (%f, %f, %f)>" % (self._params[0], self._params[1], self._params[2])
 
     cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index, double x_min=0, double x_max=1):
+        """Get the range of acceptable values a given parameter as a numpy array of two values
+
+            Args:
+                index (int): Index of the parameter whose range is got
+                x_min (double): Min value of the domain for the x axis (e.g. if index is 0 for the triangular set then we get [xmin, center]
+                x_max (double): Max value of the domain for the x axis (e.g. if index is 2 for the triangular set then we get [center, max]
+
+            Returns:
+                double[]: Range of possible values
+            """
         if x_min > self._params[0] or x_max < self._params[2]:
             raise Exception(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[2]}]")
 
@@ -67,6 +93,14 @@ cdef class TriangularMF(AbstractMF):
         return new_object
 
     cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=0, double x_max=1):
+        """Get the plot points coordinates
+
+           Args:
+               x_min (double): Min value of the domain for the x axis
+               x_max (double): Max value of the domain for the x axis
+           Returns:
+               Points coordinates that define this function shape
+           """
         return np.array([
             [x_min,0],
             [self._params[0], 0],
@@ -74,3 +108,15 @@ cdef class TriangularMF(AbstractMF):
             [self._params[2], 0],
             [x_max, 0],
         ], np.float64)
+
+    cpdef double get_support(self, double x_min=0, double x_max=0):
+        """Get the support value associated to this function: area covered by it function in the space "domain x [0, 1]"
+
+        Args:
+            x_min (double): Min value of the domain for the x axis
+            x_max (double): Max value of the domain for the x axis
+
+        Returns:
+            Support value
+        """
+        return 0.5 * (self._params[2] - self._params[0])  # right - left

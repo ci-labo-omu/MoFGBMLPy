@@ -3,6 +3,7 @@ import time
 import numpy as np
 cimport numpy as cnp
 
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClassification
@@ -18,7 +19,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolution[:] _vars
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
-    cpdef void learning(self)
+    cpdef void learning(self, Dataset dataset=?)
     cpdef double compute_coverage(self)
     cpdef double get_average_rule_weight(self)
     cpdef void remove_var(self, int index)
@@ -35,3 +36,4 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef double get_error_rate(self, Dataset dataset)
     cpdef object[:] get_errored_patterns(self, Dataset dataset)
     cpdef AbstractClassification get_classification(self)
+    cpdef AbstractClassLabel predict(self, Pattern pattern)

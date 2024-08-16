@@ -32,8 +32,8 @@ cdef class RuleBuilderCore:
     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices):
         return Antecedent(antecedent_indices, self._knowledge)
 
-    cdef Consequent create_consequent(self, Antecedent antecedent):
-        return self._consequent_factory.learning(antecedent)
+    cdef Consequent create_consequent(self, Antecedent antecedent, Dataset dataset=None):
+        return self._consequent_factory.learning(antecedent, dataset=dataset)
 
     cpdef Knowledge get_knowledge(self):
         return self._knowledge
