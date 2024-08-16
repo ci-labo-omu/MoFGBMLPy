@@ -1,5 +1,17 @@
 # MoFGBMLPy
 
+## Scikit-learn
+
+This implementation comes with a wrapper for Pittsburgh solutions, so we can use dimension reduction and other functions
+
+
+### Iris with PCA dimension reduction and classification boundaries visualization (NSGA-II)
+![boundaries](examples/pca_iris_boundaries.png)
+
+### Confusion matrices for Iris (no PCA and NSGA-II)
+![confusion_matrix](examples/confusion_matrices.png)
+
+
 ## Install
 
 ### Speedup pymoo
@@ -49,12 +61,13 @@ Please read the notebooks in examples/.
 ### Arguments
 
 ```
-usage: ipykernel_launcher.py [-h] --experiment-id EXPERIMENT_ID --algorithm-id
-                             ALGORITHM_ID [--population-size POPULATION_SIZE]
+usage: ipykernel_launcher.py [-h] [--cache-size CACHE_SIZE] --experiment-id
+                             EXPERIMENT_ID --algorithm-id ALGORITHM_ID
+                             [--population-size POPULATION_SIZE]
                              (--terminate-generation TERMINATE_GENERATION | --terminate-evaluation TERMINATE_EVALUATION)
-                             [--rand-seed RAND_SEED]
+                             [--verbose] [--rand-seed RAND_SEED]
                              [--is-probability-dont-care]
-                             [--antecedent-num-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE]
+                             [--antecedent-number-do-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE]
                              [--dont-care-rt DONT_CARE_RT]
                              [--initiation-rule-num INITIATION_RULE_NUM]
                              [--max-num-rules MAX_NUM_RULES]
@@ -66,14 +79,21 @@ usage: ipykernel_launcher.py [-h] --experiment-id EXPERIMENT_ID --algorithm-id
                              [--rule-change-rt RULE_CHANGE_RT]
                              [--michigan-cross-rt MICHIGAN_CROSS_RT]
                              [--pittsburgh-cross-rt PITTSBURGH_CROSS_RT]
-                             --objectives OBJECTIVES [OBJECTIVES ...]
+                             [--objectives OBJECTIVES [OBJECTIVES ...]]
                              [--root-folder ROOT_FOLDER] [--is-multi-label]
                              --train-file TRAIN_FILE --test-file TEST_FILE
-                             --data-name DATA_NAME [--gen-plot] [--pretty-xml]
+                             --data-name DATA_NAME [--gen-plot]
+                             [--no-output-files] [--pretty-xml]
                              [--offspring-population-size OFFSPRING_POPULATION_SIZE]
 
 options:
   -h, --help            show this help message and exit
+  --cache-size CACHE_SIZE
+                        Third argument has been left for test purposes but
+                        it's not recommended to use it since the hashing
+                        function has collisions. Cache size for fitness values
+                        computation. A big cache might deteriorate performance
+                        and increase RAM usage
   --experiment-id EXPERIMENT_ID
                         Experiment ID (Used to create the path where results
                         are saved)
@@ -88,13 +108,15 @@ options:
   --terminate-evaluation TERMINATE_EVALUATION
                         Set the termination criterion to the number of
                         objective function evaluations, and set the max value
+  --verbose             If True then display for each generation some
+                        information
   --rand-seed RAND_SEED
                         The seed for random operations
   --is-probability-dont-care
-                        If True then use the don't care rate for the
+                        If specified then use the don't care rate for the
                         antecedent factory, otherwise compute it from
                         antecedent num not don't care
-  --antecedent-num-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE
+  --antecedent-number-do-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE
                         Number of indices that are not 0 (which is don't care)
                         in an antecedent. Used by the antecedent factory
   --dont-care-rt DONT_CARE_RT
@@ -129,8 +151,8 @@ options:
                         'rule-interpretation', 'num-rules', 'total-rule-length
   --root-folder ROOT_FOLDER
                         Path where results are saved
-  --is-multi-label      Must be True if the dataset is a multi label one and
-                        False otherwise, which is the default
+  --is-multi-label      Must be specified if the dataset is a multi label one
+                        and not specified otherwise, which is the default
   --train-file TRAIN_FILE
                         Path of the training dataset file
   --test-file TEST_FILE
@@ -139,6 +161,8 @@ options:
                         Dataset name. It's used to create the path where
                         results are saved
   --gen-plot            Generate matplotlib plots
+  --no-output-files     Don't save results in files (plots, solutions,
+                        arguments...)
   --pretty-xml          Save results in a pretty XML file (formated with
                         indentation)
   --offspring-population-size OFFSPRING_POPULATION_SIZE
