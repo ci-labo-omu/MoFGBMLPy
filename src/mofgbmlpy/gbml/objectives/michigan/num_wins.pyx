@@ -4,10 +4,27 @@ from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 cdef class NumWins(ObjectiveFunction):
+    """Objective function that counts the number of times a solutions wins. For each pattern the winner is the solution with the highest fitness value
+
+    Attributes:
+        __data_set (Dataset): Training dataset used to compute the number of wins for each michigan solution
+    """
     def __init__(self, data_set):
+        """Constructor
+
+        Args:
+            data_set (Dataset): Training dataset used to compute the number of wins for each michigan solution
+        """
         self.__data_set = data_set
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
+        """Run the objective function on the given parameters
+
+        Args:
+            solutions (MichiganSolution[]): Solutions that are evaluated
+            obj_index (int): Index of the objective in the solution objectives array
+            out (double[]): Output array, it will contain the objective value of all the solutions
+        """
         cdef int i = 0
         cdef int k = 0
         cdef MichiganSolution sol

@@ -6,7 +6,15 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
 
 cdef class RuleInterpretation(ObjectiveFunction):
+    """Objective function that was in the original Java version. Its usage was not yet properly investigated so please refrain from using it"""
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
+        """Run the objective function on the given parameters
+
+        Args:
+            solutions (AbstractSolution[]): Solutions that are evaluated
+            obj_index (int): Index of the objective in the solution objectives array
+            out (double[]): Output array, it will contain the objective value of all the solutions
+        """
         cdef int i = 0
         cdef PittsburghSolution sol
         cdef double rule_interpretation

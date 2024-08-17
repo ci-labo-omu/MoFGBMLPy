@@ -18,7 +18,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
     """Antecedent factory creating all the possible antecedents in the constructor
 
     Attributes:
-        __antecedents_indices (int[:,:]): All the possible antecedent indices for the current knowledge base
+        __antecedents_indices (int[,]): All the possible antecedent indices for the current knowledge base
         __knowledge (Knowledge): Knowledge base
         _random_gen (numpy.random.Generator): Random generator
     """

@@ -12,7 +12,7 @@ cdef class Dataset:
         __size (int): Number of patterns in the dataset (used, like the other parameters, to check if the file was loaded properly)
         __num_dim (int): Number of attributes (dimensions) in all the patterns of this dataset
         __num_classes (int): Number of class in the dataset
-        __patterns (Patterns[:]): Array of patterns in the dataset
+        __patterns (Patterns[]): Array of patterns in the dataset
     """
     def __init__(self, int size, int n_dim, int c_num, Pattern[:] patterns):
         """ Constructor of the class Dataset
@@ -21,7 +21,7 @@ cdef class Dataset:
             size (int): Number of patterns in the dataset (used, like the other parameters, to check if the file was loaded properly)
             n_dim (int): Number of attributes (dimensions) in all the patterns of this dataset
             c_num (int): Number of class in the dataset
-            patterns (Patterns[:]): Array of patterns in the dataset
+            patterns (Patterns[]): Array of patterns in the dataset
         """
         if size <= 0 or n_dim <= 0 or c_num <= 0 or patterns is None:
             raise ValueError("Incorrect input dataset information")

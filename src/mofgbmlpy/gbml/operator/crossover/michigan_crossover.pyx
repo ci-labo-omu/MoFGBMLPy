@@ -12,12 +12,28 @@ from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 
 
 class MichiganCrossover(Crossover):
-    __rule_change_rate = None
-    __training_set = None
-    __knowledge = None
-    __crossover_rate = None
+    """Apply the Michigan crossover on the Michigan solutions of one Pittsburgh solution
+
+    Attributes:
+        __crossover_rate (float): Probability that a crossover occurs
+        __rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+        __training_set (Dataset): Training dataset
+        __knowledge (Knowledge): Knowledge base
+        __max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
+        _random_gen (numpy.random.Generator): Random generator
+    """
 
     def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, random_gen, prob=0.9):
+        """Constructor
+
+        Args:
+            rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+            training_set (Dataset): Training dataset
+            knowledge (Knowledge): Knowledge base
+            max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
+            random_gen (numpy.random.Generator): Random generator
+            prob (float): Probability that a crossover occurs
+        """
         super().__init__(1, 1, 1)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
@@ -27,6 +43,21 @@ class MichiganCrossover(Crossover):
         self._random_gen = random_gen
 
     def ga_rules_gen(self, crossover, mutation, selection, pop, problem, mating_pool_size, n_parents, num_ga):
+        """Generate rules using a genetic algorithm
+
+        Args:
+            crossover (Crossover): Crossover operator object
+            mutation (Mutation): Mutation operator object
+            selection (Selection): Selection operator object (select the mating pool in a population)
+            pop (Population): Population
+            problem (Problem): Optimization problem definition
+            mating_pool_size (int): Maximum size of the mating pool
+            n_parents (int): Number of parents used to generate the rules
+            num_ga (int): Number of rules that need to be generated
+
+        Returns:
+            list: Generated rules
+        """
         mating_pop = selection.do(problem, pop, mating_pool_size, n_parents, to_pop=False)
         generated_solutions = []
 
@@ -52,6 +83,16 @@ class MichiganCrossover(Crossover):
         return generated_solutions
 
     def _do(self, problem, X, **kwargs):
+        """Run the crossover on the given population
+
+        Args:
+            problem (Problem): Optimization problem (e.g. PittsburghProblem)
+            X (object[,]): Population. The shape is (n_matings, n_var),
+            **kwargs (dict): Other arguments taken by Pymoo crossover object
+
+        Returns:
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+        """
         # Note: X contains Pittsburgh solutions
         n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
@@ -103,7 +144,7 @@ class MichiganCrossover(Crossover):
                 crossover = UniformCrossoverSingleOffspringMichigan(self._random_gen, self.__crossover_rate)
 
                 mutation_rt = 1/self.__training_set.get_num_dim()
-                mutation = MichiganMutation(self.__training_set, self.__knowledge, mutation_rt, self._random_gen)
+                mutation = MichiganMutation(self.__knowledge, mutation_rt, self._random_gen)
 
                 if parent.get_num_vars() == 1:
                     tournament_size = 1
@@ -142,4 +183,14 @@ class MichiganCrossover(Crossover):
         return Y
 
     def execute(self, problem, X, **kwargs):
+        """Public version of the _do function (needed for the Hybrid crossover). Run the crossover on the given population
+
+        Args:
+            problem (Problem): Optimization problem (e.g. PittsburghProblem)
+            X (object[,]): Population. The shape is (n_matings, n_var),
+            **kwargs (dict): Other arguments taken by Pymoo crossover object
+
+        Returns:
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+        """
         return self._do(problem, X, **kwargs)

@@ -3,7 +3,15 @@ from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
 cdef class NumRules(ObjectiveFunction):
+    """Objective function that considers the number of rules (Michigan solutions) to evaluate Pittsburgh solutions"""
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
+        """Run the objective function on the given parameters
+
+        Args:
+            solutions (PittsburghSolution[]): Solutions that are evaluated
+            obj_index (int): Index of the objective in the solution objectives array
+            out (double[]): Output array, it will contain the objective value of all the solutions
+        """
         cdef int i = 0
         cdef PittsburghSolution sol
 

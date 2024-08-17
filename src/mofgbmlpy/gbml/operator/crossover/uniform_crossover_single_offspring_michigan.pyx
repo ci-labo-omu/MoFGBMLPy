@@ -7,11 +7,29 @@ from pymoo.util.misc import crossover_mask
 
 
 class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
+    """Uniform crossover for Michigan solutions"""
 
     def __init__(self, random_gen, prob, **kwargs):
+        """Constructor
+
+        Args:
+            random_gen (numpy.random.Generator): Random generator
+            prob (float): Crossover probability
+            **kwargs (dict): Other Pymoo arguments
+        """
         super().__init__(2, 1, random_gen, prob=prob, **kwargs)
 
     def _do(self, _, X, **kwargs):
+        """Run the crossover on the given population
+
+        Args:
+            problem (Problem): Optimization problem (e.g. MichiganProblem)
+            X (object[,]): Population. The shape is (n_parents, n_matings, n_var),
+            **kwargs (dict): Other arguments taken by Pymoo crossover object
+
+        Returns:
+            double[,,]: Crossover offspring. Shape: (1, n_matings, n_vars)
+        """
         n_parents, n_matings, _ = X.shape
 
         if n_parents != 2:

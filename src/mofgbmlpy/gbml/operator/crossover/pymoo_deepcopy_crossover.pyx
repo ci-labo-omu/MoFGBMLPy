@@ -14,7 +14,7 @@ from pymoo.core.variable import Real, get
 
 
 class PymooDeepcopyCrossover(Operator):
-
+    """Please refer to the Pymoo documentation to use this class as it's the same. We just changed a shallow copy operation into a deep copy, because we are using object and not numeric values like Pymoo"""
     def __init__(self,
                  n_parents,
                  n_offsprings,

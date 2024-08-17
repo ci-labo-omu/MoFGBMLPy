@@ -3,10 +3,27 @@ from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
 cdef class ErrorRate(ObjectiveFunction):
+    """Objective function that uses the error rate as its value
+
+        Attributes:
+            __data_set (Dataset): Training dataset
+        """
     def __init__(self, data_set):
+        """Constructor
+
+        Args:
+            data_set (Dataset): Training dataset
+        """
         self.__data_set = data_set
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
+        """Run the objective function on the given parameters
+
+        Args:
+            solutions (PittsburghSolution[]): Solutions that are evaluated
+            obj_index (int): Index of the objective in the solution objectives array
+            out (double[]): Output array, it will contain the objective value of all the solutions
+        """
         cdef int i = 0
         cdef PittsburghSolution sol
 
