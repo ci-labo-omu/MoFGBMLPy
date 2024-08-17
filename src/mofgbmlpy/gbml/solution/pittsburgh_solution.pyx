@@ -21,7 +21,24 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionB
 from mofgbmlpy.gbml.solution.pittsburgh_scikit_classifier import PittsburghScikitClassifier
 
 cdef class PittsburghSolution(AbstractSolution):
+    """Pittsburgh solution (which is a classifier)
+
+    Attributes:
+        __classification (AbstractClassification): Classification method used for classification
+        __michigan_solution_builder (MichiganSolutionBuilder): Michigan solution builder
+        _vars (MichiganSolution[]): Variables: Array of Michigan solutions
+    """
     def __init__(self, num_vars, num_objectives, num_constraints, michigan_solution_builder, classification, do_init_vars=True):
+        """Constructor
+
+        Args:
+            num_vars (int): Number of variables (Michigan solutions)
+            num_objectives (int): Number of objectives
+            num_constraints (int): Number of constraints
+            michigan_solution_builder (MichiganSolutionBuilder): Michigan solution builder
+            classification (AbstractClassification): Classification method used for classification
+            do_init_vars (bool): If true then the Michigan solutions are generated now, otherwise it's delayed and set_vars must be used with learning
+        """
         super().__init__(num_objectives, num_constraints)
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
@@ -29,20 +46,32 @@ cdef class PittsburghSolution(AbstractSolution):
             self._vars = michigan_solution_builder.create(num_vars)
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
+        """Get the michigan solution builder
+        
+        Returns:
+            MichiganSolutionBuilder: Michigan solution builder
+        """
         return self.__michigan_solution_builder
 
 
     cpdef void learning(self, Dataset dataset=None):
+        """Update the consequent of the michigan solutions
+        
+        Args:
+            dataset (Dataset): If provided, this dataset is instead of the one stored in the Michigan solutions  
+
+        Returns:
+
+        """
         for var in self._vars:
             var.learning(dataset)
 
-    cpdef double compute_coverage(self):
-        coverage = 0
-        for michigan_solution in self._vars:
-            coverage += michigan_solution.compute_coverage()
-        return coverage
-
     cpdef double get_average_rule_weight(self):
+        """Get the average rule weight
+        
+        Returns:
+            double: Average rule weight
+        """
         cdef double total_rule_weight = 0
         cdef int i
         cdef MichiganSolution var
@@ -93,6 +122,11 @@ cdef class PittsburghSolution(AbstractSolution):
 
 
     def __hash__(self):
+        """Hash function
+
+        Returns:
+            int: Hash value
+        """
         cdef int i
         cdef int hash_val = 13
 
@@ -101,24 +135,59 @@ cdef class PittsburghSolution(AbstractSolution):
         return hash_val
 
     cpdef void remove_var(self, int index):
+        """Remove the variable at the given index
+        
+        Args:
+            index (int): Index of the variable removed 
+        """
         self._vars = np.delete(self._vars, index)
 
     cpdef void clear_vars(self):
+        """Clear the variables"""
         self._vars = np.empty(0, dtype=object)
 
     cpdef MichiganSolution[:] get_vars(self):
+        """Get the variables
+        
+        Returns:
+            MichiganSolution[]: variables
+        """
         return self._vars
 
     cpdef MichiganSolution get_var(self, int index):
+        """Get the variable at the give index
+        
+        Args:
+            index (int): Index of the variable fetched
+
+        Returns:
+            MichiganSolution: Variable fetched
+        """
         return self._vars[index]
 
     cpdef void set_var(self, int index, MichiganSolution value):
+        """Set the variable at the given index
+        
+        Args:
+            index (int): Index of the variable changed
+            value (MichiganSolution): New value 
+        """
         self._vars[index] = value
 
     cpdef void set_vars(self, MichiganSolution[:] new_vars):
+        """Set the variables
+        
+        Args:
+            new_vars (MichiganSolution[]): New variables
+        """
         self._vars = new_vars
 
     cpdef int get_num_vars(self):
+        """Get the number of variables
+        
+        Returns:
+            int: Number of variables
+        """
         return self._vars.shape[0]
 
     def __eq__(self, other):
@@ -191,6 +260,11 @@ cdef class PittsburghSolution(AbstractSolution):
         return root
 
     cpdef bint are_rules_valid(self):
+        """Check if the rules are valid (at least one rule inside this solution and no rejected rule)
+        
+        Returns:
+            bool: True if they are valid and false otherwise
+        """
         if self.get_num_vars() < 1:
             return False
 
@@ -203,12 +277,36 @@ cdef class PittsburghSolution(AbstractSolution):
         return True
 
     cdef MichiganSolution classify(self, Pattern pattern):
-       return self.__classification.classify(self._vars, pattern)
+        """Get the Michigan solution used to classify a pattern using the classification method of this solution. Please refer to the classify method of the classification methods for more details. Can only be accessed from Cython code.
+        
+        Args:
+            pattern (Pattern): Pattern used to select a Michigan solution (a winner) 
+
+        Returns:
+            MichiganSolution: The winner if there is any and None otherwise.
+        """
+        return self.__classification.classify(self._vars, pattern)
 
     cpdef MichiganSolution classify_py(self, Pattern pattern):
-       return self.classify(pattern)
+        """Get the Michigan solution used to classify a pattern using the classification method of this solution. Please refer to the classify method of the classification methods for more details.
+ 
+        Args:
+            pattern (Pattern): Pattern used to select a Michigan solution (a winner) 
+
+        Returns:
+            MichiganSolution: The winner if there is any and None otherwise.
+        """
+        return self.classify(pattern)
 
     cpdef AbstractClassLabel predict(self, Pattern pattern):
+        """Predict the class of a pattern
+        
+        Args:
+            pattern (Pattern): Pattern whose class is predicted 
+
+        Returns:
+            AbstractClassLabel: Class predicted
+        """
         cdef MichiganSolution winner = self.classify(pattern)
         if winner is None:
             return None
@@ -216,28 +314,41 @@ cdef class PittsburghSolution(AbstractSolution):
             return winner.get_class_label()
 
     cpdef get_total_rule_length(self):
-       length = 0
-       if self._vars is not None:
+        """Get the total rule length (sum of the rule lengths of all Michigan solutions in this classifier)
+        
+        Returns:
+            int: Total rule length
+        """
+        length = 0
+        if self._vars is not None:
            for item in self._vars:
                length += item.get_length()
-       return length
+        return length
 
     cpdef double get_error_rate(self, Dataset dataset):
-       if self._vars is None or dataset is None:
+        """Get the error rate. Note that it update the fitness and number of wins of the Michigan solutions of this classifier
+        
+        Args:
+            dataset (Dataset): Dataset used to get the error rate (either for training or test) 
+
+        Returns:
+            double: Error rate
+        """
+        if self._vars is None or dataset is None:
            raise Exception("Michigan solutions list and dataset can't be None")
 
-       cdef int num_errors = 0
-       cdef int dataset_size = dataset.get_size()
-       cdef int i
-       cdef MichiganSolution winner_solution
-       cdef Pattern[:] patterns = dataset.get_patterns()
-       cdef Pattern p
+        cdef int num_errors = 0
+        cdef int dataset_size = dataset.get_size()
+        cdef int i
+        cdef MichiganSolution winner_solution
+        cdef Pattern[:] patterns = dataset.get_patterns()
+        cdef Pattern p
 
-       for sol in self._vars:
+        for sol in self._vars:
            sol.reset_num_wins()
            sol.reset_fitness()
 
-       for i in range(dataset.get_size()):
+        for i in range(dataset.get_size()):
            p = patterns[i]
            winner_solution = self.classify(p)
            if winner_solution is None:
@@ -251,36 +362,54 @@ cdef class PittsburghSolution(AbstractSolution):
            else:
                winner_solution.inc_fitness()
 
-       return num_errors / dataset_size
+        return num_errors / dataset_size
 
 
     cpdef object[:] get_errored_patterns(self, Dataset dataset):
-       if self._vars is None or dataset is None:
+        """Get the patterns that can't be classified by this classifier.
+ 
+        Args:
+            dataset (Dataset): Dataset used to get the errored patterns 
+
+        Returns:
+            double: Errored patterns
+        """
+        if self._vars is None or dataset is None:
            raise Exception("Michigan solutions list and dataset can't be None")
 
-       cdef int i
-       cdef cvector[int] errored_patterns_indices
-       cdef object[:] errored_patterns
-       cdef MichiganSolution winner_solution
-       cdef Pattern[:] patterns = dataset.get_patterns()
-       cdef Pattern p
+        cdef int i
+        cdef cvector[int] errored_patterns_indices
+        cdef object[:] errored_patterns
+        cdef MichiganSolution winner_solution
+        cdef Pattern[:] patterns = dataset.get_patterns()
+        cdef Pattern p
 
-       for i in range(dataset.get_size()):
+        for i in range(dataset.get_size()):
            p = patterns[i]
            winner_solution = self.classify(p)
 
            if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
                errored_patterns_indices.push_back(i)
 
-       errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
-       for i in range(errored_patterns_indices.size()):
+        errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
+        for i in range(errored_patterns_indices.size()):
            errored_patterns[i] = patterns[errored_patterns_indices[i]]
 
-       return errored_patterns
+        return errored_patterns
 
 
     cpdef AbstractClassification get_classification(self):
-       return self.__classification
+        """Get the classification method
+        
+        Returns:
+            AbstractClassification: Classification method object
+        """
+        return self.__classification
 
     def create_scikit_classifier(self):
+        """Create a Scikit-learn classifier (an Estimator) corresponding to this classifier
+
+        Returns:
+            PittsburghScikitClassifier: New Scikit-learn classifier
+        """
         return PittsburghScikitClassifier(self)

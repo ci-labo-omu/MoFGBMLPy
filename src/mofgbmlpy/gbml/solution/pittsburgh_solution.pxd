@@ -20,7 +20,6 @@ cdef class PittsburghSolution(AbstractSolution):
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
     cpdef void learning(self, Dataset dataset=?)
-    cpdef double compute_coverage(self)
     cpdef double get_average_rule_weight(self)
     cpdef void remove_var(self, int index)
     cpdef void clear_vars(self)

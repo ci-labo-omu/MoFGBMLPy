@@ -36,7 +36,6 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef Antecedent get_antecedent(self)
     cdef double[:] get_membership_values(self, double[:] attribute_vector)
     cdef double get_compatible_grade_value(self, double[:] attribute_vector)
-    cpdef double compute_coverage(self)
     cpdef void reset_num_wins(self)
     cpdef void reset_fitness(self)
     cpdef void inc_num_wins(self)
