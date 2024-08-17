@@ -9,12 +9,19 @@ from jproperties import Properties
 from mofgbmlpy.data.output import Output
 import argparse
 
-class Arguments(ABC):
-    __exclusive_groups = None
-    __values = None
-    _parser = None
+from mofgbmlpy.utility.util import dash_case_to_snake_case, snake_case_to_dash_case
 
+
+class Arguments(ABC):
+    """Abstract arguments object for MoFGBML
+
+    Attributes:
+        __exclusive_groups (list): List of groups of exclusive arguments
+        __values (dict): Values for each argument (initialized after calling the load function)
+        _parser (argparse.ArgumentParser): Arguments parser (check if there are missing arguments, if the type is valid...)
+    """
     def __init__(self):
+        """Constructor"""
         # TODO: change antecedent factory and other args via these params
 
         args_definition = {
@@ -249,15 +256,42 @@ class Arguments(ABC):
 
 
     def set(self, key, value):
+        """Set the value of an argument
+
+        Args:
+            key (str): Argument name
+            value (object): New value
+        """
         self.__values[str(key)] = value
 
     def get(self, key):
+        """Get the value of an argument
+
+        Args:
+            key (str): Name of the argument to be fetched
+
+        Returns:
+            object: Fetched argument
+        """
         return self.__values[key]
 
     def get_keys(self):
+        """Get the list of keys (argument names)
+
+        Returns:
+            list: List of keys
+        """
         return list(self.__values.keys())
 
     def has_key(self, key):
+        """Check if an argument exists after load
+
+        Args:
+            key (str): Key of the argument checked
+
+        Returns:
+            bool: True if it exists and false otherwise
+        """
         return key in self.__values
 
     def __repr__(self):
@@ -274,6 +308,16 @@ class Arguments(ABC):
 
     @staticmethod
     def add_arg_to_parser(arg, arg_definition, parser):
+        """Add an argument to the parser
+
+        Args:
+            arg (str): Argument name in dash case
+            arg_definition (dict): Argument definition properties (default value, ...)
+            parser (argparse.ArgumentParser) Parser to which arguments are added
+
+        Returns:
+            parser (argparse.ArgumentParser) Parser with the added arguments
+        """
         if arg == "exclusive-groups":
             for group_data in arg_definition:
                 group = parser.add_mutually_exclusive_group(required=True)
@@ -293,22 +337,27 @@ class Arguments(ABC):
         return parser
 
     def parse_args(self, args):
+        """Parse a list of arguments
+
+        Args:
+            args (list): List of arguments in dash-case, e.g. ["--verbose", "--dont-care-rt", "0.5"]
+
+        Returns:
+            dict: Parsed args as a dictionary with keys in capital letters and snake case
+        """
         # Remove not specified args and return a dict of the args
         returned_args = {}
         for arg, value in vars(self._parser.parse_args(args)).items():
-            returned_args[Arguments.arg_to_key(arg)] = value
+            returned_args[dash_case_to_snake_case(arg)] = value
 
         return returned_args
 
-    @staticmethod
-    def arg_to_key(arg):
-        return arg.upper().replace("-", "_")
-
-    @staticmethod
-    def key_to_arg(arg):
-        return arg.lower().replace("_", "-")
-
     def get_args_from_jproperties(self):
+        """Get arguments list (dash-case) from a consts.properties file
+
+        Returns:
+            list: List of arguments in dash-case
+        """
         root_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         file_path = root_folder + '/consts.properties'
 
@@ -326,7 +375,7 @@ class Arguments(ABC):
         #--max-rule-num 60 --min-rule-num 1
 
         for item in prop_view:
-            key = Arguments.key_to_arg(item[0])
+            key = snake_case_to_dash_case(item[0])
             value = str(item[1].data)
             
             # Translate Java version args format to this version format
@@ -347,6 +396,11 @@ class Arguments(ABC):
         return args
 
     def load(self, args):
+        """Load arguments into this object. the file consts.properties in the root folder can also be used, but the priority will be give nto the values in the args parameter
+
+        Args:
+            args (list): List of arguments in dash-case
+        """
         new_args = copy.deepcopy(args)
         args_from_jproperties = self.get_args_from_jproperties()
 
@@ -394,9 +448,6 @@ class Arguments(ABC):
                      self.get("ALGORITHM_ID_DIR"),
                      self.get("DATA_NAME"),
                      str(self.get("EXPERIMENT_ID")))))
-
-        if not self.get("NO_OUTPUT_FILES"):
-            Output.mkdirs(self.get("EXPERIMENT_ID_DIR"))
 
 
     def to_xml(self):

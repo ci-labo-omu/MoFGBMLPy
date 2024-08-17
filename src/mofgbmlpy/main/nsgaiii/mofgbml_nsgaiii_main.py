@@ -28,10 +28,21 @@ from mofgbmlpy.main.nsgaiii.mofgbml_nsgaiii_args import MoFGBMLNSGAIIIArgs
 
 
 class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
+    """MoFBML runner for NSGA-III"""
     def __init__(self, knowledge_factory_class):
+        """Constructor
+
+        Args:
+            knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
+        """
         super().__init__(MoFGBMLNSGAIIIArgs(), knowledge_factory_class)
 
     def run(self):
+        """Run MoFGBML
+
+        Returns:
+            pymoo.core.result.Result: Result of the run
+        """
         algorithm = NSGA3(ref_dirs=get_reference_directions("das-dennis", len(self._objectives), n_partitions=12),
                           pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(self._learner),

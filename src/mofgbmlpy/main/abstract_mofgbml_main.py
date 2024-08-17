@@ -34,7 +34,30 @@ from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_c
 
 
 class AbstractMoFGBMLMain(ABC):
+    """Abstract MoFGBML Runner
+
+    Attributes:
+        _mofgbml_args (Arguments): Arguments loader
+        _knowledge_factory_class (AbstractKnowledgeFactory): Class of the knowledge factory
+        _knowledge (Knowledge): Knowledge base
+        _train (Dataset): Training dataset
+        _test (Dataset): test dataset
+        _problem (problem): Problem object used by Pymoo
+        _objectives (ObjectiveFunction[]): Objective functions
+        _termination (Termination): Termination criterion used by Pymoo
+        _crossover (Crossover): Crossover operator
+        _verbose (bool): If true then display more text (e.g. Pymoo progress)
+        _random_gen (numpy.random.Generator): Random generator
+        _is_multi_label (bool): If true then the data set is a multi label one
+        _learner (AbstractLearning): Learner used to create consequent objects for rules
+    """
     def __init__(self, mofgbml_args, knowledge_factory_class):
+        """Constructor
+
+        Args:
+            mofgbml_args (Arguments): Arguments loader
+            knowledge_factory_class (AbstractKnowledgeFactory): Class of the knowledge factory
+        """
         self._mofgbml_args = mofgbml_args
         self._knowledge_factory_class = knowledge_factory_class
         self._knowledge = None
@@ -50,6 +73,13 @@ class AbstractMoFGBMLMain(ABC):
         self._learner = None
 
     def load_args(self, args, train=None, test=None):
+        """Load the arguments
+
+        Args:
+            args (list): List of dash-case arguments
+            train (): Training dataset
+            test (): Test dataset
+        """
         # set command arguments
         self._mofgbml_args.load(args)
         self._random_gen = np.random.Generator(np.random.MT19937(seed=self._mofgbml_args.get("RAND_SEED")))
@@ -169,6 +199,11 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def create_and_add_archives(res):
+        """Create and add an archive and non dominated archive to the result object
+
+        Args:
+            res (pymoo.core.result.Result): Result object
+        """
         # Create archive population from history and apply non dominated sorting
         res.archive = Population.empty()
         for i in range(len(res.history)):
@@ -180,6 +215,14 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def solutions_list_to_dict_array(solutions):
+        """Convert a list of solutions to an array of dictionaries of their attributes (error rate, ...)
+
+        Args:
+            solutions (AbstractSolution[]): List of solutions
+
+        Returns:
+            dict[]: Array of dictionaries of attributes
+        """
         results_data = np.zeros(len(solutions), dtype=object)
         for i in range(len(solutions)):
             results_data[i] = solutions[i].get_attributes()
@@ -187,9 +230,19 @@ class AbstractMoFGBMLMain(ABC):
 
     @abstractmethod
     def run(self):
+        """Run MoFGBML
+
+        Returns:
+            pymoo.core.result.Result: Result of the run
+        """
         pass
 
     def save_results_to_files(self, res):
+        """Save the results to CSV and XML files
+
+        Args:
+            res (pymoo.core.result.Result):
+        """
         non_dominated_solutions = res.opt.get("X")[:, 0]
         archive_solutions = res.non_dominated_archive.get("X")[:, 0]
 
@@ -210,9 +263,22 @@ class AbstractMoFGBMLMain(ABC):
                          pretty_xml=pretty_xml)
 
     def main(self, args, train=None, test=None):
+        """Main function of the runner
+
+        Args:
+            args (list): List of dash-case arguments
+            train (Dataset): Training dataset
+            test (Dataset): Test dataset
+
+        Returns:
+            pymoo.core.result.Result: Results of the run
+        """
         # TODO: print information
 
         self.load_args(args, train, test)
+
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
 
         res = self.run()
         exec_time = res.exec_time
@@ -251,6 +317,15 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def update_results_data(solutions, knowledge, train, test, id_start=0):
+        """Update the solutions data (attributes)
+
+        Args:
+            solutions (PittsburghSolution[]): solutions
+            knowledge (Knowledge): Knowledge base
+            train (Dataset): Training dataset
+            test (Dataset):  Test dataset
+            id_start (int): The ID is determined by the order of the solutions in loop. This parameter determines the starting value for the ID
+        """
         if id_start < 0:
             raise Exception("ID must be positive or null")
 
@@ -277,6 +352,15 @@ class AbstractMoFGBMLMain(ABC):
             sol_id += 1
 
     def get_results_xml(self, knowledge, pop):
+        """Get the results as an XML object
+
+        Args:
+            knowledge (Knowledge): Knowledge base
+            pop (Population): Population of solutions
+
+        Returns:
+            xml.etree.cElementTree.ElementTree: XML element
+        """
         root = xml_tree.Element("results")
         root.append(self._mofgbml_args.to_xml())
         root.append(knowledge.to_xml())
@@ -288,6 +372,12 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def save_video(history, filename):
+        """Save a video of the history, showing the progression for each generation
+
+        Args:
+            history (Population[]): List of Pymoo populations
+            filename (str): Name of the file where the video will be saved
+        """
         with Recorder(Video(filename)) as rec:
             for i in range(len(history)):
                 sc = Scatter(title=(f"Gen {i + 1}"))
@@ -297,6 +387,14 @@ class AbstractMoFGBMLMain(ABC):
                 rec.record()
 
     def get_pareto_front_plot(self, population):
+        """Get the Pareto front plot
+
+        Args:
+            population (Population): Population of solutions
+
+        Returns:
+             pymoo.visualization.scatter.Scatter: Pareto front plot
+        """
         objectives = population.get("F")
 
         if objectives.shape[1] <= 1:
@@ -310,6 +408,16 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def plot_line_interpretability_error_rate_tradeoff(solutions, file_path=None, title=None, xlim=None, grid=True, x_key="total_rule_length"):
+        """Plot an interpretability error rate tradeoff of the solutions
+
+        Args:
+            solutions (PittsburghSolution[]): solutions
+            file_path (str): Path of the file where the plot will be saved
+            title (str): Title of the plot
+            xlim (tuple): X-axis domain shown
+            grid (bool): If true then show a grid
+            x_key (str): Key of the value in the dict used as the X-axis
+        """
         err_train = []
         err_test = []
 
@@ -330,6 +438,18 @@ class AbstractMoFGBMLMain(ABC):
 
     @staticmethod
     def plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label='Total rule length', y_label='Error rate', file_path=None, title=None, xlim=None, grid=True):
+        """Plot an interpretability error rate tradeoff from coordinates
+
+        Args:
+            err_train (list): List of tuples (x_value, err_train_value_at_x)
+            err_test (list): List of tuples (x_value, err_test_value_at_x)
+            x_label (str): Name of the X-axis label
+            y_label (str): Name of the Y-axis label
+            file_path (str): Path of the file where the plot will be saved
+            title (str): Title of the plot
+            xlim (tuple): X-axis domain shown
+            grid (bool): If true then show a grid
+        """
         err_train = list(set(err_train))
         err_train.sort()
         for i in range(len(err_train)):
@@ -365,20 +485,44 @@ class AbstractMoFGBMLMain(ABC):
             plt.savefig(file_path)
 
     def plot_fuzzy_variables(self):
+        """Plot the fuzzy variables of the knowledge base """
         self._knowledge.plot_fuzzy_variables()
 
     def show_args(self):
+        """Show MoFGBML arguments"""
         print(str(self._mofgbml_args))
 
     def get_args(self):
+        """Get MoFGBML arguments
+
+        Returns:
+            Arguments: MoFGBML arguments
+        """
         return self._mofgbml_args
 
     def get_train_set(self):
+        """Get the training set
+
+        Returns:
+            Dataset: Training set
+
+        """
         return self._train
 
     def get_test_set(self):
+        """Get the test set
+
+        Returns:
+            Dataset: Test set
+
+        """
         return self._test
 
     def evaluate(self, solution):
+        """Evaluate the solution. The results will be in the solution objectives attribute
+
+        Args:
+            solution (PittsburghSolution): Solution evaluated
+        """
         solutions = np.array([[solution]], object)
         self._problem.evaluate(solutions)

@@ -40,10 +40,22 @@ from pyrecorder.writers.video import Video
 
 
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
+    """MoFBML runner for MOEAD"""
     def __init__(self, knowledge_factory_class):
+        """Constructor
+
+        Args:
+            knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
+        """
         super().__init__(MoFGBMLMOEADArgs(), knowledge_factory_class)
 
     def run(self):
+        """Run MoFGBML
+
+        Returns:
+            pymoo.core.result.Result: Result of the run
+        """
+
         ref_dirs = get_reference_directions("uniform",
                                             self._problem.get_num_objectives(),
                                             n_partitions=self._mofgbml_args.get("POPULATION_SIZE")-1) # TODO: works for 2 objectives, but change it for 1 or 3 and more objectives

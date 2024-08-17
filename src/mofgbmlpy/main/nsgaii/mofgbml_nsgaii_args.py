@@ -5,7 +5,9 @@ import os
 
 
 class MoFGBMLNSGAIIArgs(Arguments):
+    """Arguments for MoFGBML for NSGA-II"""
     def __init__(self):
+        """Constructor"""
         super().__init__()
 
         args_definition = {

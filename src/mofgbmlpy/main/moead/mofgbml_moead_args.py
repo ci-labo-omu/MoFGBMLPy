@@ -5,7 +5,9 @@ import os
 
 
 class MoFGBMLMOEADArgs(Arguments):
+    """Arguments for MoFGBML for MOEAD"""
     def __init__(self):
+        """Constructor"""
         super().__init__()
 
         args_definition = {

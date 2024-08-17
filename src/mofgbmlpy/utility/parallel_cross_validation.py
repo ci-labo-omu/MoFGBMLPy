@@ -17,6 +17,19 @@ from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 def process_runs_results(runs_results, x_key="total_rule_length", y_key="training_error_rate",
                          keep_empty_x_key_values=False,
                          remove_rare_solutions=True):
+    """Process the runs results
+
+    Args:
+        runs_results (dict): Results as a dictionary
+        x_key (str): Key in the dict for the X-axis (e.g. num_rules)
+        y_key (str): Key in the dict for the Y-axis (e.g. training_error_rate)
+        keep_empty_x_key_values (bool): If true then keep the keys with no values in the results dict
+        remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
+
+    Returns:
+        dict: The processed results
+    """
+
     if x_key != "total_rule_length" and x_key != "num_rules":
         raise Exception("only total_rule_length and num_rules are accepted for the x_key")
 
@@ -54,6 +67,14 @@ def process_runs_results(runs_results, x_key="total_rule_length", y_key="trainin
 
 
 def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=True, xlim=None):
+    """Show the results in a median line plot after aggregating them
+
+    Args:
+        runs_results (dict): Results as a dictionary
+        x_key (str): Key in the dict for the X-axis (e.g. num_rules)
+        remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
+        xlim (tuple): A Pair of numbers specifying the x-axis limits
+    """
     data_train = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate",
                                       remove_rare_solutions=remove_rare_solutions)
     data_test = process_runs_results(runs_results, x_key=x_key, y_key="test_error_rate",
@@ -72,7 +93,16 @@ def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=Tru
                                                                                    y_label="error_rate",
                                                                                    xlim=xlim)
 
+
 def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title=None):
+    """Show the results using box plots after aggregating them
+
+    Args:
+        runs_results (dict): Results as a dictionary
+        x_key (str): Key in the dict for the X-axis (e.g. num_rules)
+        remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
+        title (str): Title for the plot
+    """
     data = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate", keep_empty_x_key_values=True,
                                 remove_rare_solutions=remove_rare_solutions)
 
@@ -87,12 +117,27 @@ def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title
 
     plt.show()
 
+
 def task(args):
+    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object.
+    Note that for now only NSGA-II is used
+
+    Args:
+        args (Arguments): Arguments object used by the runner
+    """
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     runner.main(args)
 
 
 def load_result_csv(path):
+    """Load a CSV file from path as a dictionary
+
+    Args:
+        path (str): CSV file path
+
+    Returns:
+        dict: CSV data
+    """
     result = []
     with open(path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -102,6 +147,14 @@ def load_result_csv(path):
 
 
 def load_results_csv(paths):
+    """Load all the CSV files in the paths given and add the loaded data to a list
+
+    Args:
+        paths (str[]): List of CSV file paths
+
+    Returns:
+        list: List of CSV data (one item is one file data)
+    """
     results = []
     for path in paths:
         results.append(load_result_csv(path))
@@ -109,6 +162,12 @@ def load_results_csv(paths):
 
 
 def run_cross_validation(args, dataset_root):
+    """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
+
+    Args:
+        args (Arguments): Arguments object
+        dataset_root (str): Path to the dataset root directory:
+    """
     start = time.time()
 
     data_name_arg_idx = args.index("--data-name") + 1
@@ -130,6 +189,16 @@ def run_cross_validation(args, dataset_root):
 
 
 def get_results(root_folder, algorithm_id, data_name):
+    """Get all the results from a root results folder (CSV files)
+
+    Args:
+        root_folder (str): Root results folder
+        algorithm_id (str): Algorithm ID
+        data_name (str): Name of the dataset, e.g. Iris
+
+    Returns:
+        list: List of results
+    """
     results_path = root_folder + os.sep + algorithm_id + os.sep + data_name
     runs_results_folders = [f"{results_path}/trial{i}{j}/results.csv" for i in range(3)
                             for j in range(10)]

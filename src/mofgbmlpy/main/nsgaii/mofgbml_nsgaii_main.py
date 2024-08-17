@@ -25,10 +25,21 @@ from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 
 
 class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
+    """MoFBML runner for NSGA-II"""
     def __init__(self, knowledge_factory_class):
+        """Constructor
+
+        Args:
+            knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
+        """
         super().__init__(MoFGBMLNSGAIIArgs(), knowledge_factory_class)
 
     def run(self):
+        """Run MoFGBML
+
+        Returns:
+            pymoo.core.result.Result: Result of the run
+        """
         algorithm = NSGA2(pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(self._learner),
                           crossover=self._crossover,
