@@ -200,7 +200,7 @@ Run `python profiler.py MoFGBMLNSGAIIMain` (or replace MoFGBMLNSGAIIMain with th
 
 #### Setup
 
-1. Generate the rst files from the code: ` sphinx-apidoc -o docs/source/ src/mofgbmlpy`
+1. Generate the rst files from the code: `sphinx-apidoc -o docs/source/ src/mofgbmlpy`
 2. Generate the documentation from the rst files 
    - In HTML: `docs/make.bat html`
    - In PDF: `docs/make.bat pdf`
