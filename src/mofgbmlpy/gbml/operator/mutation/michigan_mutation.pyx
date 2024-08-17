@@ -13,10 +13,17 @@ class MichiganMutation(Mutation):
     Attributes:
         __knowledge (Knowledge): Knowledge base
         __mutation_rt (float): Mutation rate
-        _random_gen (numpy.random.Generator):
+        _random_gen (numpy.random.Generator): Random generator
     """
 
     def __init__(self, knowledge, mutation_rt, random_gen):
+        """Constructor
+
+        Args:
+            knowledge (Knowledge): Knowledge base
+            mutation_rt (float): Mutation rate
+            random_gen (numpy.random.Generator)
+        """
         super().__init__()
         self.__knowledge = knowledge
         self.__mutation_rt = mutation_rt

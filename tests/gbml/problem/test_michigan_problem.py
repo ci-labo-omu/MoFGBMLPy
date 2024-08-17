@@ -25,7 +25,7 @@ def test_deep_copy():
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
     consequent_factory = LearningBasic(train)
 
-    obj = MichiganProblem(1, np.array([NumRules()]), 0, train, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    obj = MichiganProblem(np.array([NumRules()]), 0, train, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
     _ = copy.deepcopy(obj)
 
     assert True

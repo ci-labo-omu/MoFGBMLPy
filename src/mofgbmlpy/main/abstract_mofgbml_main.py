@@ -34,23 +34,20 @@ from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_c
 
 
 class AbstractMoFGBMLMain(ABC):
-    _mofgbml_args = None
-    _knowledge_factory_class = None
-    _knowledge = None
-    _train = None
-    _test = None
-    _problem = None
-    _objectives = None
-    _termination = None
-    _crossover = None
-    _verbose = None
-    _random_gen = None
-    _is_multi_label = None
-
-
     def __init__(self, mofgbml_args, knowledge_factory_class):
         self._mofgbml_args = mofgbml_args
         self._knowledge_factory_class = knowledge_factory_class
+        self._knowledge = None
+        self._train = None
+        self._test = None
+        self._problem = None
+        self._objectives = None
+        self._termination = None
+        self._crossover = None
+        self._verbose = None
+        self._random_gen = None
+        self._is_multi_label = None
+        self._learner = None
 
     def load_args(self, args, train=None, test=None):
         # set command arguments
@@ -145,12 +142,14 @@ class AbstractMoFGBMLMain(ABC):
         num_constraints_pittsburgh = 0
 
         if self._is_multi_label:
+            self._learner = LearningMulti(self._train)
             rule_builder = RuleBuilderMulti(antecedent_factory,
-                                            LearningMulti(self._train),
+                                            self._learner,
                                             self._knowledge)
         else:
+            self._learner = LearningBasic(self._train)
             rule_builder = RuleBuilderBasic(antecedent_factory,
-                                            LearningBasic(self._train),
+                                            self._learner,
                                             self._knowledge)
 
         michigan_solution_builder = MichiganSolutionBuilder(self._random_gen,

@@ -3,8 +3,19 @@ from pymoo.operators.selection.tournament import TournamentSelection
 
 
 class NaryTournamentSelectionOnFitness(TournamentSelection):
+    """N-ary tournament selection operator for Michigan solutions based on fitness. Used to select parents"""
     @staticmethod
     def nary_fitness_tournament(pop, P, **kwargs):
+        """
+
+        Args:
+            pop (Population): Population from where parents are selected
+            P (Population): indices of the candidates in the tournaments. Shape: (n_tournaments, n_candidates)
+            **kwargs (dict): Other arguments for Pymoo
+
+        Returns:
+            int[]: Array of size n_tournaments of the winners of the tournaments (index of individuals in the population)
+        """
         n_tournaments, n_candidates = P.shape
 
         if n_candidates < 0:
@@ -29,4 +40,9 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
         return S[:, None].astype(int, copy=False)
 
     def __init__(self, tournament_size=2):
+        """Constructor
+
+        Args:
+            tournament_size (int): Size of the tournament
+        """
         super().__init__(func_comp=NaryTournamentSelectionOnFitness.nary_fitness_tournament, pressure=tournament_size)

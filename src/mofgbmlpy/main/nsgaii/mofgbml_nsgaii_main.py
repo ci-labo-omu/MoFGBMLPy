@@ -30,10 +30,10 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
 
     def run(self):
         algorithm = NSGA2(pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
-                          sampling=HybridGBMLSampling(self._train),
+                          sampling=HybridGBMLSampling(self._learner),
                           crossover=self._crossover,
                           repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(self._train, self._knowledge, self._random_gen),
+                          mutation=PittsburghMutation(self._knowledge, self._random_gen),
                           eliminate_duplicates=False,
                           save_history=True,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))

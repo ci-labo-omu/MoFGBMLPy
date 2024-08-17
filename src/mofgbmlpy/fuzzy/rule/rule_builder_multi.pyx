@@ -4,10 +4,26 @@ from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
 from mofgbmlpy.fuzzy.rule.rule_multi cimport RuleMulti
 
 cdef class RuleBuilderMulti(RuleBuilderCore):
+    """Rule builder for multilabel classification"""
     def __init__(self, antecedent_factory, consequent_factory, knowledge):
+        """Constructor
+
+        Args:
+            antecedent_factory (AbstractAntecedentFactory): Antecedent factory
+            consequent_factory (AbstractLearning):  Consequent factory
+            knowledge (Knowledge): Knowledge base
+        """
         super().__init__(antecedent_factory, consequent_factory, knowledge)
 
     cpdef RuleMulti create(self, Antecedent antecedent):
+        """Create a rule from an antecedent
+        
+        Args:
+            antecedent (Antecedent): Antecedent 
+
+        Returns:
+            RuleMulti: New rule
+        """
         consequent = self._consequent_factory.learning(antecedent)
         return RuleMulti(antecedent, consequent)
 

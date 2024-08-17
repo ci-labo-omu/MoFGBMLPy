@@ -135,8 +135,7 @@ class MichiganCrossover(Crossover):
             num_ga = num_generating_rules - num_heuristic
 
             if num_ga > 0:
-                michigan_problem = MichiganProblem(num_dim,
-                                                   [], # Not used
+                michigan_problem = MichiganProblem([], # Not used
                                                    problem.get_num_constraints(),
                                                    problem.get_training_set(),
                                                    problem.get_rule_builder())

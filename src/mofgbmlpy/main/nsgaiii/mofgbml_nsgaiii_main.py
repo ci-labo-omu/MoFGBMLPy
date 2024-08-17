@@ -34,10 +34,10 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
     def run(self):
         algorithm = NSGA3(ref_dirs=get_reference_directions("das-dennis", len(self._objectives), n_partitions=12),
                           pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
-                          sampling=HybridGBMLSampling(self._train),
+                          sampling=HybridGBMLSampling(self._learner),
                           crossover=self._crossover,
                           repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(self._train, self._knowledge, self._random_gen),
+                          mutation=PittsburghMutation(self._knowledge, self._random_gen),
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(self._problem,

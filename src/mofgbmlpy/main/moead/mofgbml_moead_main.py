@@ -54,10 +54,10 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             ref_dirs,
             n_neighbors=self._mofgbml_args.get("NEIGHBORHOOD_SIZE"),
             prob_neighbor_mating=self._mofgbml_args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
-            sampling=HybridGBMLSampling(self._train),
+            sampling=HybridGBMLSampling(self._learner),
             crossover=self._crossover,
             repair=PittsburghRepair(),
-            mutation=PittsburghMutation(self._train, self._knowledge, self._random_gen))
+            mutation=PittsburghMutation(self._knowledge, self._random_gen))
 
         res = minimize(self._problem,
                        algorithm,

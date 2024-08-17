@@ -13,7 +13,6 @@ cdef class RuleBuilderCore:
     cdef AbstractLearning _consequent_factory
     cdef Knowledge _knowledge
 
-    cdef Antecedent create_antecedent(self, int num_rules=?)
     cdef int[:,:] create_antecedent_indices(self, int num_rules=?, Pattern pattern=?)
     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices)
     cdef Consequent create_consequent(self, Antecedent antecedent, Dataset dataset=?)

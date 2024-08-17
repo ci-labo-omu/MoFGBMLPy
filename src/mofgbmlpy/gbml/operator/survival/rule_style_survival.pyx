@@ -5,13 +5,32 @@ from pymoo.core.population import Population
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 cdef class RuleStyleSurvival:
+    """Static methods used to replace a population of Michigan rules with its offsprings (survival step of the genetic algorithm)"""
     @staticmethod
     def sort_by_fitness(arr):
+        """Sort the array of Michigan solutions by the their fitness
+
+        Args:
+            arr (MichiganSolution[]): Array of michigan solutions
+
+        Returns:
+            MichiganSolution[]: Sorted array
+        """
         arr = sorted(arr, key=lambda x: x.get_fitness(), reverse=True)
         return np.array(arr)
 
     @staticmethod
     def replace(pop, offspring, max_num_rules):
+        """Replace a population of Michigan solutions by an offspring population in such a way that all offsprings are added and to avoid going above the max number of rules we remove the worst solutions in the initial population (based on fitness)
+
+        Args:
+            pop ():
+            offspring ():
+            max_num_rules ():
+
+        Returns:
+
+        """
         # Check if we already exceed max num rules
         num_replacements = 0
         if max_num_rules < len(pop) + len(offspring):

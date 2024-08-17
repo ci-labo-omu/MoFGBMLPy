@@ -1,17 +1,29 @@
 import copy
 from pymoo.core.mutation import Mutation
+
+from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
+from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
 
 class PittsburghMutation(Mutation):
-    __learner = None
-    __mutation_rate = None
-    __knowledge = None
-    _random_gen = None
+    """Pittsburgh mutation operator
 
-    def __init__(self, training_set, knowledge, random_gen, mutation_rate=1.0):
+    Attributes:
+        __knowledge (Knowledge): Knowledge base
+        _random_gen (numpy.random.Generator): Random generator
+        __mutation_rate (float): Mutation rate
+    """
+    def __init__(self, knowledge, random_gen, mutation_rate=1.0):
+        """Constructor
+
+        Args:
+            knowledge (Knowledge): Knowledge base
+            random_gen (numpy.random.Generator)
+            mutation_rate (float): Mutation rate
+        """
         super().__init__()
-        self.__learner = LearningBasic(training_set)
         self.__mutation_rate = mutation_rate
         self.__knowledge = knowledge
         self._random_gen = random_gen
@@ -27,8 +39,12 @@ class PittsburghMutation(Mutation):
         Returns:
              X (object[,]): Population after mutation
         """
+        if len(X) == 0:
+            return X
         # for each individual
-        training_set = self.__learner.get_training_set()
+        cdef PittsburghSolution sol = X[0, 0]
+        cdef MichiganSolution sol_m = sol.get_var(0)
+        cdef Dataset training_set = sol_m.get_rule_builder().get_training_dataset()
         training_set_size = training_set.get_size()
         dim = training_set.get_num_dim()
 
