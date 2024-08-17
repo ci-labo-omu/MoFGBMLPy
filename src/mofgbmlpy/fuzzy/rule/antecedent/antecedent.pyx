@@ -10,7 +10,19 @@ from cython.parallel import prange
 from libc.math cimport round
 
 cdef class Antecedent:
+    """Antecedent part of fuzzy rules
+
+    Attributes:
+        __antecedent_indices (int[]): Indices of the fuzzy sets of this antecedent
+        __knowledge (Knowledge): Knowledge base
+    """
     def __init__(self, int[:] antecedent_indices, Knowledge knowledge):
+        """Constructor
+
+        Args:
+            antecedent_indices (int[]): Indices of the fuzzy sets of this antecedent
+            knowledge (Knowledge): Knowledge base
+        """
         if antecedent_indices is None or knowledge is None:
             raise Exception("Parameters can't be None")
 
@@ -18,17 +30,40 @@ cdef class Antecedent:
         self.__knowledge = knowledge
 
     cpdef int get_array_size(self):
+        """Get the size of the antecedent array (number of dimensions)
+        
+        Returns:
+            int: Antecedent array size
+        """
         return self.__antecedent_indices.shape[0]
 
     cpdef int[:] get_antecedent_indices(self):
+        """Get the antecedent indices
+        
+        Returns:
+            int[]: Antecedent indices
+        """
         return self.__antecedent_indices
 
     cpdef void set_antecedent_indices(self, int[:] new_indices):
+        """Set the antecedent indices
+        
+        Args:
+            new_indices (int[]): New indices for this antecedent
+        """
         if new_indices is None:
             raise Exception("new_indices can't be None")
         self.__antecedent_indices = new_indices
 
-    cpdef double[:] get_compatible_grade(self, double[:] attribute_vector):
+    cpdef double[:] get_membership_values(self, double[:] attribute_vector):
+        """Get the membership values of the given attribute vector with this antecedent for each dimension
+        
+        Args:
+            attribute_vector (double[]): Attribute vector whose membership values are computed 
+
+        Returns:
+            double[]: Membership value for each dimension
+        """
         cdef int i
         cdef int size = self.get_array_size()
         cdef double[:] grade = np.zeros(size, dtype=np.float64)
@@ -57,6 +92,14 @@ cdef class Antecedent:
         return grade
 
     cdef double get_compatible_grade_value(self, double[:] attribute_vector):
+        """Get the compatibility grade of the given attribute vector with this antecedent. Can only be accesses from Cython code
+
+        Args:
+            attribute_vector (double[]): Attribute vector whose compatibility is computed 
+
+        Returns:
+            double[]: Compatibility grade
+        """
         cdef int i
         cdef int size = self.get_array_size()
         cdef double grade_value = 1
@@ -88,9 +131,22 @@ cdef class Antecedent:
         return grade_value
 
     def get_compatible_grade_value_py(self, double[:] attribute_vector):
+        """Get the compatibility grade of the given attribute vector with this antecedent
+
+        Args:
+            attribute_vector (double[]): Attribute vector whose compatibility is computed
+
+        Returns:
+            double[]: Compatibility grade
+        """
         return self.get_compatible_grade_value(attribute_vector)
 
     cpdef int get_length(self):
+        """Get the length of the antecedent
+        
+        Returns:
+            int: Number of antecedent indices that do not correspond to don't care (i.e. number of non-null indices)
+        """
         return np.count_nonzero(self.__antecedent_indices)
 
     def __deepcopy__(self, memo={}):
@@ -138,6 +194,11 @@ cdef class Antecedent:
         return txt + "]"
 
     cpdef str get_linguistic_representation(self):
+        """Get the linguistic representation of the antecedent (... IS ... AND ... IS ...)
+        
+        Returns:
+            str: Linguistic representation of the antecedent
+        """
         txt = ""
         cdef int i
         cdef FuzzyVariable var
@@ -171,7 +232,17 @@ cdef class Antecedent:
         return root
 
     cpdef get_knowledge(self):
+        """Get the knowledge base
+        
+        Returns:
+            Knowledge: Knowledge base
+        """
         return self.__knowledge
 
     cpdef set_knowledge(self, Knowledge new_knowledge):
+        """Set the knowledge base
+        
+        Args:
+            new_knowledge (Knowledge): New knowledge base
+        """
         self.__knowledge = new_knowledge

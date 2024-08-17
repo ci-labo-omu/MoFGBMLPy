@@ -12,16 +12,40 @@ from libc.math cimport INFINITY
 
 
 cdef class LearningMulti(AbstractLearning):
-    def __init__(self, training_dataset):
-        self._train_ds = training_dataset
+    def __init__(self, Dataset training_dataset):
+        """Constructor
+
+        Args:
+            training_dataset (Dataset): Training dataset used to generate the consequent
+        """
+        super().__init__(training_dataset)
 
     cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
+        """Learn a consequent from the antecedent and dataset
+
+        Args:
+            antecedent (Antecedent): Antecedent whose consequent part is learnt
+            dataset (Dataset): Training dataset
+            reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
+
+        Returns:
+            Consequent: Created consequent
+        """
         cdef double[:,:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelMulti class_label = self.calc_class_label(confidence)
         cdef RuleWeightMulti rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return Consequent(class_label, rule_weight)
 
     cdef double[:,:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
+        """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code
+
+        Args:
+            antecedent (Antecedent): Antecedent whose confidence is computed 
+            dataset (Dataset): Training dataset
+
+        Returns:
+            double[,]: Confidence. e.g. confidence[0, 0] is the confidence that the class 0 is not i the multi class label, and confidence[0, 1] is the confidence that it is 
+        """
         if dataset is None:
             dataset = self._train_ds
         if antecedent is None:
@@ -63,6 +87,14 @@ cdef class LearningMulti(AbstractLearning):
         return confidence
 
     cpdef ClassLabelMulti calc_class_label(self, double[:,:] confidence):
+        """Compute the conclusion class label using the confidence
+        
+        Args:
+            confidence (double[,]): confidences of each class for the given antecedent and dataset
+
+        Returns:
+            ClassLabelMulti: Label object containing a list of 0 and 1. 1 if the class is present and 0 otherwise . If the confidence that it is present and the confidence that is not are equal then the rule is rejected
+        """
         cdef double max_val = -INFINITY
         cdef int[:] consequent_classes = np.full((confidence.shape[0]), fill_value=-1)
         cdef int c
@@ -70,7 +102,7 @@ cdef class LearningMulti(AbstractLearning):
         for c in range(confidence.shape[0]):
             if confidence[c][0] > confidence[c][1]:
                 consequent_classes[c] = 0 # It's more likely "ON" than "OFF"
-            elif confidence[c][0] > confidence[c][1]:
+            elif confidence[c][0] < confidence[c][1]:
                 consequent_classes[c] = 1
             else:
                 class_label = ClassLabelMulti(consequent_classes)
@@ -80,6 +112,16 @@ cdef class LearningMulti(AbstractLearning):
         return ClassLabelMulti(consequent_classes)
 
     cpdef RuleWeightMulti calc_rule_weight(self, ClassLabelMulti class_label, double[:,:] confidence, double reject_threshold):
+        """Compute the rule weight
+
+        Args:
+            class_label (ClassLabelMulti): Class label whose rule weight is computed
+            confidence (double[,]): confidences of each class for the given antecedent and dataset
+            reject_threshold (double): Threshold for the rule weight value under which the rule is considered rejected
+
+        Returns:
+            RuleWeightMulti: Rule weight
+        """
         cdef double[:] rule_weight_values = np.full((confidence.shape[0]), fill_value=-1.0)
 
         if not class_label.is_rejected():
@@ -90,6 +132,11 @@ cdef class LearningMulti(AbstractLearning):
         return RuleWeightMulti(rule_weight_values)
 
     cpdef Dataset get_training_set(self):
+        """Get the training set
+
+        Returns:
+            Dataset: Training set
+        """
         return self._train_ds
 
     def __repr__(self):

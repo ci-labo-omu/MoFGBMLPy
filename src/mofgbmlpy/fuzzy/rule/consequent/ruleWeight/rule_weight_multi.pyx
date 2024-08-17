@@ -6,7 +6,17 @@ cimport numpy as cnp
 
 
 cdef class RuleWeightMulti(AbstractRuleWeight):
+    """Rule weight for multilabel classification
+
+    Attributes:
+        __rule_weight (double[]): Value of the rule weight
+    """
     def __init__(self, double[:] rule_weight):
+        """Constructor
+
+        Args:
+            rule_weight (double[]): Value of the rule weight
+        """
         self.__rule_weight = rule_weight
 
     def __deepcopy__(self, memo={}):
@@ -48,15 +58,38 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         return txt
 
     cpdef get_rule_weight_at(self, int index):
+        """Get the rule weight for the class at the given index
+        
+        Args:
+            index (int): Index of the class whose rule weight value is fetched 
+
+        Returns:
+            double: Rule weight value
+        """
         return self.get_value()[index]
 
     cpdef int get_length(self):
+        """Get the length of this rule weight object (number of classes)
+        
+        Returns:
+            int: Length
+        """
         return self.get_value().shape[0]
 
     cpdef object get_value(self):
+        """Get the rule weight value
+        
+        Returns:
+            double[]: Rule weight value
+        """
         return self.__rule_weight
 
     cpdef void set_value(self, object rule_weight):
+        """Set the value of the rule weight
+
+        Args:
+            rule_weight (double[]): New rule weight value
+        """
         self.__rule_weight = rule_weight
 
     def __eq__(self, other):
@@ -85,6 +118,11 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         return root
 
     cdef double get_mean(self):
+        """Get the mean of all the rule weight values
+        
+        Returns:
+            double: Mean value
+        """
         cdef int i
         cdef double sum = 0
         cdef int arr_length = self.__rule_weight.shape[0]

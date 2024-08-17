@@ -6,7 +6,28 @@ import numpy as np
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
+    """Antecedent factory that don't create antecedent in the constructor and use patterns to generate them in a random way but considering the compatibility grade values
+    Note that if the compatibility grade of all the fuzzy sets is null, then even if the dc_rate is set to 0 there might be some DC fuzzy sets. This was the same behavior in the Java version
+
+    Attributes:
+        __training_set (Dataset): Training dataset from where patterns are extracted to generate antecedent when no pattern is provided
+        __knowledge (Knowledge): Knowledge base
+        __is_dc_probability (bool): If True then use dc_rate to determine the number of don't care in the generated antecedent otherwise use antecedent_number_do_not_dont_care to compute the dc_rate
+        __dc_rate (double): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
+        __antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
+        _random_gen (numpy.random.Generator): Random generator
+    """
     def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
+        """Constructor
+
+        Args:
+            training_set (Dataset): Training dataset from where patterns are extracted to generate antecedent when no pattern is provided
+            knowledge (Knowledge): Knowledge base
+            is_dc_probability (bool): If True then use dc_rate to determine the number of don't care in the generated antecedent otherwise use antecedent_number_do_not_dont_care to compute the dc_rate
+            dc_rate (double): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
+            antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
+            random_gen (numpy.random.Generator): Random generator
+        """
         if knowledge is None or knowledge.get_num_dim() == 0:
             raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
@@ -32,10 +53,26 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             self.__dc_rate = max((self.__knowledge.get_num_dim() - self.__antecedent_number_do_not_dont_care) / self.__knowledge.get_num_dim(), dc_rate)
 
     cdef int[:] __select_antecedent_part(self, int index):
+        """Select the pattern at the given index in the dataset and use it to compute the antecedent part. Can only be accessed from Cython code
+        
+        Args:
+            index (int): Index of the pattern used to generate the antecedent indices
+
+        Returns:
+            int[]: Antecedent indices generated  
+        """
         pattern = self.__training_set.get_pattern(index)
         return self.calculate_antecedent_part(pattern)
 
     cdef int[:] calculate_antecedent_part(self, Pattern pattern):
+        """Use a pattern to generate antecedent indices using its compatibility grades with the different fuzzy sets. Can only be accessed from Cython code
+        
+        Args:
+            pattern (Pattern): Pattern used to generate the antecedent indices
+
+        Returns:
+            int[]: Antecedent indices generated  
+        """
         if pattern is None:
             raise Exception("Pattern can't be none")
 
@@ -83,9 +120,25 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return antecedent_indices
 
     cpdef int[:] calculate_antecedent_part_py(self, Pattern pattern):
+        """Use a pattern to generate antecedent indices using its compatibility grades with the different fuzzy sets
+
+        Args:
+            pattern (Pattern): Pattern used to generate the antecedent indices
+
+        Returns:
+            int[]: Antecedent indices generated  
+        """
         return self.calculate_antecedent_part(pattern)
 
     cdef Antecedent[:] create(self, int num_rules=1):
+        """Create antecedents. Can only be accessed from Cython code
+        
+        Args:
+            num_rules (int): Number of antecedent to be generated
+
+        Returns:
+            Antecedent[]: Generated antecedent
+        """
         if num_rules <= 0:
             raise Exception("num_rules must be positive")
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
@@ -95,18 +148,50 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return antecedent_objects
 
     cpdef Antecedent[:] create_py(self, int num_rules=1):
+        """Create antecedents.
+
+        Args:
+            num_rules (int): Number of antecedent to be generated
+
+        Returns:
+            Antecedent[]: Generated antecedent
+        """
         return self.create(num_rules)
 
     cdef int[:,:] create_antecedent_indices_from_pattern(self, Pattern pattern):
+        """Create an antecedent indices array and return it inside an array. Use a pattern to generate the antecedent indices using its compatibility grades with the different fuzzy sets. Can only be accessed from Cython code
+
+        Args:
+            pattern (Pattern): Pattern used to generate the antecedent indices
+
+        Returns:
+            int[]: Antecedent indices generated  
+        """
         if pattern is None:
             raise Exception("Pattern cannot be None")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 
 
     cpdef int[:,:] create_antecedent_indices_from_pattern_py(self, Pattern pattern):
+        """Create an antecedent indices array and return it inside an array. Use a pattern to generate the antecedent indices using its compatibility grades with the different fuzzy sets
+
+       Args:
+           pattern (Pattern): Pattern used to generate the antecedent indices
+
+       Returns:
+           int[]: Antecedent indices generated  
+       """
         return self.create_antecedent_indices_from_pattern(pattern)
 
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
+        """Create antecedents indices. Can only be accessed from Cython code
+
+        Args:
+            num_rules (int): Number of antecedents indices arrays to be generated
+
+        Returns:
+            int[,]: Generated antecedents indices
+        """
         cdef int data_size = self.__training_set.get_size()
         cdef int i
         cdef int j
@@ -149,6 +234,14 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return new_antecedent_indices
 
     cpdef int[:,:] create_antecedent_indices_py(self, int num_rules=1):
+        """Create antecedents indices.
+
+        Args:
+            num_rules (int): Number of antecedents indices arrays to be generated
+
+        Returns:
+            int[,]: Generated antecedents indices
+        """
         return self.create_antecedent_indices(num_rules)
 
     def __repr__(self):
@@ -173,7 +266,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
 
         return (self.__training_set == other.get_training_set() and
                 self.__knowledge == other.get_knowledge() and
-                self.__is_dc_probability == other.get_dc_probability() and
+                self.__is_dc_probability == other.get_is_dc_probability() and
                 self.__dc_rate == other.get_dc_rate() and
                 self.__antecedent_number_do_not_dont_care == other.get_antecedent_number_do_not_dont_care() and
                 self._random_gen == other.get_random_gen())
@@ -193,20 +286,49 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         return new_object
 
     cpdef get_training_set(self):
+        """Get the training set
+
+        Returns:
+            Dataset: The training set
+        """
         return self.__training_set
 
     cpdef get_knowledge(self):
+        """Get the knowledge base
+
+        Returns:
+            Knowledge: The knowledge base
+        """
         return self.__knowledge
 
-    cpdef get_dc_probability(self):
+    cpdef get_is_dc_probability(self):
+        """Get the is_dc_probability
+
+        Returns:
+            bool: is_dc_probability
+        """
         return self.__is_dc_probability
 
     cpdef get_dc_rate(self):
+        """Get the dc_rate
+
+        Returns:
+            double: dc_rate
+        """
         return self.__dc_rate
 
     cpdef get_antecedent_number_do_not_dont_care(self):
+        """Get the antecedent_number_do_not_dont_care
+
+        Returns:
+            int: antecedent_number_do_not_dont_care
+        """
         return self.__antecedent_number_do_not_dont_care
 
     cpdef get_random_gen(self):
-        return self._random_gen
+        """Get the random generator
 
+        Returns:
+            numpy.random.Generator: The random generator instance.
+        """
+        return self._random_gen

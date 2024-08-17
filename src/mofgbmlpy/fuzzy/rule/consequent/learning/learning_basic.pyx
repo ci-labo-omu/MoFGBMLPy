@@ -15,17 +15,39 @@ from cython.parallel import prange
 
 cdef class LearningBasic(AbstractLearning):
     def __init__(self, Dataset training_dataset):
-        if training_dataset is None:
-            raise Exception("The training dataset cannot be None")
-        self._train_ds = training_dataset
+        """Constructor
+
+        Args:
+            training_dataset (Dataset): Training dataset used to generate the consequent
+        """
+        super().__init__(training_dataset)
 
     cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
+        """Learn a consequent from the antecedent and dataset
+
+        Args:
+            antecedent (Antecedent): Antecedent whose consequent part is learnt
+            dataset (Dataset): Training dataset
+            reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
+
+        Returns:
+            Consequent: Created consequent
+        """
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return Consequent(class_label, rule_weight)
 
     cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
+        """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code
+        
+        Args:
+            antecedent (Antecedent): Antecedent whose confidence is computed 
+            dataset (Dataset): Training dataset
+
+        Returns:
+            double[]: Confidence
+        """
         if dataset is None:
             dataset = self._train_ds
         if antecedent is None:
@@ -65,11 +87,28 @@ cdef class LearningBasic(AbstractLearning):
 
         return confidence
 
-    cpdef double[:] calc_confidence_py(self, Antecedent antecedent):
-        return self.calc_confidence(antecedent)
+    cpdef double[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
+        """Compute the confidences of each class for the given antecedent and dataset
+        
+        Args:
+            antecedent (Antecedent): Antecedent whose confidence is computed 
+            dataset (Dataset): Training dataset
+
+        Returns:
+            double[]: Confidence
+        """
+        return self.calc_confidence(antecedent, dataset)
 
 
     cpdef ClassLabelBasic calc_class_label(self, double[:] confidence):
+        """Compute the conclusion class label using the confidence
+        
+        Args:
+            confidence (double[]): confidences of each class for the given antecedent and dataset
+
+        Returns:
+            ClassLabelBasic: Class label of the class with the highest confidence. If there are multiple ones or if there is none then a rejected class label is returned
+        """
         cdef double max_val = -INFINITY
         cdef int consequent_class = -1
         cdef int i
@@ -92,6 +131,16 @@ cdef class LearningBasic(AbstractLearning):
         return class_label
 
     cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold):
+        """Compute the rule weight
+        
+        Args:
+            class_label (ClassLabelBasic): Class label whose rule weight is computed
+            confidence (double[]): confidences of each class for the given antecedent and dataset
+            reject_threshold (double): Threshold for the rule weight value under which the rule is considered rejected
+
+        Returns:
+            RuleWeightBasic: Rule weight
+        """
         if class_label is None or confidence is None or reject_threshold is None:
             raise Exception("Class label, confidence and reject_threshold can't be None")
 
@@ -102,7 +151,7 @@ cdef class LearningBasic(AbstractLearning):
 
         cdef int label_value = class_label.get_class_label_value()
 
-        # TODO Check the effect of this modification on the results and recheck it's validity
+        # TODO Re-check the effect of this modification on the results and recheck it's validity
         # cdef double sum_confidence = np.sum(confidence)
         # cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
         cdef double rule_weight_val = (confidence[label_value] * 2) - 1
@@ -115,6 +164,11 @@ cdef class LearningBasic(AbstractLearning):
         return RuleWeightBasic(rule_weight_val)
 
     cpdef Dataset get_training_set(self):
+        """Get the training set
+        
+        Returns:
+            Dataset: Training set
+        """
         return self._train_ds
 
     def __repr__(self):

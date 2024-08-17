@@ -9,7 +9,24 @@ from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 
 cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
+    """Create a Knowledge object with triangular fuzzy sets with multiple partitions
+
+    Attributes:
+        __num_divisions (int[,]): Number of divisions per variable. e.g.: __num_divisions = [ [2, 3], [2, 3] ]: there are 2 variables and 6 fuzzy sets (DC + 2 (1st partition) + 3 (2nd partition))
+        __var_names (str[]): Array of the variables name. e.g.: ["x0", "x1"]
+        __fuzzy_set_names (str[,]): Names of the fuzzy sets (same dimension as __num_divisions). e.g.: [["low_2", "high_2"], ["low_3", "medium_3", "high_3"]].
+    """
     def __init__(self, int[:,:] num_divisions, var_names, fuzzy_set_names):
+        """Constructor
+
+        Args:
+            num_divisions (int[,]): Number of divisions per variable. e.g.: __num_divisions = [ [2, 3], [2, 3] ]: there are 2 variables and 6 fuzzy sets (DC + 2 (1st partition) + 3 (2nd partition))
+            var_names (str[]): Array of the variables name. e.g.: ["x0", "x1"]
+            fuzzy_set_names (str[,]): Names of the fuzzy sets (same dimension as __num_divisions). e.g.: [["low_2", "high_2"], ["low_3", "medium_3", "high_3"]].
+
+        Raises:
+            Exception: None or empty parameters, invalid array shape or invalid content
+        """
         if (num_divisions is None or len(num_divisions) == 0 or
                 var_names is None or len(var_names) == 0 or
                 fuzzy_set_names is None or len(fuzzy_set_names) == 0):
@@ -21,7 +38,7 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         num_dims = num_divisions.shape[0]
 
         if len(var_names) != num_dims or len(fuzzy_set_names) != num_dims:
-            raise Exception("var_names and num_divisions first dimension must be of the same size as num_division first one")
+            raise Exception("var_names and num_divisions first dimension must be of the same size as num_divisions first one")
 
         for item in var_names:
             if item is None:
@@ -42,7 +59,18 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         self.__fuzzy_set_names = fuzzy_set_names
     
     @staticmethod
-    def make_triangle_knowledge_params(int num_partitions):
+    def make_triangle_knowledge_params(int num_fuzzy_sets):
+        """Make the triangular membership function parameters given a number of fuzzy sets i the partition
+
+        Args:
+            num_fuzzy_sets (int): Number of fuzzy sets in the partition (DC excluded)
+
+        Returns:
+            double[,]: Parameters of the membership function of each fuzzy set in the partition
+
+        Raises:
+            Invalid number of fuzzy sets in the partition (>1 expected)
+        """
         cdef int i
         cdef double left
         cdef double center
@@ -50,22 +78,22 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         cdef cnp.ndarray[double, ndim=2] params
         cdef double[:] partition
 
-        if num_partitions <= 1:
-            raise Exception("num_partitions can't be lesser or equal to 1")
+        if num_fuzzy_sets <= 1:
+            raise Exception("num_fuzzy_sets can't be lesser or equal to 1")
 
-        params = np.zeros((num_partitions, 3))
-        partition = np.zeros(num_partitions+1)
+        params = np.zeros((num_fuzzy_sets, 3))
+        partition = np.zeros(num_fuzzy_sets+1)
 
         # e.g.: K = 2: 0, 1/2, 1
         # e.g.: K = 3: 0, 1/4, 3/4, 1
         # e.g.: K = 5: 0, 1/8, 3/8, 5/8, 7/8, 1
 
-        for i in range(1, num_partitions):
-            partition[i] = (2*i-1) / ((num_partitions-1) * 2)
+        for i in range(1, num_fuzzy_sets):
+            partition[i] = (2*i-1) / ((num_fuzzy_sets-1) * 2)
 
-        partition[num_partitions] = 1
+        partition[num_fuzzy_sets] = 1
 
-        for i in range(num_partitions):
+        for i in range(num_fuzzy_sets):
             if i == 0:  # 1st partition
                 params[i] = np.array([0, 0, 2*partition[1]])
             elif i == partition.shape[0]-2:  # last partition
@@ -79,6 +107,11 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         return params
 
     cpdef create(self):
+        """Create a Knowledge object. Note that a don't care fuzzy set is added at the index 0 for each variable
+
+        Returns:
+            Knowledge: Created knowledge
+        """
         cdef Knowledge knowledge
 
         cdef int set_id = 0

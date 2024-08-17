@@ -7,7 +7,14 @@ cimport numpy as cnp
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi cimport RuleWeightMulti
 
 cdef class RuleMulti(AbstractRule):
+    """Fuzzy rule for multilabel classification """
     def __init__(self, antecedent, consequent):
+        """Constructor
+
+        Args:
+            antecedent (Antecedent): Antecedent of the rule
+            consequent (Consequent): Consequent of the rule
+        """
         super().__init__(antecedent, consequent)
 
     def __deepcopy__(self, memo={}):
@@ -24,6 +31,14 @@ cdef class RuleMulti(AbstractRule):
         return new_rule
 
     cpdef double get_fitness_value(self, double[:] attribute_vector):
+        """Get the fitness value of the rule for the given input vector
+
+        Args:
+            attribute_vector (double[]): Input vector 
+
+        Returns:
+            double: Fitness value
+        """
         cdef double membership
         cdef double cf
         cdef double cf_mean

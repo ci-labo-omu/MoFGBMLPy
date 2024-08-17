@@ -38,7 +38,7 @@ def test_get_compatible_grade_no_knowledge():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
     vector = np.array([1.0, 2.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_smaller_num_vars_knowledge():
@@ -47,7 +47,7 @@ def test_get_compatible_grade_smaller_num_vars_knowledge():
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
     vector = np.array([1.0, 2.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
@@ -58,42 +58,42 @@ def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
     vector = np.array([1.0])
 
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_none_vector():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
     vector = None
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_too_small_vector():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
     vector = np.array([1.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_too_big_vector():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
     vector = np.array([1.0, 2.0, 1.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_1():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
     vector = np.array([1.0, -2.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_2():
     antecedent = Antecedent(np.array([1, -2], int), Knowledge())
     vector = np.array([1.0, 2.0])
     with pytest.raises(Exception):
-        antecedent.get_compatible_grade(vector)
+        antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_value_no_knowledge():

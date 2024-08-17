@@ -2,7 +2,14 @@ import numpy as np
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory cimport HomoTriangleKnowledgeFactory
 
 cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
+    """Helper class to create a Knowledge object with triangular fuzzy sets with 15 fuzzy sets per variable (the same ones): DC + 2 + 3 + 4 + 5"""
     def __init__(self, int num_dims, var_names = None):
+        """Constructor
+
+        Args:
+            num_dims (int): Number of dimensions (i.e. number of variables)
+            var_names (str[]): Array of the variables name. e.g.: ["x0", "x1"]
+        """
         if num_dims is None or num_dims <= 0:
             raise Exception("num_dims must be a positive integer")
 

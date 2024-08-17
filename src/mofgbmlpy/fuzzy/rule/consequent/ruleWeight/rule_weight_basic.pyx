@@ -3,7 +3,17 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport Abs
 
 
 cdef class RuleWeightBasic(AbstractRuleWeight):
+    """Rule weight for single label classification (with one or multi classes, but only one target class at a time)
+
+    Attributes:
+        __rule_weight (double): Value of the rule weight
+    """
     def __init__(self, double rule_weight):
+        """Constructor
+
+        Args:
+            rule_weight (double): Value of the rule weight
+        """
         self.__rule_weight = rule_weight
 
     def __deepcopy__(self, memo={}):
@@ -31,9 +41,19 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         return f"{self.get_value():.4f}"
 
     cpdef object get_value(self):
+        """Get the rule weight value
+        
+        Returns:
+            double: Rule weight value
+        """
         return self.__rule_weight
 
     cpdef void set_value(self, object rule_weight):
+        """Set the value of the rule weight
+        
+        Args:
+            rule_weight (double): New rule weight value
+        """
         self.__rule_weight = rule_weight
 
     def __eq__(self, other):

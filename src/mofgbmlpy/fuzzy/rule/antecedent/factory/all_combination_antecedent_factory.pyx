@@ -15,7 +15,20 @@ cdef extern from "limits.h":
     cdef int INT_MAX
 
 cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
+    """Antecedent factory creating all the possible antecedents in the constructor
+
+    Attributes:
+        __antecedents_indices (int[:,:]): All the possible antecedent indices for the current knowledge base
+        __knowledge (Knowledge): Knowledge base
+        _random_gen (numpy.random.Generator): Random generator
+    """
     def __init__(self, knowledge, random_gen):
+        """Constructor
+
+        Args:
+            knowledge (Knowledge): Knowledge base
+            random_gen (numpy.random.Generator): Random generator
+        """
         if knowledge is None or knowledge.get_num_dim() == 0:
             raise Exception("knowledge can't be None and must have at least one fuzzy variable")
 
@@ -24,9 +37,22 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         self._random_gen = random_gen
 
     def get_num_antecedents(self):
+        """Get the number of generated antecedent indices arrays
+
+        Returns:
+            int: Number of generated antecedent indices arrays
+        """
         return len(self.__antecedents_indices)
 
     cdef int[:,:] generate_antecedents_indices(self):
+        """Generate all the possible combinations of fuzzy sets indices from the knowledge base. Can only be accessed from Cython code
+        
+        Returns:
+            int[,]: All the combinations of fuzzy sets indices (it's an array of antecedent indices arrays)
+        
+        Raises:
+            Exception: The number of combinations is too big
+        """
         cdef int i
         cdef int j
         cdef int k = 0
@@ -84,9 +110,25 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return indices
 
     def generate_antecedents_indices_py(self):
-        self.generate_antecedents_indices()
+        """Generate all the possible combinations of fuzzy sets indices from the knowledge base.
+
+        Returns:
+            int[,]: All the combinations of fuzzy sets indices (it's an array of antecedent indices arrays)
+
+        Raises:
+            Exception: The number of combinations is too big
+        """
+        return self.generate_antecedents_indices()
 
     cdef Antecedent[:] create(self, int num_rules=1):
+        """Create antecedents. Can only be accessed from Cython code
+        
+        Args:
+            num_rules (int): Number of antecedent to be generated
+
+        Returns:
+            Antecedent[]: Generated antecedent
+        """
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
         cdef Antecedent[:] antecedent_objects = np.zeros(num_rules, dtype=object)
         cdef int i
@@ -99,10 +141,26 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return antecedent_objects
 
     def create_py(self, int num_rules=1):
+        """Create antecedents.
+
+        Args:
+            num_rules (int): Number of antecedent to be generated
+
+        Returns:
+            Antecedent[]: Generated antecedent
+        """
         return self.create(num_rules)
 
 
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
+        """Create antecedents indices. Can only be accessed from Cython code
+
+        Args:
+            num_rules (int): Number of antecedents indices arrays to be generated
+
+        Returns:
+            int[,]: Generated antecedents indices
+        """
         cdef int i
         cdef int j
         cdef int[:] chosen_list
@@ -123,6 +181,14 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return new_indices
 
     def create_antecedent_indices_py(self, int num_rules=1):
+        """Create antecedents indices.
+
+        Args:
+            num_rules (int): Number of antecedents indices arrays to be generated
+
+        Returns:
+            int[,]: Generated antecedents indices
+        """
         return self.create_antecedent_indices(num_rules)
 
     def __repr__(self):
@@ -163,4 +229,9 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         return new_object
 
     cpdef Knowledge get_knowledge(self):
+        """Get the knowledge base used to create the antecedents
+        
+        Returns:
+            Knowledge: Knowledge base
+        """
         return self.__knowledge

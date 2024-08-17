@@ -25,7 +25,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     cpdef int[:,:] create_antecedent_indices_py(self, int num_rules=?)
     cpdef get_training_set(self)
     cpdef get_knowledge(self)
-    cpdef get_dc_probability(self)
+    cpdef get_is_dc_probability(self)
     cpdef get_dc_rate(self)
     cpdef get_antecedent_number_do_not_dont_care(self)
     cpdef get_random_gen(self)

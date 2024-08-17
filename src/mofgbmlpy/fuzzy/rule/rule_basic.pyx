@@ -6,7 +6,15 @@ cimport numpy as cnp
 
 
 cdef class RuleBasic(AbstractRule):
+    """Fuzzy rule for simple classification (not multilabel) """
+
     def __init__(self, antecedent, consequent):
+        """Constructor
+
+        Args:
+            antecedent (Antecedent): Antecedent of the rule
+            consequent (Consequent): Consequent of the rule
+        """
         super().__init__(antecedent, consequent)
 
     def __deepcopy__(self, memo={}):
@@ -23,6 +31,14 @@ cdef class RuleBasic(AbstractRule):
         return new_rule
 
     cpdef double get_fitness_value(self, double[:] attribute_vector):
+        """Get the fitness value of the rule for the given input vector
+
+        Args:
+            attribute_vector (double[]): Input vector 
+
+        Returns:
+            double: Fitness value
+        """
         cdef double membership
         cdef double cf
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)

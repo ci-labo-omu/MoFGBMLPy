@@ -11,11 +11,9 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWe
 from mofgbmlpy.data.pattern cimport Pattern
 
 cdef class LearningBasic(AbstractLearning):
-    cdef Dataset _train_ds
-
     cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=?, double reject_threshold=?)
     cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=?)
-    cpdef double[:] calc_confidence_py(self, Antecedent antecedent)
+    cpdef double[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=?)
     cpdef ClassLabelBasic calc_class_label(self, double[:] confidence)
     cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold)
     cpdef Dataset get_training_set(self)

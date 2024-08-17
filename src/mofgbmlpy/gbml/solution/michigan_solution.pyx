@@ -90,8 +90,8 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef Antecedent get_antecedent(self):
         return self._rule.get_antecedent()
 
-    cdef double[:] get_compatible_grade(self, double[:] attribute_vector):
-        return self._rule.get_compatible_grade(attribute_vector)
+    cdef double[:] get_membership_values(self, double[:] attribute_vector):
+        return self._rule.get_membership_values(attribute_vector)
 
     cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         return self._rule.get_compatible_grade_value(attribute_vector)
