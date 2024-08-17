@@ -9,8 +9,6 @@ from jproperties import Properties
 from mofgbmlpy.data.output import Output
 import argparse
 
-from mofgbmlpy.utility.util import dash_case_to_snake_case, snake_case_to_dash_case
-
 
 class Arguments(ABC):
     """Abstract arguments object for MoFGBML
@@ -348,7 +346,7 @@ class Arguments(ABC):
         # Remove not specified args and return a dict of the args
         returned_args = {}
         for arg, value in vars(self._parser.parse_args(args)).items():
-            returned_args[dash_case_to_snake_case(arg)] = value
+            returned_args[Arguments.arg_to_key(arg)] = value
 
         return returned_args
 
@@ -375,7 +373,7 @@ class Arguments(ABC):
         #--max-rule-num 60 --min-rule-num 1
 
         for item in prop_view:
-            key = snake_case_to_dash_case(item[0])
+            key = Arguments.key_to_arg(item[0])
             value = str(item[1].data)
             
             # Translate Java version args format to this version format
@@ -394,6 +392,30 @@ class Arguments(ABC):
                 args = args + ["--"+key, value]
 
         return args
+
+    @staticmethod
+    def arg_to_key(arg):
+        """Convert a text in the format of an argument to one of a key, e.g. "verbose" becomes "VERBOSE"
+
+        Args:
+            arg (str): Text to be converted
+
+        Returns:
+            str: Formatted text
+        """
+        return arg.upper().replace("-", "_")
+
+    @staticmethod
+    def key_to_arg(arg):
+        """Convert a text in the format of a key to one of an argument, e.g. "VERBOSE" becomes "verbose"
+
+        Args:
+            arg (str): Text to be converted
+
+        Returns:
+            str: Formatted text
+        """
+        return arg.lower().replace("_", "-")
 
     def load(self, args):
         """Load arguments into this object. the file consts.properties in the root folder can also be used, but the priority will be give nto the values in the args parameter

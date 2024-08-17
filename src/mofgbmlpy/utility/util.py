@@ -23,14 +23,3 @@ def dash_case_to_snake_case(txt):
     """
     return txt.replace('-', '_')
 
-
-def snake_case_to_dash_case(txt):
-    """Convert a text in snake case to dash case format. e.g. an_example becomes an-example
-
-    Args:
-        txt (str): text to be converted
-
-    Returns:
-        str: New text
-    """
-    return txt.replace('_', '-')
