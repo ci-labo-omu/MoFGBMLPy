@@ -10,8 +10,10 @@ cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
             num_dims (int): Number of dimensions (i.e. number of variables)
             var_names (str[]): Array of the variables name. e.g.: ["x0", "x1"]
         """
-        if num_dims is None or num_dims <= 0:
-            raise Exception("num_dims must be a positive integer")
+        if num_dims is None:
+            raise TypeError("num_dims must be not be negative")
+        elif num_dims <= 0:
+            raise ValueError("num_dims must be positive")
 
         num_divisions = np.zeros((num_dims, 4), dtype=np.int_)
         fuzzy_set_names = np.zeros((num_dims, 4), dtype=list)
@@ -28,6 +30,6 @@ cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
         if var_names is None:
             var_names = np.array([f"x{i}" for i in range(num_dims)], dtype=str)
         elif len(var_names) != num_dims:
-            raise Exception(f"var_names must be of a size equals to num_dims (i.e. {num_dims})")
+            raise ValueError(f"var_names must be of a size equals to num_dims (i.e. {num_dims})")
 
         super().__init__(num_divisions, var_names, fuzzy_set_names)

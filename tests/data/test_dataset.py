@@ -57,7 +57,7 @@ def test_null_num_classes():
 
 
 def test_none_patterns():
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         Dataset(1, 1, 1, None)
 
 

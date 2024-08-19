@@ -33,7 +33,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
         n_parents, n_matings, _ = X.shape
 
         if n_parents != 2:
-            raise Exception("Error: 2 parents are needed for this crossover")
+            raise ValueError("Error: 2 parents are needed for this crossover")
 
         n_vars = X[0, 0, 0].get_num_vars()
         mask = self._random_gen.random((n_matings, n_vars)) < 0.5

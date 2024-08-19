@@ -4,6 +4,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 
@@ -48,7 +49,7 @@ cdef class Knowledge:
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         if fuzzy_vars.shape[0] == 0:
-            raise Exception("Knowledge is not yet initialized (no fuzzy set)")
+            raise UninitializedKnowledgeException()
 
         cdef FuzzyVariable var = fuzzy_vars[dim]
         return var.get_fuzzy_set(fuzzy_set_index)
@@ -64,7 +65,7 @@ cdef class Knowledge:
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         if fuzzy_vars.shape[0] == 0:
-            raise Exception("Knowledge is not yet initialized (no fuzzy set)")
+            raise UninitializedKnowledgeException()
 
         cdef FuzzyVariable var = fuzzy_vars[dim]
         return var.get_length()
@@ -114,9 +115,9 @@ cdef class Knowledge:
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         if fuzzy_vars.shape[0] == 0:
-            raise Exception("Knowledge is not yet initialized (no fuzzy set)")
+            raise UninitializedKnowledgeException()
         if dim < 0 or dim >= fuzzy_vars.shape[0]:
-            raise Exception("The dim index is out of bounds for the current knowledge")
+            raise IndexError("The dim index is out of bounds for the current knowledge")
 
         cdef FuzzyVariable var = fuzzy_vars[dim]
         return var.get_membership_value(fuzzy_set_index, attribute_value)

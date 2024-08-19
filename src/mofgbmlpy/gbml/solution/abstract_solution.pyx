@@ -1,7 +1,6 @@
-from abc import ABC, abstractmethod
 import numpy as np
-cimport numpy as cnp
 
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 
 cdef class AbstractSolution:
     """Abstract solution
@@ -90,11 +89,11 @@ cdef class AbstractSolution:
         Returns:
             int: Number of variables
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     cdef void clear_vars(self):
         """Clear the variables"""
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     # cpdef double get_constraint(self, int index):
     #     return self.__constraints[index]
@@ -126,7 +125,7 @@ cdef class AbstractSolution:
         Returns:
             (str) String representation
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -137,7 +136,7 @@ cdef class AbstractSolution:
         Returns:
             (bool) True if they are equal and False otherwise
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def __hash__(self):
         """Hash function
@@ -145,7 +144,7 @@ cdef class AbstractSolution:
         Returns:
             object: Hash value
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     cpdef object get_attributes(self):
         """get the attributes dictionary

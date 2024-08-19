@@ -1,3 +1,4 @@
+from mofgbmlpy.exception.invalid_solution_type_exception import InvalidSolutionTypeException
 from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
@@ -41,7 +42,7 @@ cdef class RuleInterpretation(ObjectiveFunction):
                 out[i] = rule_interpretation
                 sol.set_objective(obj_index, out[i])
         else:
-            raise Exception("Solution must be of type PittsburghSolution")
+            raise InvalidSolutionTypeException("PittsburghSolution")
 
     def __repr__(self):
         """Return a string representation of this object

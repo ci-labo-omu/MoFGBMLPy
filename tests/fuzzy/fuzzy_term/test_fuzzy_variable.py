@@ -9,105 +9,73 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
 
 def test_none_name():
     fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
-    with pytest.raises(Exception):
-        _ = FuzzyVariable(fuzzy_sets, np.array([0.0]), None)
-
-
-def test_none_fuzzy_sets():
-    with pytest.raises(Exception):
-        _ = FuzzyVariable(None, np.array([0.0]))
-
-
-def test_none_support_values():
-    fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = FuzzyVariable(fuzzy_sets, None)
 
 
-def test_empty_support_values():
-    fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
-    with pytest.raises(Exception):
-        _ = FuzzyVariable(fuzzy_sets, np.empty(0))
+def test_none_fuzzy_sets():
+    with pytest.raises(TypeError):
+        _ = FuzzyVariable(None)
 
 
 def test_empty_fuzzy_sets():
     fuzzy_sets = np.empty(0, object)
-    with pytest.raises(Exception):
-        _ = FuzzyVariable(fuzzy_sets, np.array([0.0]))
-
-
-def test_different_support_fuzzy_sets_sizes():
-    with pytest.raises(Exception):
-        _ = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5, 1]))
+    with pytest.raises(ValueError):
+        _ = FuzzyVariable(fuzzy_sets)
 
 
 def test_invalid_domain_size_greater():
-    with pytest.raises(Exception):
-        FuzzyVariable(domain=[0, 1, 2])
+    fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
+    with pytest.raises(ValueError):
+        FuzzyVariable(fuzzy_sets, domain=[0, 1, 2])
 
 
 def test_invalid_domain_size_smaller():
-    with pytest.raises(Exception):
-        FuzzyVariable(domain=[0])
+    fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
+    with pytest.raises(ValueError):
+        FuzzyVariable(fuzzy_sets, domain=[0])
 
 
 def test_invalid_domain_order():
-    with pytest.raises(Exception):
-        FuzzyVariable(domain=[1, 0])
+    fuzzy_sets = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
+    with pytest.raises(ValueError):
+        FuzzyVariable(fuzzy_sets, domain=[1, 0])
 
 
 def test_get_membership_value_out_of_bounds_index_negative():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_membership_value_py(-2, 0)
 
 
 def test_get_membership_value_out_of_bounds_index_big():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_membership_value_py(1, 0)
 
 
-def test_get_membership_value_empty_fuzzy_sets_array():
-    with pytest.raises(Exception):
-        var = FuzzyVariable()
-        var.get_membership_value_py(0, 0)
-
-
 def test_get_fuzzy_set_value_out_of_bounds_index_negative():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_fuzzy_set(-2)
 
 
 def test_get_fuzzy_set_value_out_of_bounds_index_big():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_fuzzy_set(1)
 
 
-def test_get_fuzzy_set_value_empty_fuzzy_sets_array():
-    with pytest.raises(Exception):
-        var = FuzzyVariable()
-        var.get_fuzzy_set(0)
-
-
 def test_get_support_out_of_bounds_index_negative():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_support(-2)
 
 
 def test_get_support_out_of_bounds_index_big():
-    with pytest.raises(Exception):
-        var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), support_values=np.array([0.5]))
+    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]))
+    with pytest.raises(IndexError):
         var.get_support(1)
-
-
-def test_get_support_empty_fuzzy_sets_array():
-    with pytest.raises(Exception):
-        var = FuzzyVariable()
-        var.get_support(0)
 
 
 def test_eq_true():
@@ -128,8 +96,6 @@ def test_eq_different_fuzzy_sets_order():
     var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 1, "small"),
                                               TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     assert var != var2
-
-
 
 
 def test_eq_different_name():

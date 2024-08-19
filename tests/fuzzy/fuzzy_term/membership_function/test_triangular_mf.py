@@ -7,47 +7,47 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import Triangu
 
 
 def test_none_left():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         TriangularMF(None, 0.5, 1)
 
 
 def test_none_center():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         TriangularMF(0, None, 1)
 
 
 def test_none_right():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         TriangularMF(0, 0.5, None)
 
 
 def test_invalid_center_left():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(0, -1, 1)
   
     
 def test_invalid_center_right():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(0, 2, 1)
 
 
 def test_invalid_left_center():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(0.7, 0.5, 1)
 
 
 def test_invalid_left_right():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(2, 0.5, 1)
     
     
 def test_invalid_right_left():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(0, 0.5, -1)
 
 
 def test_invalid_right_center():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         TriangularMF(0, 0.5, 0.2)
 
 
@@ -128,7 +128,7 @@ def test_get_param_range_left(x_min, x_max):
     mf = TriangularMF(left, center, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ = mf.get_param_range(0, x_min, x_max)
     else:
         param_range = mf.get_param_range(0, x_min, x_max)
@@ -144,7 +144,7 @@ def test_get_param_range_center(x_min, x_max):
     mf = TriangularMF(left, center, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ = mf.get_param_range(1, x_min, x_max)
     else:
         param_range = mf.get_param_range(1, x_min, x_max)
@@ -160,7 +160,7 @@ def test_get_param_range_right(x_min, x_max):
     mf = TriangularMF(left, center, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ = mf.get_param_range(2, x_min, x_max)
     else:
         param_range = mf.get_param_range(2, x_min, x_max)

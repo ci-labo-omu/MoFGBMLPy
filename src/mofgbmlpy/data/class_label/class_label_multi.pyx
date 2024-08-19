@@ -20,7 +20,10 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Args:
             class_label (int[]): Class label values
         """
-        self.__class_label = class_label
+        if class_label is None:
+            self.__class_label = np.empty(0, int)
+        else:
+            self.__class_label = class_label
         super().__init__()
 
     def __eq__(self, other):
@@ -61,8 +64,6 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int: Length of the class label values array
         """
-        if self.__class_label is None:
-            raise Exception("class label value is None")
         return self.__class_label.shape[0]
 
     def __deepcopy__(self, memo={}):
@@ -88,8 +89,6 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             str: String representation
         """
-        if self.__class_label is None:
-            raise Exception("class label value is None")
         cdef int[:] label_value = self.__class_label
         txt = f"{label_value[0]:2d}"
 

@@ -1,6 +1,7 @@
 import xml.etree.cElementTree as xml_tree
 
 import numpy as np
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 
 cdef class AbstractMF:
     """Abstract membership function
@@ -22,7 +23,7 @@ cdef class AbstractMF:
         Returns:
             double: Membership value
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def get_value_py(self, double x):
         """Get membership value
@@ -81,7 +82,7 @@ cdef class AbstractMF:
         Returns:
             double[]: Range of possible values
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     cpdef bint is_param_value_valid(self, int index, double value, double x_min=0, double x_max=1):
         """Check if the provided value for the parameter at the given index is valid
@@ -121,7 +122,7 @@ cdef class AbstractMF:
         if self.is_param_value_valid(index, value, x_min, x_max):
             self._params[index] = value
         else:
-            raise Exception("Invalid index or value")
+            raise ValueError("Invalid index or value")
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -132,7 +133,7 @@ cdef class AbstractMF:
         Returns:
             object: Deep copy of this object
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -156,7 +157,7 @@ cdef class AbstractMF:
         Returns:
             Points coordinates that define this function shape
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()
 
     cpdef double get_support(self, double x_min=0, double x_max=0):
         """Get the support value associated to this function: area covered by this function in the space "domain x [0, 1]"
@@ -168,4 +169,4 @@ cdef class AbstractMF:
         Returns:
             Support value
         """
-        raise Exception("This class is abstract")
+        raise AbstractMethodException()

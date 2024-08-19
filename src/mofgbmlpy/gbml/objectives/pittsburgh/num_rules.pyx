@@ -1,3 +1,4 @@
+from mofgbmlpy.exception.invalid_solution_type_exception import InvalidSolutionTypeException
 from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
@@ -21,7 +22,7 @@ cdef class NumRules(ObjectiveFunction):
                 out[i] = sol.get_num_vars()
                 sol.set_objective(obj_index, out[i])
         else:
-            raise Exception("Solution must be of type PittsburghSolution")
+            raise InvalidSolutionTypeException("PittsburghSolution")
 
     def __repr__(self):
         """Return a string representation of this object

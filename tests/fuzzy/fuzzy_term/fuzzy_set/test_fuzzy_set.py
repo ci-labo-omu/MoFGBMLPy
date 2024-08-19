@@ -10,22 +10,22 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import Triangu
 
 
 def test_none_function():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = FuzzySet(None, 0, DivisionType.EQUAL_DIVISION, "term")
 
 
 def test_none_id():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = FuzzySet(DontCareMF(), None, DivisionType.EQUAL_DIVISION, "term")
 
 
 def test_none_division_type():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = FuzzySet(DontCareMF(), 0, None, "term")
 
 
 def test_none_term():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = FuzzySet(DontCareMF(), 0, DivisionType.EQUAL_DIVISION, None)
 
 

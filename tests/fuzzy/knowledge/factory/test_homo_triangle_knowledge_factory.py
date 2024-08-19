@@ -12,7 +12,7 @@ def test_none_num_divisions():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -34,7 +34,7 @@ def test_none_var_names():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -45,7 +45,7 @@ def test_empty_var_names():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
 
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
@@ -54,7 +54,7 @@ def test_none_fuzzy_set_names():
     num_divisions = np.array([[1, 2], [1, 3]])
     var_names = np.array(["var1", "var2"])
     fuzzy_set_names = None
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
 
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
@@ -63,7 +63,7 @@ def test_empty_fuzzy_set_names():
     num_divisions = np.array([[1, 2], [1, 3]])
     var_names = np.array(["var1", "var2"])
     fuzzy_set_names = np.empty(0, str)
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
 
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
@@ -76,7 +76,7 @@ def test_negative_num_divisions():
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -87,7 +87,7 @@ def test_null_num_divisions():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -98,7 +98,7 @@ def test_invalid_shape_var_names():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -109,9 +109,8 @@ def test_invalid_var_names_contains_none():
         np.array([["normal_1"], ["low_1", "high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
-
 
 
 def test_invalid_shape_fuzzy_set_names_dim1():
@@ -122,18 +121,18 @@ def test_invalid_shape_fuzzy_set_names_dim1():
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
 def test_invalid_shape_fuzzy_set_names_dim2():
-    num_divisions = np.array([[1, 2], [1, 3]])
+    num_divisions = np.array([[1, 3], [1, 3]])
     var_names = np.array(["var1", "var2"])
-    fuzzy_set_names = [
-        [["normal_1"], ["low_1", "high_1"], ["low_1", "high_1"]],
-        [["normal_2"], ["low_2", "medium_2", "high_2"]],
-    ]
-    with pytest.raises(Exception):
+    fuzzy_set_names = np.array([
+        np.array([["normal_1"], ["low_1", "high_1"]], list),
+        np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
+    ])
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
@@ -144,17 +143,17 @@ def test_invalid_shape_fuzzy_set_names_dim3():
         np.array([["normal_1"], ["low_1", "high_1", "very_high_1"]], list),
         np.array([["normal_2"], ["low_2", "medium_2", "high_2"]], list),
     ])
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory(num_divisions, var_names, fuzzy_set_names)
 
 
 def test_make_triangle_knowledge_params_negative_num_partitions():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(-1)
 
 
 def test_make_triangle_knowledge_params_null_num_partitions():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory.make_triangle_knowledge_params(0)
 
 

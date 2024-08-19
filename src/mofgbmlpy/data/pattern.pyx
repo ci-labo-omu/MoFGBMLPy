@@ -24,9 +24,9 @@ cdef class Pattern:
         if pattern_id < 0:
             raise ValueError('id must be positive')
         elif attributes_vector is None:
-            raise ValueError('attribute_vector must not be None')
+            raise TypeError('attribute_vector must not be None')
         elif target_class is None:
-            raise ValueError('target_class must not be None')
+            raise TypeError('target_class must not be None')
 
         self.__id = pattern_id
         self.__attributes_vector = attributes_vector

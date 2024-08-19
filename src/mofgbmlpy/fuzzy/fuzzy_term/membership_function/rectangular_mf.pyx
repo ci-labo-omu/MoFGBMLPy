@@ -14,7 +14,7 @@ cdef class RectangularMF(AbstractMF):
             right (double): X coordinate of the leftmost side of the rectangle: membership is equals to 0 after this point and 1 before it
         """
         if left > right:
-            raise Exception(f"Error in triangular membership function: left={left:.2f} should be < right={right:.2f}")
+            raise ValueError(f"Error in triangular membership function: left={left:.2f} should be < right={right:.2f}")
         super().__init__(np.array([left, right], dtype=np.float64))
 
     cdef double get_value(self, double x):
@@ -48,14 +48,14 @@ cdef class RectangularMF(AbstractMF):
             double[]: Range of possible values
         """
         if x_min > self._params[0] or x_max < self._params[1]:
-            raise Exception(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[1]}]")
+            raise ValueError(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[1]}]")
 
         if index == 0:
             return np.array([x_min, self._params[1]])
         elif index == 1:
             return np.array([self._params[0], x_max])
         else:
-            raise Exception("Invalid index for rectangular MF")
+            raise IndexError("Invalid index for rectangular MF")
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object

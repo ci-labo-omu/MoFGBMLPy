@@ -51,7 +51,7 @@ cdef class LearningBasic(AbstractLearning):
         if dataset is None:
             dataset = self._train_ds
         if antecedent is None:
-            raise ValueError('Antecedent cannot be None')
+            raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
         cdef double[:] confidence = np.zeros(num_classes)
@@ -114,7 +114,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef int i
 
         if confidence is None:
-            raise Exception("confidence can't be None")
+            raise TypeError("confidence can't be None")
 
         for i in range(confidence.shape[0]):
             if confidence[i] > max_val:
@@ -142,7 +142,7 @@ cdef class LearningBasic(AbstractLearning):
             RuleWeightBasic: Rule weight
         """
         if class_label is None or confidence is None or reject_threshold is None:
-            raise Exception("Class label, confidence and reject_threshold can't be None")
+            raise TypeError("Class label, confidence and reject_threshold can't be None")
 
         cdef RuleWeightBasic zero_weight = RuleWeightBasic(0.0)
 
@@ -150,6 +150,9 @@ cdef class LearningBasic(AbstractLearning):
             return zero_weight
 
         cdef int label_value = class_label.get_class_label_value()
+
+        if label_value < 0 or label_value >= len(confidence):
+            raise IndexError("Label value is out of bounds for the confidence array")
 
         # TODO Re-check the effect of this modification on the results and recheck it's validity
         # cdef double sum_confidence = np.sum(confidence)

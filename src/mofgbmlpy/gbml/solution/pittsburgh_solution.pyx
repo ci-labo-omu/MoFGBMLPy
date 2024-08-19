@@ -335,7 +335,7 @@ cdef class PittsburghSolution(AbstractSolution):
             double: Error rate
         """
         if self._vars is None or dataset is None:
-           raise Exception("Michigan solutions list and dataset can't be None")
+           raise TypeError("Michigan solutions list and dataset can't be None")
 
         cdef int num_errors = 0
         cdef int dataset_size = dataset.get_size()
@@ -375,7 +375,7 @@ cdef class PittsburghSolution(AbstractSolution):
             double: Errored patterns
         """
         if self._vars is None or dataset is None:
-           raise Exception("Michigan solutions list and dataset can't be None")
+           raise TypeError("Michigan solutions list and dataset can't be None")
 
         cdef int i
         cdef cvector[int] errored_patterns_indices

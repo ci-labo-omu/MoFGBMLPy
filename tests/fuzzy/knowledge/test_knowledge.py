@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import pytest
 
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
@@ -20,74 +21,74 @@ def test_none_fuzzy_sets():
 def test_get_fuzzy_variable_out_of_bounds_index_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_variable(-2)
 
 
 def test_get_fuzzy_variable_out_of_bounds_index_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_variable(1)
 
 
 def test_get_fuzzy_variable_empty_fuzzy_sets_array():
     knowledge = Knowledge()
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_variable(0)
 
 
 def test_get_fuzzy_set_out_of_bounds_index_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_set(0, -2)
 
 
 def test_get_fuzzy_set_out_of_bounds_index_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_set(0, 1)
 
 
 def test_get_fuzzy_set_empty_fuzzy_vars_array():
     knowledge = Knowledge()
-    with pytest.raises(Exception):
+    with pytest.raises(UninitializedKnowledgeException):
         knowledge.get_fuzzy_set(0, 0)
 
 
 def test_get_fuzzy_set_out_of_bounds_dim_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_set(-2, 0)
 
 
 def test_get_fuzzy_set_out_of_bounds_dim_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_fuzzy_set(1, 0)
 
 
 def test_get_num_fuzzy_sets_out_of_bounds_index_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_num_fuzzy_sets(-2)
 
 
 def test_get_num_fuzzy_sets_out_of_bounds_index_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_num_fuzzy_sets(1)
 
 
 def test_get_num_fuzzy_sets_empty_fuzzy_vars_array():
     knowledge = Knowledge()
-    with pytest.raises(Exception):
+    with pytest.raises(UninitializedKnowledgeException):
         knowledge.get_num_fuzzy_sets(0)
 
 
@@ -127,15 +128,16 @@ def test_set_fuzzy_vars_one():
 
 def test_get_membership_value_empty_vars_array():
     knowledge = Knowledge()
-    with pytest.raises(Exception):
+    with pytest.raises(UninitializedKnowledgeException):
         knowledge.get_membership_value_py(0, 0, 0)
+
 
 def test_get_membership_value_out_of_bounds_dim_negative():
     var1 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))
     var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0.1, 0.5, 1.1, 1, "small")], object))
 
     knowledge = Knowledge(np.array([var1, var2], object))
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_membership_value_py(0, -1, 0)
 
 
@@ -144,7 +146,7 @@ def test_get_membership_value_out_of_bounds_dim_big():
     var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0.1, 0.5, 1.1, 1, "small")], object))
 
     knowledge = Knowledge(np.array([var1, var2], object))
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_membership_value_py(0, 2, 0)
 
 
@@ -152,7 +154,7 @@ def test_get_membership_value_out_of_fuzzy_set_index_negative():
     var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))
 
     knowledge = Knowledge(np.array([var], object))
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_membership_value_py(0, 0, -2)
 
 
@@ -160,7 +162,7 @@ def test_get_membership_value_out_of_fuzzy_set_index_big():
     var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))
 
     knowledge = Knowledge(np.array([var], object))
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_membership_value_py(0, 0, 1)
 
 
@@ -193,34 +195,34 @@ def test_get_num_dim_valid(num_dims):
 def test_get_support_out_of_bounds_index_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_support(0, -2)
 
 
 def test_get_support_out_of_bounds_index_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_support(0, 1)
 
 
 def test_get_support_empty_fuzzy_vars_array():
     knowledge = Knowledge()
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_support(0, 0)
 
 
 def test_get_support_out_of_bounds_dim_negative():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_support(-2, 0)
 
 
 def test_get_support_out_of_bounds_dim_big():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         knowledge.get_support(1, 0)
 
 

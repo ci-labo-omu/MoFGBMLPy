@@ -1,3 +1,4 @@
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 
 
@@ -12,7 +13,7 @@ cdef class AbstractAntecedentFactory:
         Returns:
             Antecedent[]: Generated antecedents
         """
-        Exception("This class is abstract")
+        raise AbstractMethodException()
 
     cdef int[:,:] create_antecedent_indices(self, int num_rules=1):
         """Create antecedents indices. Can only be accessed from Cython code
@@ -23,7 +24,7 @@ cdef class AbstractAntecedentFactory:
         Returns:
             int[,]: Generated antecedents indices
         """
-        Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -34,4 +35,4 @@ cdef class AbstractAntecedentFactory:
         Returns:
             object: Deep copy of this object
         """
-        Exception("This class is abstract")
+        raise AbstractMethodException()

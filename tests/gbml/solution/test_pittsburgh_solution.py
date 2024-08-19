@@ -1,4 +1,6 @@
+import xml.etree.cElementTree as xml_tree
 import copy
+from xml.dom import minidom
 
 import numpy as np
 
@@ -77,7 +79,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = None
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(TypeError):
 #         cl.get_error_rate_py(solutions, training_data_set)
 #
 #
@@ -85,7 +87,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = np.empty(0, object)
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(ValueError):
 #         cl.get_error_rate_py(solutions, training_data_set)
 #
 #
@@ -93,7 +95,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = np.empty(0, object)
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(TypeError):
 #         cl.get_error_rate_py(solutions, None)
 #
 #
@@ -344,7 +346,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = None
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(TypeError):
 #         cl.get_errored_patterns_py(solutions, training_data_set)
 #
 #
@@ -352,7 +354,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = np.empty(0, object)
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(ValueError):
 #         cl.get_errored_patterns_py(solutions, training_data_set)
 #
 #
@@ -360,7 +362,7 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     cl = Classifier(SingleWinnerRuleSelection())
 #     solutions = np.empty(0, object)
 #
-#     with pytest.raises(Exception):
+#     with pytest.raises(TypeError):
 #         cl.get_errored_patterns_py(solutions, None)
 #
 #
@@ -601,3 +603,17 @@ def test_deep_copy():
     obj = PittsburghSolution(2, 2, 0, michigan_solution_builder, SingleWinnerRuleSelection())
     _ = copy.deepcopy(obj)
 
+
+def test_to_xml_run():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+    # Only test if it doesn't return an exception
+    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
+    rule_builder = RuleBuilderBasic(AllCombinationAntecedentFactory(knowledge, random_gen), LearningBasic(training_data_set), knowledge)
+    michigan_builder = MichiganSolutionBuilder(random_gen, 2, 0, rule_builder)
+    classification = SingleWinnerRuleSelection()
+    problem = PittsburghProblem(3, ["error-rate", "num-rules"], 0, training_data_set, michigan_builder, classification)
+    sol = problem.create_solution()
+    reparsed = minidom.parseString(xml_tree.tostring(sol.to_xml()))
+    _ = reparsed.toprettyxml(indent="  ")
+
+    assert True

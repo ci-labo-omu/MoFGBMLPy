@@ -20,7 +20,7 @@ def test_none_id():
 
 
 def test_none_attribute_vector():
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         _ = Pattern(0, None, ClassLabelBasic(0))
 
 

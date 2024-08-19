@@ -5,6 +5,8 @@ from pymoo.core.population import Population
 from pymoo.core.problem import Problem
 import numpy as np
 cimport numpy as cnp
+
+from mofgbmlpy.exception.empty_pittsburgh_solution import EmptyPittsburghSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 import time
 import cython
@@ -47,7 +49,7 @@ class PittsburghProblem(Problem):
         self.__objectives = objectives
         self.__num_constraints = num_constraints
         if len(objectives) == 0:
-            raise Exception("At least one objective is needed")
+            raise ValueError("At least one objective is needed")
 
     def create_solution(self):
         """Create a Pittsburgh solution
@@ -143,6 +145,6 @@ class PittsburghProblem(Problem):
                     k += 1
 
             if sol.get_num_vars() == 0:
-                raise Exception("No michigan solution is remaining")
+                raise EmptyPittsburghSolution()
 
         return solutions

@@ -1,5 +1,4 @@
-cimport numpy as cnp
-
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 
 cdef class AbstractRuleWeight:
     """Abstract class for rule weights object"""
@@ -9,7 +8,7 @@ cdef class AbstractRuleWeight:
         Returns:
             object: Rule weight value
         """
-        raise Exception("AbstractRuleWeight is abstract")
+        raise AbstractMethodException()
 
     cpdef void set_value(self, object rule_weight):
         """Set the value of the rule weight
@@ -17,4 +16,4 @@ cdef class AbstractRuleWeight:
         Args:
             rule_weight (object): New rule weight value
         """
-        raise Exception("AbstractRuleWeight is abstract")
+        raise AbstractMethodException()

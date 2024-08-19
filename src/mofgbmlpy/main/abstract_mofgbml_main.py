@@ -139,7 +139,7 @@ class AbstractMoFGBMLMain(ABC):
                 "TERMINATE_GENERATION") is not None:
             self._termination = get_termination("n_gen", self._mofgbml_args.get("TERMINATE_GENERATION"))
         else:
-            raise Exception("Termination criterion not given or not recognized")
+            raise ValueError("Termination criterion not given or not recognized")
 
         pittsburgh_crossover = PittsburghCrossover(self._mofgbml_args.get("MIN_NUM_RULES"),
                                                    self._mofgbml_args.get("MAX_NUM_RULES"),
@@ -163,7 +163,7 @@ class AbstractMoFGBMLMain(ABC):
         elif self._mofgbml_args.get("CROSSOVER_TYPE") == "pittsburgh-crossover":
             self._crossover = pittsburgh_crossover
         else:
-            raise Exception("Unknown crossover type")
+            raise ValueError("Unknown crossover type")
 
         num_objectives_michigan = 2
         num_constraints_michigan = 0
@@ -327,7 +327,7 @@ class AbstractMoFGBMLMain(ABC):
             id_start (int): The ID is determined by the order of the solutions in loop. This parameter determines the starting value for the ID
         """
         if id_start < 0:
-            raise Exception("ID must be positive or null")
+            raise ValueError("ID must be positive or null")
 
         sol_id = id_start
         for i in range(len(solutions)):
@@ -398,7 +398,7 @@ class AbstractMoFGBMLMain(ABC):
         objectives = population.get("F")
 
         if objectives.shape[1] <= 1:
-            raise Exception("At least 2 objectives are required to plot")
+            raise ValueError("At least 2 objectives are required to plot")
 
         plot = Scatter(labels=self._mofgbml_args.get("OBJECTIVES"))
         plot.add(objectives, color="red")
@@ -426,7 +426,7 @@ class AbstractMoFGBMLMain(ABC):
         elif x_key == "num_rules":
             x_label = "Num rules"
         else:
-            raise Exception("only total_rule_length and num_rules are accepted for the x_key")
+            raise ValueError("only total_rule_length and num_rules are accepted for the x_key")
 
         for solution in solutions:
             err_train.append((solution.get_attribute(x_key),

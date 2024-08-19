@@ -1,3 +1,4 @@
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 
 cdef class ObjectiveFunction:
@@ -10,7 +11,7 @@ cdef class ObjectiveFunction:
             obj_index (int): Index of the objective in the solution objectives array
             out (double[]): Output array, it will contain the objective value of all the solutions
         """
-        raise Exception("Abstract class")
+        raise AbstractMethodException()
 
     def __repr__(self):
         """Return a string representation of this object
@@ -18,4 +19,4 @@ cdef class ObjectiveFunction:
         Returns:
             (str) String representation
         """
-        raise Exception("Abstract class")
+        raise AbstractMethodException()

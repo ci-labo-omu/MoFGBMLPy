@@ -26,9 +26,11 @@ cdef class FuzzyVariable:
             Exception: None name or empty or None fuzzy sets array
         """
         if name is None:
-            raise Exception("name can't be done")
-        if fuzzy_sets is None or len(fuzzy_sets) == 0:
-            raise Exception("fuzzy_sets must have at least one element")
+            raise TypeError("name can't be done")
+        elif fuzzy_sets is None:
+            raise TypeError("fuzzy_sets must not be None")
+        elif len(fuzzy_sets) == 0:
+            raise ValueError("fuzzy_sets must have at least one element")
 
         self.__fuzzy_sets = fuzzy_sets
         self.__name = name
@@ -37,9 +39,9 @@ cdef class FuzzyVariable:
             self.__domain = np.array([0.0, 1.0])
         else:
             if len(domain) != 2:
-                raise Exception("domain must be an array of double size 2 (min, max)")
+                raise ValueError("domain must be an array of double size 2 (min, max)")
             elif domain[0] > domain[1]:
-                raise Exception("domain's first value must be lesser than the second one")
+                raise ValueError("domain's first value must be lesser than the second one")
             self.__domain = domain
 
     cpdef str get_name(self):
@@ -64,7 +66,7 @@ cdef class FuzzyVariable:
             Exception: The index is out of range
         """
         if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
+            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
         return fuzzy_set.get_membership_value(x)
 
@@ -101,7 +103,7 @@ cdef class FuzzyVariable:
             Exception: The index is out of range
         """
         if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
+            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         return self.__fuzzy_sets[fuzzy_set_index]
 
     cpdef double get_support(self, int fuzzy_set_index):
@@ -116,7 +118,7 @@ cdef class FuzzyVariable:
             Exception: The index is out of range
         """
         if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise Exception(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
+            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
 
         cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
         return fuzzy_set.get_support(self.__domain[0], self.__domain[1])

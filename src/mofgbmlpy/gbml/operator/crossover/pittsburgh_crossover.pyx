@@ -26,6 +26,9 @@ class PittsburghCrossover(Crossover):
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
 
+        if self.__max_num_rules < 0:
+            raise ValueError("The maximum number of rules can't be negative")
+
     def get_num_rules_from_parents(self, num_rules_p1, num_rules_p2):
         """Get the number of rules that are taken from each parent
 
@@ -53,9 +56,6 @@ class PittsburghCrossover(Crossover):
                     num_rules_from_p2 -= 1
                 elif num_rules_from_p2 == 0 and num_rules_from_p1 > 0:
                     num_rules_from_p1 -= 1
-                else:
-                    # with cython.gil:
-                    raise Exception("No more rules can be deleted.")
         elif sum_num_rules < self.__min_num_rules:
             # Add missing rules
             num_additions = self.__min_num_rules - sum_num_rules
@@ -70,9 +70,6 @@ class PittsburghCrossover(Crossover):
                     num_rules_from_p2 += 1
                 elif num_rules_from_p2 == self.__max_num_rules and num_rules_from_p1 > self.__max_num_rules:
                     num_rules_from_p1 += 1
-                else:
-                    # with cython.gil:
-                    raise Exception("No more rules can be added")
         return num_rules_from_p1, num_rules_from_p2
 
     def _do(self, problem, X, **kwargs):

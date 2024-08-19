@@ -8,6 +8,7 @@ import time
 import cython
 import numpy as np
 from mofgbmlpy.data.pattern cimport Pattern
+from mofgbmlpy.exception.rejected_class_label_exception import RejectedClassLabelException
 from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClassification
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
@@ -65,21 +66,23 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         cdef MichiganSolution solution
         cdef bint can_classify = False
 
-        if michigan_solution_list.shape[0] < 1:
-            raise Exception("argument [michigan_solution_list] must contain at least 1 item")
+        if michigan_solution_list is None:
+            raise TypeError("The list of michigan solutions can't be none")
+        elif michigan_solution_list.shape[0] == 0:
+            raise ValueError("The list of michigan solutions can't be empty")
         winner =  michigan_solution_list[0]
 
         if pattern is None:
-            raise Exception("Pattern is None")
+            raise TypeError("The pattern is none")
 
         for i in range(michigan_solution_list.shape[0]):
             solution = michigan_solution_list[i]
 
             if solution is None:
-                raise Exception("A solution is None in the list")
+                raise TypeError("A solution is None in the list")
 
             if solution.get_class_label().is_rejected():
-                raise Exception("one item in the argument [michigan_solution_list] has a rejected class label (it should not be used for classification)")
+                raise RejectedClassLabelException("One michigan solution has a rejected class label (it can't be used for classification)")
 
             # if self.__cache_size == 0:  # No cache
             value = solution.get_fitness_value(pattern.get_attributes_vector())

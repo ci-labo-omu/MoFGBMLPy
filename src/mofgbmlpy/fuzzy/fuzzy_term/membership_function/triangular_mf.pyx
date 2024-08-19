@@ -17,13 +17,11 @@ cdef class TriangularMF(AbstractMF):
             right (double): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 after it
         """
         if left is None or center is None or right is None:
-            raise ValueError("Parameters can't be None")
+            raise TypeError("Parameters can't be None")
         if left > center:
-            # with cython.gil:
-            raise Exception(f"Error in triangular membership function: left={left:.2f} should be <= center={center:.2f}")
+            raise ValueError(f"Error in triangular membership function: left={left:.2f} should be <= center={center:.2f}")
         elif center > right:
-            # with cython.gil:
-            raise Exception(f"Error in triangular membership function: center={center:.2f} should be <= right={right:.2f}")
+            raise ValueError(f"Error in triangular membership function: center={center:.2f} should be <= right={right:.2f}")
 
         super().__init__(np.array([left,center,right], dtype=np.float64))
 
@@ -67,7 +65,7 @@ cdef class TriangularMF(AbstractMF):
                 double[]: Range of possible values
             """
         if x_min > self._params[0] or x_max < self._params[2]:
-            raise Exception(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[2]}]")
+            raise ValueError(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[2]}]")
 
         if index == 0:
             return np.array([x_min, self._params[1]])
@@ -76,7 +74,7 @@ cdef class TriangularMF(AbstractMF):
         elif index == 2:
             return np.array([self._params[1], x_max])
         else:
-            raise Exception("Invalid index for rectangular MF")
+            raise IndexError("Invalid index for rectangular MF")
 
 
     def __deepcopy__(self, memo={}):

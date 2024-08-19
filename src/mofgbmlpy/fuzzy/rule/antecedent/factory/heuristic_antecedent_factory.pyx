@@ -1,4 +1,5 @@
 from mofgbmlpy.data.pattern cimport Pattern
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
@@ -28,17 +29,21 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
             random_gen (numpy.random.Generator): Random generator
         """
-        if knowledge is None or knowledge.get_num_dim() == 0:
-            raise Exception("knowledge can't be None and must have at least one fuzzy variable")
+        if knowledge is None:
+            raise TypeError("Knowledge can't be None")
+        elif knowledge.get_num_dim() == 0:
+            raise UninitializedKnowledgeException()
 
-        if training_set is None or training_set.get_size() == 0 or knowledge.get_num_dim() != training_set.get_num_dim():
-            raise Exception("training set must have at least one element and with the same number of dimensions as in the knowledge")
+        if training_set is None:
+            raise TypeError("Training set can't be None")
+        elif training_set.get_size() == 0 or knowledge.get_num_dim() != training_set.get_num_dim():
+            raise ValueError("Training set must have at least one element and with the same number of dimensions as in the knowledge")
 
         if dc_rate < 0 or dc_rate > 1:
-            raise Exception("dc rate must be between 0 and 1")
+            raise ValueError("dc rate must be between 0 and 1")
 
         if antecedent_number_do_not_dont_care < 0:
-            raise Exception(f"antecedent num not dont care must not be negative")
+            raise ValueError(f"antecedent num not dont care must not be negative")
 
 
         self.__training_set = training_set
@@ -74,7 +79,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             int[]: Antecedent indices generated  
         """
         if pattern is None:
-            raise Exception("Pattern can't be none")
+            raise TypeError("The pattern is none")
 
         cdef double[:] attribute_array = pattern.get_attributes_vector()
         cdef int dim_i
@@ -82,7 +87,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         cdef int dimension = self.__knowledge.get_num_dim()
 
         if pattern.get_num_dim() != dimension:
-            raise Exception("Pattern dimension must be the same as the current knowledge")
+            raise ValueError("Pattern dimension must be the same as the current knowledge")
 
 
         antecedent_indices = np.zeros(dimension, dtype=np.int_)
@@ -140,7 +145,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             Antecedent[]: Generated antecedent
         """
         if num_rules <= 0:
-            raise Exception("num_rules must be positive")
+            raise ValueError("num_rules must be positive")
         cdef int[:,:] indices = self.create_antecedent_indices(num_rules)
         cdef int i
         cdef Antecedent[:] antecedent_objects = np.array([Antecedent(indices[i], self.__knowledge) for i in range(num_rules)], dtype=object)
@@ -168,7 +173,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             int[]: Antecedent indices generated  
         """
         if pattern is None:
-            raise Exception("Pattern cannot be None")
+            raise TypeError("The pattern is none")
         return np.array([self.calculate_antecedent_part(pattern)], dtype=int)
 
 
@@ -202,7 +207,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         cdef int[:,:] new_antecedent_indices
 
         if num_rules <= 0:
-            raise Exception("num_rules must be positive")
+            raise ValueError("num_rules must be positive")
 
         if num_rules is None or num_rules == 1:
             pattern_index = self._random_gen.integers(0, data_size)

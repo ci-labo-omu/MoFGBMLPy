@@ -46,8 +46,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
             (str) String representation
         """
         if self.get_value() is None:
-            # with cython.gil:
-            raise ValueError("Rule weight is None")
+            raise TypeError("Rule weight is None")
 
         txt = f"{self.get_value()[0]:.4f}"
 

@@ -7,17 +7,17 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.rectangular_mf import Rectan
 
 
 def test_none_left():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         RectangularMF(None, 1)
 
 
 def test_none_right():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         RectangularMF(0, None)
 
 
 def test_invalid_left_right():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         RectangularMF(2, 1)
 
 
@@ -54,7 +54,7 @@ def test_get_param_range_left(x_min, x_max):
     mf = RectangularMF(left, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ = mf.get_param_range(0, x_min, x_max)
     else:
         param_range = mf.get_param_range(0, x_min, x_max)
@@ -69,7 +69,7 @@ def test_get_param_range_right(x_min, x_max):
     mf = RectangularMF(left, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ = mf.get_param_range(1, x_min, x_max)
     else:
         param_range = mf.get_param_range(1, x_min, x_max)

@@ -2,6 +2,8 @@ import xml.etree.cElementTree as xml_tree
 import copy
 
 import numpy as np
+
+from mofgbmlpy.exception.incompatible_antecedent_index_with_input import IncompatibleAntecedentIndexWithInput
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 cimport cython
@@ -24,7 +26,7 @@ cdef class Antecedent:
             knowledge (Knowledge): Knowledge base
         """
         if antecedent_indices is None or knowledge is None:
-            raise Exception("Parameters can't be None")
+            raise TypeError("Parameters can't be None")
 
         self.__antecedent_indices = antecedent_indices
         self.__knowledge = knowledge
@@ -52,7 +54,7 @@ cdef class Antecedent:
             new_indices (int[]): New indices for this antecedent
         """
         if new_indices is None:
-            raise Exception("new_indices can't be None")
+            raise TypeError("new_indices can't be None")
         self.__antecedent_indices = new_indices
 
     cpdef double[:] get_membership_values(self, double[:] attribute_vector):
@@ -69,11 +71,13 @@ cdef class Antecedent:
         cdef double[:] grade = np.zeros(size, dtype=np.float64)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
-        if attribute_vector is None or size != attribute_vector.shape[0]:
-            raise ValueError("antecedent_indices must not be None and must have the same length as attribute_vector")
+        if attribute_vector is None :
+            raise TypeError("antecedent_indices must not be None")
+        elif size != attribute_vector.shape[0]:
+            raise ValueError("antecedent_indices must have the same length as attribute_vector")
 
         if size > self.__knowledge.get_num_dim():
-            raise Exception("The given number of dimensions is out of bounds for the current knowledge")
+            raise IndexError("The given number of dimensions is out of bounds for the current knowledge")
 
         for i in range(size):
             val = attribute_vector[i]
@@ -87,7 +91,7 @@ cdef class Antecedent:
                 # don't care
                 grade[i] = 1.0
             else:
-                raise ValueError("Illegal argument")
+                raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_indices[i])
 
         return grade
 
@@ -111,7 +115,7 @@ cdef class Antecedent:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
 
         if size > self.__knowledge.get_num_dim():
-            raise Exception("The given number of dimensions is out of bounds for the current knowledge")
+            raise IndexError("The given number of dimensions is out of bounds for the current knowledge")
 
         for i in range(size):
         # for i in prange(size, nogil=True):
@@ -126,7 +130,7 @@ cdef class Antecedent:
             elif antecedent_indices[i] == 0:
                 continue
             else:
-                raise Exception("Invalid antecedent_indices")
+                raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_indices[i])
 
         return grade_value
 

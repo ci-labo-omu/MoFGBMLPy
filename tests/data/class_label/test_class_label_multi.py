@@ -7,7 +7,7 @@ from mofgbmlpy.data.class_label.class_label_multi import ClassLabelMulti
 
 def test_label_value_none():
     label = ClassLabelMulti(None)
-    assert label.get_class_label_value() is None
+    assert label.get_class_label_value().shape[0] == 0
 
 
 def test_label_value_valid():
@@ -87,8 +87,7 @@ def test_get_length_empty():
 
 def test_get_length_none():
     label = ClassLabelMulti(None)
-    with pytest.raises(Exception):
-        _ = label.get_length()
+    assert label.get_length() == 0
 
 
 def test_deep_copy():
@@ -104,6 +103,7 @@ def test_eq_none():
     label1 = ClassLabelMulti(None)
     label2 = ClassLabelMulti(None)
     assert label1 == label2
+
 
 def test_eq_true():
     label1 = ClassLabelMulti(np.array([0, 1, 2], dtype=int))

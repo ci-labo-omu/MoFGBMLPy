@@ -5,6 +5,7 @@ import numpy as np
 
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
+from mofgbmlpy.exception.exceeded_max_trials_number import ExceededMaxTrialsNumber
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
 from mofgbmlpy.fuzzy.rule.abstract_rule cimport AbstractRule
@@ -53,7 +54,7 @@ cdef class MichiganSolution(AbstractSolution):
                     self.create_rule()
                     is_rejected = self._rule.is_rejected_class_label()
                     if cnt > 1000:
-                        raise Exception("Exceeded maximum number of trials to generate rule")
+                        raise ExceededMaxTrialsNumber("Exceeded maximum number of trials to generate rule")
             else:
                 training_data_set = self.get_rule_builder().get_training_dataset()
                 size_training_data_set = training_data_set.get_size()
@@ -65,7 +66,7 @@ cdef class MichiganSolution(AbstractSolution):
                     self.create_rule(training_data_set.get_pattern(random_gen.integers(0, size_training_data_set)))
                     is_rejected = self._rule.is_rejected_class_label()
                     if cnt > 1000:
-                        raise Exception("Exceeded maximum number of trials to generate rule")
+                        raise ExceededMaxTrialsNumber("Exceeded maximum number of trials to generate rule")
 
     cdef void create_rule(self, Pattern pattern=None):
         """Create the rule of this solution
@@ -86,7 +87,7 @@ cdef class MichiganSolution(AbstractSolution):
         """
         cdef Antecedent antecedent_object
         if self._vars is None:
-            raise Exception("Vars is not defined")
+            raise TypeError("Vars is not defined")
 
         if self._rule is None or self._rule.get_antecedent() is None:
             antecedent_object = self._rule_builder.create_antecedent_from_indices(self._vars)

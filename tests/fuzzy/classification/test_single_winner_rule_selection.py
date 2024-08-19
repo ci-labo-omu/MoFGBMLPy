@@ -6,6 +6,7 @@ import pytest
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.class_label.class_label_multi import ClassLabelMulti
 from mofgbmlpy.data.pattern import Pattern
+from mofgbmlpy.exception.rejected_class_label_exception import RejectedClassLabelException
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
@@ -27,7 +28,7 @@ class TestSingleWinnerRuleSelectionBasic:
         solutions = None
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_empty_solutions_list(self):
@@ -35,7 +36,7 @@ class TestSingleWinnerRuleSelectionBasic:
         solutions = np.empty(0, object)
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_solutions_list_none_items(self):
@@ -43,7 +44,7 @@ class TestSingleWinnerRuleSelectionBasic:
         solutions = np.array([None], object)
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_rejected_solutions_list(self):
@@ -53,7 +54,7 @@ class TestSingleWinnerRuleSelectionBasic:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())]),
                           ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(RejectedClassLabelException):
             classification.classify(solutions, pattern)
 
     def test_classify_none_pattern(self):
@@ -61,7 +62,7 @@ class TestSingleWinnerRuleSelectionBasic:
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
         pattern = None
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_empty_pattern_attributes(self):
@@ -69,7 +70,7 @@ class TestSingleWinnerRuleSelectionBasic:
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
         pattern = Pattern(0, np.empty(0), ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_incompatible_dimensions_1(self):
@@ -78,7 +79,7 @@ class TestSingleWinnerRuleSelectionBasic:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)]),
                           ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_incompatible_dimensions_2(self):
@@ -87,7 +88,7 @@ class TestSingleWinnerRuleSelectionBasic:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)]),
                           ClassLabelBasic(0))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_one_winner(self):
@@ -165,7 +166,7 @@ class TestSingleWinnerRuleSelectionMulti:
         solutions = None
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_empty_solutions_list(self):
@@ -173,7 +174,7 @@ class TestSingleWinnerRuleSelectionMulti:
         solutions = np.empty(0, object)
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_solutions_list_none_items(self):
@@ -181,7 +182,7 @@ class TestSingleWinnerRuleSelectionMulti:
         solutions = np.array([None], object)
         pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_rejected_solutions_list(self):
@@ -191,7 +192,7 @@ class TestSingleWinnerRuleSelectionMulti:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())]),
                           ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(RejectedClassLabelException):
             classification.classify(solutions, pattern)
 
     def test_classify_none_pattern(self):
@@ -199,7 +200,7 @@ class TestSingleWinnerRuleSelectionMulti:
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
         pattern = None
 
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
 
     def test_classify_empty_pattern_attributes(self):
@@ -207,7 +208,7 @@ class TestSingleWinnerRuleSelectionMulti:
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
         pattern = Pattern(0, np.empty(0), ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_incompatible_dimensions_1(self):
@@ -216,7 +217,7 @@ class TestSingleWinnerRuleSelectionMulti:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)]),
                           ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_incompatible_dimensions_2(self):
@@ -225,7 +226,7 @@ class TestSingleWinnerRuleSelectionMulti:
         pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)]),
                           ClassLabelMulti(np.array([0, 1])))
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
 
     def test_classify_one_winner(self):

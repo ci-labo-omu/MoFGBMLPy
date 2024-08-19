@@ -27,32 +27,36 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         Raises:
             Exception: None or empty parameters, invalid array shape or invalid content
         """
-        if (num_divisions is None or len(num_divisions) == 0 or
-                var_names is None or len(var_names) == 0 or
-                fuzzy_set_names is None or len(fuzzy_set_names) == 0):
-            raise Exception("Parameters can't be null or empty")
+        if (num_divisions is None or
+                var_names is None or
+                fuzzy_set_names is None):
+            raise TypeError("Parameters can't be none")
+        elif (len(num_divisions) == 0 or
+                len(var_names) == 0 or
+                len(fuzzy_set_names) == 0):
+            raise ValueError("Parameters can't be empty")
 
         if len(num_divisions.base.shape) != 2 or num_divisions.shape[1] == 0:
-            raise Exception("num_divisions second dimension can't be null")
+            raise ValueError("num_divisions second dimension can't be null")
 
         num_dims = num_divisions.shape[0]
 
         if len(var_names) != num_dims or len(fuzzy_set_names) != num_dims:
-            raise Exception("var_names and num_divisions first dimension must be of the same size as num_divisions first one")
+            raise ValueError("var_names and num_divisions first dimension must be of the same size as num_divisions first one")
 
         for item in var_names:
             if item is None:
-                raise Exception("Var names can't be None")
+                raise TypeError("Var names (var_names items) can't be None")
 
         for dim_i in range(len(num_divisions)):
             num_divisions_dim_i = len(num_divisions[dim_i])
             if len(fuzzy_set_names[dim_i]) != num_divisions_dim_i:
-                raise Exception(f"fuzzy_set_names second dimension is invalid, got {fuzzy_set_names.shape[1]} but expected {num_divisions_dim_i}")
+                raise ValueError(f"fuzzy_set_names second dimension is invalid, got {fuzzy_set_names.shape[1]} but expected {num_divisions_dim_i}")
             for j in range(num_divisions_dim_i):
                 if len(fuzzy_set_names[dim_i][j]) != num_divisions[dim_i][j]:
-                    raise Exception(f"fuzzy_set_names third dimension is invalid, got {len(fuzzy_set_names[dim_i][j])} but expected {num_divisions[dim_i][j]}")
+                    raise ValueError(f"fuzzy_set_names third dimension is invalid, got {len(fuzzy_set_names[dim_i][j])} but expected {num_divisions[dim_i][j]}")
                 if num_divisions[dim_i][j] <= 0:
-                    raise Exception("num_divisions can't contain null or negative values")
+                    raise TypeError("num_divisions can't contain null or negative values")
 
         self.__num_divisions = num_divisions
         self.__var_names = var_names
@@ -79,7 +83,7 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         cdef double[:] partition
 
         if num_fuzzy_sets <= 1:
-            raise Exception("num_fuzzy_sets can't be lesser or equal to 1")
+            raise ValueError("num_fuzzy_sets can't be lesser or equal to 1")
 
         params = np.zeros((num_fuzzy_sets, 3))
         partition = np.zeros(num_fuzzy_sets+1)

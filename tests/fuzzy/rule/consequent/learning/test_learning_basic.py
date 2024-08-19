@@ -18,20 +18,20 @@ train, _ = get_a0_0_iris_train_test()
 
 
 def test_none_training_set():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         LearningBasic(None)
 
 
 def test_learning_none_antecedent():
     learner = LearningBasic(train)
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         learner.learning(None)
 
 
 def test_calc_confidence_none_antecedent():
     learner = LearningBasic(train)
-    with pytest.raises(Exception):
-        learner.calc_confidence(None)
+    with pytest.raises(TypeError):
+        learner.calc_confidence_py(None)
 
 
 def test_calc_confidence_antecedent_iris():
@@ -96,7 +96,7 @@ def test_calc_confidence_all_zero():
 
 def test_calc_class_label_none_confidence():
     learner = LearningBasic(train)
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         learner.calc_class_label(None)
 
 
@@ -125,7 +125,7 @@ def test_calc_rule_weight_none_class_label():
     reject_threshold = 0
     learner = LearningBasic(train)
 
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         learner.calc_rule_weight(None, confidence, reject_threshold)
 
 
@@ -134,7 +134,7 @@ def test_calc_rule_weight_none_confidence():
     reject_threshold = 0
     learner = LearningBasic(train)
 
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         learner.calc_rule_weight(class_label, None, reject_threshold)
 
 
@@ -143,7 +143,7 @@ def test_calc_rule_weight_empty_confidence():
     reject_threshold = 0
     learner = LearningBasic(train)
 
-    with pytest.raises(Exception):
+    with pytest.raises(IndexError):
         learner.calc_rule_weight(class_label, np.empty(0), reject_threshold)
 
 
@@ -152,7 +152,7 @@ def test_calc_rule_weight_none_reject_threshold():
     confidence = np.array([0.4, 0.0, 0.5, 0.2])
     learner = LearningBasic(train)
 
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         learner.calc_rule_weight(class_label, confidence, None)
 
 
@@ -162,8 +162,8 @@ def test_calc_rule_weight_incompatible_class_label_and_confidence():
     reject_threshold = 0
     learner = LearningBasic(train)
 
-    with pytest.raises(Exception):
-        rule_weight = learner.calc_rule_weight(class_label, confidence, reject_threshold)
+    with pytest.raises(IndexError):
+        learner.calc_rule_weight(class_label, confidence, reject_threshold)
 
 
 def test_calc_rule_weight_confidence_below_0_5():

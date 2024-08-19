@@ -1,12 +1,11 @@
-cimport numpy as cnp
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 from mofgbmlpy.data.pattern cimport Pattern
-import cython
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 cdef class AbstractClassification:
     """Abstract class for classification methods. """
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
-        raise Exception("AbstractClassification is abstract")
+        raise AbstractMethodException()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -17,4 +16,4 @@ cdef class AbstractClassification:
         Returns:
             object: Deep copy of this object
         """
-        raise Exception("AbstractClassification is abstract")
+        raise AbstractMethodException()

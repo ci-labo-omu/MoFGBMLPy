@@ -31,7 +31,7 @@ def process_runs_results(runs_results, x_key="total_rule_length", y_key="trainin
     """
 
     if x_key != "total_rule_length" and x_key != "num_rules":
-        raise Exception("only total_rule_length and num_rules are accepted for the x_key")
+        raise ValueError("only total_rule_length and num_rules are accepted for the x_key")
 
     data = {}
     x_occ = {}

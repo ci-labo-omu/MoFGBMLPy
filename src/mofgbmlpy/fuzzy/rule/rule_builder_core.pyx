@@ -46,7 +46,7 @@ cdef class RuleBuilderCore:
             return factory.create_antecedent_indices(num_rules)
         else:
             if not isinstance(factory, HeuristicAntecedentFactory):
-                raise Exception("The antecedent factory must be HeuristicAntecedentFactory if a pattern is provided")
+                raise TypeError("The antecedent factory must be HeuristicAntecedentFactory if a pattern is provided")
             heuristic_factory = factory
             return heuristic_factory.create_antecedent_indices_from_pattern(pattern)
 

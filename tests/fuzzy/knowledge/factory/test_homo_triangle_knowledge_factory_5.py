@@ -6,17 +6,17 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import 
 
 
 def test_none_num_dims():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         HomoTriangleKnowledgeFactory_5(None)
 
 
 def test_negative_num_dims():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory_5(-1)
 
 
 def test_null_num_dims():
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HomoTriangleKnowledgeFactory_5(0)
 
 

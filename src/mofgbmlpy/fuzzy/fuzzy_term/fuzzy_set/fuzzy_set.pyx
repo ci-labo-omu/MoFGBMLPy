@@ -15,7 +15,7 @@ cdef class FuzzySet:
     """
     def __init__(self, AbstractMF function, int id, int division_type, str term=""):
         if function is None or id is None or division_type is None or term is None:
-            raise ValueError("function, id, division_type and term can't be none")
+            raise TypeError("function, id, division_type and term can't be none")
 
         if id < 0 or division_type < 0 or division_type >= len(DivisionType):
             raise ValueError("Invalid DivisionType constant value")

@@ -18,7 +18,7 @@ cdef class AbstractLearning:
             training_dataset (Dataset): Training dataset used to generate the consequent
         """
         if training_dataset is None:
-            raise Exception("The training dataset cannot be None")
+            raise TypeError("The training dataset cannot be None")
         self._train_ds = training_dataset
 
     cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):

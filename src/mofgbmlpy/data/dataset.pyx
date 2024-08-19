@@ -23,8 +23,10 @@ cdef class Dataset:
             c_num (int): Number of class in the dataset
             patterns (Patterns[]): Array of patterns in the dataset
         """
-        if size <= 0 or n_dim <= 0 or c_num <= 0 or patterns is None:
-            raise ValueError("Incorrect input dataset information")
+        if size <= 0 or n_dim <= 0 or c_num <= 0:
+            raise ValueError("size, n_dim and c_num must be positive")
+        elif patterns is None:
+            raise TypeError("Patterns array can't be None")
         if size != patterns.shape[0]:
             raise ValueError("Size is not equal to the length of the patterns array")
         cdef Pattern p = patterns[0]
@@ -46,7 +48,7 @@ cdef class Dataset:
             Pattern: Pattern at the given index
         """
         if index < 0 or index >= self.__size:
-            raise Exception("Index is out of bounds")
+            raise IndexError("Index is out of bounds")
         return self.__patterns[index]
 
     cpdef Pattern[:] get_patterns(self):

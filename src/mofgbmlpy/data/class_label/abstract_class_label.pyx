@@ -1,5 +1,4 @@
-cimport numpy as cnp
-import cython
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 
 cdef class AbstractClassLabel:
     """Abstract class for class labels
@@ -19,7 +18,7 @@ cdef class AbstractClassLabel:
         Returns:
             object: Class label value
         """
-        raise Exception("AbstractClassLabel is abstract")
+        raise AbstractMethodException()
 
     cpdef void set_class_label_value(self, object class_label):
         """Set the class label value. Must be overridden.
@@ -27,7 +26,7 @@ cdef class AbstractClassLabel:
         Args:
             class_label (object): New class label value, either a int or an array of int depending on the label type (multi or nsgaii) 
         """
-        raise Exception("AbstractClassLabel is abstract")
+        raise AbstractMethodException()
 
     cpdef bint is_rejected(self):
         """Check if the class label is rejected
@@ -49,4 +48,4 @@ cdef class AbstractClassLabel:
         Returns:
             :xml.etree.ElementTree: XML element representing this object
         """
-        raise Exception("AbstractClassLabel is abstract")
+        raise AbstractMethodException()

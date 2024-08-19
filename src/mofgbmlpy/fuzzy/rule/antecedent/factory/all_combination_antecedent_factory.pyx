@@ -5,6 +5,8 @@ cimport numpy as cnp
 from libcpp.queue cimport queue as cqueue
 from libcpp.vector cimport vector as cvector
 from libc cimport math as cmath
+
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
@@ -29,8 +31,10 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
             knowledge (Knowledge): Knowledge base
             random_gen (numpy.random.Generator): Random generator
         """
-        if knowledge is None or knowledge.get_num_dim() == 0:
-            raise Exception("knowledge can't be None and must have at least one fuzzy variable")
+        if knowledge is None:
+            raise TypeError("knowledge can't be None")
+        elif knowledge.get_num_dim() == 0:
+            raise UninitializedKnowledgeException()
 
         self.__knowledge = knowledge
         self.__antecedents_indices = self.generate_antecedents_indices()
@@ -79,7 +83,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         try:
             indices = (np.empty((num_generated_indices, dimension), dtype=int))
         except MemoryError:
-            raise Exception("The number of variables and/or the number of fuzzy sets is too big,"
+            raise MemoryError("The number of variables and/or the number of fuzzy sets is too big,"
                             " the antecedents list memory can't be allocated."
                             "Please use another antecedent factory")
 
@@ -166,7 +170,7 @@ cdef class AllCombinationAntecedentFactory(AbstractAntecedentFactory):
         cdef int[:] chosen_list
 
         if num_rules <= 0:
-            raise Exception("num_rules must be positive")
+            raise ValueError("num_rules must be positive")
 
         num_rules = min(num_rules, self.__antecedents_indices.shape[0])
 

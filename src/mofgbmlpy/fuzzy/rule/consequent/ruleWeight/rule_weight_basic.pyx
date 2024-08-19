@@ -36,8 +36,7 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
             (str) String representation
         """
         if self.get_value() is None:
-            # with cython.gil:
-            raise ValueError("Rule weight is None")
+            raise TypeError("Rule weight is None")
         return f"{self.get_value():.4f}"
 
     cpdef object get_value(self):

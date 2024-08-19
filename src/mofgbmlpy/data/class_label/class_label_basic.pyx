@@ -51,8 +51,6 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         Returns:
             str: String representation
         """
-        if self.__class_label is None:
-            raise Exception("class label value is None")
         return f"{self.__class_label:2d}"
 
     cpdef object get_class_label_value(self):

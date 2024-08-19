@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import pytest
 
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
@@ -13,14 +14,14 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory 
 def test_none_knowledge():
     knowledge = None
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         AllCombinationAntecedentFactory(knowledge, random_gen)
 
 
 def test_no_fuzzy_vars_knowledge():
     knowledge = Knowledge()
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-    with pytest.raises(Exception):
+    with pytest.raises(UninitializedKnowledgeException):
         AllCombinationAntecedentFactory(knowledge, random_gen)
 
 
@@ -40,8 +41,8 @@ def test_create_negative_num_rules():
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     factory = AllCombinationAntecedentFactory(knowledge, random_gen)
 
-    with pytest.raises(Exception):
-        factory.create(-1)
+    with pytest.raises(ValueError):
+        factory.create_py(-1)
 
 
 def test_create_null_num_rules():
@@ -49,8 +50,8 @@ def test_create_null_num_rules():
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     factory = AllCombinationAntecedentFactory(knowledge, random_gen)
 
-    with pytest.raises(Exception):
-        factory.create(0)
+    with pytest.raises(ValueError):
+        factory.create_py(0)
 
 
 def test_create_1_rule():
@@ -76,7 +77,7 @@ def test_create_antecedent_indices_negative_num_rules():
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     factory = AllCombinationAntecedentFactory(knowledge, random_gen)
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.create_antecedent_indices_py(-1)
 
 
@@ -85,7 +86,7 @@ def test_create_antecedent_indices_null_num_rules():
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     factory = AllCombinationAntecedentFactory(knowledge, random_gen)
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.create_antecedent_indices_py(0)
 
 

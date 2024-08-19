@@ -50,7 +50,7 @@ cdef class LearningMulti(AbstractLearning):
             dataset = self._train_ds
         if antecedent is None:
             # with cython.gil:
-            raise ValueError('Antecedent cannot be None')
+            raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
         cdef double[:,:] confidence = np.zeros((num_classes, 2))

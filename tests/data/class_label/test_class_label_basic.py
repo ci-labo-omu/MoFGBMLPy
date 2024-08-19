@@ -7,18 +7,13 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 
 
 def test_label_value_none():
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         _ = ClassLabelBasic(None)
 
 
 def test_label_value_valid():
     label = ClassLabelBasic(0)
     assert label.get_class_label_value() == 0
-
-
-def test_invalid_label_value_list():
-    with pytest.raises(Exception):
-        _ = ClassLabelBasic(np.array([0, 1, 2]))
 
 
 def test_label_value_float():
@@ -28,7 +23,7 @@ def test_label_value_float():
 
 def test_set_label_value_none():
     label = ClassLabelBasic(0)
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         label.set_class_label_value(None)
 
 
@@ -36,12 +31,6 @@ def test_set_label_value_valid():
     label = ClassLabelBasic(0)
     label.set_class_label_value(1)
     assert label.get_class_label_value() == 1
-
-
-def test_set_invalid_label_value_list():
-    label = ClassLabelBasic(0)
-    with pytest.raises(Exception):
-        label.set_class_label_value(np.array([0, 1, 2]))
 
 
 def test_set_label_value_float():

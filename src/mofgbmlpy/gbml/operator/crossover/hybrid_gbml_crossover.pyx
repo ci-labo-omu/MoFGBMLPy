@@ -66,12 +66,10 @@ class HybridGBMLCrossover(Crossover):
             Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
 
         if at_least_one_michigan_crossover and at_least_one_pittsburgh_crossover:
-            Y = np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
+            return np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
         elif not at_least_one_michigan_crossover:
             return Y_pittsburgh
         elif not at_least_one_pittsburgh_crossover:
             return Y_michigan
         else:
-            raise Exception("No offspring created during hybrid crossover")
-
-        return Y
+            raise ValueError("No offspring created during hybrid crossover. It might be because n_matings is null")

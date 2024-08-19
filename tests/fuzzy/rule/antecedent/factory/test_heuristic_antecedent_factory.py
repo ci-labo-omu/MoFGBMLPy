@@ -7,6 +7,7 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.dataset import Dataset
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
+from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
@@ -26,41 +27,45 @@ def create_example(knowledge=None, is_dc_probability=True, dc_rate=0.5, antecede
 
 
 def test_none_knowledge():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = None
     is_dc_probability = True
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_no_fuzzy_vars_knowledge():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = Knowledge()
     is_dc_probability = True
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    with pytest.raises(Exception):
+    with pytest.raises(UninitializedKnowledgeException):
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_none_training_set():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(1).create()
     is_dc_probability = True
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
-    with pytest.raises(Exception):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+    with pytest.raises(TypeError):
+        HeuristicAntecedentFactory(None, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
 def test_different_num_dim_training_set():
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(1).create()
     is_dc_probability = True
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
@@ -71,7 +76,8 @@ def test_is_dc_probability_none():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+    factory = HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+    assert not factory.get_is_dc_probability()
 
 
 @pytest.mark.parametrize("value", np.random.uniform(-1, 1, 5))
@@ -83,7 +89,7 @@ def test_dc_rate(value):
     antecedent_number_do_not_dont_care = 1
 
     if dc_rate < 0 or dc_rate > 1:
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
     else:
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
@@ -96,7 +102,7 @@ def test_antecedent_number_do_not_dont_care_negative():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = -1
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
 
 
@@ -104,7 +110,7 @@ def test_calculate_antecedent_part_none_pattern():
     factory, _ = create_example()
     pattern = None
 
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         factory.calculate_antecedent_part_py(pattern)
 
 
@@ -112,7 +118,7 @@ def test_calculate_antecedent_part_empty_pattern():
     factory, _ = create_example()
     pattern = Pattern(0, np.empty(0), ClassLabelBasic(0))
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.calculate_antecedent_part_py(pattern)
 
 
@@ -120,7 +126,7 @@ def test_calculate_antecedent_part_different_dimension_than_knowledge():
     factory, _ = create_example()
     pattern = Pattern(0, np.array([1.0]), ClassLabelBasic(0))
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.calculate_antecedent_part_py(pattern)
 
 
@@ -163,15 +169,15 @@ def test_calculate_antecedent_part_all_dc_from_not_dc_probability():
 def test_create_num_rules_negative():
     factory, _ = create_example()
 
-    with pytest.raises(Exception):
-        factory.create(-1)
+    with pytest.raises(ValueError):
+        factory.create_py(-1)
 
 
 def test_create_num_rules_null():
     factory, _ = create_example()
 
-    with pytest.raises(Exception):
-        factory.create(0)
+    with pytest.raises(ValueError):
+        factory.create_py(0)
 
 
 def test_create_3():
@@ -198,8 +204,8 @@ def test_create_antecedent_indices_from_pattern_none_pattern():
     factory, _ = create_example()
     pattern = None
 
-    with pytest.raises(Exception):
-        antecedent_indices = factory.create_antecedent_indices_from_pattern_py(pattern)
+    with pytest.raises(TypeError):
+        factory.create_antecedent_indices_from_pattern_py(pattern)
 
 
 def test_create_antecedent_indices_from_pattern():
@@ -214,14 +220,14 @@ def test_create_antecedent_indices_from_pattern():
 def test_create_antecedent_indices_num_rules_negative():
     factory, _ = create_example()
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.create_antecedent_indices_py(-1)
 
 
 def test_create_antecedent_indices_num_rules_null():
     factory, _ = create_example()
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         factory.create_antecedent_indices_py(0)
 
 
