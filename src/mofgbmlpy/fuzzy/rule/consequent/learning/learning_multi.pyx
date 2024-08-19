@@ -49,7 +49,6 @@ cdef class LearningMulti(AbstractLearning):
         if dataset is None:
             dataset = self._train_ds
         if antecedent is None:
-            # with cython.gil:
             raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
@@ -102,9 +101,12 @@ cdef class LearningMulti(AbstractLearning):
         cdef int[:] consequent_classes = np.full((confidence.shape[0]), fill_value=-1)
         cdef int c
 
+        if confidence is None:
+            raise TypeError("confidence can't be None")
+
         for c in range(confidence.shape[0]):
             if confidence[c][0] > confidence[c][1]:
-                consequent_classes[c] = 0 # It's more likely "ON" than "OFF"
+                consequent_classes[c] = 0 # It's more likely "OFF" than "ON"
             elif confidence[c][0] < confidence[c][1]:
                 consequent_classes[c] = 1
             else:
@@ -125,6 +127,11 @@ cdef class LearningMulti(AbstractLearning):
         Returns:
             RuleWeightMulti: Rule weight
         """
+        if confidence is None:
+            raise TypeError("confidence can't be None")
+        elif class_label is None:
+            raise TypeError("class_label can't be None")
+
         cdef double[:] rule_weight_values = np.full((confidence.shape[0]), fill_value=-1.0)
 
         if not class_label.is_rejected():
@@ -163,3 +170,17 @@ cdef class LearningMulti(AbstractLearning):
 
         memo[id(self)] = new_object
         return new_object
+
+    def __eq__(self, other):
+        """Check if another object is equal to this one
+
+        Args:
+            other (object): Object compared to this one
+
+        Returns:
+            bool: True if they are equal and False otherwise
+        """
+        if not isinstance(other, LearningMulti):
+            return False
+
+        return self._train_ds == other.get_training_set()
