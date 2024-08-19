@@ -473,7 +473,7 @@ class AbstractMoFGBMLMain(ABC):
             plt.grid()
 
         plt.ylabel(y_label)
-        plt.ylim(0, 1)
+        # plt.ylim(0, 1)
         if xlim is not None:
             plt.xlim(xlim)
 

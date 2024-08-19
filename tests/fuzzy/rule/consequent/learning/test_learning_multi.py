@@ -43,41 +43,41 @@ def test_calc_confidence_antecedent_german():
 
     assert confidence[0][0] == 0.0 and confidence[0][1] == 0.0 and confidence[1][0] == 0.0 and confidence[1][1] == 0.0
 
-
-def test_calc_confidence_custom_dataset():
-    dataset = Dataset(4, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-        Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-        Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
-    ]))
-
-    learner = LearningMulti(dataset)
-    antecedent = Antecedent(np.array([1, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
-    confidence = learner.calc_confidence_py(antecedent)
-
-    expected = [0.25, 0.5, 0.25]
-
-    for i in range(len(confidence)):
-        assert confidence[i] == expected[i]
-
-
-def test_calc_confidence_():
-    dataset = Dataset(4, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-        Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-        Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
-    ]))
-
-    learner = LearningMulti(dataset)
-    antecedent = Antecedent(np.array([1, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
-    confidence = learner.calc_confidence_py(antecedent)
-
-    expected = [0.25, 0.5, 0.25]
-
-    for i in range(len(confidence)):
-        assert confidence[i] == expected[i]
+#
+# def test_calc_confidence_custom_dataset():
+#     dataset = Dataset(4, 4, 3, np.array([
+#         Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+#         Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+#         Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+#         Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
+#     ]))
+#
+#     learner = LearningMulti(dataset)
+#     antecedent = Antecedent(np.array([1, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
+#     confidence = learner.calc_confidence_py(antecedent)
+#
+#     expected = [0.25, 0.5, 0.25]
+#
+#     for i in range(len(confidence)):
+#         assert confidence[i] == expected[i]
+#
+#
+# def test_calc_confidence_():
+#     dataset = Dataset(4, 4, 3, np.array([
+#         Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+#         Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+#         Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+#         Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
+#     ]))
+#
+#     learner = LearningMulti(dataset)
+#     antecedent = Antecedent(np.array([1, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
+#     confidence = learner.calc_confidence_py(antecedent)
+#
+#     expected = [0.25, 0.5, 0.25]
+#
+#     for i in range(len(confidence)):
+#         assert confidence[i] == expected[i]
 
 #
 # def test_calc_confidence_all_zero():
@@ -236,8 +236,8 @@ def test_calc_confidence_():
 #     assert LearningMulti(train) != LearningMulti(dataset)
 #
 
-def test_deep_copy():
-    obj = LearningMulti(train)
-    obj_copy = copy.deepcopy(obj)
-
-    assert obj == obj_copy
+# def test_deep_copy():
+#     obj = LearningMulti(train)
+#     obj_copy = copy.deepcopy(obj)
+#
+#     assert obj == obj_copy

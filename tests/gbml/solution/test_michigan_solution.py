@@ -45,4 +45,6 @@ def test_deep_copy():
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
     consequent_factory = LearningBasic(training_data_set)
     obj = MichiganSolution(random_gen, 2, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
-    _ = copy.deepcopy(obj)
+    copied_obj = copy.deepcopy(obj)
+
+    assert obj == copied_obj and id(obj.get_vars().base) != id(copied_obj.get_vars().base)

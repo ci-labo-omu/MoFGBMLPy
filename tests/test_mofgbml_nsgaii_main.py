@@ -31,7 +31,7 @@ def test_main():
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         "--terminate-evaluation", "3000",
-        "--objectives", "num-rules", "error-rate",
+        "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--gen-plot"
@@ -66,7 +66,7 @@ def test_main_multiclass():
         "--train-file", "../dataset/german/a0_0_german-10tra.dat",
         "--test-file", "../dataset/german/a0_0_german-10tst.dat",
         "--terminate-evaluation", "100",
-        "--objectives", "num-rules", "error-rate",
+        "--objectives", "total-rule-length", "error-rate",
         "--is-multi-label",
         "--gen-plot",
         "--verbose",

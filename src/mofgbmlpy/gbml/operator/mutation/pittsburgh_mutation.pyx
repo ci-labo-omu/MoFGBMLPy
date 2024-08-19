@@ -41,12 +41,14 @@ class PittsburghMutation(Mutation):
         """
         if len(X) == 0:
             return X
-        # for each individual
+
         cdef PittsburghSolution sol = X[0, 0]
         cdef MichiganSolution sol_m = sol.get_var(0)
         cdef Dataset training_set = sol_m.get_rule_builder().get_training_dataset()
         training_set_size = training_set.get_size()
         dim = training_set.get_num_dim()
+
+        # for each individual
 
         for s in range(len(X)):
             for i in range(len(X[s])):
@@ -80,14 +82,13 @@ class PittsburghMutation(Mutation):
                             X[s][i].set_var(michigan_sol_i, new_michigan_solution)
                     else:
                         current_michigan_solution = X[s][i].get_var(michigan_sol_i)
-                        current_var_value = current_michigan_solution.get_var(mutated_dim)
+                        new_michigan_solution = copy.deepcopy(current_michigan_solution)
 
-                        current_michigan_solution.set_var(mutated_dim, round(var_of_random_pattern))
-                        current_michigan_solution.learning()
+                        new_michigan_solution.set_var(mutated_dim, round(var_of_random_pattern))
+                        new_michigan_solution.learning()
 
-                        if current_michigan_solution.get_rule().is_rejected_class_label():
-                            current_michigan_solution.set_var(mutated_dim, current_var_value)
-                            current_michigan_solution.learning()
+                        if not new_michigan_solution.get_consequent().is_rejected():
+                            X[s][i].set_var(michigan_sol_i, new_michigan_solution)
 
 
         return X

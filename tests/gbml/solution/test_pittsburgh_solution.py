@@ -601,7 +601,17 @@ def test_deep_copy():
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, 1, 0,
                                                         RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
     obj = PittsburghSolution(2, 2, 0, michigan_solution_builder, SingleWinnerRuleSelection())
-    _ = copy.deepcopy(obj)
+    copied_obj = copy.deepcopy(obj)
+    assert obj == copied_obj and id(obj.get_vars().base) != id(copied_obj.get_vars().base)
+
+    for i in range(obj.get_num_vars()):
+        v1 = obj.get_var(i)
+        v2 = copied_obj.get_var(i)
+
+        assert (v1 == v2 and id(v1) != id(v2) and
+                id(v1.get_vars().base) != id(v2.get_vars().base) and
+                id(v1.get_antecedent()) != id(v2.get_antecedent()) and
+                id(v1.get_antecedent().get_antecedent_indices().base) != id(v2.get_antecedent().get_antecedent_indices().base))
 
 
 def test_to_xml_run():
