@@ -12,6 +12,7 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi cimport RuleWe
 cdef class LearningMulti(AbstractLearning):
     cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=?, double reject_threshold=?)
     cdef double[:,:] calc_confidence(self, Antecedent antecedent, Dataset dataset=?)
+    cpdef double[:,:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=?)
     cpdef ClassLabelMulti calc_class_label(self, double[:,:] confidence)
     cpdef RuleWeightMulti calc_rule_weight(self, ClassLabelMulti class_label, double[:,:] confidence, double reject_threshold)
     cpdef Dataset get_training_set(self)

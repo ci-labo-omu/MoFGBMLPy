@@ -74,7 +74,7 @@ cdef class LearningMulti(AbstractLearning):
             for i in range(dataset.get_size()):
                 pattern = patterns[i]
                 class_label_val = pattern.get_target_class().get_class_label_value_at(c)
-                confidence[c][class_label_val] += 1
+                confidence[c][class_label_val] += compatible_grades[i]
 
             all_sum = confidence[c][0] + confidence[c][1]
             if all_sum != 0:
@@ -85,6 +85,9 @@ cdef class LearningMulti(AbstractLearning):
                 confidence[c][1] = 0.0
 
         return confidence
+
+    cpdef double[:,:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
+        return self.calc_confidence(antecedent, dataset)
 
     cpdef ClassLabelMulti calc_class_label(self, double[:,:] confidence):
         """Compute the conclusion class label using the confidence

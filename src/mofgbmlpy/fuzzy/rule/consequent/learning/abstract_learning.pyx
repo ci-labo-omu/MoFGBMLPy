@@ -1,4 +1,5 @@
 from mofgbmlpy.data.dataset cimport Dataset
+from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 
@@ -32,7 +33,7 @@ cdef class AbstractLearning:
         Returns:
             Consequent: Created consequent
         """
-        Exception("This class is abstract")
+        raise AbstractMethodException()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -43,4 +44,4 @@ cdef class AbstractLearning:
         Returns:
             object: Deep copy of this object
         """
-        Exception("This class is abstract")
+        raise AbstractMethodException()

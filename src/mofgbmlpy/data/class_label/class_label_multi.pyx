@@ -112,6 +112,10 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int: Class label value
         """
+        if index < 0 or index > self.__class_label.shape[0]:
+            raise IndexError("index is out of bounds for the class label object")
+
+        return self.__class_label[index]
 
     cpdef void set_class_label_value(self, object class_label):
         """Set the class label values
@@ -119,6 +123,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             Args:
                 class_label (int[]): New class label values 
             """
+        if class_label is None:
+            raise TypeError("class_label can't be None")
         cdef int[:] value = class_label
         self.__class_label = class_label
 

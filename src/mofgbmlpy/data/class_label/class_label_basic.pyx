@@ -67,6 +67,8 @@ cdef class ClassLabelBasic(AbstractClassLabel):
             Args:
                 class_label (int): New class label value 
             """
+        if class_label is None:
+            raise TypeError("class_label can't be None")
         self.__class_label = class_label
 
 
