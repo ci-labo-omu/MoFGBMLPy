@@ -17,6 +17,10 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         Args:
             rule_weight (double[]): Value of the rule weight
         """
+        if rule_weight is None:
+            raise TypeError("Rule weight can't be none")
+        elif rule_weight.shape[0] == 0:
+            raise ValueError("Rule weight array must have at least one element")
         self.__rule_weight = rule_weight
 
     def __deepcopy__(self, memo={}):
@@ -91,6 +95,11 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         """
         self.__rule_weight = rule_weight
 
+        if rule_weight is None:
+            raise TypeError("Rule weight can't be none")
+        elif rule_weight.shape[0] == 0:
+            raise ValueError("Rule weight array must have at least one element")
+
     def __eq__(self, other):
         """Check if another object is equal to this one
         
@@ -117,7 +126,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         return root
 
     cdef double get_mean(self):
-        """Get the mean of all the rule weight values
+        """Get the mean of all the rule weight values. Only callable from Cython code
         
         Returns:
             double: Mean value
@@ -129,3 +138,11 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         for i in range(arr_length):
             sum += self.__rule_weight[i]
         return sum/arr_length
+
+    cpdef double get_mean_py(self):
+        """Get the mean of all the rule weight values
+
+        Returns:
+            double: Mean value
+        """
+        return self.get_mean()

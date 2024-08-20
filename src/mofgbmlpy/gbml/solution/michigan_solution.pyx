@@ -10,7 +10,6 @@ from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
 from mofgbmlpy.fuzzy.rule.abstract_rule cimport AbstractRule
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
@@ -156,11 +155,11 @@ cdef class MichiganSolution(AbstractSolution):
         """
         return self._rule_builder
 
-    cpdef Consequent get_consequent(self):
+    cpdef AbstractConsequent get_consequent(self):
         """Get the consequent of this solution
 
         Returns:
-            Consequent: Consequent
+            AbstractConsequent: Consequent
         """
         return self._rule.get_consequent()
 

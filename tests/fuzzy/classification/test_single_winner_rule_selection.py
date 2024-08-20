@@ -11,7 +11,8 @@ from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWi
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
-from mofgbmlpy.fuzzy.rule.consequent.consequent import Consequent
+from mofgbmlpy.fuzzy.rule.consequent.consequent_basic import ConsequentBasic
+from mofgbmlpy.fuzzy.rule.consequent.consequent_multi import ConsequentMulti
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti
@@ -107,17 +108,17 @@ class TestSingleWinnerRuleSelectionBasic:
                                       int)
         class_label = ClassLabelBasic(0)
         rule_weight = RuleWeightBasic(0.7)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         class_label = ClassLabelBasic(1)
         rule_weight = RuleWeightBasic(0.7)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         class_label = ClassLabelBasic(3)
         rule_weight = RuleWeightBasic(0.5)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         solutions = np.array([sol1, sol2, sol3], object)
@@ -131,17 +132,17 @@ class TestSingleWinnerRuleSelectionBasic:
         antecedent_indices = np.array([0 if i != 1 else 1 for i in range(self.training_data_set.get_num_dim())], int)
         class_label = ClassLabelBasic(0)
         rule_weight = RuleWeightBasic(0.7)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         class_label = ClassLabelBasic(0)
         rule_weight = RuleWeightBasic(0.7)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         class_label = ClassLabelBasic(1)
         rule_weight = RuleWeightBasic(0.5)
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentBasic(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         solutions = np.array([sol1, sol2, sol3], object)
@@ -244,19 +245,19 @@ class TestSingleWinnerRuleSelectionMulti:
         antecedent_indices = np.array([0 if i != 1 else 1 for i in range(self.training_data_set.get_num_dim())], int)
         class_label = ClassLabelMulti(np.array([0, 1]))
         rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([1, 1]))
         rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([0, 0]))
         rule_weight = RuleWeightMulti(np.array([0.5, 0.5]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
@@ -271,19 +272,19 @@ class TestSingleWinnerRuleSelectionMulti:
         antecedent_indices = np.array([0 if i != 1 else 1 for i in range(self.training_data_set.get_num_dim())], int)
         class_label = ClassLabelMulti(np.array([0, 1]))
         rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([0, 1]))
         rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([1, 1]))
         rule_weight = RuleWeightMulti(np.array([0.5, 0.5]))
-        consequent = Consequent(class_label, rule_weight)
+        consequent = ConsequentMulti(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 

@@ -1,4 +1,4 @@
-from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
+from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
 
 cdef class AbstractRuleWeight:
     """Abstract class for rule weights object"""

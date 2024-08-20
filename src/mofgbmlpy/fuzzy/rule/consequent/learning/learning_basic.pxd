@@ -4,14 +4,14 @@ cimport numpy as cnp
 
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWeightBasic
 from mofgbmlpy.data.pattern cimport Pattern
 
 cdef class LearningBasic(AbstractLearning):
-    cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=?, double reject_threshold=?)
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=?, double reject_threshold=?)
     cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=?)
     cpdef double[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=?)
     cpdef ClassLabelBasic calc_class_label(self, double[:] confidence)

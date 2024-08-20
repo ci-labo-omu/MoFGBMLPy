@@ -4,8 +4,8 @@ cimport numpy as cnp
 
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.consequent_basic cimport ConsequentBasic
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWeightBasic
 from mofgbmlpy.data.pattern cimport Pattern
@@ -22,7 +22,7 @@ cdef class LearningBasic(AbstractLearning):
         """
         super().__init__(training_dataset)
 
-    cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
 
         Args:
@@ -31,12 +31,12 @@ cdef class LearningBasic(AbstractLearning):
             reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
 
         Returns:
-            Consequent: Created consequent
+            AbstractConsequent: Created consequent
         """
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
-        return Consequent(class_label, rule_weight)
+        return ConsequentBasic(class_label, rule_weight)
 
     cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
         """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code

@@ -8,8 +8,8 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 
 cdef class AbstractRule:
@@ -37,15 +37,15 @@ cdef class AbstractRule:
         """
         return self._antecedent
 
-    cpdef Consequent get_consequent(self):
+    cpdef AbstractConsequent get_consequent(self):
         """Get the consequent
         
         Returns:
-           Consequent: Consequent of the rule
+           AbstractConsequent: Consequent of the rule
         """
         return self._consequent
 
-    cpdef void set_consequent(self, Consequent consequent):
+    cpdef void set_consequent(self, AbstractConsequent consequent):
         """Set the consequent
 
         Args:

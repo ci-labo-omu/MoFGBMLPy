@@ -1,7 +1,7 @@
 from mofgbmlpy.data.dataset cimport Dataset
-from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
+from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 
 
 
@@ -22,7 +22,7 @@ cdef class AbstractLearning:
             raise TypeError("The training dataset cannot be None")
         self._train_ds = training_dataset
 
-    cpdef Consequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
         
         Args:
@@ -31,7 +31,7 @@ cdef class AbstractLearning:
             reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
 
         Returns:
-            Consequent: Created consequent
+            AbstractConsequent: Created consequent
         """
         raise AbstractMethodException()
 

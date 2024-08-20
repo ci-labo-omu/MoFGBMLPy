@@ -9,7 +9,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
-from mofgbmlpy.fuzzy.rule.consequent.consequent import Consequent
+
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti

@@ -1,4 +1,4 @@
-from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
+from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 
 cdef class ObjectiveFunction:

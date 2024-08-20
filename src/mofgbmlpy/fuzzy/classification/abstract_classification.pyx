@@ -1,4 +1,4 @@
-from mofgbmlpy.exception.abstract_class_exception import AbstractMethodException
+from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 

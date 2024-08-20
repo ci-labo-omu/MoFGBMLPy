@@ -6,10 +6,10 @@ import cython
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.rule_builder_core cimport RuleBuilderCore
 from mofgbmlpy.fuzzy.rule.abstract_rule cimport AbstractRule
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
@@ -32,7 +32,7 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef AbstractRuleWeight get_rule_weight_py(self)
     cpdef AbstractRule get_rule(self)
     cpdef RuleBuilderCore get_rule_builder(self)
-    cpdef Consequent get_consequent(self)
+    cpdef AbstractConsequent get_consequent(self)
     cpdef Antecedent get_antecedent(self)
     cdef double[:] get_membership_values(self, double[:] attribute_vector)
     cdef double get_compatible_grade_value(self, double[:] attribute_vector)

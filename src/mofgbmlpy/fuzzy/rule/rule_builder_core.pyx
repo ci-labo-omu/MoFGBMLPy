@@ -6,7 +6,7 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 cimport numpy as cnp
 
-from mofgbmlpy.fuzzy.rule.consequent.consequent cimport Consequent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 
 cdef class RuleBuilderCore:
     """Rule builder
@@ -61,7 +61,7 @@ cdef class RuleBuilderCore:
         """
         return Antecedent(antecedent_indices, self._knowledge)
 
-    cdef Consequent create_consequent(self, Antecedent antecedent, Dataset dataset=None):
+    cdef AbstractConsequent create_consequent(self, Antecedent antecedent, Dataset dataset=None):
         """Create a consequent from the antecedent and eventually a dataset different from the one given
         
         Args:
@@ -69,7 +69,7 @@ cdef class RuleBuilderCore:
             dataset (Dataset): Optional dataset (if not given, use the one defined in this class). Used by the Scikit-learn wrapper for Pittsburgh solutions 
 
         Returns:
-            Consequent: New consequent
+            AbstractConsequent: New consequent
         """
         return self._consequent_factory.learning(antecedent, dataset=dataset)
 
