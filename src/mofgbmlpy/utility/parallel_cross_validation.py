@@ -15,14 +15,16 @@ from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 
 
 def process_runs_results(runs_results, x_key="total_rule_length", y_key="training_error_rate",
+                         xlim=None,
                          keep_empty_x_key_values=False,
                          remove_rare_solutions=True):
     """Process the runs results
 
     Args:
-        runs_results (dict): Results as a dictionary
+        runs_results (list): List of results as a dictionary
         x_key (str): Key in the dict for the X-axis (e.g. num_rules)
         y_key (str): Key in the dict for the Y-axis (e.g. training_error_rate)
+        xlim (tuple): A Pair of numbers specifying the x-axis limits. Takes affect only if keep_empty_x_key_values is True
         keep_empty_x_key_values (bool): If true then keep the keys with no values in the results dict
         remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
 
@@ -35,45 +37,58 @@ def process_runs_results(runs_results, x_key="total_rule_length", y_key="trainin
 
     data = {}
     x_occ = {}
-    max_x = float('-inf')
-    num_runs = 0
 
+    # Load data
     for run in runs_results:
-        num_runs += 1
+        i_x_in_run = {}
         for res in run:
-            x = int(res[x_key])
+            x = int(float(res[x_key]))
 
             if x not in data:
                 data[x] = []
                 x_occ[x] = 0
 
-            x_occ[x] += 1
+            i_x_in_run[x] = True
             data[x].append(float(res[y_key]))
-            if x > max_x:
-                max_x = x
+        for x in i_x_in_run.keys():
+            x_occ[x] += 1
 
-    new_data = {}
-    for i in range(int(max_x)):
-        if i not in data:
-            if keep_empty_x_key_values:
+    num_runs = len(runs_results)
+
+    # Remove rare solutions
+    if remove_rare_solutions:
+        new_data = {}
+        for x in data.keys():
+            if x_occ[x] >= num_runs // 2:
+                new_data[x] = data[x]
+        data = new_data
+
+    # Add empty list for x values with no solutions
+    if keep_empty_x_key_values:
+        new_data = {}
+        if xlim is None:
+            xlim = [0, int(np.max(list(data.keys())))]
+
+        for i in range(xlim[0], xlim[1]+1):
+            if i not in data:
                 new_data[i] = []
-        elif remove_rare_solutions and x_occ[i] < num_runs // 2:
-            if keep_empty_x_key_values:
-                new_data[i] = []
-        else:
-            new_data[i] = data[i]
+            else:
+                new_data[i] = data[i]
+        data = new_data
 
-    return OrderedDict(sorted(new_data.items()))
+    return OrderedDict(sorted(data.items()))
 
 
-def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=True, xlim=None):
+def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=True, xlim=None, title=None, file_path=None):
     """Show the results in a median line plot after aggregating them
 
     Args:
-        runs_results (dict): Results as a dictionary
+        runs_results (list): List of results as a dictionary
         x_key (str): Key in the dict for the X-axis (e.g. num_rules)
         remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
         xlim (tuple): A Pair of numbers specifying the x-axis limits
+        title (str): Title of the plot
+        file_path (str): Path of the file where the plot will be saved
     """
     data_train = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate",
                                       remove_rare_solutions=remove_rare_solutions)
@@ -91,20 +106,23 @@ def show_results_median_line_plot(runs_results, x_key, remove_rare_solutions=Tru
                                                                                    err_test,
                                                                                    x_label=x_key,
                                                                                    y_label="error_rate",
-                                                                                   xlim=xlim)
+                                                                                   xlim=xlim,
+                                                                                   title=title,
+                                                                                   file_path=file_path)
 
 
-def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title=None):
+def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title=None, xlim=None):
     """Show the results using box plots after aggregating them
 
     Args:
-        runs_results (dict): Results as a dictionary
+        runs_results (list): List of results as a dictionary
         x_key (str): Key in the dict for the X-axis (e.g. num_rules)
         remove_rare_solutions (): If true then remove solutions with an interpretability value that appears in less than 50 % of the results
         title (str): Title for the plot
+        xlim (tuple): A Pair of numbers specifying the x-axis limits
     """
-    data = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate", keep_empty_x_key_values=True,
-                                remove_rare_solutions=remove_rare_solutions)
+    data = process_runs_results(runs_results, x_key=x_key, y_key="training_error_rate",
+                                remove_rare_solutions=remove_rare_solutions, xlim=xlim, keep_empty_x_key_values=True)
 
     fig, ax = plt.subplots()
     labels = list(data.keys())
@@ -180,8 +198,6 @@ def run_cross_validation(args, dataset_root):
                 ]
         for i in range(3) for j in range(10)]
 
-    task(runs_args[0])
-
     with ProcessPoolExecutor() as executor:
         executor.map(task, runs_args)
 
@@ -200,7 +216,34 @@ def get_results(root_folder, algorithm_id, data_name):
         list: List of results
     """
     results_path = root_folder + os.sep + algorithm_id + os.sep + data_name
-    runs_results_folders = [f"{results_path}/trial{i}{j}/results.csv" for i in range(3)
+    runs_results_folders = [f"{results_path}/trial{i}{j}" for i in range(3)
                             for j in range(10)]
 
-    return load_results_csv(runs_results_folders)
+    return load_results_data(runs_results_folders)
+
+
+def load_results_data(paths):
+    """Load all the CSV files in the paths given and add the loaded data to a list
+
+    Args:
+        paths (str[]): List of CSV file paths
+
+    Returns:
+        list: List of CSV data (one item is one file data)
+    """
+    results = []
+    for path in paths:
+        exec_time = None
+
+        with open(path+'/exec_time.txt', 'r') as file:
+            line = file.readline().strip()
+            exec_time = float(line)
+
+        if exec_time is None:
+            raise Exception("Invalid exec_time read from file")
+
+        results.append({
+            "solutions": load_result_csv(path + "/results.csv"),
+            "exec_time": exec_time
+        })
+    return results

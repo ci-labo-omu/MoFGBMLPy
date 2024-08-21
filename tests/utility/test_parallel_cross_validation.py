@@ -21,4 +21,11 @@ def test_runs_iris():
 
     run_cross_validation(args, dataset_root)
     results = get_results(results_root_folder, algorithm_id, data_name)
-    show_results_box_plot(results, "num_rules", title="Cross validation on Iris with NSGA-II")
+
+    results_solutions = [run["solutions"] for run in results]
+    _ = [run["exec_time"] for run in results]
+
+    show_results_box_plot(results_solutions, "num_rules", title="Cross validation on Iris with NSGA-II")
+
+
+

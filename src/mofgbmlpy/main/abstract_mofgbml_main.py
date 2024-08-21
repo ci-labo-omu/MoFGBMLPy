@@ -88,6 +88,7 @@ class AbstractMoFGBMLMain(ABC):
 
         # Save params
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
             Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
             file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
             Output.writeln(file_name, str(self._mofgbml_args), False)
@@ -262,6 +263,8 @@ class AbstractMoFGBMLMain(ABC):
         Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
                          pretty_xml=pretty_xml)
 
+        Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')), f"{res.exec_time}")
+
     def main(self, args, train=None, test=None):
         """Main function of the runner
 
@@ -276,9 +279,6 @@ class AbstractMoFGBMLMain(ABC):
         # TODO: print information
 
         self.load_args(args, train, test)
-
-        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
-            Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
 
         res = self.run()
         exec_time = res.exec_time
@@ -473,16 +473,17 @@ class AbstractMoFGBMLMain(ABC):
             plt.grid()
 
         plt.ylabel(y_label)
-        # plt.ylim(0, 1)
+        plt.ylim(0, 1)
         if xlim is not None:
             plt.xlim(xlim)
 
         if len(err_train) != 0 or len(err_test) != 0:
             plt.legend(loc="upper left")
-        plt.show()
 
         if file_path is not None:
             plt.savefig(file_path)
+
+        plt.show()
 
     def plot_fuzzy_variables(self):
         """Plot the fuzzy variables of the knowledge base """
