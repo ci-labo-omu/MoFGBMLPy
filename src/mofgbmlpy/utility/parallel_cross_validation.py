@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
+from mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 
 
@@ -136,14 +137,25 @@ def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title
     plt.show()
 
 
-def task(args):
-    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object.
-    Note that for now only NSGA-II is used
+def task_nsgaii_homo_triangle_2_3_4_5(args):
+    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object using NSGAII and the
+    knowledge factory for homo triangles with partitions 2, 3, 4, 5
 
     Args:
         args (Arguments): Arguments object used by the runner
     """
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    runner.main(args)
+
+
+def task_moead_homo_triangle_2_3_4_5(args):
+    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object using MOEA/D and the
+    knowledge factory for homo triangles with partitions 2, 3, 4, 5
+
+    Args:
+        args (Arguments): Arguments object used by the runner
+    """
+    runner = MoFGBMLMOEADMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     runner.main(args)
 
 
@@ -179,12 +191,13 @@ def load_results_csv(paths):
     return results
 
 
-def run_cross_validation(args, dataset_root):
+def run_cross_validation(args, dataset_root, task):
     """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
 
     Args:
         args (Arguments): Arguments object
-        dataset_root (str): Path to the dataset root directory:
+        dataset_root (str): Path to the dataset root directory
+        task (function): Task used (e.g. task_nsgaii_homo_triangle_2_3_4_5)
     """
     start = time.time()
 

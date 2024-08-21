@@ -77,6 +77,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
                        seed=self._mofgbml_args.get("RAND_SEED"),
                        verbose=self._verbose,
                        save_history=True)
+
         return res
 
 
