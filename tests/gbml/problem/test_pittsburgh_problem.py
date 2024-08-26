@@ -15,7 +15,7 @@ from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.arguments import Arguments
-from util import get_a0_0_iris_train_test
+from tests.util import get_a0_0_iris_train_test
 
 
 def test_deep_copy():

@@ -12,7 +12,7 @@ from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.main.arguments import Arguments
-from util import get_a0_0_iris_train_test
+from tests.util import get_a0_0_iris_train_test
 
 train, _ = get_a0_0_iris_train_test()
 

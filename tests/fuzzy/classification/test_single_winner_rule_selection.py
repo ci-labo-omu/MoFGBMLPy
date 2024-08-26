@@ -18,7 +18,7 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWei
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from util import get_a0_0_iris_train_test, create_michigan_sol, get_a0_0_german_train_test
+from tests.util import get_a0_0_iris_train_test, create_michigan_sol, get_a0_0_german_train_test
 
 
 class TestSingleWinnerRuleSelectionBasic:
