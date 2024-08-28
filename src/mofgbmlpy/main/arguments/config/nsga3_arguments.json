@@ -1,0 +1,8 @@
+{
+    "offspring-population-size": {
+        "default": null,
+        "help": "Number of offsprings generated per generation",
+        "type": "int",
+        "required": false
+    }
+}

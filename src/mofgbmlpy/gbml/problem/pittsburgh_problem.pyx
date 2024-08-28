@@ -60,8 +60,8 @@ class PittsburghProblem(Problem):
         pittsburgh_solution = PittsburghSolution(self.__num_vars,
                                                  self.get_num_objectives(),
                                                  self.__num_constraints,
-                                                 copy.deepcopy(self.__michigan_solution_builder),
-                                                 self.__classification)
+                                                 self.__classification,
+                                                 copy.deepcopy(self.__michigan_solution_builder))
 
         return pittsburgh_solution
 

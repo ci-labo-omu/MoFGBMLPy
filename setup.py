@@ -107,6 +107,7 @@ setup(
     # },
     # If there are data files included in your packages that need to be
     # installed, specify them here.
+    package_data={"mofgbmlpy.main.arguments": ["*.json"]}
     # package_data={  # Optional
     #     "mofgbmlpy.utility": ["lru_cache.h", "lru_cache.cpp"],
     # },

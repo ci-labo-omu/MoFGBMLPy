@@ -1,0 +1,20 @@
+{
+    "neighborhood-selection-probability": {
+        "default": 1,
+        "help": "Probability to select neighbors as parents",
+        "type": "float",
+        "required": false
+    },
+    "neighborhood-size": {
+        "default": 10,
+        "help": "Number of neighbors, for each vector, considered per mating",
+        "type": "int",
+        "required": false
+    },
+    "offspring-population-size": {
+        "default": null,
+        "help": "This argument has been kept for compatibility with the Java version jproperties file format, but it's ignored",
+        "type": "int",
+        "required": false
+    }
+}

@@ -28,21 +28,23 @@ cdef class PittsburghSolution(AbstractSolution):
         __michigan_solution_builder (MichiganSolutionBuilder): Michigan solution builder
         _vars (MichiganSolution[]): Variables: Array of Michigan solutions
     """
-    def __init__(self, num_vars, num_objectives, num_constraints, michigan_solution_builder, classification, do_init_vars=True):
+    def __init__(self, num_vars, num_objectives, num_constraints, classification, michigan_solution_builder=None, do_init_vars=True):
         """Constructor
 
         Args:
             num_vars (int): Number of variables (Michigan solutions)
             num_objectives (int): Number of objectives
             num_constraints (int): Number of constraints
-            michigan_solution_builder (MichiganSolutionBuilder): Michigan solution builder
             classification (AbstractClassification): Classification method used for classification
+            michigan_solution_builder (MichiganSolutionBuilder): Michigan solution builder
             do_init_vars (bool): If true then the Michigan solutions are generated now, otherwise it's delayed and set_vars must be used with learning
         """
         super().__init__(num_objectives, num_constraints)
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
         if do_init_vars:
+            if michigan_solution_builder is None:
+                raise TypeError("Michigan solution builder can't be None if do init vars is True")
             self._vars = michigan_solution_builder.create(num_vars)
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
@@ -51,6 +53,8 @@ cdef class PittsburghSolution(AbstractSolution):
         Returns:
             MichiganSolutionBuilder: Michigan solution builder
         """
+        if self.__michigan_solution_builder is None:
+            raise TypeError("Michigan solution builder was not initialized but is is accessed")
         return self.__michigan_solution_builder
 
 
@@ -59,9 +63,6 @@ cdef class PittsburghSolution(AbstractSolution):
         
         Args:
             dataset (Dataset): If provided, this dataset is instead of the one stored in the Michigan solutions  
-
-        Returns:
-
         """
         for var in self._vars:
             var.learning(dataset)
@@ -97,8 +98,8 @@ cdef class PittsburghSolution(AbstractSolution):
         new_solution = PittsburghSolution(self.get_num_vars(),
                                           self.get_num_objectives(),
                                           self.get_num_constraints(),
-                                          copy.deepcopy(self.__michigan_solution_builder),
                                           copy.deepcopy(self.__classification),
+                                          copy.deepcopy(self.__michigan_solution_builder),
                                           do_init_vars=False)
 
         cdef MichiganSolution[:] vars_copy = np.empty(self.get_num_vars(), dtype=object)

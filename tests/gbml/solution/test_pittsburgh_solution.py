@@ -600,7 +600,7 @@ def test_deep_copy():
     consequent_factory = LearningBasic(training_data_set)
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, 1, 0,
                                                         RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
-    obj = PittsburghSolution(2, 2, 0, michigan_solution_builder, SingleWinnerRuleSelection())
+    obj = PittsburghSolution(2, 2, 0, SingleWinnerRuleSelection(), michigan_solution_builder)
     copied_obj = copy.deepcopy(obj)
     assert obj == copied_obj and id(obj.get_vars().base) != id(copied_obj.get_vars().base)
 

@@ -66,16 +66,17 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             ref_dirs,
             n_neighbors=self._mofgbml_args.get("NEIGHBORHOOD_SIZE"),
             prob_neighbor_mating=self._mofgbml_args.get("NEIGHBORHOOD_SELECTION_PROBABILITY"),
-            sampling=HybridGBMLSampling(self._learner),
+            sampling=self._sampling,
             crossover=self._crossover,
-            repair=PittsburghRepair(),
-            mutation=PittsburghMutation(self._knowledge, self._random_gen))
+            repair=self._repair,
+            mutation=self._mutation)
 
         res = minimize(self._problem,
                        algorithm,
                        self._termination,
                        seed=self._mofgbml_args.get("RAND_SEED"),
                        verbose=self._verbose,
+                       callback=self._callback,
                        save_history=True)
 
         return res

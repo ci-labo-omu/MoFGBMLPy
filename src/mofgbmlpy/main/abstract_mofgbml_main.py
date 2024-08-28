@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 from matplotlib import pyplot as plt
+from pymoo.core.callback import Callback
 from pymoo.core.population import Population
 from pymoo.termination import get_termination
 
@@ -28,7 +29,13 @@ from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
 from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
+from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import \
+    UniformCrossoverSingleOffspringMichigan
+from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
+from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
+from mofgbmlpy.gbml.restore_population_if_worse_michigan import RestorePopulationIfWorseMichigan
+from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.utility.util import dash_case_to_class_name, dash_case_to_snake_case
 
@@ -50,7 +57,13 @@ class AbstractMoFGBMLMain(ABC):
         _random_gen (numpy.random.Generator): Random generator
         _is_multi_label (bool): If true then the data set is a multi label one
         _learner (AbstractLearning): Learner used to create consequent objects for rules
+        _callback (Callback): Callback function called after each generation in Pymoo
+        _is_michigan_style (bool): If true then use a Michigan style FGBML, otherwise use the Pittsburgh approach
+        _repair (Repair): Repair operator
+        _mutation (Mutation): Mutation operator
+        _sampling (Sampling): Population initialization operation
     """
+
     def __init__(self, mofgbml_args, knowledge_factory_class):
         """Constructor
 
@@ -71,20 +84,26 @@ class AbstractMoFGBMLMain(ABC):
         self._random_gen = None
         self._is_multi_label = None
         self._learner = None
+        self._callback = None
+        self._is_michigan_style = None
+        self._repair = None
+        self._mutation = None
+        self._sampling = None
 
     def load_args(self, args, train=None, test=None):
         """Load the arguments
 
         Args:
             args (list): List of dash-case arguments
-            train (): Training dataset
-            test (): Test dataset
+            train (Dataset): Training dataset
+            test (Dataset): Test dataset
         """
         # set command arguments
         self._mofgbml_args.load(args)
         self._random_gen = np.random.Generator(np.random.MT19937(seed=self._mofgbml_args.get("RAND_SEED")))
 
         self._verbose = self._mofgbml_args.get("VERBOSE")
+        self._is_michigan_style = self._mofgbml_args.get("IS_MICHIGAN_STYLE")
 
         # Save params
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
@@ -99,13 +118,21 @@ class AbstractMoFGBMLMain(ABC):
         else:
             self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
 
-
         self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
 
         # Create knowledge object
         self._knowledge = self._knowledge_factory_class(self._train.get_num_dim()).create()
 
-        # Run the algo
+        # Load Pymoo callback function
+        if self._is_michigan_style:
+            self._callback = RestorePopulationIfWorseMichigan(self._train)
+        else:
+            self._callback = Callback()
+            self._repair = PittsburghRepair()
+            self._mutation = PittsburghMutation(self._knowledge, self._random_gen)
+            self._sampling = HybridGBMLSampling(self._learner)
+
+        # Load objectives
         self._objectives = []
         for obj_key in self._mofgbml_args.get("OBJECTIVES"):
             class_name = dash_case_to_class_name(obj_key)
@@ -142,29 +169,32 @@ class AbstractMoFGBMLMain(ABC):
         else:
             raise ValueError("Termination criterion not given or not recognized")
 
-        pittsburgh_crossover = PittsburghCrossover(self._mofgbml_args.get("MIN_NUM_RULES"),
-                                                   self._mofgbml_args.get("MAX_NUM_RULES"),
-                                                   self._random_gen,
-                                                   self._mofgbml_args.get("PITTSBURGH_CROSS_RT"))
-
-        if self._mofgbml_args.get("CROSSOVER_TYPE") == "hybrid-gbml-crossover":
-            crossover_probability = self._mofgbml_args.get("HYBRID_CROSS_RT")
-            self._crossover = HybridGBMLCrossover(self._random_gen,
-                                                  self._mofgbml_args.get("MICHIGAN_OPE_RT"),
-                                                  MichiganCrossover(
-                                                      self._mofgbml_args.get("RULE_CHANGE_RT"),
-                                                      self._train,
-                                                      self._knowledge,
-                                                      self._mofgbml_args.get("MAX_NUM_RULES"),
-                                                      self._random_gen,
-                                                      self._mofgbml_args.get("MICHIGAN_CROSS_RT"),
-                                                  ),
-                                                  pittsburgh_crossover,
-                                                  crossover_probability)
-        elif self._mofgbml_args.get("CROSSOVER_TYPE") == "pittsburgh-crossover":
-            self._crossover = pittsburgh_crossover
+        if self._is_michigan_style:
+            self._crossover = UniformCrossoverSingleOffspringMichigan(self._random_gen, self._mofgbml_args.get("MICHIGAN_CROSS_RT"))  # TODO: change it to another one
         else:
-            raise ValueError("Unknown crossover type")
+            pittsburgh_crossover = PittsburghCrossover(self._mofgbml_args.get("MIN_NUM_RULES"),
+                                                       self._mofgbml_args.get("MAX_NUM_RULES"),
+                                                       self._random_gen,
+                                                       self._mofgbml_args.get("PITTSBURGH_CROSS_RT"))
+
+            if self._mofgbml_args.get("CROSSOVER_TYPE") == "hybrid-gbml-crossover":
+                crossover_probability = self._mofgbml_args.get("HYBRID_CROSS_RT")
+                self._crossover = HybridGBMLCrossover(self._random_gen,
+                                                      self._mofgbml_args.get("MICHIGAN_OPE_RT"),
+                                                      MichiganCrossover(
+                                                          self._mofgbml_args.get("RULE_CHANGE_RT"),
+                                                          self._train,
+                                                          self._knowledge,
+                                                          self._mofgbml_args.get("MAX_NUM_RULES"),
+                                                          self._random_gen,
+                                                          self._mofgbml_args.get("MICHIGAN_CROSS_RT"),
+                                                      ),
+                                                      pittsburgh_crossover,
+                                                      crossover_probability)
+            elif self._mofgbml_args.get("CROSSOVER_TYPE") == "pittsburgh-crossover":
+                self._crossover = pittsburgh_crossover
+            else:
+                raise ValueError("Unknown crossover type")
 
         num_objectives_michigan = 2
         num_constraints_michigan = 0
@@ -263,7 +293,8 @@ class AbstractMoFGBMLMain(ABC):
         Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
                          pretty_xml=pretty_xml)
 
-        Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')), f"{res.exec_time}")
+        Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')),
+                       f"{res.exec_time}")
 
     def main(self, args, train=None, test=None):
         """Main function of the runner
@@ -311,8 +342,9 @@ class AbstractMoFGBMLMain(ABC):
 
             # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'mofgbml.mp4')))
             AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff(res.opt.get("X")[:, 0],
-                                                         str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"),
-                                                                          'error_rate_interpretability_tradeoff.png')))
+                                                                               str(os.path.join(self._mofgbml_args.get(
+                                                                                   "EXPERIMENT_ID_DIR"),
+                                                                                                'error_rate_interpretability_tradeoff.png')))
         return res
 
     @staticmethod
@@ -407,7 +439,8 @@ class AbstractMoFGBMLMain(ABC):
         return plot
 
     @staticmethod
-    def plot_line_interpretability_error_rate_tradeoff(solutions, file_path=None, title=None, xlim=None, grid=True, x_key="total_rule_length"):
+    def plot_line_interpretability_error_rate_tradeoff(solutions, file_path=None, title=None, xlim=None, grid=True,
+                                                       x_key="total_rule_length"):
         """Plot an interpretability error rate tradeoff of the solutions
 
         Args:
@@ -434,10 +467,16 @@ class AbstractMoFGBMLMain(ABC):
             err_test.append((solution.get_attribute(x_key),
                              solution.get_attribute("test_error_rate")))
 
-        AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label=x_label, y_label="Error rate", file_path=file_path, title=title, xlim=xlim, grid=grid)
+        AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test,
+                                                                                       x_label=x_label,
+                                                                                       y_label="Error rate",
+                                                                                       file_path=file_path, title=title,
+                                                                                       xlim=xlim, grid=grid)
 
     @staticmethod
-    def plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label='Total rule length', y_label='Error rate', file_path=None, title=None, xlim=None, grid=True):
+    def plot_line_interpretability_error_rate_tradeoff_from_coords(err_train, err_test, x_label='Total rule length',
+                                                                   y_label='Error rate', file_path=None, title=None,
+                                                                   xlim=None, grid=True):
         """Plot an interpretability error rate tradeoff from coordinates
 
         Args:

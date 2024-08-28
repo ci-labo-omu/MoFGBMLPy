@@ -45,10 +45,10 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
         """
         algorithm = NSGA3(ref_dirs=get_reference_directions("das-dennis", len(self._objectives), n_partitions=12),
                           pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
-                          sampling=HybridGBMLSampling(self._learner),
+                          sampling=self._sampling,
                           crossover=self._crossover,
-                          repair=PittsburghRepair(),
-                          mutation=PittsburghMutation(self._knowledge, self._random_gen),
+                          repair=self._repair,
+                          mutation=self._mutation,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(self._problem,
@@ -56,6 +56,7 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
                        termination=self._termination,
                        seed=self._mofgbml_args.get("RAND_SEED"),
                        save_history=True,
+                       callback=self._callback,
                        verbose=self._verbose)
         return res
 
