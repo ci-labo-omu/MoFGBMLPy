@@ -90,50 +90,6 @@
         "type": "string",
         "required": false
     },
-    "crossover-type": {
-        "default": "hybrid-gbml-crossover",
-        "help": "Crossover used in the GA algorithm",
-        "choices": ["hybrid-gbml-crossover", "pittsburgh-crossover"],
-        "type": "string",
-        "required": false
-    },
-
-    "is-michigan-style": {
-        "default": false,
-        "help": "Must be specified if you want to use Michigan style FGBML instead of Pittsburgh",
-        "type": "bool",
-        "required": false
-    },
-    "hybrid-cross-rt": {
-        "default": 1,
-        "help": "Probability that a (hybrid) crossover occurs",
-        "type": "float",
-        "required": false
-    },
-    "michigan-ope-rt": {
-        "default": 0.5,
-        "help": "Probability that Michigan mating operators are used instead of a Pittsburgh one",
-        "type": "float",
-        "required": false
-    },
-    "rule-change-rt": {
-        "default": 0.2,
-        "help": "Ratio of the rules that are changed in a Michigan crossover",
-        "type": "float",
-        "required": false
-    },
-    "michigan-cross-rt": {
-        "default": 0.9,
-        "help": "Probability that a Michigan crossover occurs",
-        "type": "float",
-        "required": false
-    },
-    "pittsburgh-cross-rt": {
-        "default": 0.9,
-        "help": "Probability that a Pittsburgh crossover occurs",
-        "type": "float",
-        "required": false
-    },
 
     "objectives": {
         "default": ["num-rules", "error-rate"],

@@ -1,8 +1,12 @@
 import xml.etree.cElementTree as xml_tree
 import os
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 import numpy as np
+from pymoo.algorithms.moo.moead import MOEAD
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.algorithms.moo.nsga3 import NSGA3
 from pymoo.core.population import Population
 from pymoo.optimize import minimize
 from pymoo.termination import get_termination
@@ -16,9 +20,16 @@ from mofgbmlpy.data.output import Output
 from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMulti
+from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
+from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
+from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.arguments.arguments import Arguments
+from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 from mofgbmlpy.main.michigan.michigan_main import MichiganMain
-from mofgbmlpy.utility.util import get_algo, dash_case_to_snake_case
+from mofgbmlpy.utility.util import get_algo, dash_case_to_snake_case, dash_case_to_class_name
 
 
 class AbstractMain(ABC):
@@ -32,53 +43,87 @@ class AbstractMain(ABC):
         _verbose (bool): If true then display more text (e.g. Pymoo progress)
         _callback (Callback): Callback function called after each generation in Pymoo
     """
-    def __init__(self, algo_name, problem, pymoo_rand_seed, callback, verbose,
-                 is_multi_label, train_file_path, test_file_path, no_output_files, mofgbml_args,
-                 experiment_id_dir, root_folder, pop_size, sampling, crossover, repair, mutation,
-                 terminate_generation=None, terminate_evaluation=None):
+
+    def __init__(self, mofgbml_args, knowledge_factory_class):
         """Constructor
 
         Args:
-            algo_name (str): name of the algorithm to run (e.g. nsga2)
-            problem (Problem): Problem object used by Pymoo
-            pymoo_rand_seed (int): Seed for random generation for pymoo
-            verbose (bool): If true then display more text (e.g. Pymoo progress)
-            callback (Callback): Callback function called after each generation in Pymoo
+            mofgbml_args (Arguments): Arguments loader
+            knowledge_factory_class (AbstractKnowledgeFactory): Class of the knowledge factory
         """
-        self._algo_name = algo_name
-        self._problem = problem
-        self._pymoo_rand_seed = pymoo_rand_seed
-        self._verbose = verbose
-        self._callback = callback
-        self._experiment_id_dir = experiment_id_dir
-        self._root_folder = root_folder
-
-        self._train = Input.input_data_set(train_file_path, is_multi_label)
-        self._test = Input.input_data_set(test_file_path, is_multi_label)
-
-        self._terminate_evaluation = terminate_evaluation
-        self._terminate_generation = terminate_generation
-
-        algo_kwargs = {
-            "pop_size": pop_size,
-            "sampling": sampling,
-            "crossover": crossover,
-            "repair": repair,
-            "mutation": mutation
-        }
-
-        self._algo = get_algo(algo_name, **algo_kwargs)
         self._mofgbml_args = mofgbml_args
+        self._knowledge_factory_class = knowledge_factory_class
+        self._knowledge = None
+        self._train = None
+        self._test = None
+        self._problem = None
+        self._objectives = None
+        self._termination = None
+        self._crossover = None
+        self._verbose = None
+        self._random_gen = None
+        self._is_multi_label = None
+        self._learner = None
+        self._callback = None
+        self._is_michigan_style = None
+        self._repair = None
+        self._mutation = None
+        self._sampling = None
+        self._algo = None
+        self._pop_size = None
+        self._antecedent_factory = None
+        self._rule_builder = None
+        self._pymoo_rand_seed = None
 
-        if self._mofgbml_args is None:
-            self._mofgbml_args = self.load_args()
+    def load_args(self, args, train=None, test=None):
+        """Load the arguments
 
-        if self._terminate_evaluation is not None:
-            self._termination = get_termination("n_eval", self._terminate_evaluation)
-        elif self._terminate_generation is not None:
-            self._termination = get_termination("n_gen", self._terminate_generation)
+        Args:
+            args (list): List of dash-case arguments
+            train (Dataset): Training dataset
+            test (Dataset): Test dataset
+        """
+        # Add parameters specific to the algorithm used
+        algo_name = args[args.index("--algorithm") + 1]
+        self._mofgbml_args.load_config_file(algo_name + "_arguments")
+
+        # load command arguments
+        self._mofgbml_args.load(args)
+
+        seed = self._mofgbml_args.get("RAND_SEED")
+        self._random_gen = np.random.Generator(np.random.MT19937(seed=seed))
+        self._pymoo_rand_seed = seed
+
+        self._verbose = self._mofgbml_args.get("VERBOSE")
+
+        # Save params
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
+            Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
+            file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
+            Output.writeln(file_name, str(self._mofgbml_args), False)
+
+        # Load dataset
+        if train is not None and test is not None:
+            self._train, self._test = train, test
         else:
-            raise ValueError("Termination criterion not given or not recognized")
+            self._train, self._test = Input.get_train_test_files(self._mofgbml_args)
+
+        self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
+
+        # Create knowledge object
+        self._knowledge = self._knowledge_factory_class(self._train.get_num_dim()).create()
+        self._pop_size = self._mofgbml_args.get("POPULATION_SIZE")
+
+        # Load objectives
+        self._objectives = self._get_objectives(isinstance(self._mofgbml_args, PittsburghStyleArguments))
+
+        self._rule_builder = self._get_rule_builder()
+        self._termination = self._get_termination()
+
+        self._load_additional_args()
+
+        self._algo = self.get_pymoo_algo()
 
     def run(self):
         """Run MoFGBML
@@ -88,10 +133,10 @@ class AbstractMain(ABC):
         """
 
         # Save params
-        if not no_output_files:
-            Output.mkdirs(self._experiment_id_dir)
-            Output.mkdirs(self._root_folder)
-            file_name = str(os.path.join(experiment_id_dir, "Consts.txt"))
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
+            Output.mkdirs(self._mofgbml_args.get("ROOT_FOLDER"))
+            file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
             Output.writeln(file_name, str(self._mofgbml_args), False)
 
         res = minimize(self._problem,
@@ -103,20 +148,90 @@ class AbstractMain(ABC):
 
         return res
 
-    @staticmethod
-    def get_antecedent_factory(antecedent_factory_name):
+    def _get_antecedent_factory(self):
+        antecedent_factory_name = self._mofgbml_args.get("ANTECEDENT_FACTORY")
         if antecedent_factory_name == "all-combination-antecedent-factory":
-            return AllCombinationAntecedentFactory(self._random_gen, self._knowledge)
+            return AllCombinationAntecedentFactory(knowledge=self._knowledge, random_gen=self._random_gen)
         elif antecedent_factory_name == "heuristic-antecedent-factory":
-            return HeuristicAntecedentFactory(self._train,
-                                              self._knowledge,
-                                              self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
-                                              self._mofgbml_args.get("DONT_CARE_RT"),
-                                              self._mofgbml_args.get(
+            return HeuristicAntecedentFactory(training_set=self._train,
+                                              knowledge=self._knowledge,
+                                              is_dc_probability=self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
+                                              dc_rate=self._mofgbml_args.get("DONT_CARE_RT"),
+                                              antecedent_number_do_not_dont_care=self._mofgbml_args.get(
                                                   "ANTECEDENT_NUMBER_DO_NOT_DONT_CARE"),
-                                              self._random_gen)
+                                              random_gen=self._random_gen)
         else:
             Exception("Unsupported antecedent factory")
+
+    def _get_termination(self):
+        if self._mofgbml_args.has_key("TERMINATE_EVALUATION") and self._mofgbml_args.get(
+                "TERMINATE_EVALUATION") is not None:
+            return get_termination("n_eval", self._mofgbml_args.get("TERMINATE_EVALUATION"))
+        elif self._mofgbml_args.has_key("TERMINATE_GENERATION") and self._mofgbml_args.get(
+                "TERMINATE_GENERATION") is not None:
+            return get_termination("n_gen", self._mofgbml_args.get("TERMINATE_GENERATION"))
+        else:
+            raise ValueError("Termination criterion not given or not recognized")
+
+    def _get_objectives(self, is_pittsburgh_style):
+        objectives = []
+        module_base = f"mofgbmlpy.gbml.objectives.{'pittsburgh' if is_pittsburgh_style else 'michigan'}."
+
+        for obj_key in self._mofgbml_args.get("OBJECTIVES"):
+            class_name = dash_case_to_class_name(obj_key)
+            module_name = module_base + dash_case_to_snake_case(obj_key)
+            imported_module = import_module(module_name)
+            objective_class = getattr(imported_module, class_name)
+
+            if obj_key == "error-rate":
+                objectives.append(objective_class(self._train))
+            else:
+                objectives.append(objective_class())
+        return objectives
+
+    def _get_rule_builder(self):
+        antecedent_factory = self._get_antecedent_factory()
+        if self._is_multi_label:
+            self._learner = LearningMulti(self._train)
+            return RuleBuilderMulti(antecedent_factory,
+                                    self._learner,
+                                    self._knowledge)
+        else:
+            self._learner = LearningBasic(self._train)
+            return RuleBuilderBasic(antecedent_factory,
+                                    self._learner,
+                                    self._knowledge)
+
+    def get_pymoo_algo(self):
+        algo_name = self._mofgbml_args.get("ALGORITHM")
+
+        algo_args = {
+            "eliminate_duplicates": False,
+            "save_history": True,
+            "pop_size": self._pop_size,
+            "sampling": self._sampling,
+            "crossover": self._crossover,
+            "repair": self._repair,
+            "mutation": self._mutation
+        }
+
+        algos = {
+            "nsga2": {"class": NSGA2, "additional_args": ["n_offsprings"]},
+            "nsga3": {"class": NSGA3, "additional_args": ["n_offsprings"]},
+            "moead": {"class": MOEAD, "additional_args": [
+                "neighborhood_selection_probability",
+                "neighborhood_size",
+                "offspring_population_size"
+            ]},
+        }
+
+        if algo_name not in algos:
+            raise ValueError("Unknown algo name")
+
+        for arg in algos[algo_name]["additional_args"]:
+            algo_args[arg] = self._mofgbml_args.get(arg.upper())
+
+        return algos[algo_name]["class"](algo_args)
 
     def save_results_to_files(self, res):
         """Save the results to CSV and XML files
@@ -271,16 +386,11 @@ class AbstractMain(ABC):
         """Evaluate the solution. The results will be in the solution objectives attribute
 
         Args:
-            solution (PittsburghSolution): Solution evaluated
+            solution (AbstractSolution): Solution evaluated
         """
         solutions = np.array([[solution]], object)
         self._problem.evaluate(solutions)
 
-    def load_args(self):
-        args = {}
-        for arg in self._mofgbml_args.get_accepted_arguments():
-            try:
-                args[arg] = getattr(self, "_"+dash_case_to_snake_case(arg))
-            except: continue
-
-        self._mofgbml_args.load(args)
+    def _load_additional_args(self):
+        """Load either Michigan or Pittsburgh approach arguments (problem, ...) """
+        raise AbstractMethodException()

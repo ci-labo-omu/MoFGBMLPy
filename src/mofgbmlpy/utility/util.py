@@ -30,30 +30,3 @@ def dash_case_to_snake_case(txt):
     """
     return txt.replace('-', '_')
 
-
-def get_algo(algo_name, **kwargs):
-    algo_args = {
-        "eliminate_duplicates": False,
-        "save_history": True,
-    }
-
-    for arg in ["pop_size", "sampling", "crossover", "repair", "mutation"]:
-        if arg not in kwargs:
-            raise Exception(f"Missing argument {arg}")
-        algo_args[arg] = kwargs[arg]
-
-    algos = {
-        "nsga2": {"class": NSGA2, "additional_args": ["n_offsprings"]},
-        "nsga3": NSGA3,
-        "moead": MOEAD
-    }
-
-    if algo_name not in algos:
-        raise ValueError("Unknown algo name")
-
-    for arg in algos[algo_name]["additional_args"]:
-        if arg not in kwargs:
-            raise Exception(f"Missing argument {arg}")
-        algo_args[arg] = kwargs[arg]
-
-    return algos[algo_name]["class"](algo_args)
