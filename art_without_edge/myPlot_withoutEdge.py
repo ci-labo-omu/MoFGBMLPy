@@ -38,11 +38,14 @@ def myPlot_withoutEdge(DATA, net):
         count_str = str(net.CountNode[i])
         plt.text(w[i, 0] + 0.01, w[i, 1] + 0.01, count_str, color='k', fontsize=8)
 
+
     plt.xlabel('X', fontsize=14)
     plt.ylabel('Y', fontsize=14)
     plt.grid(True)
     plt.box(True)
     plt.axis('equal')
+    plt.xlim = (-0.05, 1.05)
+    plt.ylim = (-0.05, 1.05)
     plt.show()
 
 

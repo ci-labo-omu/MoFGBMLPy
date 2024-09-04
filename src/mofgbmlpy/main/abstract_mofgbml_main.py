@@ -277,7 +277,6 @@ class AbstractMoFGBMLMain(ABC):
             pymoo.core.result.Result: Results of the run
         """
         # TODO: print information
-
         self.load_args(args, train, test)
 
         res = self.run()

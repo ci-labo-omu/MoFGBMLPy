@@ -9,7 +9,6 @@ class MoFGBMLNSGAIIArgs(Arguments):
     def __init__(self):
         """Constructor"""
         super().__init__()
-
         args_definition = {
             "offspring-population-size": {
                 "default": None,

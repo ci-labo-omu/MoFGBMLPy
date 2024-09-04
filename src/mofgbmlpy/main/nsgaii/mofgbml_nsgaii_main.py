@@ -28,7 +28,6 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
     """MoFBML runner for NSGA-II"""
     def __init__(self, knowledge_factory_class):
         """Constructor
-
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
         """

@@ -27,7 +27,6 @@ class ARTNet:
         adaptiveSig = self.adaptiveSig
         Lambda = self.Lambda
         minCIM = self.minCIM
-        print(DATA.shape)
         for sampleNum in range(DATA.shape[0]):
             if len(weight) == 0 or sampleNum % Lambda == 0:
                 estSigCA = self.SigmaEstimation(DATA, sampleNum, Lambda)

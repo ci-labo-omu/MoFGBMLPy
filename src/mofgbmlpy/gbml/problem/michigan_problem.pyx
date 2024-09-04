@@ -35,7 +35,7 @@ class MichiganProblem(Problem):
 
     def _evaluate(self, X, out, *args, **kwargs):
         """Evaluate the solutions in the population
-
+    
         Args:
             X (Population): Population evaluated
             out (double[,]): Objective function values for each solution
