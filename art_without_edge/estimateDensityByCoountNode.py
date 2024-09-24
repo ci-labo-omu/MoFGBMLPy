@@ -10,9 +10,9 @@ def estimateDensityByCountNode(net, class_num):
     # Silverman's Ruleに基づくバンド幅の計算
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    #with open('node_positions.csv', 'a') as f:
-    #    for i in range(len(node_positions)):
-    #        f.write(str(node_positions[i][0]) + ', ' + str(node_positions[i][1]) + ', ' + str(count_node[i]) + ', ' + str(class_num+1) + '\n')
+    with open('node_positions3dim_50_010.csv', 'a') as f:
+        for i in range(len(node_positions)):
+            f.write(str(node_positions[i][0]) + ', ' + str(node_positions[i][1]) + ', ' + str(node_positions[i][2]) + ', ' + str(count_node[i]) + ', ' + str(class_num) + '\n')
 
 
     n = node_positions.shape[0]
