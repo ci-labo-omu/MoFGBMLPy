@@ -3,14 +3,19 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def estimateDensityByCountNode(net):
+def estimateDensityByCountNode(net, class_num):
     # ノード位置とカウントを取得
     node_positions = np.array(net.weight)
     count_node = np.array(net.CountNode)
-    print(node_positions)
     print(count_node)
-
     # Silverman's Ruleに基づくバンド幅の計算
+    #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
+    #書き出す．
+    #with open('node_positions3dim_50_010.csv', 'a') as f:
+    #    for i in range(len(node_positions)):
+    #        f.write(str(node_positions[i][0]) + ', ' + str(node_positions[i][1]) + ', ' + str(node_positions[i][2]) + ', ' + str(count_node[i]) + ', ' + str(class_num) + '\n')
+
+
     n = node_positions.shape[0]
     sigma_x = np.std(node_positions[:, 0])
     sigma_y = np.std(node_positions[:, 1])

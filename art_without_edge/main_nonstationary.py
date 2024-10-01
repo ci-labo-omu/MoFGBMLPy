@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from art_without_edge.ARTclustering_woEdge_Train import ARTNet
-from art_without_edge.estimateDensityByCoountNode import estimateDensityByCountNode
+from art_without_edge.estimateDensityByCountNode import estimateDensityByCountNode
 from art_without_edge.myPlot_withoutEdge import myPlot_withoutEdge
 
 

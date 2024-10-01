@@ -6,20 +6,22 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
 import scipy.io
 
+from art_without_edge.ARTclustering_woEdge_Train_all import ARTNet_all
+from estimateDensityByCountNode import estimateDensityByCountNode
 from art_without_edge.ARTclustering_woEdge_Train import ARTNet
-from art_without_edge.estimateDensityByCountNode import estimateDensityByCountNode
 from art_without_edge.myPlot_withoutEdge import myPlot_withoutEdge
-
+from estimateDensityByCountNode_all import estimateDensityByCountNode_all
 # Number of trials
 TRIAL = 1
 
 # Noise Rate [0-1]
 NR = 0.0
 
+num_features = 4
 # Load 2D_ClusteringDATASET
 data = scipy.io.loadmat('2D_ClusteringDATASET.mat')['data']  # OpenMLデータセットの読み込み
 data, y = make_classification(n_samples=8000,  # サンプル数
-                              n_features=2 ,  # 特徴量の数（2つの特徴量）
+                              n_features=num_features ,  # 特徴量の数（2つの特徴量）
                               flip_y=0,
                               class_sep=2.2,
                               n_informative=2,  # 有益な特徴量の数
@@ -39,7 +41,7 @@ plt.scatter(data[y == 1, 0], data[y == 1, 1], label='Class 2', s=50, alpha=0.6)
 plt.scatter(data[y == 2, 0], data[y == 2, 1], label='Class 3', s=50, alpha=0.6)
 plt.scatter(data[y == 3, 0], data[y == 3, 1], label='Class 4', s=50, alpha=0.6)
 plt.legend()
-plt.show()
+#plt.show()
 """
 numD = 5000
 
@@ -70,36 +72,36 @@ data_4 = data[y == 3]
 
 
 
-for i, data in enumerate([data_1, data_2, data_3, data_4]):
-    # Normalization [0-1]
-    # Normalization [0-1]
+#for i, data in enumerate([data_1, data_2, data_3, data_4]):
+# Normalization [0-1]
+# Normalization [0-1]
+# Randomize data
+np.random.seed(11)
+data = shuffle(data)
+# Noise Setting [0,1]
+#     if NR > 0:
+#         noise_data = np.random.rand(int(data.shape[0] * NR), data.shape[1])
+#         data[:len(noise_data)] = noise_data
+#
+#     # Parameters ========================================================
+net = ARTNet_all(Lambda=50, minCIM=0.70)
+# ====================================================================
+time_train = 0
+for trial in range(TRIAL):
+    print(f'Iterations: {trial + 1}/{TRIAL}')
     # Randomize data
-    np.random.seed(11)
     data = shuffle(data)
-    # Noise Setting [0,1]
-    #     if NR > 0:
-    #         noise_data = np.random.rand(int(data.shape[0] * NR), data.shape[1])
-    #         data[:len(noise_data)] = noise_data
-    #
-    #     # Parameters ========================================================
-    net = ARTNet(Lambda=50, minCIM=0.10)
-    # ====================================================================
-    time_train = 0
-    for trial in range(TRIAL):
-        print(f'Iterations: {trial + 1}/{TRIAL}')
-        # Randomize data
-        data = shuffle(data)
-        # Training ==========================================
-        start_time = time.time()
-        net.ARTclustering_woEdge_Train(data)
-        time_train += time.time() - start_time
-        # ===================================================
-        # Results
-        resultNumNodes = f'   Num. Clusters: {net.numNodes}'
-        print(resultNumNodes)
-        print(f' Processing Time: {time_train}')
-        print('')
-    myPlot_withoutEdge(data, net)
-    #ノード座標と数をカウントする
-    i = 0
-    estimateDensityByCountNode(net, i)
+    # Training ==========================================
+    start_time = time.time()
+    net.ARTclustering_woEdge_Train(data, y)
+    time_train += time.time() - start_time
+    # ===================================================
+    # Results
+    resultNumNodes = f'   Num. Clusters: {net.numNodes}'
+    print(resultNumNodes)
+    print(f' Processing Time: {time_train}')
+    print('')
+#myPlot_withoutEdge(data, net)
+#ノード座標と数をカウントする
+i = 0
+estimateDensityByCountNode_all(net, 0)

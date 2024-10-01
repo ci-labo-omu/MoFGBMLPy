@@ -3,16 +3,35 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def estimateDensityByCountNode(net, class_num):
+def convert_dicts_to_lists(dict_array):
+    result = []
+    for d in dict_array:
+        # 各クラスの寄与数を初期化
+        class_list = [0, 0, 0, 0]  # クラス0からクラス3までの寄与数
+        for key, value in d.items():
+            class_list[key] = value  # 辞書のキーに対応するクラスに寄与数を挿入
+        result.append(class_list)  # リストを結果に追加
+    return result
+def estimateDensityByCountNode_all(net, data):
     # ノード位置とカウントを取得
-    node_positions = np.array(net.weight)
+    node_positions = np.array(net.weight)[:,:-1]
+    print(node_positions)
     count_node = np.array(net.CountNode)
-    # Silverman's Ruleに基づくバンド幅の計算
+    #辞書をリストに変換，[0, 1, 2, 3]の順番で寄与数を書いている
+    counts_list = convert_dicts_to_lists(count_node)
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    with open('node_positions3dim_50_010.csv', 'a') as f:
-        for i in range(len(node_positions)):
-            f.write(str(node_positions[i][0]) + ', ' + str(node_positions[i][1]) + ', ' + str(node_positions[i][2]) + ', ' + str(count_node[i]) + ', ' + str(class_num) + '\n')
+    # ノードの座標とカウントを結合したデータを作成
+    data = np.hstack([node_positions, np.array(counts_list)])
+
+    # 書き出し部分
+    with open('node_positions_all/all_4dim_50_070.csv', 'a') as f:
+        np.savetxt(f, data, delimiter=', ', fmt='%s')
+
+    exit()
+    #各ノードの，各クラスからの勝利回数を表した辞書
+    counts = [sum(count_node[i].values()) for i in range(len(count_node))]
+
 
 
     n = node_positions.shape[0]
@@ -39,7 +58,7 @@ def estimateDensityByCountNode(net, class_num):
             # 各ノードに対するカーネル密度の計算
             distances_x = (node_positions[:, 0] - grid_point[0]) / h_x
             distances_y = (node_positions[:, 1] - grid_point[1]) / h_y
-            kernel_values = count_node * np.exp(-(distances_x ** 2 + distances_y ** 2) / 2)
+            kernel_values = counts * np.exp(-(distances_x ** 2 + distances_y ** 2) / 2)
 
             # 密度を累積
             density[i, j] = np.sum(kernel_values)
