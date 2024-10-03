@@ -21,6 +21,8 @@ def estimateDensityByCountNode_all(net, data):
     counts_list = convert_dicts_to_lists(count_node)
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
+    print(counts_list)
+    print(node_positions)
     # ノードの座標とカウントを結合したデータを作成
     data = np.hstack([node_positions, np.array(counts_list)])
 
