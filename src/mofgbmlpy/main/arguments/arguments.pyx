@@ -48,10 +48,12 @@ class Arguments:
             data = json.load(f)
             for k, v in data.items():
                 if k in self.__args_definition:
-                    raise Exception("Duplicated arguments are not yet handled")  # TODO
+                    raise Exception(f"Duplicated arguments are not yet handled. {str(k)} is already loaded")  # TODO
                 else:
                     self.__args_definition[k] = v
 
+    def load_parser(self):
+        """Load the arguments definition into the parser"""
         self.add_args_dict_to_parser(self.__args_definition)
 
     def set(self, key, value):
@@ -157,7 +159,7 @@ class Arguments:
         Returns:
             list: List of arguments in dash-case
         """
-        root_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        root_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
         file_path = root_folder + '/consts.properties'
 
         if not os.path.exists(file_path):
@@ -275,6 +277,7 @@ class Arguments:
                 while i < len(args_from_jproperties) and args_from_jproperties[i][0] != "-":
                     new_args.append(args_from_jproperties[i])
                     i += 1
+
 
         parsed_args = self.parse_args(new_args)
 

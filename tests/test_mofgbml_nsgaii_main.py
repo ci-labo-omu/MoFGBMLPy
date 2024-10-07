@@ -6,7 +6,7 @@ from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 
 
 def test_main_iris():
-    start = time.time()
+    # start = time.time()
     args = [
         "--data-name", "iris",
         "--algorithm-id", "1",
@@ -22,15 +22,16 @@ def test_main_iris():
     ]
 
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    results = runner.main(args)
-    elapsed = time.time() - start
+    runner.main(args)
+    # results = runner.main(args)
+    # elapsed = time.time() - start
 
-    txt = str(elapsed)+"\n"
+    # txt = str(elapsed)+"\n"
+    #
+    # for objectives in results.F:
+    #     txt += f"{objectives[0]},{objectives[1]}\n"
 
-    for objectives in results.F:
-        txt += f"{objectives[0]},{objectives[1]}\n"
-
-    Output.writeln("../py_version_results/basic_main_iris_30000.txt", txt)
+    # Output.writeln("../py_version_results/basic_main_iris_30000.txt", txt)
 
     assert True
 

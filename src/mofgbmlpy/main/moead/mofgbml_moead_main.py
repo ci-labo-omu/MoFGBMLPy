@@ -20,7 +20,6 @@ from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
-from mofgbmlpy.main.moead.mofgbml_moead_args import MoFGBMLMOEADArgs
 import sys
 import os
 from pymoo.visualization.scatter import Scatter
@@ -38,6 +37,8 @@ from mofgbmlpy.gbml.basic_duplicate_elimination import BasicDuplicateElimination
 from pyrecorder.recorder import Recorder
 from pyrecorder.writers.video import Video
 
+from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
+
 
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
     """MoFBML runner for MOEAD"""
@@ -47,7 +48,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
         """
-        super().__init__(MoFGBMLMOEADArgs(), knowledge_factory_class)
+        super().__init__(PittsburghStyleArguments("moead"), knowledge_factory_class)
 
     def run(self):
         """Run MoFGBML

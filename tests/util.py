@@ -14,7 +14,7 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMult
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from mofgbmlpy.main.arguments import Arguments
+from mofgbmlpy.main.arguments.arguments import Arguments
 
 
 def get_datasets(datasets_dir="../dataset"):

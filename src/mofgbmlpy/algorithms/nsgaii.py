@@ -1,5 +1,4 @@
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize

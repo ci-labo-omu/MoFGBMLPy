@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from mofgbmlpy.data.input import Input
-from mofgbmlpy.main.arguments import Arguments
+from mofgbmlpy.main.arguments.arguments import Arguments
 from util import get_datasets
 
 

@@ -35,56 +35,5 @@
         "help": "Probability that a Pittsburgh crossover occurs",
         "type": "float",
         "required": false
-    },
-
-    "root-folder": {
-        "default": "results",
-        "help": "Path where results are saved",
-        "type": "string",
-        "required": false
-    },
-
-    "is-multi-label": {
-        "default": false,
-        "help": "Must be specified if the dataset is a multi label one and not specified otherwise, which is the default",
-        "type": "bool",
-        "required": false
-    },
-    "train-file": {
-        "default": null,
-        "help": "Path of the training dataset file",
-        "type": "string",
-        "required": true
-    },
-    "test-file": {
-        "default": null,
-        "help": "Path of the test dataset file",
-        "type": "string",
-        "required": true
-    },
-    "data-name": {
-        "default": null,
-        "help": "Dataset name. It's used to create the path where results are saved",
-        "type": "string",
-        "required": true
-    },
-
-    "gen-plot": {
-        "default": false,
-        "help": "Generate matplotlib plots",
-        "type": "bool",
-        "required": false
-    },
-    "no-output-files": {
-        "default": false,
-        "help": "Don't save results in files (plots, solutions, arguments...)",
-        "type": "bool",
-        "required": false
-    },
-    "pretty-xml": {
-        "default": false,
-        "help": "Save results in a pretty XML file (i.e. formated with indentation)",
-        "type": "bool",
-        "required": false
     }
 }

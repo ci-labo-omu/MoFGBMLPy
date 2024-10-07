@@ -14,7 +14,7 @@ from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.arguments import Arguments
+from mofgbmlpy.main.arguments.arguments import Arguments
 from util import get_a0_0_iris_train_test
 
 

@@ -46,6 +46,7 @@ If you don't need to edit the source code of this library you can just use :
 
 - Pymoo is not yet compatible with numpy 2.0.0, so we use the previous version instead
 - Profiler for Cython only works for Python<3.12
+- If the code is modified, you need to run again `python setup.py build_ext --inplace` to compile it
 
 ## Usage
 
@@ -171,16 +172,21 @@ options:
 
 ## Profiling
 
+### Requirements
+
+- `pip install gprof2dot`
+- Install Graphviz https://graphviz.org/download/
+
 ### Automatically
 
 Run `python profiler.py MoFGBMLNSGAIIMain` (or replace MoFGBMLNSGAIIMain with the method you want to use)
 
 ### Manually
 
-1. Install `gprof2dot`
-2. Generate a pstats profiler results file
-3. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
-4. `dot Profile.dot -Tpng -o Profile.png`
+
+1. Generate a pstats profiler results file
+2. `gprof2dot -f pstats Profile.pstats -o Profile.dot`
+3. `dot Profile.dot -Tpng -o Profile.png`
 
 
 ## Documentation

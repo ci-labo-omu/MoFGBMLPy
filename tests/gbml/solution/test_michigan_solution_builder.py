@@ -6,17 +6,11 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
-from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
-from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
 from util import get_a0_0_iris_train_test
 
 training_data_set, _ = get_a0_0_iris_train_test()

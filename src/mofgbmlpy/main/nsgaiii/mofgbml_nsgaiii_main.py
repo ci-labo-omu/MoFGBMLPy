@@ -14,7 +14,7 @@ from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
+
 import sys
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
@@ -24,7 +24,9 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-from mofgbmlpy.main.nsgaiii.mofgbml_nsgaiii_args import MoFGBMLNSGAIIIArgs
+
+
+from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 
 
 class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
@@ -35,7 +37,7 @@ class MoFGBMLNSGAIIIMain(AbstractMoFGBMLMain):
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
         """
-        super().__init__(MoFGBMLNSGAIIIArgs(), knowledge_factory_class)
+        super().__init__(PittsburghStyleArguments("nsga3"), knowledge_factory_class)
 
     def run(self):
         """Run MoFGBML

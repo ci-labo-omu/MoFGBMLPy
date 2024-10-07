@@ -37,7 +37,7 @@ class PittsburghMain(AbstractMain):
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
         """
-        args = PittsburghStyleArguments()
+        args = PittsburghStyleArguments("nsga2")
         super().__init__(args, knowledge_factory_class)
 
     def _load_additional_args(self):

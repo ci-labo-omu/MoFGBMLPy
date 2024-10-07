@@ -16,7 +16,7 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWei
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_multi import RuleMulti
-from mofgbmlpy.main.arguments import Arguments
+from mofgbmlpy.main.arguments.arguments import Arguments
 from util import get_a0_0_iris_train_test
 
 train, _ = get_a0_0_iris_train_test()
