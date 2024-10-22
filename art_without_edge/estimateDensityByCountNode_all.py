@@ -12,27 +12,24 @@ def convert_dicts_to_lists(dict_array):
             class_list[key] = value  # 辞書のキーに対応するクラスに寄与数を挿入
         result.append(class_list)  # リストを結果に追加
     return result
-def estimateDensityByCountNode_all(net, data):
+def estimateDensityByCountNode_all(net, dim, minCIM):
     # ノード位置とカウントを取得
     node_positions = np.array(net.weight)[:,:-1]
-    print(node_positions)
     count_node = np.array(net.CountNode)
     #辞書をリストに変換，[0, 1, 2, 3]の順番で寄与数を書いている
     counts_list = convert_dicts_to_lists(count_node)
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    print(counts_list)
-    print(node_positions)
+
     # ノードの座標とカウントを結合したデータを作成
     data = np.hstack([node_positions, np.array(counts_list)])
-
+    minCIM = int(minCIM*100)
     # 書き出し部分
-    with open('node_positions_all/all_4dim_50_070.csv', 'a') as f:
+    with open(f'node_positions_all/all_{dim}dim_50_0{minCIM}.csv', 'a') as f:
         np.savetxt(f, data, delimiter=', ', fmt='%s')
 
-    exit()
     #各ノードの，各クラスからの勝利回数を表した辞書
-    counts = [sum(count_node[i].values()) for i in range(len(count_node))]
+    """counts = [sum(count_node[i].values()) for i in range(len(count_node))]
 
 
 
@@ -98,3 +95,4 @@ def estimateDensityByCountNode_all(net, data):
     ax.view_init(elev=30, azim=45)  # 3Dビューを設定
 
     plt.show()
+"""

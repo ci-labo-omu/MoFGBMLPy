@@ -36,7 +36,7 @@ data, y = load_wine(return_X_y=True)
 print(np.unique(y, return_counts=True))
 data = MinMaxScaler().fit_transform(data)
 # dataを2次元平面でプロット再現性のための乱数シード
-# dataとyを結合
+# dataとyを結合x
 data = np.hstack([data, y.reshape(-1, 1)])
 #dataをプロット
 plt.scatter(data[y == 0, 0], data[y == 0, 1], label='Class 1', s=50, alpha=0.6)

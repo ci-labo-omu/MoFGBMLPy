@@ -72,7 +72,7 @@ cdef class LearningMulti(AbstractLearning):
             # TODO: Add multithreading
             for i in range(dataset.get_size()):
                 pattern = patterns[i]
-                print("あああ")
+                print("multi!!!")
                 class_label_val = pattern.get_target_class().get_class_label_value_at(c)
                 confidence[c][class_label_val] += compatible_grades[i]
                 print(f"confidence[{c}][{class_label_val}")

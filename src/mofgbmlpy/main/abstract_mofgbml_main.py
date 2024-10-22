@@ -171,7 +171,6 @@ class AbstractMoFGBMLMain(ABC):
 
         num_vars_pittsburgh = self._mofgbml_args.get("INITIATION_RULE_NUM")
         num_constraints_pittsburgh = 0
-
         if self._is_multi_label:
             self._learner = LearningMulti(self._train)
             rule_builder = RuleBuilderMulti(antecedent_factory,
@@ -266,6 +265,7 @@ class AbstractMoFGBMLMain(ABC):
         Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')), f"{res.exec_time}")
 
     def main(self, args, train=None, test=None):
+
         """Main function of the runner
 
         Args:
@@ -276,6 +276,7 @@ class AbstractMoFGBMLMain(ABC):
         Returns:
             pymoo.core.result.Result: Results of the run
         """
+
         # TODO: print information
         self.load_args(args, train, test)
 

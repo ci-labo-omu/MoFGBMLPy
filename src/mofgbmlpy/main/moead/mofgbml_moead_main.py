@@ -42,6 +42,7 @@ from pyrecorder.writers.video import Video
 class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
     """MoFBML runner for MOEAD"""
     def __init__(self, knowledge_factory_class):
+
         """Constructor
 
         Args:
@@ -60,7 +61,6 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
                                             self._problem.get_num_objectives(),
                                             n_partitions=self._mofgbml_args.get("POPULATION_SIZE")-1) # TODO: works for 2 objectives, but change it for 1 or 3 and more objectives
 
-
         # Note: if num_obj <=2, pymoo uses Tschebyscheff
         algorithm = MOEAD(
             ref_dirs,
@@ -70,7 +70,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             crossover=self._crossover,
             repair=PittsburghRepair(),
             mutation=PittsburghMutation(self._knowledge, self._random_gen))
-
+        print(self._problem)
         res = minimize(self._problem,
                        algorithm,
                        self._termination,

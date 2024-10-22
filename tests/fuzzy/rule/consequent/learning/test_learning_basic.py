@@ -12,7 +12,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.main.arguments import Arguments
-from util import get_a0_0_iris_train_test, float_eq
+from tests.util import get_a0_0_iris_train_test, float_eq
 
 train, _ = get_a0_0_iris_train_test()
 

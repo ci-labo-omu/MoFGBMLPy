@@ -24,7 +24,7 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_features=num_features ,  # 特徴量の数（2つの特徴量）
                               flip_y=0,
                               class_sep=2.2,
-                              n_informative=2,  # 有益な特徴量の数
+                              n_informative=num_features,  # 有益な特徴量の数
                               n_redundant=0,  # 冗長な特徴量の数
                               n_clusters_per_class=1,  # クラスごとのクラスター数
                               n_classes=4,  # クラス数（4クラス分類）
@@ -84,24 +84,28 @@ data = shuffle(data)
 #         data[:len(noise_data)] = noise_data
 #
 #     # Parameters ========================================================
-net = ARTNet_all(Lambda=50, minCIM=0.70)
+minCIMs = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
+
 # ====================================================================
-time_train = 0
-for trial in range(TRIAL):
-    print(f'Iterations: {trial + 1}/{TRIAL}')
-    # Randomize data
-    data = shuffle(data)
-    # Training ==========================================
-    start_time = time.time()
-    net.ARTclustering_woEdge_Train(data, y)
-    time_train += time.time() - start_time
-    # ===================================================
-    # Results
-    resultNumNodes = f'   Num. Clusters: {net.numNodes}'
-    print(resultNumNodes)
-    print(f' Processing Time: {time_train}')
-    print('')
-#myPlot_withoutEdge(data, net)
-#ノード座標と数をカウントする
-i = 0
-estimateDensityByCountNode_all(net, 0)
+for minCIM in minCIMs:
+    net = ARTNet_all(Lambda=50, minCIM=minCIM)
+
+    time_train = 0
+    for trial in range(TRIAL):
+        print(f'Iterations: {trial + 1}/{TRIAL}')
+        # Randomize data
+        data = shuffle(data)
+        # Training ==========================================
+        start_time = time.time()
+        net.ARTclustering_woEdge_Train(data, y)
+        time_train += time.time() - start_time
+        # ===================================================
+        # Results\
+        resultNumNodes = f'   Num. Clusters: {net.numNodes}'
+        print(resultNumNodes)
+        print(f' Processing Time: {time_train}')
+        print('')
+    #myPlot_withoutEdge(data, net)
+    #ノード座標と数をカウントする
+    i = 0
+    estimateDensityByCountNode_all(net, num_features, minCIM)

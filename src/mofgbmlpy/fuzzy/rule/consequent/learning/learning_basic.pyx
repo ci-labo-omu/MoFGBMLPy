@@ -58,6 +58,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes)
         cdef double[:] compatible_grades = np.zeros(dataset.get_size())
         cdef Pattern[:] patterns = dataset.get_patterns()
+        cdef double[:] density = dataset.get_density()
         cdef int i
         cdef Pattern p
 
@@ -74,17 +75,16 @@ cdef class LearningBasic(AbstractLearning):
         for c in range(num_classes):
             part_sum = 0
             # TODO: Add multithreading
+
             for i in range(dataset.get_size()):
                 pattern = patterns[i]
                 if pattern.get_target_class().get_class_label_value() == c:
                     part_sum += compatible_grades[i]
-
             sum_compatible_grade_for_each_class[c] = part_sum
             all_sum += part_sum
 
         if all_sum != 0:
             confidence = sum_compatible_grade_for_each_class/all_sum
-
         return confidence
 
     cpdef double[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):

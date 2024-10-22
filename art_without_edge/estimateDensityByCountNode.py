@@ -9,7 +9,6 @@ def estimateDensityByCountNode(net, class_num, minCIM):
     print(minCIM)
     node_positions = np.array(net.weight)
     count_node = np.array(net.CountNode)
-    # Silverman's Ruleに基づくバンド幅の計算
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
     with open(f'wine.csv', 'a') as f:

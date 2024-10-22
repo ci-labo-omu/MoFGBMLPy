@@ -89,7 +89,6 @@ class Input:
 
                 for i in range(len(in_vector)):
                     in_vector[i] = float(row[i])
-
                 class_label = ClassLabelBasic(int(float(row[num_dim])))
 
                 patterns.append(Pattern(pattern_id, in_vector, class_label))
