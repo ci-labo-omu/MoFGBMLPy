@@ -74,7 +74,6 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
 
         if pattern is None:
             raise TypeError("The pattern is none")
-
         for i in range(michigan_solution_list.shape[0]):
             solution = michigan_solution_list[i]
 
@@ -86,12 +85,9 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
 
             # if self.__cache_size == 0:  # No cache
             value = solution.get_fitness_value(pattern.get_attributes_vector())
-            #rule weightをvalueにかけてvalueとする
-            print(value)
-            weight = solution.get_rule_weight()
-            print(weight)
-            value = value * weight
-            print(value)
+            rule_weight = solution.get_rule_weight()
+            value = value * rule_weight
+            print(value, rule_weight)
             # else:
             #     value = self.get_fitness_value(solution, pattern)
 

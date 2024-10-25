@@ -114,7 +114,6 @@ class PittsburghProblem(Problem):
             *args (tuple): Other arguments for Pymoo
             **kwargs (dict): Other arguments for Pymoo
         """
-        print("あああ")
         cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)
         cdef int i
 

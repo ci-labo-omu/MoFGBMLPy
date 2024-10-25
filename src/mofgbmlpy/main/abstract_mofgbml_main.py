@@ -189,7 +189,6 @@ class AbstractMoFGBMLMain(ABC):
 
         # classification = SingleWinnerRuleSelection(self._mofgbml_args.get("CACHE_SIZE"))
         classification = SingleWinnerRuleSelection()
-
         self._problem = PittsburghProblem(num_vars_pittsburgh,
                                           self._objectives,
                                           num_constraints_pittsburgh,
