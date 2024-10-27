@@ -58,7 +58,7 @@ cdef class LearningBasic(AbstractLearning):
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes)
         cdef double[:] compatible_grades = np.zeros(dataset.get_size())
         cdef Pattern[:] patterns = dataset.get_patterns()
-        cdef double[:] density = dataset.get_density()
+        #cdef double[:] density = dataset.get_density()
         cdef int i
         cdef Pattern p
 
