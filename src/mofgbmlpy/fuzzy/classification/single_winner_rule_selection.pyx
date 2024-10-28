@@ -88,7 +88,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
 
             value = solution.get_fitness_value(pattern.get_attributes_vector())
             # Value should be multiplied by the Rule weight.
-            rule_weight = solution.get_rule_weight()
+            rule_weight = solution.get_rule_weight().get_value()
             value = value * rule_weight
 
             # else:
