@@ -72,7 +72,7 @@ if __name__ == '__main__':
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--no-output-files",
-        "--verbose",
+        "--verbose", "True",
     ]
     #runner.main(sys.argv[1:])
     runner.main(args)
