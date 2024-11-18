@@ -59,4 +59,20 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
 
 if __name__ == '__main__':
     runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    runner.main(sys.argv[1:])
+    import os
+    os.chdir("C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/examples")
+    args = [
+        "--algorithm-id", "1",
+        "--experiment-id", "2",
+        "--data-name", "pima",
+        "--train-file", "../dataset/pima/a0_0_pima-10tra.dat",
+        "--test-file", "../dataset/pima/a0_0_pima-10tst.dat",
+        "--terminate-evaluation", "10000",
+        "--objectives", "total-rule-length", "error-rate",
+        # "--crossover-type", "pittsburgh-crossover",
+        # "--antecedent-factory", "all-combination-antecedent-factory",
+        "--no-output-files",
+        "--verbose",
+    ]
+    #runner.main(sys.argv[1:])
+    runner.main(args)
