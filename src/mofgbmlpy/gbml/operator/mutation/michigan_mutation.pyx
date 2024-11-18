@@ -6,6 +6,8 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
+
 
 class MichiganMutation(Mutation):
     """Michigan mutation operator
@@ -46,7 +48,7 @@ class MichiganMutation(Mutation):
         # for each individual
         cdef MichiganSolution sol
         sol = X[0, 0]
-        cdef Dataset training_set = sol.get_rule_builder().get_training_dataset()
+        cdef DatasetWithDensity training_set = sol.get_rule_builder().get_training_dataset()
         cdef int training_set_size = training_set.get_size()
 
         for i in range(len(X)):

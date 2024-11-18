@@ -8,6 +8,8 @@ cimport numpy as cnp
 
 from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
+
 cdef class RuleBuilderCore:
     """Rule builder
 
@@ -61,7 +63,7 @@ cdef class RuleBuilderCore:
         """
         return Antecedent(antecedent_indices, self._knowledge)
 
-    cdef AbstractConsequent create_consequent(self, Antecedent antecedent, Dataset dataset=None):
+    cdef AbstractConsequent create_consequent(self, Antecedent antecedent, DatasetWithDensity dataset=None):
         """Create a consequent from the antecedent and eventually a dataset different from the one given
         
         Args:
@@ -81,7 +83,7 @@ cdef class RuleBuilderCore:
         """
         return self._knowledge
 
-    cpdef Dataset get_training_dataset(self):
+    cpdef DatasetWithDensity get_training_dataset(self):
         """Get the training set
         
         Returns:

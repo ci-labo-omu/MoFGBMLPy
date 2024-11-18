@@ -3,11 +3,12 @@ from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 
 
 
 cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
-    cdef Dataset __training_set
+    cdef DatasetWithDensity __training_set
     cdef Knowledge __knowledge
     cdef bint __is_dc_probability
     cdef double __dc_rate

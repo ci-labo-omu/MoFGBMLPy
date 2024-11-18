@@ -20,7 +20,7 @@ NR = 0.0
 data = scipy.io.loadmat('2D_ClusteringDATASET.mat')['data']  # OpenMLデータセットの読み込み
 
 
-num_features = 2
+num_features = 4
 data, y = make_classification(n_samples=8000,  # サンプル数
                               n_features=num_features ,  # 特徴量の数（2つの特徴量）
                               flip_y=0,
@@ -30,14 +30,16 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_clusters_per_class=1,  # クラスごとのクラスター数
                               n_classes=4,  # クラス数（4クラス分類）
                               random_state=42)  #
-data, y = load_wine(return_X_y=True)
 
 #それぞれのクラスのデータ数を表示
 print(np.unique(y, return_counts=True))
 data = MinMaxScaler().fit_transform(data)
+#dataとyをdatファイルに書き出し，それぞれの行を横に並べて
+data = np.hstack([data, y.reshape(-1, 1)])
+np.savetxt('data.dat', data, delimiter=',', fmt='%.5f')
+exit()
 # dataを2次元平面でプロット再現性のための乱数シード
 # dataとyを結合x
-data = np.hstack([data, y.reshape(-1, 1)])
 #dataをプロット
 plt.scatter(data[y == 0, 0], data[y == 0, 1], label='Class 1', s=50, alpha=0.6)
 plt.scatter(data[y == 1, 0], data[y == 1, 1], label='Class 2', s=50, alpha=0.6)
@@ -71,10 +73,11 @@ y = np.hstack([y1, y2, y3, y4, y5, y6])"""
 data_1 = data[y == 0]
 data_2 = data[y == 1]
 data_3 = data[y == 2]
+data_4 = data[y == 3]
 
 minCIMs = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
-for minCIM in [0.15]:
-    for i, data in enumerate([data_1, data_2, data_3]):
+for minCIM in minCIMs:
+    for i, data in enumerate([data_1, data_2, data_3, data_4]):
         # Normalization [0-1]
         # Normalization [0-1]
         # Randomize data

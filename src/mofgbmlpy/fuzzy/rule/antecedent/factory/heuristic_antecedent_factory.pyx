@@ -1,4 +1,6 @@
 from mofgbmlpy.data.pattern cimport Pattern
+
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
@@ -18,7 +20,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         __antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
         _random_gen (numpy.random.Generator): Random generator
     """
-    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
+    def __init__(self, DatasetWithDensity training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
         """Constructor
 
         Args:

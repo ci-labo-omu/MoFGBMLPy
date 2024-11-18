@@ -54,7 +54,7 @@ cdef class PittsburghSolution(AbstractSolution):
         return self.__michigan_solution_builder
 
 
-    cpdef void learning(self, Dataset dataset=None):
+    cpdef void learning(self, DatasetWithDensity dataset=None):
         """Update the consequent of the michigan solutions
         
         Args:
@@ -325,7 +325,7 @@ cdef class PittsburghSolution(AbstractSolution):
                length += item.get_length()
         return length
 
-    cpdef double get_error_rate(self, Dataset dataset):
+    cpdef double get_error_rate(self, DatasetWithDensity dataset):
         """Get the error rate. Note that it update the fitness and number of wins of the Michigan solutions of this classifier
         
         Args:
@@ -365,7 +365,7 @@ cdef class PittsburghSolution(AbstractSolution):
         return num_errors / dataset_size
 
 
-    cpdef object[:] get_errored_patterns(self, Dataset dataset):
+    cpdef object[:] get_errored_patterns(self, DatasetWithDensity dataset):
         """Get the patterns that can't be classified by this classifier.
  
         Args:

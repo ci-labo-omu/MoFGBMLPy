@@ -60,6 +60,7 @@ class Input:
                 pattern_id += 1
 
             patterns = np.array(patterns, dtype=object)
+
             dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset
@@ -95,6 +96,8 @@ class Input:
                 pattern_id += 1
 
         patterns = np.array(patterns, dtype=object)
+        print(size, num_dim, num_classes, patterns)
+
         dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset

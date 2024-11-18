@@ -5,15 +5,13 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def estimateDensityByCountNode(net, class_num, minCIM):
     # ノード位置とカウントを取得
-    minCIM = int(minCIM*100)
-    print(minCIM)
     node_positions = np.array(net.weight)
     count_node = np.array(net.CountNode)
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    with open(f'wine.csv', 'a') as f:
+    with open(f'node_positions/node_positions4dim_50_{int(minCIM*100)}.csv', 'a') as f:
         for i in range(len(node_positions)):
-            f.write(str(list(node_positions[i])) + ', ' + str(count_node[i]) + ', ' + str(class_num) + '\n')
+            f.write(str(list(node_positions[i])) + ', ' + str(class_num) + ', ' + str(count_node[i]) + '\n')
 
 
     """n = node_positions.shape[0]

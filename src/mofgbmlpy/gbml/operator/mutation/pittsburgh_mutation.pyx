@@ -6,6 +6,8 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
+
 
 class PittsburghMutation(Mutation):
     """Pittsburgh mutation operator
@@ -44,7 +46,7 @@ class PittsburghMutation(Mutation):
 
         cdef PittsburghSolution sol = X[0, 0]
         cdef MichiganSolution sol_m = sol.get_var(0)
-        cdef Dataset training_set = sol_m.get_rule_builder().get_training_dataset()
+        cdef DatasetWithDensity training_set = sol_m.get_rule_builder().get_training_dataset()
         training_set_size = training_set.get_size()
         dim = training_set.get_num_dim()
 

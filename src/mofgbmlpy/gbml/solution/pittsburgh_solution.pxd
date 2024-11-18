@@ -12,6 +12,7 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionBuilder
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 
 cdef class PittsburghSolution(AbstractSolution):
     cdef AbstractClassification __classification
@@ -19,7 +20,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolution[:] _vars
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
-    cpdef void learning(self, Dataset dataset=?)
+    cpdef void learning(self, DatasetWithDensity dataset=?)
     cpdef double get_average_rule_weight(self)
     cpdef void remove_var(self, int index)
     cpdef void clear_vars(self)
@@ -32,7 +33,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolution classify(self, Pattern pattern)
     cpdef MichiganSolution classify_py(self, Pattern pattern)
     cpdef get_total_rule_length(self)
-    cpdef double get_error_rate(self, Dataset dataset)
-    cpdef object[:] get_errored_patterns(self, Dataset dataset)
+    cpdef double get_error_rate(self, DatasetWithDensity dataset)
+    cpdef object[:] get_errored_patterns(self, DatasetWithDensity dataset)
     cpdef AbstractClassification get_classification(self)
     cpdef AbstractClassLabel predict(self, Pattern pattern)

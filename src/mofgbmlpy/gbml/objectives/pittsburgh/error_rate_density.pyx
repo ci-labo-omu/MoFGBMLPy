@@ -1,4 +1,3 @@
-
 from mofgbmlpy.exception.invalid_solution_type_exception import InvalidSolutionTypeException
 from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
@@ -16,7 +15,8 @@ cdef class ErrorRate(ObjectiveFunction):
         Args:
             data_set (Dataset): Training dataset
         """
-
+        print("ErrorRate constructor")
+        print(type(self.__data_set))
         self.__data_set = data_set
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
