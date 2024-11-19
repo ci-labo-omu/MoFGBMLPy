@@ -72,7 +72,38 @@ if __name__ == '__main__':
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--no-output-files",
-        "--verbose", "True",
+        "--verbose",
     ]
     #runner.main(sys.argv[1:])
-    runner.main(args)
+    results = runner.main(args)
+    min_length = results.opt.get("X")[0, 0].get_var(0).get_rule().get_length()
+    max_length = min_length
+    for sol in results.opt.get("X")[:, 0]:
+        for var in sol.get_vars():
+            length = var.get_rule().get_length()
+            if length < min_length:
+                min_length = length
+            elif length > max_length:
+                max_length = length
+    print(min_length, max_length)
+
+    i = 1
+    for var in results.opt.get("X")[0, 0].get_vars():
+        print(f"{i}:\t{var.get_rule().get_linguistic_representation()}")
+        i += 1
+
+    plot = runner.get_pareto_front_plot(results.opt)
+    plot.show()
+    # plot.ax.set_ylim([0,1])
+    plot.ax.grid(visible=True)
+    results.opt.get('X')[1, 0]
+    runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
+                                                          title="MoFGBMLPy on 4dim8000 with NSGA-II", xlim=[0, 51])
+
+    for idx, sol in enumerate(results.opt.get("X")[:, 0]):
+        print(f"\n識別器 {idx + 1} のルール:")
+
+    # 各識別器のルールを取得し表示
+    for rule_idx, var in enumerate(sol.get_vars(), start=1):
+        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+
