@@ -72,7 +72,7 @@ if __name__ == '__main__':
         "--data-name", "bupa",
         "--train-file", "../art_without_edge/node_positions/node_positions4dim_50_30.csv",
         "--test-file", "../art_without_edge/data.dat",
-        "--terminate-evaluation", "30000",
+        "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
