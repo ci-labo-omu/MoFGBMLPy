@@ -97,7 +97,6 @@ class Input:
 
         patterns = np.array(patterns, dtype=object)
         print(size, num_dim, num_classes, patterns)
-
         dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset

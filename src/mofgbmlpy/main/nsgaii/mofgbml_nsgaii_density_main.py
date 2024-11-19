@@ -70,8 +70,8 @@ if __name__ == '__main__':
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--data-name", "bupa",
-        "--train-file", "../art_without_edge/node_positions/node_positions4dim_50_30.csv",
-        "--test-file", "../art_without_edge/data.dat",
+        "--train-file", "../art_without_edge/node_positions/node_positions4dim_50_60.csv",
+        "--test-file", "../art_without_edge/data4dim.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     plot.ax.grid(visible=True)
     results.opt.get('X')[1, 0]
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy Density with NSGA-II", xlim=[0, 51])
+                                                          title="MoFGBMLPy Density 60 with NSGA-II", xlim=[0, 51])
 
 # 最適解の中の全ての識別器についてループ
 for idx, sol in enumerate(results.opt.get("X")[:, 0]):

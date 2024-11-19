@@ -36,11 +36,11 @@ print(np.unique(y, return_counts=True))
 data = MinMaxScaler().fit_transform(data)
 #dataとyをdatファイルに書き出し，それぞれの行を横に並べて
 data = np.hstack([data, y.reshape(-1, 1)])
-np.savetxt('data.dat', data, delimiter=',', fmt='%.5f')
-exit()
+np.savetxt('data4dim.dat', data, delimiter=',', fmt='%.5f')
 # dataを2次元平面でプロット再現性のための乱数シード
 # dataとyを結合x
 #dataをプロット
+exit(0)
 plt.scatter(data[y == 0, 0], data[y == 0, 1], label='Class 1', s=50, alpha=0.6)
 plt.scatter(data[y == 1, 0], data[y == 1, 1], label='Class 2', s=50, alpha=0.6)
 plt.scatter(data[y == 2, 0], data[y == 2, 1], label='Class 3', s=50, alpha=0.6)
