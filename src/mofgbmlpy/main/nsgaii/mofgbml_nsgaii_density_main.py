@@ -70,8 +70,8 @@ if __name__ == '__main__':
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--data-name", "bupa",
-        "--train-file", "../art_without_edge/node_positions/node_positions4dim_50_75.csv",
-        "--test-file", "../art_without_edge/data4dim.dat",
+        "--train-file", "../art_without_edge/node_positions/node_positions3dim_50_75.csv",
+        "--test-file", "../art_without_edge/data3dim.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_5)
+    runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     results = runner.main(args)
 
     min_length = results.opt.get("X")[0, 0].get_var(0).get_rule().get_length()
@@ -105,12 +105,12 @@ if __name__ == '__main__':
     plot.ax.grid(visible=True)
     results.opt.get('X')[1, 0]
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy Density 75 with NSGA-II", xlim=[0, 51])
+                                                          title="MoFGBMLPy Density3 75 with NSGA-II", xlim=[0, 51])
+    print(results.opt.get('F'))
+    #  最適解の中の全ての識別器についてループ
+    for idx, sol in enumerate(results.opt.get("X")[:, 0]):
+        print(f"\n識別器 {idx + 1} のルール:")
 
-# 最適解の中の全ての識別器についてループ
-for idx, sol in enumerate(results.opt.get("X")[:, 0]):
-    print(f"\n識別器 {idx + 1} のルール:")
-
-    # 各識別器のルールを取得し表示
-    for rule_idx, var in enumerate(sol.get_vars(), start=1):
-        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+        # 各識別器のルールを取得し表示
+        for rule_idx, var in enumerate(sol.get_vars(), start=1):
+            print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
