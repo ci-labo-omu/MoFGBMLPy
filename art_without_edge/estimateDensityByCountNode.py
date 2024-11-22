@@ -11,7 +11,7 @@ def estimateDensityByCountNode(net, class_num, minCIM):
 
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    with open(f'node_positions/node_positions3dim_50_{int(minCIM*100)}.csv', 'a') as f:
+    with open(f'dataset_nodes/a0_0_bupa_node{int(minCIM*100)}.csv', 'a') as f:
         for i in range(len(node_positions)):
             position = ",".join(map(str, node_positions[i]))
             f.write(position + ',' + str(count_node[i]) + '\n')

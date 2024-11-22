@@ -31,16 +31,28 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_classes=4,  # クラス数（4クラス分類）
                               random_state=42)
 
+with open('../dataset/bupa/a0_0_bupa-10tra.dat', 'r') as f:
+    #ヘッダ行はサンプル数，次元数，クラス数の3つの整数をカンマ区切りで記述されている
+    header = f.readline().strip().split(',')
+    num_rows = int(header[0])
+    num_dims = int(header[1])
+    num_classes = int(header[2])
+    print(num_rows, num_dims, num_classes)
+    X = np.zeros((num_rows, num_dims))
+    y = np.zeros(num_rows)
+    for i, line in enumerate(f):
+        data = line.strip().split(',')[:-1]
+        X[i] = np.array(data[:-1], dtype=float)
+        y[i] = data[-1]
+
 #それぞれのクラスのデータ数を表示
 print(np.unique(y, return_counts=True))
-data = MinMaxScaler().fit_transform(data)
+X = MinMaxScaler().fit_transform(X)
 #dataとyをdatファイルに書き出し，それぞれの行を横に並べて
-data = np.hstack([data, y.reshape(-1, 1)])
-np.savetxt('data3dim.dat', data, delimiter=',', fmt='%.5f')
+data = np.hstack([X, y.reshape(-1, 1)])
 # dataを2次元平面でプロット再現性のための乱数シード
 # dataとyを結合x
 #dataをプロット
-exit(0)
 plt.scatter(data[y == 0, 0], data[y == 0, 1], label='Class 1', s=50, alpha=0.6)
 plt.scatter(data[y == 1, 0], data[y == 1, 1], label='Class 2', s=50, alpha=0.6)
 plt.scatter(data[y == 2, 0], data[y == 2, 1], label='Class 3', s=50, alpha=0.6)
