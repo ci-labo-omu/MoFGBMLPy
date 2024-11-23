@@ -69,9 +69,9 @@ if __name__ == '__main__':
     args = [
         "--algorithm-id", "1",
         "--experiment-id", "2",
-        "--data-name", "bupa",
-        "--train-file", "../art_without_edge/dataset_nodes/a0_0_bupa_node30.csv",
-        "--test-file", "../dataset/bupa/a0_0_bupa-10tst.dat",
+        "--data-name", "pima",
+        "--train-file", f"../art_without_edge/dataset_nodes/satimage/a0_0_satimage_tra/a0_0_satimage_node50.csv",
+        "--test-file", "../dataset/satimage/a0_0_satimage-10tst.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -79,9 +79,11 @@ if __name__ == '__main__':
         "--crossover-type", "hybrid-gbml-crossover",
         "--verbose",
     ]
-
+    data_name = "satimage"
+    minCIM = 0.5
     runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     results = runner.main(args)
+
 
     min_length = results.opt.get("X")[0, 0].get_var(0).get_rule().get_length()
     max_length = min_length
@@ -92,7 +94,6 @@ if __name__ == '__main__':
                 min_length = length
             elif length > max_length:
                 max_length = length
-    print(min_length, max_length)
 
     i = 1
     for var in results.opt.get("X")[0, 0].get_vars():
@@ -105,9 +106,9 @@ if __name__ == '__main__':
     plot.ax.grid(visible=True)
     results.opt.get('X')[1, 0]
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy Density3 Bupa30 with NSGA-II", xlim=[0, 51])
+                                                          title=f"MoFGBMLPy Density3 {str(data_name)}{int(minCIM*100)} with NSGA-II", xlim=[0, 51])
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy Density3 Bupa30 with NSGA-II", xlim=[0, 51], x_key='num_rules')
+                                                          title=f"MoFGBMLPy Density3 {str(data_name)}{int(minCIM*100)} with NSGA-II", xlim=[0, 51], x_key='num_rules')
 
     print(results.opt.get('F'))
     #  最適解の中の全ての識別器についてループ
