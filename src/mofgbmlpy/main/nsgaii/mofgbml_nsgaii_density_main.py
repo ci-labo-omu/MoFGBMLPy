@@ -70,8 +70,8 @@ if __name__ == '__main__':
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--data-name", "pima",
-        "--train-file", f"../art_without_edge/dataset_nodes/iris/a0_0_iris_tra/a0_0_iris_node50.csv",
-        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
+        "--train-file", "../art_without_edge/dataset_nodes/iris/a1_0_iris_tra/a1x_0_iris_node50.csv",
+        "--test-file", "../dataset/iris/a1_0_iris-10tst.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -110,7 +110,6 @@ if __name__ == '__main__':
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
                                                           title=f"MoFGBMLPy Density3 {str(data_name)}{int(minCIM*100)} with NSGA-II", xlim=[0, 51], x_key='num_rules')
 
-    print(results.opt.get('F'))
     #  最適解の中の全ての識別器についてループ
     for idx, sol in enumerate(results.opt.get("X")[:, 0]):
         print(f"\n識別器 {idx + 1} のルール:")
