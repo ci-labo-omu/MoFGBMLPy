@@ -65,8 +65,8 @@ if __name__ == '__main__':
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--data-name", "pima",
-        "--train-file", "../art_without_edge/dataset_nodes/a0_0_bupa_node30.csv",
-        "--test-file", "../dataset/bupa/a0_0_bupa-10tra.dat",
+        "--train-file", "../dataset/satimage/a0_0_satimage-10tra.dat",
+        "--test-file", "../dataset/satimage/a0_0_satimage-10tst.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -98,12 +98,11 @@ if __name__ == '__main__':
     plot.ax.grid(visible=True)
     results.opt.get('X')[1, 0]
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy on 4dim_30 with NSGA-II", xlim=[0, 51])
+                                                          title="MoFGBMLPy a0_0_satimage-10tra", xlim=[0, 51])
 
     for idx, sol in enumerate(results.opt.get("X")[:, 0]):
         print(f"\n識別器 {idx + 1} のルール:")
 
-    # 各識別器のルールを取得し表示
-    for rule_idx, var in enumerate(sol.get_vars(), start=1):
-        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
-
+        # 各識別器のルールを取得し表示
+        for rule_idx, var in enumerate(sol.get_vars(), start=1):
+            print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
