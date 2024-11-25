@@ -70,8 +70,8 @@ if __name__ == '__main__':
         "--algorithm-id", "1",
         "--experiment-id", "2",
         "--data-name", "pima",
-        "--train-file", f"../art_without_edge/dataset_nodes/satimage/a0_0_satimage_tra/a0_0_satimage_node50.csv",
-        "--test-file", "../dataset/satimage/a0_0_satimage-10tst.dat",
+        "--train-file", f"../art_without_edge/dataset_nodes/iris/a0_0_iris_tra/a0_0_iris_node50.csv",
+        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         "--terminate-evaluation", "10000",
         "--objectives", "total-rule-length", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         "--crossover-type", "hybrid-gbml-crossover",
         "--verbose",
     ]
-    data_name = "satimage"
+    data_name = "iris"
     minCIM = 0.5
     runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     results = runner.main(args)
