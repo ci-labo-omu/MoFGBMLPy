@@ -417,6 +417,7 @@ class AbstractMoFGBMLDensityMain(ABC):
             grid (bool): If true then show a grid
             x_key (str): Key of the value in the dict used as the X-axis
         """
+        plt.figure()
         err_train = []
         err_test = []
 
@@ -482,7 +483,7 @@ class AbstractMoFGBMLDensityMain(ABC):
         if file_path is not None:
             plt.savefig(file_path)
 
-        plt.show()
+        #plt.show()
 
     def plot_fuzzy_variables(self):
         """Plot the fuzzy variables of the knowledge base """

@@ -130,7 +130,6 @@ class Input_density():
             raise ValueError("Invalid arguments")
 
         training_data = Input_density.input_data_set(train_file_name, is_multi_label)
-        print(type(training_data))
         arguments.set("DATA_SIZE", training_data.get_size())
         arguments.set("ATTRIBUTE_NUMBER", training_data.get_num_dim())
         arguments.set("CLASS_LABEL_NUMBER", training_data.get_num_classes())
