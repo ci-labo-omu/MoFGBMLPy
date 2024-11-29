@@ -1,3 +1,7 @@
+import re
+from pathlib import Path
+
+import numpy as np
 from pymoo.termination import get_termination
 
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
@@ -11,6 +15,8 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import
 from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
+
+from mofgbmlpy.data.input import Input
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
 import sys
@@ -58,51 +64,101 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
 
 
 if __name__ == '__main__':
-    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
     import os
-    os.chdir("C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/examples")
+    os.chdir("C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/")
+
     args = [
         "--algorithm-id", "1",
         "--experiment-id", "2",
-        "--data-name", "pima",
-        "--train-file", "../dataset/satimage/a0_0_satimage-10tra.dat",
-        "--test-file", "../dataset/satimage/a0_0_satimage-10tst.dat",
+        "--train-file", "None",
+        "--test-file", "None",
+        "--data-name", "iris",
         "--terminate-evaluation", "10000",
-        "--objectives", "total-rule-length", "error-rate",
+        "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
-        "--no-output-files",
-        "--verbose",
+        "--crossover-type", "hybrid-gbml-crossover",
+
     ]
-    #runner.main(sys.argv[1:])
-    results = runner.main(args)
-    min_length = results.opt.get("X")[0, 0].get_var(0).get_rule().get_length()
-    max_length = min_length
-    for sol in results.opt.get("X")[:, 0]:
-        for var in sol.get_vars():
-            length = var.get_rule().get_length()
-            if length < min_length:
-                min_length = length
-            elif length > max_length:
-                max_length = length
-    print(min_length, max_length)
 
-    i = 1
-    for var in results.opt.get("X")[0, 0].get_vars():
-        print(f"{i}:\t{var.get_rule().get_linguistic_representation()}")
-        i += 1
+    data_name = "iris"
+    minCIM = 0.5
+    test_dir = f"dataset/{data_name}/"
+    #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
+    #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
+    #探索し，それぞれでrunner.mainを実行する．で，テストもまたそれぞれ
 
-    plot = runner.get_pareto_front_plot(results.opt)
-    plot.show()
-    # plot.ax.set_ylim([0,1])
-    plot.ax.grid(visible=True)
-    results.opt.get('X')[1, 0]
-    runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
-                                                          title="MoFGBMLPy a0_0_satimage-10tra", xlim=[0, 51])
+    """
+    tstファイルを探索し、それに基づいて対応するtraファイルを別ディレクトリから取得して処理する。
 
-    for idx, sol in enumerate(results.opt.get("X")[:, 0]):
-        print(f"\n識別器 {idx + 1} のルール:")
+    Args:
+        test_dir (str): tstファイルが保存されているディレクトリ
+        train_base_dir (str): traファイルが保存されているディレクトリのベースパス
+        data_name (str): 対象データセット名 (例: "bupa")
+    """
+    # 1. tstファイルを探索
+    test_dir = Path(test_dir)
 
-        # 各識別器のルールを取得し表示
-        for rule_idx, var in enumerate(sol.get_vars(), start=1):
-            print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+    for train_file, test_file in zip(test_dir.glob(f"*{data_name}-10tra.dat"), test_dir.glob(f"*{data_name}-10tst.dat")):
+        # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
+        identifier = test_file.stem.split(f"-10tst")[0]
+
+        print(f"Processing Train: {train_file} | Test: {test_file}")
+        # 実際の処理 (例: runner.main を呼び出す)
+        train_file = str(train_file)
+        test_file = str(test_file)
+
+        """        with open (train_file, 'r') as f:
+            header = f.readline().strip().split(',')
+            num_rows = int(header[0])
+            num_dims = int(header[1])
+            num_classes = int(header[2])
+            X = np.zeros((num_rows, num_dims))
+            y = np.zeros(num_rows)
+            for i, line in enumerate(f):
+                data = line.strip().split(',')[:-1]
+                X[i] = np.array(data[:-1], dtype=float)
+                y[i] = data[-1]
+        with open(test_file, 'r') as f:
+            header = f.readline().strip().split(',')
+            num_rows = int(header[0])
+            num_dims = int(header[1])
+            num_classes = int(header[2])
+            X = np.zeros((num_rows, num_dims))
+            y = np.zeros(num_rows)
+            for i, line in enumerate(f):
+                data = line.strip().split(',')[:-1]
+                X[i] = np.array(data[:-1], dtype=float)
+                y[i] = data[-1]"""
+        train_set = Input().input_data_set(train_file, False)
+        test_set = Input().input_data_set(test_file, False)
+        runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+        results = runner.main(args, train=train_set, test=test_set)
+        Xs = results.opt.get("X")[:, 0]
+        rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
+        num_rules = [len(sol.get_vars()) for sol in Xs]
+        min_length = min(rule_lengths)
+        max_length = max(rule_lengths)
+        #plot = runner.get_pareto_front_plot(results.opt)
+        #plot.show()
+        ## plot.ax.set_ylim([0,1])
+        #plot.ax.grid(visible=True)
+        results.opt.get('X')[1, 0]
+        #各plotのタイトルは，各traファイルの名前に対応するようにする
+        rule_length_path = f"image/{data_name}/{identifier}_rule_length.png"
+        num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
+        title = f"MoFGBMLPy with Density {train_file} with NSGA-II"
+        runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+                                                              file_path=rule_length_path,title=title, xlim=[0, 20])
+        runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+                                                          title=title, file_path=num_rules_path, xlim=[0, 10], x_key='num_rules')
+        ##  最適解の中の全ての識別器についてループ
+        #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
+        #    print(f"\n識別器 {idx + 1} のルール:")
+        #    # 各識別器のルールを取得し表示
+        #    for rule_idx, var in enumerate(sol.get_vars(), start=1):
+        #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+        # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
+        # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
+        with open("result_main.txt", "a") as f:
+            f.write(f"{train_file}, {results.exec_time}, {num_rules}, {min_length}, {max_length}\n")
