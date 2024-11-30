@@ -78,16 +78,16 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "bupa",
+        "--data-name", "iris",
         "--terminate-evaluation", "10000",
-        "--objectives", "total-rule-length", "error-rate",
+        "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
 
     ]
 
-    data_name = "bupa"
+    data_name = "iris"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -101,14 +101,14 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "bupa")
+        data_name (str): 対象データセット名 (例: "iris")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
+        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
 
@@ -118,7 +118,7 @@ if __name__ == '__main__':
             print(f"Train directory not found: {train_dir}")
             continue
 
-        # 2. traファイルを探索 (例: "a0_0_bupa_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"))
         if not train_files:
             print(f"No training files found in: {train_dir}")
@@ -133,28 +133,7 @@ if __name__ == '__main__':
             # Extract numeric part (e.g., `30` or `45`) from the file name
             match = re.search(r"node(\d+)", Path(train_file).stem)
             node_number = match.group(1) if match else "unknown"
-            with open (train_file, 'r') as f:
-                header = f.readline().strip().split(',')
-                num_rows = int(header[0])
-                num_dims = int(header[1])
-                num_classes = int(header[2])
-                X = np.zeros((num_rows, num_dims))
-                y = np.zeros(num_rows)
-                for i, line in enumerate(f):
-                    data = line.strip().split(',')[:-1]
-                    X[i] = np.array(data[:-1], dtype=float)
-                    y[i] = data[-1]
-            with open(test_file, 'r') as f:
-                header = f.readline().strip().split(',')
-                num_rows = int(header[0])
-                num_dims = int(header[1])
-                num_classes = int(header[2])
-                X = np.zeros((num_rows, num_dims))
-                y = np.zeros(num_rows)
-                for i, line in enumerate(f):
-                    data = line.strip().split(',')[:-1]
-                    X[i] = np.array(data[:-1], dtype=float)
-                    y[i] = data[-1]
+
             train_set = Input_density().input_data_set(train_file, False)
             test_set = Input().input_data_set(test_file, False)
             runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
@@ -178,10 +157,9 @@ if __name__ == '__main__':
             rule_length_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_rule_length.png"
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
+
             runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                                  file_path=rule_length_path,title=title, xlim=[0, 51])
-            runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                              title=title, file_path=num_rules_path, xlim=[0, 51], x_key='num_rules')
+                                                              title=title, file_path=num_rules_path, xlim=[0, 10], x_key='num_rules')
 
             ##  最適解の中の全ての識別器についてループ
             #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
