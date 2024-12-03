@@ -468,8 +468,7 @@ class AbstractMoFGBMLMain(ABC):
             plt.plot(err_test[:, 0], err_test[:, 1], c='blue', marker='o', label="Test")
         plt.xlabel(x_label)
         if title is not None:
-            #plt.title(title)
-            pass
+            plt.title(title)
         if grid:
             plt.grid()
 
