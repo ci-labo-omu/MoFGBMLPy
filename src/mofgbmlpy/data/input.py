@@ -43,6 +43,7 @@ class Input:
             pattern_id = 0
             patterns = []
             for row in reader:
+
                 in_vector = np.zeros(num_dim, dtype=np.float64)
                 c_vector = np.zeros(num_classes, dtype=np.int_)
 

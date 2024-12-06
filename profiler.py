@@ -7,7 +7,7 @@ new_path = f"{os.getcwd()}{os.sep}src"
 if new_path not in sys.path:
     sys.path.append(new_path)
 
-from src.mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
+from src.mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main_repeat import MoFGBMLNSGAIIMain
 from src.mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5

@@ -12,7 +12,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
     HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
 from mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
+from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main_repeat import MoFGBMLNSGAIIMain
 
 
 def process_runs_results(runs_results, x_key="total_rule_length", y_key="training_error_rate",
