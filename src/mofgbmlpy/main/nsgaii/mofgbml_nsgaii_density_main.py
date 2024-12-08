@@ -78,8 +78,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris",
-        "--terminate-evaluation", "10000",
+        "--data-name", "yeast",
+        "--terminate-evaluation", "30000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "iris"
+    data_name = "yeast"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -154,12 +154,11 @@ if __name__ == '__main__':
             #plot.ax.grid(visible=True)
             results.opt.get('X')[1, 0]
             #各plotのタイトルは，各traファイルの名前に対応するようにする
-            rule_length_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_rule_length.png"
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
 
             runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                              title=title, file_path=num_rules_path, xlim=[0, 10], x_key='num_rules')
+                                                              file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
 
             ##  最適解の中の全ての識別器についてループ
             #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
@@ -171,5 +170,5 @@ if __name__ == '__main__':
 
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            with open("result.txt", "a") as f:
+            with open("result_yeast_density.txt", "a") as f:
                 f.write(f"{train_file}, {results.exec_time}, {num_rules}, {min_length}, {max_length}\n")
