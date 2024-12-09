@@ -72,7 +72,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "yeast",
+        "--data-name", "segment",
         "--terminate-evaluation", "30000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "yeast"
+    data_name = "segment"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -134,10 +134,8 @@ if __name__ == '__main__':
         runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
         results = runner.main(args, train=train_set, test=test_set)
         Xs = results.opt.get("X")[:, 0]
-        rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
         num_rules = [len(sol.get_vars()) for sol in Xs]
-        min_length = min(rule_lengths)
-        max_length = max(rule_lengths)
+
         #plot = runner.get_pareto_front_plot(results.opt)
         #plot.show()
         ## plot.ax.set_ylim([0,1])
@@ -146,7 +144,8 @@ if __name__ == '__main__':
         #各plotのタイトルは，各traファイルの名前に対応するようにする
         num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
         runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                          file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+                                                          file_path=num_rules_path, xlim=[0, 30], x_key='num_rules')
+        #各識別器の識別精度を取得
         ##  最適解の中の全ての識別器についてループ
         #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
         #    print(f"\n識別器 {idx + 1} のルール:")
@@ -155,5 +154,5 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_yeast.txt", "a") as f:
-            f.write(f"{train_file}, {results.exec_time}, {num_rules}, {min_length}, {max_length}\n")
+        with open("result_segment.txt", "a") as f:
+            f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
