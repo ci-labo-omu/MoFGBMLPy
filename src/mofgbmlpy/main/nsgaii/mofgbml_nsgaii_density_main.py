@@ -78,7 +78,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "yeast",
+        "--data-name", "segment",
         "--terminate-evaluation", "30000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "yeast"
+    data_name = "segment"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -101,14 +101,14 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "iris")
+        data_name (str): 対象データセット名 (例: "segment")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
+        # tstファイル名から識別子を抽出 (例: "a0_0_segment")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
 
@@ -118,7 +118,7 @@ if __name__ == '__main__':
             print(f"Train directory not found: {train_dir}")
             continue
 
-        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_segment_node*.csv")
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"))
         if not train_files:
             print(f"No training files found in: {train_dir}")
@@ -152,7 +152,7 @@ if __name__ == '__main__':
             #plot.show()
             ## plot.ax.set_ylim([0,1])
             #plot.ax.grid(visible=True)
-            results.opt.get('X')[1, 0]
+            
             #各plotのタイトルは，各traファイルの名前に対応するようにする
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
@@ -160,6 +160,7 @@ if __name__ == '__main__':
             runner.plot_line_interpretability_error_rate_tradeoff(Xs,
                                                               file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
 
+            objectives = list(np.unique(results.opt.get("F")))
             ##  最適解の中の全ての識別器についてループ
             #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
             #    print(f"\n識別器 {idx + 1} のルール:")
@@ -170,5 +171,5 @@ if __name__ == '__main__':
 
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            with open("result_yeast_density.txt", "a") as f:
-                f.write(f"{train_file}, {results.exec_time}, {num_rules}, {min_length}, {max_length}\n")
+            with open("result_segment_density.txt", "a") as f:
+                f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
