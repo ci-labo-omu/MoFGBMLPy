@@ -263,7 +263,7 @@ class AbstractMoFGBMLDensityMain(ABC):
 
         Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')), f"{res.exec_time}")
 
-    def main(self, args, train=None, test=None):
+    def main(self, args, train=None, test=None, trains=None, change=False):
 
         """Main function of the runner
 

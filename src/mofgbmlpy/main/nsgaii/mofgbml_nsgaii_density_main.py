@@ -157,8 +157,8 @@ if __name__ == '__main__':
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
 
-            runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                              file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+            #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+            #                                                  file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
 
             objectives = list(np.unique(results.opt.get("F")))
             ##  最適解の中の全ての識別器についてループ
@@ -171,5 +171,5 @@ if __name__ == '__main__':
 
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            with open("result_segment_density.txt", "a") as f:
-                f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
+            #with open("result_segment_density.txt", "a") as f:
+            #    f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
