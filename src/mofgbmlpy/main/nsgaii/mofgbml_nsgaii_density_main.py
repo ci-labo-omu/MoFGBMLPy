@@ -49,7 +49,7 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
         Returns:
             pymoo.core.result.Result: Result of the run
         """
-        algorithm = NSGA2(pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
+        self.algorithm = NSGA2(pop_size=self._mofgbml_args.get("POPULATION_SIZE"),
                           sampling=HybridGBMLSampling(self._learner),
                           crossover=self._crossover,
                           repair=PittsburghRepair(),
@@ -58,12 +58,12 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
                           save_history=True,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
-        res = minimize(self._problem,
-                       algorithm,
+        self.res = minimize(self._problem,
+                       self.algorithm,
                        termination=self._termination,
                        seed=self._mofgbml_args.get("RAND_SEED"),
                        verbose=self._verbose)
-        return res
+        return self.res
 
 
 
