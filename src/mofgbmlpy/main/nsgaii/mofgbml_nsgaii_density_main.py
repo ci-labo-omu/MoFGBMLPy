@@ -91,7 +91,7 @@ if __name__ == '__main__':
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
-    #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
+    #for文で，trainとtestのデータをつっこんで，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
     #探索し，それぞれでrunner.mainを実行する．で，テストもまたそれぞれ
 
