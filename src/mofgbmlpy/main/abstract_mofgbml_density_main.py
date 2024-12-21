@@ -73,7 +73,9 @@ class AbstractMoFGBMLDensityMain(ABC):
         self._is_multi_label = None
         self._learner = None
 
-    def load_args(self, args, train=None, test=None):
+        self._trains = None
+
+    def load_args(self, args, train=None, test=None, trains=None):
         """Load the arguments
 
         Args:
@@ -95,10 +97,15 @@ class AbstractMoFGBMLDensityMain(ABC):
             Output.writeln(file_name, str(self._mofgbml_args), False)
 
         # Load dataset
-        if train is not None and test is not None:
-            self._train, self._test = train, test
-        else:
-            self._train, self._test = Input_density.get_train_test_files(self._mofgbml_args)
+        #if train is not None and test is not None:
+        #    self._train, self._test = train, test
+        #else:
+        #    self._train, self._test = Input_density.get_train_test_files(self._mofgbml_args)
+
+        if trains is not None:
+            self._trains = trains
+            self._train = self._trains[0]
+            self._test = test
 
 
         self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
@@ -192,7 +199,7 @@ class AbstractMoFGBMLDensityMain(ABC):
         self._problem = PittsburghProblem(num_vars_pittsburgh,
                                           self._objectives,
                                           num_constraints_pittsburgh,
-                                          self._train,
+                                          self._trains,
                                           michigan_solution_builder,
                                           classification)
 
@@ -277,7 +284,7 @@ class AbstractMoFGBMLDensityMain(ABC):
         """
 
         # TODO: print information
-        self.load_args(args, train, test)
+        self.load_args(args, trains = trains, test=test)
 
         res = self.run()
         exec_time = res.exec_time

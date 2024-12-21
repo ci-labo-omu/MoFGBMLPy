@@ -110,66 +110,49 @@ if __name__ == '__main__':
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
         # tstファイル名から識別子を抽出 (例: "a0_0_segment")
         identifier = test_file.stem.split(f"-10tst")[0]
-        print(f"Processing test file: {test_file} | Identifier: {identifier}")
+        print(f"Processing test file: {test_file}")
 
         # 対応する tra ファイルを含むディレクトリを決定
         train_dir = train_base_dir / f"{identifier}_tra"
         if not train_dir.exists():
             print(f"Train directory not found: {train_dir}")
             continue
-
+        train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"), reverse=True)
+        train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
         # 2. traファイルを探索 (例: "a0_0_segment_node*.csv")
-        train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"))
+
+
         if not train_files:
             print(f"No training files found in: {train_dir}")
             continue
 
-        # 3. traファイルとtstファイルを対応させて処理
-        for train_file in train_files:
-            print(f"Processing Train: {train_file} | Test: {test_file}")
-            # 実際の処理 (例: runner.main を呼び出す)
-            train_file = str(train_file)
-            test_file = str(test_file)
-            # Extract numeric part (e.g., `30` or `45`) from the file name
-            match = re.search(r"node(\d+)", Path(train_file).stem)
-            node_number = match.group(1) if match else "unknown"
 
-            train_set = Input_density().input_data_set(train_file, False)
-            test_set = Input().input_data_set(test_file, False)
-            runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-            results = runner.main(args, train=train_set, test=test_set)
-            Xs = results.opt.get("X")[:, 0]
-            rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
-            num_rules = [len(sol.get_vars()) for sol in Xs]
-            min_length = min(rule_lengths)
-            max_length = max(rule_lengths)
+        test_set = Input().input_data_set(test_file, False)
+        runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+        results = runner.main(args, trains=train_datasets, test=test_set)
+        Xs = results.opt.get("X")[:, 0]
+        rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
+        num_rules = [len(sol.get_vars()) for sol in Xs]
+        min_length = min(rule_lengths)
+        max_length = max(rule_lengths)
+        #plot = runner.get_pareto_front_plot(results.opt)
+        #plot.show()
+        ## plot.ax.set_ylim([0,1])
+        #plot.ax.grid(visible=True)
 
-
-
-
-
-            #plot = runner.get_pareto_front_plot(results.opt)
-            #plot.show()
-            ## plot.ax.set_ylim([0,1])
-            #plot.ax.grid(visible=True)
-            
-            #各plotのタイトルは，各traファイルの名前に対応するようにする
-            num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
-            title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
-
-            #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-            #                                                  file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
-
-            objectives = list(np.unique(results.opt.get("F")))
-            ##  最適解の中の全ての識別器についてループ
-            #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
-            #    print(f"\n識別器 {idx + 1} のルール:")
-
-            #    # 各識別器のルールを取得し表示
-            #    for rule_idx, var in enumerate(sol.get_vars(), start=1):
-            #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
-
-            # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
-            # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            #with open("result_segment_density.txt", "a") as f:
-            #    f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
+        #各plotのタイトルは，各traファイルの名前に対応するようにする
+        num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_adapt.png"
+        title = f"MoFGBMLPy with Density {train_dir} with NSGA-II"
+        #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+        #                                                  file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+        objectives = list(np.unique(results.opt.get("F")))
+        ##  最適解の中の全ての識別器についてループ
+        #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
+        #    print(f"\n識別器 {idx + 1} のルール:")
+        #    # 各識別器のルールを取得し表示
+        #    for rule_idx, var in enumerate(sol.get_vars(), start=1):
+        #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+        # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
+        # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
+        #with open("result_segment_density.txt", "a") as f:
+        #    f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")

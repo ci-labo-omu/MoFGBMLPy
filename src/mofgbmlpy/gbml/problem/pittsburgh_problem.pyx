@@ -55,6 +55,7 @@ class PittsburghProblem(Problem):
         self.__max_history = 10
         self.__last_error_rates = []
 
+
     def create_solution(self):
         """Create a Pittsburgh solution
 
@@ -99,17 +100,17 @@ class PittsburghProblem(Problem):
         Returns:
             Dataset: Training set
         """
-        self.__last_error_rates.append(self.__training_ds.get_error_rate())
         if len(self.__last_error_rates) > self.__max_history:
             self.__last_error_rates.pop(0)
-        if len(self.__training_dss) == self.__max_history:
+        if len(self.__last_error_rates) == self.__max_history:
             if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
                 try:
+                    print("Change training dataset")
                     self.__training_ds = next(self.__training_dss)
                     self.__last_error_rates = []
                 except StopIteration:
                     pass
-
+        print(self.__last_error_rates)
 
 
         return self.__training_ds
@@ -148,12 +149,14 @@ class PittsburghProblem(Problem):
         Returns:
             PittsburghSolution[]: List of Pittsburgh solutions after removal
         """
+        min_error_rate = 1.0
         for i in range(len(solutions)):
             sol = solutions[i][0]
 
             # Update eval values
-            sol.get_error_rate(self.__training_ds)
-
+            error_rate = sol.get_error_rate(self.__training_ds)
+            if error_rate < min_error_rate:
+                min_error_rate = error_rate
             k = 0
             for j in range(sol.get_num_vars()):
                 if sol.get_var(k).get_num_wins() < 1:
@@ -163,5 +166,5 @@ class PittsburghProblem(Problem):
 
             if sol.get_num_vars() == 0:
                 raise EmptyPittsburghSolution()
-
+        self.__last_error_rates.append(min_error_rate)
         return solutions
