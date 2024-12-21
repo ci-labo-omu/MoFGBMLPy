@@ -26,7 +26,7 @@ class PittsburghProblem(Problem):
                  num_vars,
                  objectives,
                  num_constraints,
-                 training_dataset,
+                 training_datasets,
                  michigan_solution_builder,
                  classification):
 
@@ -37,12 +37,13 @@ class PittsburghProblem(Problem):
             objectives (ObjectiveFunction[]): Array of objectives
             num_constraints (int): Number of constraints (not used yet in the current version)
             training_dataset (Dataset): Training dataset
+            training_datasets (Dataset[]): Training datasets
             michigan_solution_builder (MichiganSolutionBuilder): Builder for Michigan solutions
             classification (Classification): Classification method
         """
 
         super().__init__(n_var=1, n_obj=len(objectives))  # 1 var because we consider one solution object
-        self.__training_ds = training_dataset
+        self.__training_dss = iter(training_datasets)
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
@@ -50,6 +51,9 @@ class PittsburghProblem(Problem):
         self.__num_constraints = num_constraints
         if len(objectives) == 0:
             raise ValueError("At least one objective is needed")
+        self.__training_ds = next(self.__training_dss)
+        self.__max_history = 10
+        self.__last_error_rates = []
 
     def create_solution(self):
         """Create a Pittsburgh solution
@@ -95,6 +99,19 @@ class PittsburghProblem(Problem):
         Returns:
             Dataset: Training set
         """
+        self.__last_error_rates.append(self.__training_ds.get_error_rate())
+        if len(self.__last_error_rates) > self.__max_history:
+            self.__last_error_rates.pop(0)
+        if len(self.__training_dss) == self.__max_history:
+            if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
+                try:
+                    self.__training_ds = next(self.__training_dss)
+                    self.__last_error_rates = []
+                except StopIteration:
+                    pass
+
+
+
         return self.__training_ds
 
     def get_rule_builder(self):

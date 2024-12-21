@@ -29,7 +29,6 @@ cdef class ErrorRate(ObjectiveFunction):
         """
         cdef int i = 0
         cdef PittsburghSolution sol
-
         if isinstance(solutions[0], PittsburghSolution):
             for i in range(len(solutions)):
                 sol = solutions[i]

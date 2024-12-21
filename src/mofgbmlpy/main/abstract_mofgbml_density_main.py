@@ -327,7 +327,6 @@ class AbstractMoFGBMLDensityMain(ABC):
         """
         if id_start < 0:
             raise ValueError("ID must be positive or null")
-
         sol_id = id_start
         for i in range(len(solutions)):
             total_coverage = 0
