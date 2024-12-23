@@ -83,7 +83,7 @@ class Input_density():
             header = next(reader)
 
             size, num_dim, num_classes = int(header[0]), int(header[1]), int(header[2])
-
+            print(size, num_dim, num_classes)
             pattern_id = 0
 
             patterns = []
