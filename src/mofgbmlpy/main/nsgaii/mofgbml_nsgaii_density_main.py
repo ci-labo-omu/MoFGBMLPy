@@ -145,13 +145,6 @@ if __name__ == '__main__':
             max_length = max(rule_lengths)
 
 
-
-
-
-            #plot = runner.get_pareto_front_plot(results.opt)
-            #plot.show()
-            ## plot.ax.set_ylim([0,1])
-            #plot.ax.grid(visible=True)
             
             #各plotのタイトルは，各traファイルの名前に対応するようにする
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
