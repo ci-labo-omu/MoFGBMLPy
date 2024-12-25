@@ -102,7 +102,9 @@ class PittsburghProblem(Problem):
         """
         if len(self.__last_error_rates) > self.__max_history:
             print("pop")
+            print(self.__last_error_rates)
             self.__last_error_rates.pop(0)
+            print(self.__last_error_rates)
         if len(self.__last_error_rates) == self.__max_history:
             if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
                 try:
@@ -168,5 +170,5 @@ class PittsburghProblem(Problem):
             if sol.get_num_vars() == 0:
                 raise EmptyPittsburghSolution()
         self.__last_error_rates.append(min_error_rate)
-        print(self.__last_error_rates)
+        print("Error rate", min_error_rate)
         return solutions
