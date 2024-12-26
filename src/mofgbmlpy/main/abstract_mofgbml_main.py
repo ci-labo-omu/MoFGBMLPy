@@ -117,7 +117,7 @@ class AbstractMoFGBMLMain(ABC):
                 self._objectives.append(objective_class(self._train))
             else:
                 self._objectives.append(objective_class())
-        print(self._mofgbml_args)
+        #print(self._mofgbml_args)
         antecedent_factory = None
         antecedent_factory_name = self._mofgbml_args.get("ANTECEDENT_FACTORY")
         if antecedent_factory_name == "all-combination-antecedent-factory":
