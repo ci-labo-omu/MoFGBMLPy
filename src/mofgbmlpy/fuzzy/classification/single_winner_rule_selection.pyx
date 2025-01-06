@@ -89,7 +89,6 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             value = value * rule_weight
             # else:
             #     value = self.get_fitness_value(solution, pattern)
-
             if value > max:
                 max = value
                 winner = solution

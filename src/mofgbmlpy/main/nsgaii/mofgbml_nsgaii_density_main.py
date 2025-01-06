@@ -1,7 +1,9 @@
+import datetime
 from pathlib import Path
 import re
 
 import numpy as np
+from matplotlib import pyplot as plt
 from pymoo.termination import get_termination
 
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
@@ -78,7 +80,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "segment",
+        "--data-name", "iris",
         "--terminate-evaluation", "30000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -87,7 +89,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "segment"
+    data_name = "iris"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -101,14 +103,14 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "segment")
+        data_name (str): 対象データセット名 (例: "iris")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        # tstファイル名から識別子を抽出 (例: "a0_0_segment")
+        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file}")
 
@@ -119,7 +121,10 @@ if __name__ == '__main__':
             continue
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"), reverse=True)
         train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
-        # 2. traファイルを探索 (例: "a0_0_segment_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
+
+        #train_datasetsの各データセットをplotするｔ，ここで
+        #plotのタイトルは，traファイルの名前に対応する
 
 
         if not train_files:
@@ -141,10 +146,10 @@ if __name__ == '__main__':
         #plot.ax.grid(visible=True)
 
         #各plotのタイトルは，各traファイルの名前に対応するようにする
-        num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_adapt.png"
-        title = f"MoFGBMLPy with Density {train_dir} with NSGA-II"
-        #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-        #                                                  file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+        num_rules_path = f"art_without_edge/result_nodes/adapt/{data_name}/{identifier}_adapt.png"
+        title = f"MoFGBMLPy with Density adaptive {identifier} with NSGA-II"
+        runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+                                                          file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
         objectives = list(np.unique(results.opt.get("F")))
         ##  最適解の中の全ての識別器についてループ
         #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
@@ -154,5 +159,8 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        #with open("result_segment_density.txt", "a") as f:
-        #    f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
+        #with open("result_iris_density_adapt.txt", "a") as f:
+        #    f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
+        #現在の時刻を取得
+        now = datetime.datetime.now()
+        print(f"Finish: {now}")

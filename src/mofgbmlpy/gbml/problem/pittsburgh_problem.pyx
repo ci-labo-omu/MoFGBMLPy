@@ -101,20 +101,17 @@ class PittsburghProblem(Problem):
             Dataset: Training set
         """
         if len(self.__last_error_rates) > self.__max_history:
-            print("pop")
-            print(self.__last_error_rates)
             self.__last_error_rates.pop(0)
-            print(self.__last_error_rates)
         if len(self.__last_error_rates) == self.__max_history:
             if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
                 try:
-                    print("Change training dataset")
                     self.__training_ds = next(self.__training_dss)
-                    print(self.__training_ds)
                     self.__last_error_rates = []
+                    print("Training set changed")
+                    #print(self.__training_ds)
+
                 except StopIteration:
                     pass
-
 
         return self.__training_ds
 
@@ -155,7 +152,6 @@ class PittsburghProblem(Problem):
         min_error_rate = 1.0
         for i in range(len(solutions)):
             sol = solutions[i][0]
-
             # Update eval values
             error_rate = sol.get_error_rate(self.__training_ds)
             if error_rate < min_error_rate:
@@ -164,11 +160,12 @@ class PittsburghProblem(Problem):
             for j in range(sol.get_num_vars()):
                 if sol.get_var(k).get_num_wins() < 1:
                     sol.remove_var(k)
+                    print(sol)
+
                 else:
                     k += 1
 
             if sol.get_num_vars() == 0:
                 raise EmptyPittsburghSolution()
         self.__last_error_rates.append(min_error_rate)
-        print("Error rate", min_error_rate)
         return solutions
