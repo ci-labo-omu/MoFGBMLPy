@@ -69,7 +69,8 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
 
 if __name__ == '__main__':
     #runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    #runner.main(sys.argv[1:])
+    #runner.main(sys.argv
+    # [1:])
     import os
     os.chdir("C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/")
 
@@ -145,7 +146,9 @@ if __name__ == '__main__':
             max_length = max(rule_lengths)
 
 
-            
+
+
+
             #各plotのタイトルは，各traファイルの名前に対応するようにする
             num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"

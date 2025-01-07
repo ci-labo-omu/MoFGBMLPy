@@ -8,7 +8,7 @@ import scipy.io
 
 from art_without_edge.ARTclustering_woEdge_Train import ARTNet
 from art_without_edge.estimateDensityByCountNode import estimateDensityByCountNode
-from art_without_edge.myPlot_withoutEdge import myPlot_withoutEdge
+from art_without_edge.myPlot_withoutEdge import myPlot_withoutEdge, myPlot_color
 
 # Number of trials
 TRIAL = 1
@@ -17,10 +17,10 @@ TRIAL = 1
 NR = 0.0
 
 # Load 2D_ClusteringDATASET
-data = scipy.io.loadmat('2D_ClusteringDATASET.mat')['data']  # OpenMLデータセットの読み込み
+#data = scipy.io.loadmat('2D_ClusteringDATASET.mat')['data']  # OpenMLデータセットの読み込み
 
 
-num_features = 3
+num_features = 2
 data, y = make_classification(n_samples=8000,  # サンプル数
                               n_features=num_features ,  # 特徴量の数（2つの特徴量）
                               flip_y=0,
@@ -30,6 +30,7 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_clusters_per_class=1,  # クラスごとのクラスター数
                               n_classes=4,  # クラス数（4クラス分類）
                               random_state=42)
+"""
 with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
     #ヘッダ行はサンプル数，次元数，クラス数の3つの整数をカンマ区切りで記述されている
     header = f.readline().strip().split(',')
@@ -43,9 +44,10 @@ with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
         data = line.strip().split(',')[:-1]
         X[i] = np.array(data[:-1], dtype=float)
         y[i] = data[-1]
+"""
 #それぞれのクラスのデータ数を表示
 print(np.unique(y, return_counts=True))
-X = MinMaxScaler().fit_transform(X)
+X = MinMaxScaler().fit_transform(data)
 #dataとyをdatファイルに書き出し，それぞれの行を横に並べて
 data = np.hstack([X, y.reshape(-1, 1)])
 # dataを2次元平面でプロット再現性のための乱数シード
@@ -78,16 +80,15 @@ y5 = y[60000:60000 + numD]
 y6 = y[75000:75000 + numD]
 y = np.hstack([y1, y2, y3, y4, y5, y6])"""
 
+data1 = data[y == 0]
+data2 = data[y == 1]
+data3 = data[y == 2]
+data4 = data[y == 3]
 
 
-data_1 = data[y == 0]
-data_2 = data[y == 1]
-data_3 = data[y == 2]
-data_4 = data[y == 3]
-
-minCIMs = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
+minCIMs = [0.40]
 for minCIM in minCIMs:
-    for i, data in enumerate([data_1, data_2, data_3, data_4]):
+    for i, data in enumerate([data1, data2, data3]):
         # Normalization [0-1]
         # Normalization [0-1]
         # Randomize data
@@ -99,7 +100,7 @@ for minCIM in minCIMs:
         #         data[:len(noise_data)] = noise_data
         #
         #     # Parameters ========================================================
-        net = ARTNet(Lambda=50, minCIM=minCIM)
+        net = ARTNet(Lambda=30, minCIM=minCIM)
         # ====================================================================
         time_train = 0
         for trial in range(TRIAL):
@@ -116,6 +117,6 @@ for minCIM in minCIMs:
             print(resultNumNodes)
             print(f' Processing Time: {time_train}')
             print('')
-        #myPlot_withoutEdge(data, net)
+        myPlot_withoutEdge(data, net)
         #ノード座標と数をカウントする
-        estimateDensityByCountNode(net, minCIM)
+        #estimateDensityByCountNode(net, minCIM)
