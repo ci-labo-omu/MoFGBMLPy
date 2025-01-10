@@ -85,8 +85,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
 
             # if self.__cache_size == 0:  # No cache
             value = solution.get_fitness_value(pattern.get_attributes_vector())
-            rule_weight = solution.get_rule_weight().get_value()
-            value = value * rule_weight
+
             # else:
             #     value = self.get_fitness_value(solution, pattern)
             if value > max:

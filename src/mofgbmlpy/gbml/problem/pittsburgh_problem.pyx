@@ -109,6 +109,7 @@ class PittsburghProblem(Problem):
                     self.__last_error_rates = []
                     print("Training set changed")
                     #print(self.__training_ds)
+                    #ここで全個体を評価しなおす
 
                 except StopIteration:
                     pass
