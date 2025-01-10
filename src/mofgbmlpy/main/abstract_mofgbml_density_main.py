@@ -86,7 +86,6 @@ class AbstractMoFGBMLDensityMain(ABC):
         # set command arguments
         self._mofgbml_args.load(args)
         self._random_gen = np.random.Generator(np.random.MT19937(seed=self._mofgbml_args.get("RAND_SEED")))
-
         self._verbose = self._mofgbml_args.get("VERBOSE")
 
         # Save params

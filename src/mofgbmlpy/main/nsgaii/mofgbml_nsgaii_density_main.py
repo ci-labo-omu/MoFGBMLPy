@@ -80,16 +80,18 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris",
-        "--terminate-evaluation", "30000",
+        "--data-name", "bupa",
+        "--terminate-evaluation", "300000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
-
     ]
 
-    data_name = "iris"
+    data_name = "bupa"
+
+
+
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -103,14 +105,14 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "iris")
+        data_name (str): 対象データセット名 (例: "bupa")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
+        # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file}")
 
@@ -121,7 +123,7 @@ if __name__ == '__main__':
             continue
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"), reverse=True)
         train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
-        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_bupa_node*.csv")
 
         #train_datasetsの各データセットをplotするｔ，ここで
         #plotのタイトルは，traファイルの名前に対応する
@@ -159,8 +161,8 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        #with open("result_iris_density_adapt.txt", "a") as f:
-        #    f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
+        with open("result_bupa_density_adapt.txt", "a") as f:
+            f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()
         print(f"Finish: {now}")
