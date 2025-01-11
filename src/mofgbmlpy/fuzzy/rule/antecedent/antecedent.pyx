@@ -109,7 +109,6 @@ cdef class Antecedent:
         cdef double grade_value = 1
         cdef double val
         cdef int[:] antecedent_indices = self.__antecedent_indices
-
         if size != attribute_vector.shape[0]:
             # with cython.gil:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")

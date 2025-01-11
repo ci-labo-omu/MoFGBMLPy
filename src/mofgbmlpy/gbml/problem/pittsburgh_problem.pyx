@@ -162,16 +162,16 @@ class PittsburghProblem(Problem):
             for j in range(sol.get_num_vars()):
 
                 if sol.get_var(k).get_num_wins() < 1:
-                    #print(f"remove {k}th rule of {i}th solution")
+                    print(f"remove {k}th rule of {i}th solution")
 
-                    #print(solutions)
+                    print(solutions)
                     sol.remove_var(k)
                 else:
 
                     k += 1
 
             if sol.get_num_vars() == 0:
-                #print(solutions)
+                print(solutions)
                 raise EmptyPittsburghSolution()
         self.__last_error_rates.append(min_error_rate)
         return solutions

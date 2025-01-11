@@ -13,6 +13,9 @@ from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClas
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
 from libc.math cimport INFINITY
+
+from plot import plot_data
+
 # from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
@@ -83,7 +86,7 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             if solution.get_class_label().is_rejected():
                 raise RejectedClassLabelException("One michigan solution has a rejected class label (it can't be used for classification)")
 
-            # if self.__cache_size == 0:  # No cache
+            # if self.__cache_size == 0:  # No cache:
             value = solution.get_fitness_value(pattern.get_attributes_vector())
 
             # else:
