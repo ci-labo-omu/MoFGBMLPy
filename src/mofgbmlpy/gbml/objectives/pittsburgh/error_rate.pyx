@@ -3,6 +3,8 @@ from mofgbmlpy.gbml.objectives.objective_function cimport ObjectiveFunction
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
+from plot import plot_data
+
 cdef class ErrorRate(ObjectiveFunction):
     """Objective function that uses the error rate as its value
 
@@ -27,6 +29,7 @@ cdef class ErrorRate(ObjectiveFunction):
         """
         cdef int i = 0
         cdef PittsburghSolution sol
+        plot_data(solutions[0])
 
         if isinstance(solutions[0], PittsburghSolution):
             for i in range(len(solutions)):

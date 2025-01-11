@@ -13,6 +13,9 @@ from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClas
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
 from libc.math cimport INFINITY
+
+from plot import plot_data
+
 # from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
@@ -87,7 +90,6 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
             # if self.__cache_size == 0:  # No cache
 
             value = solution.get_fitness_value(pattern.get_attributes_vector())
-
             # else:
             #     value = self.get_fitness_value(solution, pattern)
 
