@@ -106,6 +106,7 @@ class PittsburghProblem(Problem):
             if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
                 try:
                     self.__training_ds = next(self.__training_dss)
+
                     self.__last_error_rates = []
                     print("Training set changed")
                     #print(self.__training_ds)
@@ -113,7 +114,7 @@ class PittsburghProblem(Problem):
 
                 except StopIteration:
                     pass
-
+        print(self.__last_error_rates)
         return self.__training_ds
 
     def get_rule_builder(self):
@@ -127,7 +128,7 @@ class PittsburghProblem(Problem):
     def _evaluate(self, X, out, *args, **kwargs):
         """Evaluate the solutions in the population
 
-        Args:
+        Args:/
             X (Population): Population evaluated
             out (double[,]): Objective function values for each solution
             *args (tuple): Other arguments for Pymoo
@@ -162,9 +163,9 @@ class PittsburghProblem(Problem):
             for j in range(sol.get_num_vars()):
 
                 if sol.get_var(k).get_num_wins() < 1:
-                    print(f"remove {k}th rule of {i}th solution")
+                    #print(f"remove {k}th rule of {i}th solution")
 
-                    print(solutions)
+                    #print(solutions)
                     sol.remove_var(k)
                 else:
 

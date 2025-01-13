@@ -51,9 +51,9 @@ class PittsburghMutation(Mutation):
         dim = training_set.get_num_dim()
 
         # for each individual
-
         for s in range(len(X)):
             for i in range(len(X[s])):
+
                 # for each michigan solution (rule)
                 for michigan_sol_i in range(X[s][i].get_num_vars()):
                     mutated_dim = self._random_gen.integers(0, dim)

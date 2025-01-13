@@ -32,7 +32,7 @@ class MichiganProblem(Problem):
         self.__rule_builder = rule_builder
         self.__objectives = objectives
         self.__num_constraints = num_constraints
-
+        print(training_dataset.get_size())
     def _evaluate(self, X, out, *args, **kwargs):
         """Evaluate the solutions in the population
     

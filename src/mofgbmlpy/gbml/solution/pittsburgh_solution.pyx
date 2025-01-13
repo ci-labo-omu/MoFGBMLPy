@@ -10,6 +10,7 @@ cimport numpy as cnp
 
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.data.dataset cimport Dataset
+from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.fuzzy.classification.abstract_classification import AbstractClassification
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti
@@ -383,7 +384,7 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef MichiganSolution winner_solution
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef Pattern p
-
+        #print(dataset.get_size())
         for i in range(dataset.get_size()):
            p = patterns[i]
            winner_solution = self.classify(p)

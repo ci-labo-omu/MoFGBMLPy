@@ -67,6 +67,9 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
                        verbose=self._verbose)
         return self.res
 
+    def set_train(self, train):
+        self.train = train
+
 
 
 if __name__ == '__main__':
