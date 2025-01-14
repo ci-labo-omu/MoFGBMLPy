@@ -20,6 +20,7 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBu
 
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
 
+#from mofgbmlpy.data.dataset_manager import TrainDatasetManager
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.input_density import Input_density
 from mofgbmlpy.main.abstract_mofgbml_density_main import AbstractMoFGBMLDensityMain
@@ -125,16 +126,11 @@ if __name__ == '__main__':
             print(f"Train directory not found: {train_dir}")
             continue
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"), reverse=True)
+        print(train_files)
+
         train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
         # 2. traファイルを探索 (例: "a0_0_bupa_node*.csv")
 
-        #train_datasetsの各データセットをplotするｔ，ここで
-        #plotのタイトルは，traファイルの名前に対応する
-
-
-        if not train_files:
-            print(f"No training files found in: {train_dir}")
-            continue
 
 
         test_set = Input().input_data_set(test_file, False)

@@ -109,7 +109,7 @@ class AbstractMoFGBMLDensityMain(ABC):
 
         self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
 
-        # Create knowledge object
+        # Create knowledge object　ここは，次元数を指定するだけなので不変
         self._knowledge = self._knowledge_factory_class(self._train.get_num_dim()).create()
 
         # Run the algo
@@ -120,7 +120,7 @@ class AbstractMoFGBMLDensityMain(ABC):
             imported_module = import_module(module_name)
             objective_class = getattr(imported_module, class_name)
             if obj_key == "error-rate":
-                self._objectives.append(objective_class(self._train))
+                self._objectives.append(objective_class(self._train)) #error-rateを計算するため，ここはメソッドで渡す
             else:
                 self._objectives.append(objective_class())
 
@@ -138,6 +138,7 @@ class AbstractMoFGBMLDensityMain(ABC):
                                                             self._random_gen)
         else:
             Exception("Unsupported antecedent factory")
+
 
         if self._mofgbml_args.has_key("TERMINATE_EVALUATION") and self._mofgbml_args.get(
                 "TERMINATE_EVALUATION") is not None:
