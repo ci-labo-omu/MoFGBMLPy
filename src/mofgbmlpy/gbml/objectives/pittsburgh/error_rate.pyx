@@ -29,7 +29,6 @@ cdef class ErrorRate(ObjectiveFunction):
         """
         cdef int i = 0
         cdef PittsburghSolution sol
-        plot_data(solutions[0])
 
         if isinstance(solutions[0], PittsburghSolution):
             for i in range(len(solutions)):
