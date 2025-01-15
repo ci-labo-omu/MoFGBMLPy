@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 import re
 
@@ -79,8 +80,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "segment",
-        "--terminate-evaluation", "30000",
+        "--data-name", "iris",
+        "--terminate-evaluation", "120000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -88,7 +89,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "segment"
+    data_name = "iris"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -102,14 +103,16 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "segment")
+        data_name (str): 対象データセット名 (例: "iris")
     """
+    start = time.time()
+    print(f"start: {start}")
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        # tstファイル名から識別子を抽出 (例: "a0_0_segment")
+        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
 
@@ -119,7 +122,7 @@ if __name__ == '__main__':
             print(f"Train directory not found: {train_dir}")
             continue
 
-        # 2. traファイルを探索 (例: "a0_0_segment_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"))
         if not train_files:
             print(f"No training files found in: {train_dir}")
@@ -140,23 +143,20 @@ if __name__ == '__main__':
             runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
             results = runner.main(args, train=train_set, test=test_set)
             Xs = results.opt.get("X")[:, 0]
-            rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
             num_rules = [len(sol.get_vars()) for sol in Xs]
-            min_length = min(rule_lengths)
-            max_length = max(rule_lengths)
+
 
 
 
 
 
             #各plotのタイトルは，各traファイルの名前に対応するようにする
-            num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}_num_rules.png"
+            num_rules_path = f"art_without_edge/result_nodes/{data_name}/{identifier}_node{node_number}.png"
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
 
-            #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-            #                                                  file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+            runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+                                                              file_path=num_rules_path, xlim=[0, 10], x_key='num_rules')
 
-            objectives = list(np.unique(results.opt.get("F")))
             ##  最適解の中の全ての識別器についてループ
             #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
             #    print(f"\n識別器 {idx + 1} のルール:")
@@ -165,7 +165,10 @@ if __name__ == '__main__':
             #    for rule_idx, var in enumerate(sol.get_vars(), start=1):
             #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
 
+            objectives = [[sol.get("F")[0], sol.get("F")[1]] for sol in Xs]
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            #with open("result_segment_density.txt", "a") as f:
-            #    f.write(f"{train_file}, {results.exec_time}, {num_rules}, {objectives} \n")
+            with open("results_density/result_iris_density.txt", "a") as f:
+                f.write(f"{train_file},{results.exec_time},{objectives} \n")
+    end = time.time()
+    print(f"end: {end}")
