@@ -164,4 +164,3 @@ if __name__ == '__main__':
             f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()
-        print(f"Finish: {now}")
