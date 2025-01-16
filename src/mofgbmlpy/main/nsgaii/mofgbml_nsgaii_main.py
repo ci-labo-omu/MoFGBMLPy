@@ -101,14 +101,13 @@ if __name__ == '__main__':
     plot.show()
     # plot.ax.set_ylim([0,1])
     plot.ax.grid(visible=True)
-    results.opt.get('X')[1, 0]
     runner.plot_line_interpretability_error_rate_tradeoff(results.opt.get('X')[:, 0],
                                                           title="MoFGBMLPy on Bupa with NSGA-II", xlim=[0, 51])
 
-# 最適解の中の全ての識別器についてループ
-for idx, sol in enumerate(results.opt.get("X")[:, 0]):
-    print(f"\n識別器 {idx + 1} のルール:")
+    # 最適解の中の全ての識別器についてループ
+    for idx, sol in enumerate(results.opt.get("X")[:, 0]):
+        print(f"\n識別器 {idx + 1} のルール:")
 
-    # 各識別器のルールを取得し表示
-    for rule_idx, var in enumerate(sol.get_vars(), start=1):
-        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
+        # 各識別器のルールを取得し表示
+        for rule_idx, var in enumerate(sol.get_vars(), start=1):
+            print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
