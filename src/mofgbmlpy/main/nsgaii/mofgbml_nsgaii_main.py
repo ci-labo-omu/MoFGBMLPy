@@ -72,8 +72,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "segment",
-        "--terminate-evaluation", "30000",
+        "--data-name", "iris",
+        "--terminate-evaluation", "3000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "segment"
+    data_name = "iris"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -154,5 +154,5 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_segment.txt", "a") as f:
+        with open("result_iris.txt", "a") as f:
             f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
