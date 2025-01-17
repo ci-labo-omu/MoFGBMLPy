@@ -215,8 +215,8 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             pattern_index = self._random_gen.integers(0, data_size)
             return np.array([self.__select_antecedent_part(pattern_index)], dtype=int)
 
-        if num_rules <= self.__training_set.get_size():
-            pattern_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_rules, replace=False)
+        if num_rules <= data_size:
+            pattern_indices = self._random_gen.choice(np.arange(data_size, dtype=int), num_rules, replace=False)
 
         else:
             pattern_indices = np.empty(num_rules, int)
