@@ -245,14 +245,14 @@ class AbstractMoFGBMLMain(ABC):
             res (pymoo.core.result.Result):
         """
         non_dominated_solutions = res.opt.get("X")[:, 0]
-        archive_solutions = res.non_dominated_archive.get("X")[:, 0]
+        #archive_solutions = res.non_dominated_archive.get("X")[:, 0]
 
         results_data = AbstractMoFGBMLMain.solutions_list_to_dict_array(non_dominated_solutions)
         Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
-        results_data = AbstractMoFGBMLMain.solutions_list_to_dict_array(archive_solutions)
-        Output.save_data(results_data,
-                         str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
+        #results_data = AbstractMoFGBMLMain.solutions_list_to_dict_array(archive_solutions)
+        #Output.save_data(results_data,
+        #                 str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 
         pretty_xml = False
         if self._mofgbml_args is not None and self._mofgbml_args.has_key("PRETTY_XML") and self._mofgbml_args.get(
@@ -292,10 +292,10 @@ class AbstractMoFGBMLMain(ABC):
         non_dominated_mask = NonDominatedSorting().do(res.opt.get("F"), only_non_dominated_front=True)
         res.opt = res.opt[non_dominated_mask]
 
-        self.create_and_add_archives(res)
+        #self.create_and_add_archives(res)
 
         # We use archive since it contains all solutions of all populations without filter
-        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
+        #self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
         self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
                                  id_start=len(res.archive))
 
