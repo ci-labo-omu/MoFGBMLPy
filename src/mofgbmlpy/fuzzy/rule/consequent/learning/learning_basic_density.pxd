@@ -11,6 +11,8 @@ from mofgbmlpy.data.pattern cimport Pattern
 from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 
 cdef class LearningBasicDensity(AbstractLearningWithDensity):
+    cdef DatasetWithDensity __train_ds
+
     cpdef AbstractConsequent learning(self, Antecedent antecedent, DatasetWithDensity dataset=?, double reject_threshold=?)
     cdef double[:] calc_confidence(self, Antecedent antecedent, DatasetWithDensity dataset=?)
     cpdef double[:] calc_confidence_py(self, Antecedent antecedent, DatasetWithDensity dataset=?)

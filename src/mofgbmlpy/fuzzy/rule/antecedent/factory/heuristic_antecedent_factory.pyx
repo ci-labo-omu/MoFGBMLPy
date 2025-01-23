@@ -1,6 +1,7 @@
 from mofgbmlpy.data.pattern cimport Pattern
 
 from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
+from mofgbmlpy.data.dataset_manager cimport DatasetManager
 from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport AbstractAntecedentFactory
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
@@ -20,7 +21,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         __antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
         _random_gen (numpy.random.Generator): Random generator
     """
-    def __init__(self, DatasetWithDensity training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
+    def __init__(self, DatasetManager dataset_manager, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
         """Constructor
 
         Args:
@@ -35,6 +36,8 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
             raise TypeError("Knowledge can't be None")
         elif knowledge.get_num_dim() == 0:
             raise UninitializedKnowledgeException()
+
+        training_set = dataset_manager.get_current_dataset()
 
         if training_set is None:
             raise TypeError("Training set can't be None")
@@ -228,7 +231,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                     k += 1
 
             num_remaining_indices = num_rules % data_size
-            remaining_indices = self._random_gen.choice(np.arange(self.__training_set.get_size(), dtype=int), num_remaining_indices,
+            remaining_indices = self._random_gen.choice(np.arange(data_size, dtype=int), num_remaining_indices,
                                                  replace=False)
 
             for i in range(num_remaining_indices):

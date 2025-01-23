@@ -45,7 +45,6 @@ cdef class PittsburghSolution(AbstractSolution):
         self.__classification = classification
         if do_init_vars:
             self._vars = michigan_solution_builder.create(num_vars)
-
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self):
         """Get the michigan solution builder
         

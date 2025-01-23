@@ -8,6 +8,7 @@ from pymoo.termination import get_termination
 
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 
+from mofgbmlpy.data.dataset_manager import DatasetManager
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.input_density import Input_density
 from mofgbmlpy.data.output import Output
@@ -100,13 +101,11 @@ class AbstractMoFGBMLDensityMain(ABC):
         #    self._train, self._test = train, test
         #else:
         #    self._train, self._test = Input_density.get_train_test_files(self._mofgbml_args)
-
+        self.dataset_manager = DatasetManager(trains)
         if trains is not None:
             self._trains = trains
             self._train = self._trains[0]
             self._test = test
-
-
         self._is_multi_label = self._mofgbml_args.get("IS_MULTI_LABEL")
 
         # Create knowledge object　ここは，次元数を指定するだけなので不変
@@ -120,16 +119,15 @@ class AbstractMoFGBMLDensityMain(ABC):
             imported_module = import_module(module_name)
             objective_class = getattr(imported_module, class_name)
             if obj_key == "error-rate":
-                self._objectives.append(objective_class(self._train)) #error-rateを計算するため，ここはメソッドで渡す
+                self._objectives.append(objective_class(self.dataset_manager)) #error-rateを計算するため，ここはメソッドで渡す
             else:
                 self._objectives.append(objective_class())
-
         antecedent_factory = None
         antecedent_factory_name = self._mofgbml_args.get("ANTECEDENT_FACTORY")
         if antecedent_factory_name == "all-combination-antecedent-factory":
             antecedent_factory = AllCombinationAntecedentFactory(self._random_gen, self._knowledge)
         elif antecedent_factory_name == "heuristic-antecedent-factory":
-            antecedent_factory = HeuristicAntecedentFactory(self._train,
+            antecedent_factory = HeuristicAntecedentFactory(self.dataset_manager,
                                                             self._knowledge,
                                                             self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
                                                             self._mofgbml_args.get("DONT_CARE_RT"),
@@ -138,7 +136,6 @@ class AbstractMoFGBMLDensityMain(ABC):
                                                             self._random_gen)
         else:
             Exception("Unsupported antecedent factory")
-
 
         if self._mofgbml_args.has_key("TERMINATE_EVALUATION") and self._mofgbml_args.get(
                 "TERMINATE_EVALUATION") is not None:
@@ -160,7 +157,7 @@ class AbstractMoFGBMLDensityMain(ABC):
                                                   self._mofgbml_args.get("MICHIGAN_OPE_RT"),
                                                   MichiganCrossover(
                                                       self._mofgbml_args.get("RULE_CHANGE_RT"),
-                                                      self._train,
+                                                      self.dataset_manager,
                                                       self._knowledge,
                                                       self._mofgbml_args.get("MAX_NUM_RULES"),
                                                       self._random_gen,
@@ -179,12 +176,12 @@ class AbstractMoFGBMLDensityMain(ABC):
         num_vars_pittsburgh = self._mofgbml_args.get("INITIATION_RULE_NUM")
         num_constraints_pittsburgh = 0
         if self._is_multi_label:
-            self._learner = LearningMulti(self._train)
+            self._learner = LearningMulti(self.dataset_manager)
             rule_builder = RuleBuilderMulti(antecedent_factory,
                                             self._learner,
                                             self._knowledge)
         else:
-            self._learner = LearningBasicDensity(self._train)
+            self._learner = LearningBasicDensity(self.dataset_manager)
             rule_builder = RuleBuilderBasic(antecedent_factory,
                                             self._learner,
                                             self._knowledge)
@@ -199,10 +196,9 @@ class AbstractMoFGBMLDensityMain(ABC):
         self._problem = PittsburghProblem(num_vars_pittsburgh,
                                           self._objectives,
                                           num_constraints_pittsburgh,
-                                          self._trains,
+                                          self.dataset_manager,
                                           michigan_solution_builder,
                                           classification)
-
     @staticmethod
     def create_and_add_archives(res):
         """Create and add an archive and non dominated archive to the result object

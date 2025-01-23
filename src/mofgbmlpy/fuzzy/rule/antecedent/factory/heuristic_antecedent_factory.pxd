@@ -4,6 +4,7 @@ from mofgbmlpy.fuzzy.rule.antecedent.factory.abstract_antecedent_factory cimport
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
+from mofgbmlpy.data.dataset_manager import DatasetManager
 
 
 

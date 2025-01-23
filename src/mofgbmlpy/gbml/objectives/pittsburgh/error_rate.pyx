@@ -10,14 +10,14 @@ cdef class ErrorRate(ObjectiveFunction):
         Attributes:
             __data_set (Dataset): Training dataset
         """
-    def __init__(self, data_set):
+    def __init__(self,data_manager):
         """Constructor
 
         Args:
             data_set (Dataset): Training dataset
         """
 
-        self.__data_set = data_set
+        self.__dataset_manager = data_manager
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
         """Run the objective function on the given parameters
@@ -27,6 +27,7 @@ cdef class ErrorRate(ObjectiveFunction):
             obj_index (int): Index of the objective in the solution objectives array
             out (double[]): Output array, it will contain the objective value of all the solutions
         """
+        self.__data_set = self.__dataset_manager.get_current_dataset()
         cdef int i = 0
         cdef PittsburghSolution sol
         if isinstance(solutions[0], PittsburghSolution):

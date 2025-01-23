@@ -26,7 +26,7 @@ class PittsburghProblem(Problem):
                  num_vars,
                  objectives,
                  num_constraints,
-                 training_datasets,
+                 dataset_manager,
                  michigan_solution_builder,
                  classification):
 
@@ -43,7 +43,7 @@ class PittsburghProblem(Problem):
         """
 
         super().__init__(n_var=1, n_obj=len(objectives))  # 1 var because we consider one solution object
-        self.__training_dss = iter(training_datasets)
+        self.__dataset_manager = dataset_manager
         self.__num_vars = num_vars
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
@@ -51,10 +51,8 @@ class PittsburghProblem(Problem):
         self.__num_constraints = num_constraints
         if len(objectives) == 0:
             raise ValueError("At least one objective is needed")
-        self.__training_ds = next(self.__training_dss)
         self.__max_history = 10
         self.__last_error_rates = []
-
 
     def create_solution(self):
         """Create a Pittsburgh solution
@@ -105,7 +103,8 @@ class PittsburghProblem(Problem):
         if len(self.__last_error_rates) == self.__max_history:
             if all(self.__last_error_rates[i] <= self.__last_error_rates[i+1] for i in range(self.__max_history-1)):
                 try:
-                    self.__training_ds = next(self.__training_dss)
+                    self.__dataset_manager.switch_dataset()
+                    self.__training_ds = self.__dataset_manager.get_current_dataset()
 
                     self.__last_error_rates = []
                     print("Training set changed")

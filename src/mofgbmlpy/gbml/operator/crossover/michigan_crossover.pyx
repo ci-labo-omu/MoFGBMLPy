@@ -23,7 +23,7 @@ class MichiganCrossover(Crossover):
         _random_gen (numpy.random.Generator): Random generator
     """
 
-    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, random_gen, prob=0.9):
+    def __init__(self, rule_change_rate, dataset_manager, knowledge, max_num_rules, random_gen, prob=0.9):
         """Constructor
 
         Args:
@@ -37,7 +37,8 @@ class MichiganCrossover(Crossover):
         super().__init__(1, 1, 1)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
-        self.__training_set = training_set
+        self.__dataset_manager = dataset_manager
+        #self.__training_set = training_set
         self.__knowledge = knowledge
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
@@ -93,6 +94,9 @@ class MichiganCrossover(Crossover):
         Returns:
             double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
+        # get current training dataset from manager
+        self.__training_set = self.__dataset_manager.get_dataset()
+
         # Note: X contains Pittsburgh solutions
         n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)

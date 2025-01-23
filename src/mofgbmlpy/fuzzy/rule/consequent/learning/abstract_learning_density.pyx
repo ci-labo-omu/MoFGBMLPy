@@ -13,15 +13,16 @@ cdef class AbstractLearningWithDensity:
         _train_ds (DatasetWithDensity): Training dataset used to generate the consequent
     """
 
-    def __init__(self, DatasetWithDensity training_dataset):
+    def __init__(self, DatasetManager dataset_manager):
         """Constructor
 
         Args:
             training_dataset (DatasetWithDensity): Training dataset used to generate the consequent
         """
+        training_dataset = dataset_manager.get_current_dataset()
         if training_dataset is None:
             raise TypeError("The training dataset cannot be None")
-        self._train_ds = training_dataset
+        self.__train_ds = training_dataset
 
     cpdef AbstractConsequent learning(self, Antecedent antecedent, DatasetWithDensity dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset

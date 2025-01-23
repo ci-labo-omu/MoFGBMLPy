@@ -5,6 +5,8 @@ cimport numpy as cnp
 from mofgbmlpy.data.dataset_density cimport DatasetWithDensity
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_basic cimport ConsequentBasic
+
+from mofgbmlpy.data.dataset_manager cimport DatasetManager
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning_density cimport AbstractLearningWithDensity
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic cimport RuleWeightBasic
@@ -14,13 +16,15 @@ from cython.parallel import prange
 
 
 cdef class LearningBasicDensity(AbstractLearningWithDensity):
-    def __init__(self, DatasetWithDensity training_dataset):
+
+    def __init__(self, DatasetManager dataset_manager):
         """Constructor
 
         Args:
             training_dataset (Dataset): Training dataset used to generate the consequent
         """
-        super().__init__(training_dataset)
+        super().__init__(dataset_manager)
+        self.__train_ds = dataset_manager.get_current_dataset()
 
     cpdef AbstractConsequent learning(self, Antecedent antecedent, DatasetWithDensity dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
@@ -49,7 +53,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
             double[]: Confidence
         """
         if dataset is None:
-            dataset = self._train_ds
+            dataset = self.dataset_manager.get_current_dataset()
         if antecedent is None:
             raise TypeError('Antecedent cannot be None')
 
@@ -193,7 +197,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         Returns:
             object: Deep copy of this object
         """
-        new_object = LearningBasicDensity(self._train_ds)
+        new_object = LearningBasicDensity(self.dataset_manager)
 
         memo[id(self)] = new_object
         return new_object

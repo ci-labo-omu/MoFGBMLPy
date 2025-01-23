@@ -102,7 +102,6 @@ if __name__ == '__main__':
         # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
         identifier = test_file.stem.split(f"-10tst")[0]
 
-        print(f"Processing Train: {train_file} | Test: {test_file}")
         # 実際の処理 (例: runner.main を呼び出す)
         train_file = str(train_file)
         test_file = str(test_file)
