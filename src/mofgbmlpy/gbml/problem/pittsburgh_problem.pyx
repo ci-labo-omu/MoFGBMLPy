@@ -49,6 +49,7 @@ class PittsburghProblem(Problem):
         self.__classification = classification
         self.__objectives = objectives
         self.__num_constraints = num_constraints
+        self.__training_ds = self.__dataset_manager.get_current_dataset()
         if len(objectives) == 0:
             raise ValueError("At least one objective is needed")
         self.__max_history = 10
@@ -105,7 +106,6 @@ class PittsburghProblem(Problem):
                 try:
                     self.__dataset_manager.switch_dataset()
                     self.__training_ds = self.__dataset_manager.get_current_dataset()
-
                     self.__last_error_rates = []
                     print("Training set changed")
                     #print(self.__training_ds)
@@ -154,6 +154,7 @@ class PittsburghProblem(Problem):
         for i in range(len(solutions)):
             sol = solutions[i][0]
             # Update eval values
+
             error_rate = sol.get_error_rate(self.__training_ds)
             if error_rate < min_error_rate:
                 min_error_rate = error_rate

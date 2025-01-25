@@ -24,6 +24,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
             training_dataset (Dataset): Training dataset used to generate the consequent
         """
         super().__init__(dataset_manager)
+        self.dataset_manager = dataset_manager
         self.__train_ds = dataset_manager.get_current_dataset()
 
     cpdef AbstractConsequent learning(self, Antecedent antecedent, DatasetWithDensity dataset=None, double reject_threshold=0):
@@ -37,9 +38,13 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         Returns:
             AbstractConsequent: Created consequent
         """
+        print("LearningBasicDensity.learning")
+
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
+        print("Class label: ", class_label)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
+        print("Rule weight: ", rule_weight)
         return ConsequentBasic(class_label, rule_weight)
 
     cdef double[:] calc_confidence(self, Antecedent antecedent, DatasetWithDensity dataset=None):
@@ -52,11 +57,11 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         Returns:
             double[]: Confidence
         """
+
         if dataset is None:
             dataset = self.dataset_manager.get_current_dataset()
         if antecedent is None:
             raise TypeError('Antecedent cannot be None')
-
         cdef int num_classes = dataset.get_num_classes()
         cdef double[:] confidence = np.zeros(num_classes)
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes)

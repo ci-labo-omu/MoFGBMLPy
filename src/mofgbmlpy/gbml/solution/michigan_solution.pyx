@@ -88,7 +88,6 @@ cdef class MichiganSolution(AbstractSolution):
 
         if self._rule is None or self._rule.get_antecedent() is None:
             antecedent_object = self._rule_builder.create_antecedent_from_indices(self._vars)
-            print(self._rule_builder)
             self._rule = self._rule_builder.create(antecedent_object)
         else:
             antecedent_object = self._rule.get_antecedent()
