@@ -26,7 +26,6 @@ class HybridGBMLSampling(Sampling):
         """
         super().__init__()
         self.__learner = learner
-        print("HybridGBMLSampling")
 
 
     def _do(self, problem, n_samples, **kwargs):

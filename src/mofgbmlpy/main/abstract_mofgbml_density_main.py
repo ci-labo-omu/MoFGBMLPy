@@ -231,7 +231,7 @@ class AbstractMoFGBMLDensityMain(ABC):
         return results_data
 
     @abstractmethod
-    def run(self):
+    def run(self, dataset_manager):
         """Run MoFGBML
 
         Returns:
@@ -282,7 +282,7 @@ class AbstractMoFGBMLDensityMain(ABC):
         # TODO: print information
         self.load_args(args, trains = trains, test=test)
 
-        res = self.run()
+        res = self.run(self.dataset_manager)
         exec_time = res.exec_time
 
         if self._mofgbml_args.get("VERBOSE"):

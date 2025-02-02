@@ -107,13 +107,9 @@ class PittsburghProblem(Problem):
                     self.__dataset_manager.switch_dataset()
                     self.__training_ds = self.__dataset_manager.get_current_dataset()
                     self.__last_error_rates = []
-                    print("Training set changed")
-                    #print(self.__training_ds)
-                    #ここで全個体を評価しなおす
 
                 except StopIteration:
                     pass
-        print(self.__last_error_rates)
         return self.__training_ds
 
     def get_rule_builder(self):

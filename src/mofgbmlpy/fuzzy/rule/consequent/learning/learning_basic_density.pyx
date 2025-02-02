@@ -38,13 +38,10 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         Returns:
             AbstractConsequent: Created consequent
         """
-        print("LearningBasicDensity.learning")
 
         cdef double[:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
-        print("Class label: ", class_label)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
-        print("Rule weight: ", rule_weight)
         return ConsequentBasic(class_label, rule_weight)
 
     cdef double[:] calc_confidence(self, Antecedent antecedent, DatasetWithDensity dataset=None):
@@ -182,7 +179,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         Returns:
             Dataset: Training set
         """
-        return self._train_ds
+        return self.__train_ds
 
     def __repr__(self):
         """Return a string representation of this object

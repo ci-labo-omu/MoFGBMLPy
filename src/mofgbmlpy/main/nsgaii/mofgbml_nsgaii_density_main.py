@@ -45,7 +45,7 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
         """
         super().__init__(MoFGBMLNSGAIIArgs(), knowledge_factory_class)
 
-    def run(self):
+    def run(self, dataset_manager):
         """Run MoFGBML
 
         Returns:
@@ -59,6 +59,7 @@ class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
                           eliminate_duplicates=False,
                           save_history=True,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
+        dataset_manager.set_algorithm(self.algorithm)
         self.res = minimize(self._problem,
                        self.algorithm,
                        copy_algorithm=False,
@@ -84,8 +85,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris",
-        "--terminate-evaluation", "3000",
+        "--data-name", "iris_density_adapt",
+        "--terminate-evaluation", "120000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -114,8 +115,11 @@ if __name__ == '__main__':
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
-
+    experiment_id = 1
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
+        import gc
+        gc.collect()
+        args[3] = str(experiment_id)
         # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file}")
@@ -137,10 +141,8 @@ if __name__ == '__main__':
         runner = MoFGBMLNSGAIIDensityMain(HomoTriangleKnowledgeFactory_2_3_4_5)
         results = runner.main(args, trains=train_datasets, test=test_set)
         Xs = results.opt.get("X")[:, 0]
-        rule_lengths = [sol.get_var(0).get_rule().get_length() for sol in Xs]
         num_rules = [len(sol.get_vars()) for sol in Xs]
-        min_length = min(rule_lengths)
-        max_length = max(rule_lengths)
+
         #plot = runner.get_pareto_front_plot(results.opt)
         #plot.show()
         ## plot.ax.set_ylim([0,1])
@@ -152,6 +154,7 @@ if __name__ == '__main__':
         runner.plot_line_interpretability_error_rate_tradeoff(Xs,
                                                           file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
         objectives = list(np.unique(results.opt.get("F")))
+
         ##  最適解の中の全ての識別器についてループ
         #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
         #    print(f"\n識別器 {idx + 1} のルール:")
@@ -164,3 +167,6 @@ if __name__ == '__main__':
             f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()
+        print(now)
+        experiment_id += 1
+

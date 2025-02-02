@@ -25,10 +25,7 @@ cdef class RuleBuilderBasic(RuleBuilderCore):
         Returns:
             RuleBasic: New rule
         """
-        print("antecedent: ", antecedent)
-        print("consequent_factory: ", self._consequent_factory)
         consequent = self._consequent_factory.learning(antecedent)
-        print("consequent: ", consequent)
         return RuleBasic(antecedent, consequent)
 
     def __deepcopy__(self, memo={}):

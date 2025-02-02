@@ -15,8 +15,7 @@ cdef class ErrorRate(ObjectiveFunction):
         Args:
             data_set (Dataset): Training dataset
         """
-        print("ErrorRate constructor")
-        print(type(self.__data_set))
+
         self.__data_set = data_set
 
     cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
