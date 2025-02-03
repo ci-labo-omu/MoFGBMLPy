@@ -19,7 +19,7 @@ cdef class AbstractLearningWithDensity:
         Args:
             training_dataset (DatasetWithDensity): Training dataset used to generate the consequent
         """
-        training_dataset = dataset_manager.get_current_dataset()
+        training_dataset = dataset_manager.current_dataset
         if training_dataset is None:
             raise TypeError("The training dataset cannot be None")
         self.__train_ds = training_dataset

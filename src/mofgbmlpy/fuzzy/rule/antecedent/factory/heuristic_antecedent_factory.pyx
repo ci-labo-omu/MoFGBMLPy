@@ -37,7 +37,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         elif knowledge.get_num_dim() == 0:
             raise UninitializedKnowledgeException()
 
-        training_set = dataset_manager.get_current_dataset()
+        training_set = dataset_manager.current_dataset
 
         if training_set is None:
             raise TypeError("Training set can't be None")

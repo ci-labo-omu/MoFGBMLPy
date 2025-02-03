@@ -27,7 +27,7 @@ cdef class ErrorRate(ObjectiveFunction):
             obj_index (int): Index of the objective in the solution objectives array
             out (double[]): Output array, it will contain the objective value of all the solutions
         """
-        self.__data_set = self.__dataset_manager.get_current_dataset()
+        self.__data_set = self.__dataset_manager.current_dataset
         cdef int i = 0
         cdef PittsburghSolution sol
         if isinstance(solutions[0], PittsburghSolution):

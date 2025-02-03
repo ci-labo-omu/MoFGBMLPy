@@ -95,7 +95,7 @@ class MichiganCrossover(Crossover):
             double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         # get current training dataset from manager
-        self.__training_set = self.__dataset_manager.get_current_dataset()
+        self.__training_set = self.__dataset_manager.current_dataset
 
         # Note: X contains Pittsburgh solutions
         n_matings, n_var = X.shape

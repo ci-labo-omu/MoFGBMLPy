@@ -25,7 +25,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         """
         super().__init__(dataset_manager)
         self.dataset_manager = dataset_manager
-        self.__train_ds = dataset_manager.get_current_dataset()
+        self.__train_ds = dataset_manager.current_dataset
 
     cpdef AbstractConsequent learning(self, Antecedent antecedent, DatasetWithDensity dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
@@ -56,7 +56,7 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         """
 
         if dataset is None:
-            dataset = self.dataset_manager.get_current_dataset()
+            dataset = self.dataset_manager.current_dataset
         if antecedent is None:
             raise TypeError('Antecedent cannot be None')
         cdef int num_classes = dataset.get_num_classes()
