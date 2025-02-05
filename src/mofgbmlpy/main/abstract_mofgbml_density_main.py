@@ -212,8 +212,8 @@ class AbstractMoFGBMLDensityMain(ABC):
             res.archive = Population.merge(res.archive, res.history[i].pop)
 
         archive_objectives = res.archive.get("F")
-        non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
-        res.non_dominated_archive = res.archive[non_dominated_mask]
+        #non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
+        #res.non_dominated_archive = res.archive[non_dominated_mask]
 
     @staticmethod
     def solutions_list_to_dict_array(solutions):
@@ -246,12 +246,12 @@ class AbstractMoFGBMLDensityMain(ABC):
             res (pymoo.core.result.Result):
         """
         non_dominated_solutions = res.opt.get("X")[:, 0]
-        archive_solutions = res.non_dominated_archive.get("X")[:, 0]
+        #archive_solutions = res.non_dominated_archive.get("X")[:, 0]
 
         results_data = AbstractMoFGBMLDensityMain.solutions_list_to_dict_array(non_dominated_solutions)
         Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
 
-        results_data = AbstractMoFGBMLDensityMain.solutions_list_to_dict_array(archive_solutions)
+        #results_data = AbstractMoFGBMLDensityMain.solutions_list_to_dict_array(archive_solutions)
         Output.save_data(results_data,
                          str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
 

@@ -6,35 +6,20 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
-from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
-from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
-from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
-from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
 from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
-from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 
 from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
-from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
-
-#from mofgbmlpy.data.dataset_manager import TrainDatasetManager
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.input_density import Input_density
 from mofgbmlpy.main.abstract_mofgbml_density_main import AbstractMoFGBMLDensityMain
-from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
 from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_args import MoFGBMLNSGAIIArgs
-import sys
 
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
 
-from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-
-from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-
+import gc
 
 class MoFGBMLNSGAIIDensityMain(AbstractMoFGBMLDensityMain):
     """MoFBML runner for NSGA-II"""
@@ -85,7 +70,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris_density_adapt",
+        "--data-name", "yeast_density_adapt",
         "--terminate-evaluation", "120000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -93,7 +78,7 @@ if __name__ == '__main__':
         "--crossover-type", "hybrid-gbml-crossover",
     ]
 
-    data_name = "iris"
+    data_name = "yeast"
 
 
 
@@ -110,17 +95,15 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "iris")
+        data_name (str): 対象データセット名 (例: "yeast")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
     experiment_id = 1
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
-        import gc
-        gc.collect()
         args[3] = str(experiment_id)
-        # tstファイル名から識別子を抽出 (例: "a0_0_iris")
+        # tstファイル名から識別子を抽出 (例: "a0_0_yeast")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file}")
 
@@ -133,7 +116,7 @@ if __name__ == '__main__':
         print(train_files)
 
         train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
-        # 2. traファイルを探索 (例: "a0_0_iris_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_yeast_node*.csv")
 
 
 
@@ -163,10 +146,12 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_iris_density_adapt.txt", "a") as f:
+        with open("result_yeast_density_adapt.txt", "a") as f:
             f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()
         print(now)
         experiment_id += 1
+        del runner, results, train_datasets
+        gc.collect()
 
