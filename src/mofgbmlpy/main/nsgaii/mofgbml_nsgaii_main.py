@@ -52,7 +52,7 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(self._knowledge, self._random_gen),
                           eliminate_duplicates=False,
-                          #save_history=True,
+                          save_history=True,
                           #世代数を表示する
                           verbose=True,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
@@ -123,7 +123,6 @@ if __name__ == '__main__':
         #plot.show()
         ## plot.ax.set_ylim([0,1])
         #plot.ax.grid(visible=True)
-        results.opt.get('X')[1, 0]
         #各plotのタイトルは，各traファイルの名前に対応するようにする
         num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
         runner.plot_line_interpretability_error_rate_tradeoff(Xs,
