@@ -292,12 +292,12 @@ class AbstractMoFGBMLMain(ABC):
         non_dominated_mask = NonDominatedSorting().do(res.opt.get("F"), only_non_dominated_front=True)
         res.opt = res.opt[non_dominated_mask]
 
-        #self.create_and_add_archives(res)
+        self.create_and_add_archives(res)
 
         # We use archive since it contains all solutions of all populations without filter
-        #self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
-        #self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
-        #                         id_start=len(res.archive))
+        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
+        self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
+                                 id_start=len(res.archive))
 
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
             self.save_results_to_files(res)

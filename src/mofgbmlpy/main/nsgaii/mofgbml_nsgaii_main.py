@@ -81,7 +81,6 @@ if __name__ == '__main__':
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
         "--verbose",
-
     ]
 
     data_name = "yeast"
@@ -118,15 +117,15 @@ if __name__ == '__main__':
         results = runner.main(args, train=train_set, test=test_set)
         Xs = results.opt.get("X")[:, 0]
         num_rules = [len(sol.get_vars()) for sol in Xs]
-
+        experiment_id += 1
         #plot = runner.get_pareto_front_plot(results.opt)
         #plot.show()
         ## plot.ax.set_ylim([0,1])
         #plot.ax.grid(visible=True)
         #各plotのタイトルは，各traファイルの名前に対応するようにする
         num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
-        runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                          file_path=num_rules_path, xlim=[0, 30], x_key='num_rules')
+        #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
+        #                                                  file_path=num_rules_path, xlim=[0, 30], x_key='num_rules')
         #各識別器の識別精度を取得
         ##  最適解の中の全ての識別器についてループ
         #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
@@ -136,5 +135,6 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
+        print(results.opt.get("F"))
         with open("result_yeast.txt", "a") as f:
             f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
