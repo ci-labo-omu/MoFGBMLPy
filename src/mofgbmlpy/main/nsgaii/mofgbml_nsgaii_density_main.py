@@ -70,15 +70,15 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "yeast_density_adapt",
-        "--terminate-evaluation", "120000",
+        "--data-name", "vowel_density_adapt",
+        "--terminate-evaluation", "1200",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
     ]
 
-    data_name = "yeast"
+    data_name = "vowel"
 
 
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "yeast")
+        data_name (str): 対象データセット名 (例: "vowel")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     experiment_id = 1
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
         args[3] = str(experiment_id)
-        # tstファイル名から識別子を抽出 (例: "a0_0_yeast")
+        # tstファイル名から識別子を抽出 (例: "a0_0_vowel")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file}")
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         print(train_files)
 
         train_datasets = [Input_density().input_data_set(train_file, False) for train_file in train_files]
-        # 2. traファイルを探索 (例: "a0_0_yeast_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_vowel_node*.csv")
 
 
 
@@ -146,7 +146,7 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_yeast_density_adapt.txt", "a") as f:
+        with open("result_vowel_density_adapt.txt", "a") as f:
             f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()

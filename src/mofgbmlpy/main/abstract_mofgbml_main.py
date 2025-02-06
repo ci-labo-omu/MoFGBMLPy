@@ -417,6 +417,7 @@ class AbstractMoFGBMLMain(ABC):
             grid (bool): If true then show a grid
             x_key (str): Key of the value in the dict used as the X-axis
         """
+
         err_train = []
         err_test = []
 
