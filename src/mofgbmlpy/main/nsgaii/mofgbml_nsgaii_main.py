@@ -52,7 +52,9 @@ class MoFGBMLNSGAIIMain(AbstractMoFGBMLMain):
                           repair=PittsburghRepair(),
                           mutation=PittsburghMutation(self._knowledge, self._random_gen),
                           eliminate_duplicates=False,
-                          save_history=True,
+                          #save_history=True,
+                          #世代数を表示する
+                          verbose=True,
                           n_offsprings=self._mofgbml_args.get("OFFSPRING_POPULATION_SIZE"))
 
         res = minimize(self._problem,
@@ -72,16 +74,17 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris",
-        "--terminate-evaluation", "3000",
+        "--data-name", "yeast",
+        "--terminate-evaluation", "1200",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
+        "--verbose",
 
     ]
 
-    data_name = "iris"
+    data_name = "yeast"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -97,9 +100,11 @@ if __name__ == '__main__':
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
+    experiment_id_index = args.index("--experiment-id") + 1  # "--experiment-id" の次の要素が ID の値
 
-    for train_file, test_file in zip(test_dir.glob(f"*{data_name}-10tra.dat"), test_dir.glob(f"*{data_name}-10tst.dat")):
+    for experiment_id, (train_file, test_file) in enumerate(zip(test_dir.glob(f"*{data_name}-10tra.dat"), test_dir.glob(f"*{data_name}-10tst.dat"))):
         # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
+        args[experiment_id_index] = str(experiment_id + 1)
         identifier = test_file.stem.split(f"-10tst")[0]
 
         print(f"Processing Train: {train_file} | Test: {test_file}")
@@ -107,28 +112,6 @@ if __name__ == '__main__':
         train_file = str(train_file)
         test_file = str(test_file)
 
-        """        with open (train_file, 'r') as f:
-            header = f.readline().strip().split(',')
-            num_rows = int(header[0])
-            num_dims = int(header[1])
-            num_classes = int(header[2])
-            X = np.zeros((num_rows, num_dims))
-            y = np.zeros(num_rows)
-            for i, line in enumerate(f):
-                data = line.strip().split(',')[:-1]
-                X[i] = np.array(data[:-1], dtype=float)
-                y[i] = data[-1]
-        with open(test_file, 'r') as f:
-            header = f.readline().strip().split(',')
-            num_rows = int(header[0])
-            num_dims = int(header[1])
-            num_classes = int(header[2])
-            X = np.zeros((num_rows, num_dims))
-            y = np.zeros(num_rows)
-            for i, line in enumerate(f):
-                data = line.strip().split(',')[:-1]
-                X[i] = np.array(data[:-1], dtype=float)
-                y[i] = data[-1]"""
         train_set = Input().input_data_set(train_file, False)
         test_set = Input().input_data_set(test_file, False)
         runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
@@ -154,5 +137,5 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_iris.txt", "a") as f:
+        with open("result_yeast.txt", "a") as f:
             f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
