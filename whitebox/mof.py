@@ -40,8 +40,9 @@ if __name__ == '__main__':
     data_name = "vehicle"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
+    RANDOM_SEED = 42
 
-    TARGET_FOLDS = ["a0", "a1"]
+    TARGET_FOLDS = ["a0", "a1", "a2"]
     all_files = sorted(os.listdir(DATASET_DIR))
     train_files = [f for f in all_files if any(f.startswith(fold) and "tra" in f for fold in TARGET_FOLDS)]
     test_files = [f.replace("tra", "tst") for f in train_files]
@@ -78,60 +79,96 @@ if __name__ == '__main__':
         # prediction_train と prediction_test を numpy.ndarray に変換
         df["prediction_train"] = df["prediction_train"].apply(parse_list_column)
         df["prediction_test"] = df["prediction_test"].apply(parse_list_column)
-
-
-
-        # Easyなところのマスク
-        base_predictions_train = df.loc[0, "prediction_train"]
-        base_predictions_test = df.loc[0, "prediction_test"]
-        base_predictions_train = np.where(base_predictions_train == None, -1, base_predictions_train)
-
-        easy_mask_train = base_predictions_train == y_train
-
-        hard_mask_train = ~easy_mask_train
-        # Optunaで最適化されたRandomForestをhard samplesに適用
-        study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=42))
+        # **Optunaで最適化されたRandomForestをhard samplesに適用**
+        study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
         study.optimize(lambda trial: objective(trial, X_train, y_train), n_trials=20)
         best_params = study.best_params
-        defe_clf = RandomForestClassifier(**best_params, random_state=42, n_jobs=-1)
+
+        defe_clf = RandomForestClassifier(**best_params, random_state=RANDOM_SEED, n_jobs=-1)
         defe_clf.fit(X_train, y_train)
-        print(defe_clf.score(X_train, y_train))
-        # Hard/Easy分類器（Grader）
-        y_easy = np.ones_like(y_train)
-        y_easy[hard_mask_train] = 0
-        if sum(y_easy == 0) > 2:
-            smote = SMOTE(random_state=42, k_neighbors=2)
-            X_resampled, y_resampled = smote.fit_resample(X_train, easy_mask_train)
-        else:
-            X_resampled, y_resampled = X_train, easy_mask_train
-
-        grader_clf = DecisionTreeClassifier(max_depth=4)
-        grader_clf.fit(X_resampled, y_resampled)
-
-        # テストデータでの評価
-        test_hard_easy = grader_clf.predict(X_test)
-        easy_mask_test = test_hard_easy == 1
-        hard_mask_test = test_hard_easy == 0
+        defe_predictions_train = defe_clf.predict(X_train)
         defe_predictions_test = defe_clf.predict(X_test)
 
-        final_predictions_test = base_predictions_test.copy()
-        final_predictions_test[hard_mask_test] = defe_predictions_test[hard_mask_test]
+        # **ユニークな num_rules の値を取得**
+        unique_num_rules = sorted(df["num_rules"].unique())  # 昇順にソート
+        # **ユニークなルール数ごとにループ**
+        for num_rule in unique_num_rules:
+            df_filtered = df[df["num_rules"] == num_rule]  # `num_rules` が num_rule のものを抽出
+            if df_filtered.empty:
+                continue  # 該当するデータがない場合はスキップ
 
-        base_accuracy = accuracy_score(y_test, base_predictions_test)
-        final_accuracy = accuracy_score(y_test, final_predictions_test)
-        defe_accuracy = accuracy_score(y_test, defe_predictions_test)
-        easy_rate = sum(easy_mask_test) / len(easy_mask_test)
-        results.append((train_file, test_file, base_accuracy, easy_rate, defe_accuracy, final_accuracy))
-        print(
-            f"{train_file} -> Base Acc: {base_accuracy:.4f}, Deferral Acc: {defe_accuracy}, Easy Rate: {easy_rate}, Final Acc: {final_accuracy:.4f},")
+            # **Base classifier（決定木）**
+            base_predictions_train = df_filtered.iloc[0]["prediction_train"]
+            base_predictions_test = df_filtered.iloc[0]["prediction_test"]
+            base_predictions_train = np.where(base_predictions_train == None, -1, base_predictions_train)
+
+            easy_mask_train = base_predictions_train == y_train
+            hard_mask_train = ~easy_mask_train
+
+
+            base_train_score = accuracy_score(y_train, base_predictions_train)
+            print(f"num_rules: {num_rule}, Train Score: {base_train_score:.4f}")
+            # **Hard/Easy分類器（Grader）**
+            y_easy = np.ones_like(y_train)
+            y_easy[hard_mask_train] = 0
+
+            if sum(y_easy == 0) > 2:
+                smote = SMOTE(random_state=RANDOM_SEED, k_neighbors=2)
+                X_resampled, y_resampled = smote.fit_resample(X_train, easy_mask_train)
+            else:
+                X_resampled, y_resampled = X_train, easy_mask_train
+            grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
+            grader_clf.fit(X_resampled, y_resampled)
+
+            # **テストデータでの評価**
+            test_hard_easy = grader_clf.predict(X_test)
+            easy_mask_test = test_hard_easy == 1
+            hard_mask_test = test_hard_easy == 0
+            final_predictions_train = base_predictions_train.copy()
+            final_predictions_train[hard_mask_train] = defe_predictions_train[hard_mask_train]
+            final_accuracy_train = accuracy_score(y_train, final_predictions_train)
+            final_predictions_test = base_predictions_test.copy()
+            final_predictions_test[hard_mask_test] = defe_predictions_test[hard_mask_test]
+            final_accuracy_test = accuracy_score(y_test, final_predictions_test)
+            defe_accuracy_test = accuracy_score(y_test, defe_predictions_test)
+            deferral_rate_test = sum(hard_mask_test) / len(easy_mask_test)
+            deferral_rate_train = sum(hard_mask_train) / len(easy_mask_train)
+            base_accuracy_test = accuracy_score(y_test, base_predictions_test)
+            results.append((train_file, test_file, num_rule, base_train_score, base_accuracy_test, final_accuracy_train, final_accuracy_test, deferral_rate_train, deferral_rate_test))
+            print(
+                f"num_rules={num_rule}: {train_file} -> Base Train Acc: {base_train_score:.4f}, Base Test Acc: {base_accuracy_test:.4f}, Final Train Acc: {final_accuracy_train:.4f}, Final Test Acc: {final_accuracy_test:.4f}, Deferral Train Rate: {deferral_rate_train:.4f}, Deferral Test Rate: {deferral_rate_test:.4f}"
+            )
+
         res_id += 1
 
     # 結果出力
     results_df = pd.DataFrame(results,
-                              columns=["Train File", "Test File", "Base Accuracy", "Deferral Acc", "Easy Rate",
-                                       "Final Accuracy"])
-    print(results_df)
-    # final_accuracyの20回平均をとる
-    print(results_df["Final Accuracy"].mean())
+                              columns=["Train File", "Test File", "Num Rules", "Base Train Accuracy", "Base Test Accuracy", "Final Train Accuracy", "Final Test Accuracy", "Deferral Train Rate", "Deferral Test Rate",
+                                       ])
+    # **各 num_rules ごとの統計情報を計算**
+    summary_df = results_df.groupby("Num Rules").agg(
+        Base_Train_Accuracy_Mean=("Base Train Accuracy", "mean"),
+        Base_Test_Accuracy_Mean=("Base Test Accuracy", "mean"),
+        Final_Train_Accuracy_Mean=("Final Train Accuracy", "mean"),
+        Final_Test_Accuracy_Mean=("Final Test Accuracy", "mean"),
+        Deferral_Train_Rate_Mean=("Deferral Train Rate", "mean"),
+        Deferral_Test_Rate_Mean=("Deferral Test Rate", "mean"),
+        Count=("Num Rules", "count")  # 各ルール数の出現回数
+    ).reset_index()
 
+    # **結果を表示**
+    print("\nSummary of Metrics by Num Rules:")
+    print(summary_df)
+
+    # **詳細データの表示**
+    print("\nMean of Each Metric for Each Num Rules:")
+    print(summary_df[
+              ["Num Rules", "Base_Train_Accuracy_Mean", "Base_Test_Accuracy_Mean", "Final_Train_Accuracy_Mean",
+               "Final_Test_Accuracy_Mean", "Deferral_Train_Rate_Mean", "Deferral_Test_Rate_Mean"]])
+
+    print("\nCount of Each Num Rules:")
+    print(summary_df[["Num Rules", "Count"]])
+
+    #summary of metrics by num rulesを，csvファイルとして保存
+    summary_df.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_30ver.csv", index=False)
 
