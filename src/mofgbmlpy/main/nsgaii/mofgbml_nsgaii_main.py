@@ -74,8 +74,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "yeast",
-        "--terminate-evaluation", "1200",
+        "--data-name", "vehicle",
+        "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "yeast"
+    data_name = "vehicle"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -136,5 +136,5 @@ if __name__ == '__main__':
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
         print(results.opt.get("F"))
-        with open("result_yeast.txt", "a") as f:
+        with open("result_vehicle.txt", "a") as f:
             f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")

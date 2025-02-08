@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 from matplotlib import pyplot as plt
+from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghScikitClassifier
+
 from pymoo.core.population import Population
 from pymoo.termination import get_termination
 
@@ -211,8 +213,8 @@ class AbstractMoFGBMLMain(ABC):
             res.archive = Population.merge(res.archive, res.history[i].pop)
 
         archive_objectives = res.archive.get("F")
-        non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
-        res.non_dominated_archive = res.archive[non_dominated_mask]
+        #non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
+        #res.non_dominated_archive = res.archive[non_dominated_mask]
 
     @staticmethod
     def solutions_list_to_dict_array(solutions):
@@ -295,7 +297,7 @@ class AbstractMoFGBMLMain(ABC):
         self.create_and_add_archives(res)
 
         # We use archive since it contains all solutions of all populations without filter
-        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
+        #self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test, predict = False)
         self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test,
                                  id_start=len(res.archive))
 
@@ -341,6 +343,8 @@ class AbstractMoFGBMLMain(ABC):
                     coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
                 total_coverage += coverage
 
+            prediction_train = [sol.predict(train.get_pattern(idx)) for idx in range(train.get_size())]
+            prediction_test = [sol.predict(test.get_pattern(idx)) for idx in range(test.get_size())]
             sol.set_attribute("id", sol_id)
             sol.set_attribute("total_coverage", total_coverage)
             sol.set_attribute("total_rule_length", sol.get_total_rule_length())
@@ -348,7 +352,8 @@ class AbstractMoFGBMLMain(ABC):
             sol.set_attribute("training_error_rate", sol.get_error_rate(train))
             sol.set_attribute("test_error_rate", sol.get_error_rate(test))
             sol.set_attribute("num_rules", sol.get_num_vars())
-
+            sol.set_attribute("prediction_train", prediction_train)
+            sol.set_attribute("prediction_test", prediction_test)
             sol_id += 1
 
     def get_results_xml(self, knowledge, pop):
