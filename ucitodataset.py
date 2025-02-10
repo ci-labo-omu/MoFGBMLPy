@@ -16,7 +16,7 @@ import pandas as pd
 
 # データ取得
 from ucimlrepo import fetch_ucirepo
-dataset = fetch_ucirepo(id=264)
+dataset = fetch_ucirepo(id=17)
 X = dataset.data.features.to_numpy()
 y = dataset.data.targets.to_numpy()
 
@@ -30,11 +30,11 @@ X = scaler.fit_transform(X)
 
 # データを結合
 data = np.hstack((X, y.reshape(-1, 1)))
-
+data_name = "cancer"
 # データ保存
 num_pattern, num_feature = X.shape
 num_class = len(np.unique(y))
-output_path = "dataset/eeg/eeg.dat"
+output_path = f"dataset/{data_name}/{data_name}.dat"
 
 with open(output_path, "w") as f:
     f.write(f"{num_pattern},{num_feature},{num_class}\n")

@@ -1,5 +1,7 @@
 import ast
 import os
+import re
+
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -34,15 +36,33 @@ def objective(trial, X_train, y_train):
     y_pred = clf.predict(X_val)
     return accuracy_score(y_val, y_pred)
 
+#これの決定木版も作成する，最大深さは4
+def objective_tree(trial, X_train, y_train):
+    max_depth = trial.suggest_int("max_depth", 2, 4)
+    min_samples_split = trial.suggest_int("min_samples_split", 2, 10)
+    min_samples_leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+
+    clf = DecisionTreeClassifier(
+        max_depth=max_depth,
+        min_samples_split=min_samples_split,
+        min_samples_leaf=min_samples_leaf,
+        random_state=42
+    )
+
+    X_cal, X_val, y_cal, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+    clf.fit(X_cal, y_cal)
+    y_pred = clf.predict(X_val)
+    return accuracy_score(y_val, y_pred)
+
 
 if __name__ == '__main__':
     # データセットのパス
-    data_name = "vehicle"
+    data_name = "iris"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
     RANDOM_SEED = 42
 
-    TARGET_FOLDS = ["a0", "a1", "a2"]
+    TARGET_FOLDS = ["a1", "a2"]
     all_files = sorted(os.listdir(DATASET_DIR))
     train_files = [f for f in all_files if any(f.startswith(fold) and "tra" in f for fold in TARGET_FOLDS)]
     test_files = [f.replace("tra", "tst") for f in train_files]
@@ -53,6 +73,15 @@ if __name__ == '__main__':
     mode = 0
     results = []
     res_id = 1
+
+
+    def parse_list_column(s):
+        try:
+            lst = ast.literal_eval(s)
+            return np.array([-1 if x is None else int(x) for x in lst])  # 文字列をリストに変換
+        except (ValueError, SyntaxError):
+            return []  # 失敗した場合は空リスト
+
     for train_file, test_file in zip(train_files, test_files):
         train_path = os.path.join(DATASET_DIR, train_file)
         test_path = os.path.join(DATASET_DIR, test_file)
@@ -62,18 +91,12 @@ if __name__ == '__main__':
 
         X_train, y_train = train_data[:, :-1], train_data[:, -1]
         X_test, y_test = test_data[:, :-1], test_data[:, -1]
-
-        # Base classifier（決定木）
-        df = pd.read_csv(f"{MoF_DIR}/{res_id}/results.csv", delimiter=",")
-
-
         # 文字列として格納されているリストをリスト型に変換する関数
-        def parse_list_column(s):
-            try:
-                lst = ast.literal_eval(s)
-                return np.array([-1 if x is None else int(x) for x in lst])  # 文字列をリストに変換
-            except (ValueError, SyntaxError):
-                return []  # 失敗した場合は空リスト
+
+        identifier = os.path.basename(test_path).split(f"_{data_name}-10tst")[0]
+        # Base classifier（MoFGBML）
+        df = pd.read_csv(f"{MoF_DIR}/{res_id}/results.csv", delimiter=",")
+        #df = pd.read_csv(f"{MoF_DIR}/{identifier}/results.csv", delimiter=",")
 
 
         # prediction_train と prediction_test を numpy.ndarray に変換
@@ -83,14 +106,18 @@ if __name__ == '__main__':
         study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
         study.optimize(lambda trial: objective(trial, X_train, y_train), n_trials=20)
         best_params = study.best_params
-
+#
         defe_clf = RandomForestClassifier(**best_params, random_state=RANDOM_SEED, n_jobs=-1)
         defe_clf.fit(X_train, y_train)
         defe_predictions_train = defe_clf.predict(X_train)
         defe_predictions_test = defe_clf.predict(X_test)
 
+        df_filtered = df[df["num_rules"] == 1]  # `num_rules` が num_rule のものを抽出
+        base_predictions_train = df_filtered.iloc[0]["prediction_train"]
         # **ユニークな num_rules の値を取得**
         unique_num_rules = sorted(df["num_rules"].unique())  # 昇順にソート
+
+
         # **ユニークなルール数ごとにループ**
         for num_rule in unique_num_rules:
             df_filtered = df[df["num_rules"] == num_rule]  # `num_rules` が num_rule のものを抽出
@@ -104,6 +131,7 @@ if __name__ == '__main__':
 
             easy_mask_train = base_predictions_train == y_train
             hard_mask_train = ~easy_mask_train
+
 
 
             base_train_score = accuracy_score(y_train, base_predictions_train)
@@ -138,7 +166,6 @@ if __name__ == '__main__':
             print(
                 f"num_rules={num_rule}: {train_file} -> Base Train Acc: {base_train_score:.4f}, Base Test Acc: {base_accuracy_test:.4f}, Final Train Acc: {final_accuracy_train:.4f}, Final Test Acc: {final_accuracy_test:.4f}, Deferral Train Rate: {deferral_rate_train:.4f}, Deferral Test Rate: {deferral_rate_test:.4f}"
             )
-
         res_id += 1
 
     # 結果出力
@@ -170,5 +197,5 @@ if __name__ == '__main__':
     print(summary_df[["Num Rules", "Count"]])
 
     #summary of metrics by num rulesを，csvファイルとして保存
-    summary_df.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_30ver.csv", index=False)
+    summary_df.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules12.csv", index=False)
 

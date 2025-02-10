@@ -36,7 +36,7 @@ def objective(trial, X_train, y_train):
 
 if __name__ == '__main__':
     # データセットのパス
-    DATASET_DIR = "C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/satimage"
+    DATASET_DIR = "C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/bupa"
     TARGET_FOLDS = ["a0", "a1"]
 
     all_files = sorted(os.listdir(DATASET_DIR))

@@ -70,11 +70,11 @@ if __name__ == '__main__':
     os.chdir("C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/")
 
     args = [
-        "--algorithm-id", "1",
-        "--experiment-id", "2",
+        "--algorithm-id", "2",
+        "--experiment-id", "1",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "vehicle",
+        "--data-name", "vowel",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "vehicle"
+    data_name = "vowel"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -101,10 +101,14 @@ if __name__ == '__main__':
     test_dir = Path(test_dir)
     experiment_id_index = args.index("--experiment-id") + 1  # "--experiment-id" の次の要素が ID の値
 
-    for experiment_id, (train_file, test_file) in enumerate(zip(test_dir.glob(f"*{data_name}-10tra.dat"), test_dir.glob(f"*{data_name}-10tst.dat"))):
+    train_files = list(test_dir.glob(f"*{data_name}-10tra.dat"))
+    test_files = list(test_dir.glob(f"*{data_name}-10tst.dat"))
+    for train_file, test_file in zip(train_files, test_files):
         # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
-        args[experiment_id_index] = str(experiment_id + 1)
         identifier = test_file.stem.split(f"-10tst")[0]
+        # identifier="a0_0_{dataname}"であり，experiment_idはa0_0となるようにする
+        experiment_id = re.match(r"a\d+_\d+", identifier).group()
+        args[experiment_id_index] = experiment_id
 
         print(f"Processing Train: {train_file} | Test: {test_file}")
         # 実際の処理 (例: runner.main を呼び出す)
@@ -117,7 +121,6 @@ if __name__ == '__main__':
         results = runner.main(args, train=train_set, test=test_set)
         Xs = results.opt.get("X")[:, 0]
         num_rules = [len(sol.get_vars()) for sol in Xs]
-        experiment_id += 1
         #plot = runner.get_pareto_front_plot(results.opt)
         #plot.show()
         ## plot.ax.set_ylim([0,1])
@@ -135,6 +138,5 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        print(results.opt.get("F"))
-        with open("result_vehicle.txt", "a") as f:
+        with open("result_vowel.txt", "a") as f:
             f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
