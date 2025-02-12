@@ -113,6 +113,7 @@ if __name__ == '__main__':
         print(f"Processing Train: {train_file} | Test: {test_file}")
         # 実際の処理 (例: runner.main を呼び出す)
         train_file = str(train_file)
+
         test_file = str(test_file)
 
         train_set = Input().input_data_set(train_file, False)

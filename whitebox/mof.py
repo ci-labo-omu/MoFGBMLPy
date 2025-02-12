@@ -57,12 +57,12 @@ def objective_tree(trial, X_train, y_train):
 
 if __name__ == '__main__':
     # データセットのパス
-    data_name = "iris"
+    data_name = "yeast"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
     RANDOM_SEED = 42
 
-    TARGET_FOLDS = ["a1", "a2"]
+    TARGET_FOLDS = ["a0", "a1"]
     all_files = sorted(os.listdir(DATASET_DIR))
     train_files = [f for f in all_files if any(f.startswith(fold) and "tra" in f for fold in TARGET_FOLDS)]
     test_files = [f.replace("tra", "tst") for f in train_files]
@@ -72,6 +72,7 @@ if __name__ == '__main__':
         dim = int(header[1])
     mode = 0
     results = []
+    results2 = []
     res_id = 1
 
 
@@ -148,20 +149,33 @@ if __name__ == '__main__':
             grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
             grader_clf.fit(X_resampled, y_resampled)
 
+            #**訓練データでの評価**
+
+
+            final_predictions_train = base_predictions_train.copy()
+            final_predictions_train[hard_mask_train] = defe_predictions_train[hard_mask_train]
+            deferral_rate_train = sum(hard_mask_train) / len(easy_mask_train)
+            final_accuracy_train = accuracy_score(y_train, final_predictions_train)
+            defe_accuracy_train = accuracy_score(y_train, defe_predictions_train)
+            defe_accuracy_train_onhard = accuracy_score(y_train[hard_mask_train], defe_predictions_train[hard_mask_train])
+            base_accuracy_train = accuracy_score(y_train, base_predictions_train)
+            base_accuracy_train_oneasy = accuracy_score(y_train[easy_mask_train], base_predictions_train[easy_mask_train])
+
+
+
             # **テストデータでの評価**
             test_hard_easy = grader_clf.predict(X_test)
             easy_mask_test = test_hard_easy == 1
             hard_mask_test = test_hard_easy == 0
-            final_predictions_train = base_predictions_train.copy()
-            final_predictions_train[hard_mask_train] = defe_predictions_train[hard_mask_train]
-            final_accuracy_train = accuracy_score(y_train, final_predictions_train)
             final_predictions_test = base_predictions_test.copy()
             final_predictions_test[hard_mask_test] = defe_predictions_test[hard_mask_test]
             final_accuracy_test = accuracy_score(y_test, final_predictions_test)
             defe_accuracy_test = accuracy_score(y_test, defe_predictions_test)
             deferral_rate_test = sum(hard_mask_test) / len(easy_mask_test)
-            deferral_rate_train = sum(hard_mask_train) / len(easy_mask_train)
             base_accuracy_test = accuracy_score(y_test, base_predictions_test)
+            base_accuracy_test_oneasy = accuracy_score(y_test[easy_mask_test], base_predictions_test[easy_mask_test])
+            defe_accuracy_test_onhard = accuracy_score(y_test[hard_mask_test], defe_predictions_test[hard_mask_test])
+
             results.append((train_file, test_file, num_rule, base_train_score, base_accuracy_test, final_accuracy_train, final_accuracy_test, deferral_rate_train, deferral_rate_test))
             print(
                 f"num_rules={num_rule}: {train_file} -> Base Train Acc: {base_train_score:.4f}, Base Test Acc: {base_accuracy_test:.4f}, Final Train Acc: {final_accuracy_train:.4f}, Final Test Acc: {final_accuracy_test:.4f}, Deferral Train Rate: {deferral_rate_train:.4f}, Deferral Test Rate: {deferral_rate_test:.4f}"
@@ -197,5 +211,5 @@ if __name__ == '__main__':
     print(summary_df[["Num Rules", "Count"]])
 
     #summary of metrics by num rulesを，csvファイルとして保存
-    summary_df.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules12.csv", index=False)
+    summary_df.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules.csv", index=False)
 
