@@ -74,7 +74,7 @@ if __name__ == '__main__':
         "--experiment-id", "1",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "vowel",
+        "--data-name", "blood",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "vowel"
+    data_name = "blood"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -127,7 +127,7 @@ if __name__ == '__main__':
         ## plot.ax.set_ylim([0,1])
         #plot.ax.grid(visible=True)
         #各plotのタイトルは，各traファイルの名前に対応するようにする
-        num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
+        #num_rules_path = f"image/{data_name}/{identifier}_num_rules.png"
         #runner.plot_line_interpretability_error_rate_tradeoff(Xs,
         #                                                  file_path=num_rules_path, xlim=[0, 30], x_key='num_rules')
         #各識別器の識別精度を取得
@@ -139,5 +139,5 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_vowel.txt", "a") as f:
-            f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")
+        #with open("result_vowel.txt", "a") as f:
+        #    f.write(f"{train_file}, {results.exec_time}, {num_rules}\n")

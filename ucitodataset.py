@@ -16,10 +16,10 @@ import pandas as pd
 
 # データ取得
 from ucimlrepo import fetch_ucirepo
-dataset = fetch_ucirepo(id=17)
+dataset = fetch_ucirepo(id=198)
 X = dataset.data.features.to_numpy()
 y = dataset.data.targets.to_numpy()
-
+print(X[0])
 # 必要に応じてラベルをエンコード
 le = LabelEncoder()
 y = le.fit_transform(y)
@@ -30,7 +30,7 @@ X = scaler.fit_transform(X)
 
 # データを結合
 data = np.hstack((X, y.reshape(-1, 1)))
-data_name = "cancer"
+data_name = "steel"
 # データ保存
 num_pattern, num_feature = X.shape
 num_class = len(np.unique(y))
