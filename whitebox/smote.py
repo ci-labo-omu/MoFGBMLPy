@@ -54,7 +54,7 @@ def objective_base(trial, X_train, y_train):
 RANDOM_SEED = 42
 if __name__ == '__main__':
     # データセットのパス
-    data_name = "cancer"
+    data_name = "vowel"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     TARGET_FOLDS = ["a0", "a1"]
 
@@ -156,7 +156,6 @@ if __name__ == '__main__':
                                        "Deferral Train Accuracy on Hard", "Deferral Test Accuracy",
                                        "Deferral Test Accuracy on Hard",
                                        ])
-    # **各 num_rules ごとの統計情報を計算**
     summary_df1 = results_df[["Final Train Accuracy", "Final Test Accuracy", "Deferral Train Rate", "Deferral Test Rate"]]
 
     summary_df2 = results_df[["Base Train Accuracy", "Base Test Accuracy",
@@ -174,6 +173,8 @@ if __name__ == '__main__':
     print("\nSummary of Metrics")
     print(summary_df1)
     # **詳細データの表示**
+
+
 
     # summary of metrics by num rulesを，csvファイルとして保存
     summary_df1.to_csv(f"whitebox/summary_of_metrics_{data_name}1.csv", index=False)

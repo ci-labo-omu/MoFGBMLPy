@@ -8,11 +8,11 @@ from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 from imblearn.over_sampling import SMOTE
 import optuna
-
-
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 
 # Optunaでハイパーパラメータ最適化
@@ -37,18 +37,16 @@ def objective(trial, X_train, y_train):
     return accuracy_score(y_val, y_pred)
 
 #これの決定木版も作成する，最大深さは4
-def objective_tree(trial, X_train, y_train):
+def objective_grader(trial, X_train, y_train):
     max_depth = trial.suggest_int("max_depth", 2, 4)
     min_samples_split = trial.suggest_int("min_samples_split", 2, 10)
     min_samples_leaf = trial.suggest_int("min_samples_leaf", 1, 10)
-
     clf = DecisionTreeClassifier(
         max_depth=max_depth,
         min_samples_split=min_samples_split,
         min_samples_leaf=min_samples_leaf,
         random_state=42
     )
-
     X_cal, X_val, y_cal, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
     clf.fit(X_cal, y_cal)
     y_pred = clf.predict(X_val)
@@ -57,7 +55,8 @@ def objective_tree(trial, X_train, y_train):
 
 if __name__ == '__main__':
     # データセットのパス
-    data_name = "vowel"
+    optu = 1
+    data_name = "blood"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
     RANDOM_SEED = 42
@@ -84,7 +83,8 @@ if __name__ == '__main__':
             return []  # 失敗した場合は空リスト
 
 
-
+    conf_matrices = {}
+    rule_counts = {}
     for train_file, test_file in zip(train_files, test_files):
         train_path = os.path.join(DATASET_DIR, train_file)
         test_path = os.path.join(DATASET_DIR, test_file)
@@ -114,11 +114,14 @@ if __name__ == '__main__':
         defe_clf.fit(X_train, y_train)
         defe_predictions_train = defe_clf.predict(X_train)
         defe_predictions_test = defe_clf.predict(X_test)
+        defe_accuracy_train = accuracy_score(y_train, defe_predictions_train)
+
 
         df_filtered = df[df["num_rules"] == 1]  # num_rules が num_rule のものを抽出
         base_predictions_train = df_filtered.iloc[0]["prediction_train"]
         # **ユニークな num_rules の値を取得**
         unique_num_rules = sorted(df["num_rules"].unique())  # 昇順にソート
+
 
         # **ユニークなルール数ごとにループ**
         for num_rule in unique_num_rules:
@@ -135,7 +138,7 @@ if __name__ == '__main__':
             hard_mask_train = ~easy_mask_train
 
             base_accuracy_train = accuracy_score(y_train, base_predictions_train)
-            print(f"num_rules: {num_rule}, Train Score: {base_accuracy_train:.4f}")
+            #print(f"num_rules: {num_rule}, Train Score: {base_accuracy_train:.4f}")
             # **Hard/Easy分類器（Grader）**
             y_easy = np.ones_like(y_train)
             y_easy[hard_mask_train] = 0
@@ -145,9 +148,26 @@ if __name__ == '__main__':
                 X_resampled, y_resampled = smote.fit_resample(X_train, easy_mask_train)
             else:
                 X_resampled, y_resampled = X_train, easy_mask_train
-
-            grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
+            if optu:
+                study_grader = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
+                study_grader.optimize(lambda trial: objective_grader(trial, X_resampled, y_resampled), n_trials=50)
+                best_params_grader = study_grader.best_params
+                grader_clf = DecisionTreeClassifier(**best_params_grader, random_state=RANDOM_SEED)
+            else:
+                grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
             grader_clf.fit(X_resampled, y_resampled)
+            grader_X = grader_clf.predict(X_resampled)
+            print(len(X_resampled))
+            print(confusion_matrix(y_resampled, grader_X))
+            conf_matrix = confusion_matrix(y_resampled, grader_X)
+            print
+            if num_rule in conf_matrices:
+                conf_matrices[num_rule] += conf_matrix
+                rule_counts[num_rule] += 1
+            else:
+                conf_matrices[num_rule] = conf_matrix
+                rule_counts[num_rule] = 1
+
 
             # **訓練データでの評価**
 
@@ -155,13 +175,12 @@ if __name__ == '__main__':
             final_predictions_train[hard_mask_train] = defe_predictions_train[hard_mask_train]
             deferral_rate_train = sum(hard_mask_train) / len(easy_mask_train)
             final_accuracy_train = accuracy_score(y_train, final_predictions_train)
-            defe_accuracy_train = accuracy_score(y_train, defe_predictions_train)
-            defe_accuracy_train_onhard = accuracy_score(y_train[hard_mask_train],
-                                                        defe_predictions_train[hard_mask_train])
+
             base_accuracy_train = accuracy_score(y_train, base_predictions_train)
             base_accuracy_train_oneasy = accuracy_score(y_train[easy_mask_train],
                                                         base_predictions_train[easy_mask_train])
-
+            defe_accuracy_train_onhard = accuracy_score(y_train[hard_mask_train],
+                                                        defe_predictions_train[hard_mask_train])
             # **テストデータでの評価**
             test_hard_easy = grader_clf.predict(X_test)
             easy_mask_test = test_hard_easy == 1
@@ -185,6 +204,23 @@ if __name__ == '__main__':
                 f"num_rules={num_rule}: {train_file} -> Base Train Acc: {base_accuracy_train:.4f}, Base Test Acc: {base_accuracy_test:.4f}, Final Train Acc: {final_accuracy_train:.4f}, Final Test Acc: {final_accuracy_test:.4f}, Deferral Train Rate: {deferral_rate_train:.4f}, Deferral Test Rate: {deferral_rate_test:.4f}"
             )
         res_id += 1
+
+    avg_conf_matrices = {num_rule: conf_matrices[num_rule] / rule_counts[num_rule] for num_rule in conf_matrices}
+    for num_rule, avg_conf_matrix in avg_conf_matrices.items():
+        print(f"\nAverage Confusion Matrix for Num Rules {num_rule}:\n{avg_conf_matrix}")
+        plt.figure(figsize=(6, 5))
+        sns.heatmap(avg_conf_matrix, annot=True, cmap="Blues", fmt=".2f",
+                    xticklabels=["Hard", "Easy"], yticklabels=["Hard", "Easy"])
+
+        # 軸ラベル
+        plt.xlabel("Predicted Label", fontsize=18)
+        plt.ylabel("True Label", fontsize=18)
+        if optu:
+            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)} (Optimized)")
+        else:
+            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)}" )
+        plt.show()
+    exit()
 
     # 結果をdfに、ここに全部まとめる
     results_df = pd.DataFrame(results,
@@ -230,6 +266,6 @@ if __name__ == '__main__':
     print(summary_df[["Num Rules", "Count"]])
     """
 
-    # summary of metrics by num rulesを，csvファイルとして保存
-    summary_df1.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_1.csv", index=False)
-    summary_df2.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_2.csv", index=False)
+    # summary of metrics by num rulesを，csvファイルとして保存 graderにoptunaを使った場合
+    #summary_df1.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_1_optimized.csv", index=False)
+    #summary_df2.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_2_optimized.csv", index=False)
