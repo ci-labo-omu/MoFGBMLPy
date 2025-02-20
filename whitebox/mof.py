@@ -55,8 +55,8 @@ def objective_grader(trial, X_train, y_train):
 
 if __name__ == '__main__':
     # データセットのパス
-    optu = 1
-    data_name = "blood"
+    optu = 0
+    data_name = "vehicle"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
     RANDOM_SEED = 42
@@ -85,6 +85,7 @@ if __name__ == '__main__':
 
     conf_matrices = {}
     rule_counts = {}
+    conf_matrices_test = {}
     for train_file, test_file in zip(train_files, test_files):
         train_path = os.path.join(DATASET_DIR, train_file)
         test_path = os.path.join(DATASET_DIR, test_file)
@@ -157,18 +158,26 @@ if __name__ == '__main__':
                 grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
             grader_clf.fit(X_resampled, y_resampled)
             grader_X = grader_clf.predict(X_resampled)
-            print(len(X_resampled))
-            print(confusion_matrix(y_resampled, grader_X))
+
             conf_matrix = confusion_matrix(y_resampled, grader_X)
-            print
+            base_mask_test = base_predictions_test == y_test
+            print(base_predictions_test)
+            print(y_test)
+            conf_matrix_test = confusion_matrix(base_mask_test, grader_clf.predict(X_test))
+            print(conf_matrix_test)
             if num_rule in conf_matrices:
-                conf_matrices[num_rule] += conf_matrix
+                #conf_matrices[num_rule] += conf_matrix
                 rule_counts[num_rule] += 1
+                conf_matrices_test[num_rule] += conf_matrix_test
             else:
-                conf_matrices[num_rule] = conf_matrix
+                #conf_matrices[num_rule] = conf_matrix
+                conf_matrices_test[num_rule] = conf_matrix_test
                 rule_counts[num_rule] = 1
 
 
+
+
+            continue
             # **訓練データでの評価**
 
             final_predictions_train = base_predictions_train.copy()
@@ -206,7 +215,10 @@ if __name__ == '__main__':
         res_id += 1
 
     avg_conf_matrices = {num_rule: conf_matrices[num_rule] / rule_counts[num_rule] for num_rule in conf_matrices}
-    for num_rule, avg_conf_matrix in avg_conf_matrices.items():
+    avg_conf_matrices_test = {num_rule: conf_matrices_test[num_rule] / rule_counts[num_rule] for num_rule in conf_matrices_test}
+    for num_rule, avg_conf_matrix in avg_conf_matrices_test.items():
+        if num_rule == 1:
+            continue
         print(f"\nAverage Confusion Matrix for Num Rules {num_rule}:\n{avg_conf_matrix}")
         plt.figure(figsize=(6, 5))
         sns.heatmap(avg_conf_matrix, annot=True, cmap="Blues", fmt=".2f",
@@ -216,9 +228,9 @@ if __name__ == '__main__':
         plt.xlabel("Predicted Label", fontsize=18)
         plt.ylabel("True Label", fontsize=18)
         if optu:
-            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)} (Optimized)")
+            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)} Test data (Optimized)")
         else:
-            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)}" )
+            plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)} Test data " )
         plt.show()
     exit()
 
