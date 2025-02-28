@@ -56,7 +56,7 @@ def objective_grader(trial, X_train, y_train):
 if __name__ == '__main__':
     # データセットのパス
     optu = 0
-    data_name = "bupa"
+    data_name = "banknote"
     DATASET_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/dataset/{data_name}"
     MoF_DIR = f"C:/Users/Ayato Tomofuji/Documents/Mof/MoFGBMLPy/results/1/{data_name}"
     RANDOM_SEED = 42
@@ -92,11 +92,9 @@ if __name__ == '__main__':
 
         train_data = np.loadtxt(train_path, delimiter=",", skiprows=1, usecols=range(0, dim + 1))
         test_data = np.loadtxt(test_path, delimiter=",", skiprows=1, usecols=range(0, dim + 1))
-
         X_train, y_train = train_data[:, :-1], train_data[:, -1]
         X_test, y_test = test_data[:, :-1], test_data[:, -1]
         # 文字列として格納されているリストをリスト型に変換する関数
-
 
         identifier = os.path.basename(test_path).split(f"_{data_name}-10tst")[0]
         # Base classifier（MoFGBML）
@@ -109,22 +107,22 @@ if __name__ == '__main__':
         df["prediction_train"] = df["prediction_train"].apply(parse_list_column)
         df["prediction_test"] = df["prediction_test"].apply(parse_list_column)
         # **Optunaで最適化されたRandomForestをhard samplesに適用**
-        study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
-        study.optimize(lambda trial: objective(trial, X_train, y_train), n_trials=50)
-        best_params = study.best_params
-        defe_clf = RandomForestClassifier(**best_params, random_state=RANDOM_SEED, n_jobs=-1)
-        defe_clf.fit(X_train, y_train)
-        defe_predictions_train = defe_clf.predict(X_train)
-        defe_predictions_test = defe_clf.predict(X_test)
-        defe_accuracy_train = accuracy_score(y_train, defe_predictions_train)
+        #study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
+        #study.optimize(lambda trial: objective(trial, X_train, y_train), n_trials=50)
+        #best_params = study.best_params
+        #defe_clf = RandomForestClassifier(**best_params, random_state=RANDOM_SEED, n_jobs=-1)
+        #defe_clf.fit(X_train, y_train)
+        #defe_predictions_train = defe_clf.predict(X_train)
+        #defe_predictions_test = defe_clf.predict(X_test)
+        #defe_accuracy_train = accuracy_score(y_train, defe_predictions_train)
 
 
         df_filtered = df[df["num_rules"] == 1]  # num_rules が num_rule のものを抽出
         base_predictions_train = df_filtered.iloc[0]["prediction_train"]
         # **ユニークな num_rules の値を取得**
         unique_num_rules = sorted(df["num_rules"].unique())  # 昇順にソート
-        defe_accuracy_test = accuracy_score(y_test, defe_predictions_test)
-        print(f"Test Score: {defe_accuracy_test:.4f}")
+
+
         # **ユニークなルール数ごとにループ**
         for num_rule in unique_num_rules:
             df_filtered = df[df["num_rules"] == num_rule]  # num_rules が num_rule のものを抽出
@@ -135,47 +133,97 @@ if __name__ == '__main__':
             base_predictions_train = df_filtered.iloc[0]["prediction_train"]
             base_predictions_test = df_filtered.iloc[0]["prediction_test"]
             base_predictions_train = np.where(base_predictions_train == None, -1, base_predictions_train)
+            base_predictions_test = np.where(base_predictions_test == None, -1, base_predictions_test)
 
             easy_mask_train = base_predictions_train == y_train
             hard_mask_train = ~easy_mask_train
-
+            easy_mask_test = base_predictions_test == y_test
+            hard_mask_test = ~easy_mask_test
             base_accuracy_train = accuracy_score(y_train, base_predictions_train)
+            base_accuracy_test = accuracy_score(y_test, base_predictions_test)
             #print(f"num_rules: {num_rule}, Train Score: {base_accuracy_train:.4f}")
             # **Hard/Easy分類器（Grader）**
             y_easy = np.ones_like(y_train)
             y_easy[hard_mask_train] = 0
+            y_easy_test = np.ones_like(y_test)
+            y_easy_test[hard_mask_test] = 0
+            # X_trainとeasy_mask_trainを，元のデータみたいにして，{MoF_DIR}/{identifier}/にcsvで保存する，全ルール数まとめて
+            # 保存する
+            # 保存先のディレクトリを指定
+            save_dir = f"../result_grader/{data_name}/{identifier}"
+
+
+
+
+
 
             if sum(y_easy == 0) > 2:
                 smote = SMOTE(random_state=RANDOM_SEED, k_neighbors=2)
                 X_resampled, y_resampled = smote.fit_resample(X_train, easy_mask_train)
             else:
                 X_resampled, y_resampled = X_train, easy_mask_train
-            if optu:
-                study_grader = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
-                study_grader.optimize(lambda trial: objective_grader(trial, X_resampled, y_resampled), n_trials=50)
-                best_params_grader = study_grader.best_params
-                grader_clf = DecisionTreeClassifier(**best_params_grader, random_state=RANDOM_SEED)
+
+            # ディレクトリが存在しない場合は作成
+            os.makedirs(save_dir, exist_ok=True)
+            X_masked = np.hstack([X_resampled, y_resampled.reshape(-1, 1)])
+            X_masked_test = np.hstack([X_test, y_easy_test.reshape(-1, 1)])
+            print(X_masked.shape)
+
+            test = True
+
+            if test == True:
+                num_patterns, num_attributes = X_test.shape
+                num_classes = 2  # クラス数は固定
+
+                # 先頭行を作成
+                header_info = f"{num_patterns},{num_attributes},{num_classes}\n"
+                # CSVを保存（先頭行を追加）
+                with open(f"{save_dir}/X_masked{num_rule}_test.csv", "w") as f:
+                    f.write(header_info)
+                    pd.DataFrame(X_masked_test).to_csv(f, index=False, header=False, lineterminator="\n")
+                print(save_dir)
             else:
-                grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
-            grader_clf.fit(X_resampled, y_resampled)
-            grader_X = grader_clf.predict(X_resampled)
+                num_patterns, num_attributes = X_resampled.shape
+                num_classes = 2
+                # 先頭行を作成
+                header_info = f"{num_patterns},{num_attributes},{num_classes}\n"
+                # CSVを保存（先頭行を追加）
+                with open(f"{save_dir}/X_masked{num_rule}.csv", "w") as f:
+                    f.write(header_info)
+                    pd.DataFrame(X_masked).to_csv(f, index=False, header=False, lineterminator="\n")
+                print(save_dir)
 
-            conf_matrix = confusion_matrix(y_resampled, grader_X)
-            base_mask_test = base_predictions_test == y_test
 
-            """
-            conf_matrix_test = confusion_matrix(base_mask_test, grader_clf.predict(X_test))
-            print(conf_matrix_test)
-            if num_rule in conf_matrices:
-                #conf_matrices[num_rule] += conf_matrix
-                rule_counts[num_rule] += 1
-                conf_matrices_test[num_rule] += conf_matrix_test
-            else:
-                #conf_matrices[num_rule] = conf_matrix
-                conf_matrices_test[num_rule] = conf_matrix_test
-                rule_counts[num_rule] = 1
-            """
+            #X_maskedをcsvで保存
+            # データの形状を取得
 
+
+
+            continue
+
+            if 0:
+                if optu:
+                    study_grader = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=RANDOM_SEED))
+                    study_grader.optimize(lambda trial: objective_grader(trial, X_resampled, y_resampled), n_trials=50)
+                    best_params_grader = study_grader.best_params
+                    grader_clf = DecisionTreeClassifier(**best_params_grader, random_state=RANDOM_SEED)
+                else:
+                    grader_clf = DecisionTreeClassifier(max_depth=4, random_state=RANDOM_SEED)
+                grader_clf.fit(X_resampled, y_resampled)
+                grader_X = grader_clf.predict(X_resampled)
+
+                conf_matrix = confusion_matrix(y_resampled, grader_X)
+                base_mask_test = base_predictions_test == y_test
+
+                conf_matrix_test = confusion_matrix(base_mask_test, grader_clf.predict(X_test))
+                if num_rule in conf_matrices:
+                    #conf_matrices[num_rule] += conf_matrix
+                    rule_counts[num_rule] += 1
+                    conf_matrices_test[num_rule] += conf_matrix_test
+                else:
+                    #conf_matrices[num_rule] = conf_matrix
+                    conf_matrices_test[num_rule] = conf_matrix_test
+                    rule_counts[num_rule] = 1
 
 
             # **訓練データでの評価**
@@ -197,10 +245,11 @@ if __name__ == '__main__':
             final_predictions_test = base_predictions_test.copy()
             final_predictions_test[hard_mask_test] = defe_predictions_test[hard_mask_test]
             final_accuracy_test = accuracy_score(y_test, final_predictions_test)
+            defe_accuracy_test = accuracy_score(y_test, defe_predictions_test)
+            deferral_rate_test = sum(hard_mask_test) / len(easy_mask_test)
             base_accuracy_test = accuracy_score(y_test, base_predictions_test)
             base_accuracy_test_oneasy = accuracy_score(y_test[easy_mask_test], base_predictions_test[easy_mask_test])
             defe_accuracy_test_onhard = accuracy_score(y_test[hard_mask_test], defe_predictions_test[hard_mask_test])
-            deferral_rate_test = sum(hard_mask_test) / len(easy_mask_test)
 
             results.append((train_file, test_file, num_rule, base_accuracy_train, base_accuracy_test,
                             final_accuracy_train, final_accuracy_test, deferral_rate_train,
@@ -212,16 +261,10 @@ if __name__ == '__main__':
                 f"num_rules={num_rule}: {train_file} -> Base Train Acc: {base_accuracy_train:.4f}, Base Test Acc: {base_accuracy_test:.4f}, Final Train Acc: {final_accuracy_train:.4f}, Final Test Acc: {final_accuracy_test:.4f}, Deferral Train Rate: {deferral_rate_train:.4f}, Deferral Test Rate: {deferral_rate_test:.4f}"
             )
         res_id += 1
-    average_defe_accuracy_train = sum([result[11] for result in results]) / len(results)
-    print(f"Average Deferral Accuracy on Train Data: {average_defe_accuracy_train:.4f}")
-    average_defe_accuracy_test = sum([result[13] for result in results]) / len(results)
-    print(f"Average Deferral Accuracy on Test Data: {average_defe_accuracy_test:.4f}")
-    #resultから，defe_accuracy_testの平均を求める
-    exit()
 
     avg_conf_matrices = {num_rule: conf_matrices[num_rule] / rule_counts[num_rule] for num_rule in conf_matrices}
     avg_conf_matrices_test = {num_rule: conf_matrices_test[num_rule] / rule_counts[num_rule] for num_rule in conf_matrices_test}
-    """for num_rule, avg_conf_matrix in avg_conf_matrices_test.items():
+    for num_rule, avg_conf_matrix in avg_conf_matrices_test.items():
         if num_rule == 1:
             continue
         print(f"\nAverage Confusion Matrix for Num Rules {num_rule}:\n{avg_conf_matrix}")
@@ -237,7 +280,8 @@ if __name__ == '__main__':
         else:
             plt.title(f"{data_name} Confusion Matrix for Num Rules {str(num_rule)} Test data " )
         plt.show()
-    """
+    exit()
+
     # 結果をdfに、ここに全部まとめる
     results_df = pd.DataFrame(results,
                               columns=["Train File", "Test File", "Num Rules", "Base Train Accuracy",
@@ -271,11 +315,17 @@ if __name__ == '__main__':
     # **結果を表示**
     print("\nSummary of Metrics by Num Rules:")
     print(summary_df1)
+    """
     # **詳細データの表示**
+    print("\nMean of Each Metric for Each Num Rules:")
+    print(summary_df[
+          ["Num Rules", "Base_Train_Accuracy", "Base_Test_Accuracy", "Final_Train_Accuracy",
+           "Final_Test_Accuracy", "Deferral_Train_Rate", "Deferral_Test_Rate"]])
 
+    print("\nCount of Each Num Rules:")
+    print(summary_df[["Num Rules", "Count"]])
+    """
 
     # summary of metrics by num rulesを，csvファイルとして保存 graderにoptunaを使った場合
     #summary_df1.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_1_optimized.csv", index=False)
     #summary_df2.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_2_optimized.csv", index=False)
-    summary_df1.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_1_revised.csv", index=False)
-    summary_df2.to_csv(f"{MoF_DIR}/summary_of_metrics_by_num_rules_2_revised.csv", index=False)

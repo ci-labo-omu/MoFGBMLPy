@@ -90,13 +90,14 @@ class Input:
 
                 for i in range(len(in_vector)):
                     in_vector[i] = float(row[i])
-
                 class_label = ClassLabelBasic(int(float(row[num_dim])))
 
                 patterns.append(Pattern(pattern_id, in_vector, class_label))
                 pattern_id += 1
 
         patterns = np.array(patterns, dtype=object)
+        print(patterns)
+        print(size, num_dim, num_classes)
         dataset = Dataset(size, num_dim, num_classes, patterns)
 
         return dataset
