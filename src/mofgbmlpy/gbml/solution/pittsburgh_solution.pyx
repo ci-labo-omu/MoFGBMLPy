@@ -361,7 +361,6 @@ cdef class PittsburghSolution(AbstractSolution):
                num_errors += 1
            else:
                winner_solution.inc_fitness()
-
         return num_errors / dataset_size
 
 

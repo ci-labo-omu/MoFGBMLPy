@@ -71,7 +71,7 @@ if __name__ == '__main__':
         "--train-file", "None",
         "--test-file", "None",
         "--data-name", "vehicle_density_adapt",
-        "--terminate-evaluation", "120000",
+        "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -132,7 +132,7 @@ if __name__ == '__main__':
         #plot.ax.grid(visible=True)
 
         #各plotのタイトルは，各traファイルの名前に対応するようにする
-        num_rules_path = f"art_without_edge/result_nodes/adapt/{data_name}/{identifier}_adapt.png"
+        num_rules_path = f"art_without_edge/result_nodes/adapt/{data_name}/{identifier}_adapt_recip.png"
         title = f"MoFGBMLPy with Density adaptive {identifier} with NSGA-II"
         runner.plot_line_interpretability_error_rate_tradeoff(Xs,
                                                           file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
@@ -146,8 +146,8 @@ if __name__ == '__main__':
         #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
         # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
         # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-        with open("result_vehicle_density_adapt.txt", "a") as f:
-            f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
+        #with open("result_vehicle_density_adapt.txt", "a") as f:
+        #    f.write(f"{identifier}, {results.exec_time}, {num_rules}, {objectives} \n")
         #現在の時刻を取得
         now = datetime.datetime.now()
         print(now)

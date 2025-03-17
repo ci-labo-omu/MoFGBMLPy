@@ -99,6 +99,7 @@ class PittsburghProblem(Problem):
         Returns:
             Dataset: Training set
         """
+        print(self.__last_error_rates)
         if len(self.__last_error_rates) > self.__max_history:
             self.__last_error_rates.pop(0)
         if len(self.__last_error_rates) == self.__max_history:
@@ -106,7 +107,7 @@ class PittsburghProblem(Problem):
                 try:
                     self.__dataset_manager.switch_dataset()
                     self.__training_ds = self.__dataset_manager.current_dataset
-                    self.__last_error_rates = []
+                    self.__last_error_rnates = []
 
                 except StopIteration:
                     pass
