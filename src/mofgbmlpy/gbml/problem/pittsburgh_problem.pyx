@@ -107,7 +107,7 @@ class PittsburghProblem(Problem):
                 try:
                     self.__dataset_manager.switch_dataset()
                     self.__training_ds = self.__dataset_manager.current_dataset
-                    self.__last_error_rnates = []
+                    self.__last_error_rates = []
 
                 except StopIteration:
                     pass
