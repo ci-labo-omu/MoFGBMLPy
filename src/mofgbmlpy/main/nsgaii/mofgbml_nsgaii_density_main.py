@@ -80,8 +80,8 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "iris",
-        "--terminate-evaluation", "120000",
+        "--data-name", "vehicle",
+        "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "iris"
+    data_name = "vehicle"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -168,7 +168,7 @@ if __name__ == '__main__':
             objectives = [[sol.get("F")[0], sol.get("F")[1]] for sol in Xs]
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            with open("results_density/result_iris_density.txt", "a") as f:
-                f.write(f"{train_file},{results.exec_time},{objectives} \n")
+            #with open("results_density/result_iris_density.txt", "a") as f:
+            #    f.write(f"{train_file},{results.exec_time},{objectives} \n")
     end = time.time()
     print(f"end: {end}")
