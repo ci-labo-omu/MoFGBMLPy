@@ -30,7 +30,7 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_clusters_per_class=1,  # クラスごとのクラスター数
                               n_classes=4,  # クラス数（4クラス分類）
                               random_state=42)
-"""
+
 with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
     #ヘッダ行はサンプル数，次元数，クラス数の3つの整数をカンマ区切りで記述されている
     header = f.readline().strip().split(',')
@@ -44,7 +44,7 @@ with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
         data = line.strip().split(',')[:-1]
         X[i] = np.array(data[:-1], dtype=float)
         y[i] = data[-1]
-"""
+
 #それぞれのクラスのデータ数を表示
 print(np.unique(y, return_counts=True))
 X = MinMaxScaler().fit_transform(data)

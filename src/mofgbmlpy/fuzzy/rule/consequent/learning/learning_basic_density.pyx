@@ -75,13 +75,10 @@ cdef class LearningBasicDensity(AbstractLearningWithDensity):
         for c in range(num_classes):
             part_sum = 0
             # TODO: Add multithreading
-
             for i in range(dataset.get_size()):
                 pattern = patterns[i]
                 if pattern.get_target_class().get_class_label_value() == c:
                     part_sum += compatible_grades[i]*densities[i]
-                    print(densities[i])
-
             sum_compatible_grade_for_each_class[c] = part_sum
             all_sum += part_sum
 

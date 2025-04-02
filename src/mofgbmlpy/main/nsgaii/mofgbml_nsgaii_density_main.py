@@ -80,7 +80,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "vehicle",
+        "--data-name", "bupa_density",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "vehicle"
+    data_name = "bupa"
     minCIM = 0.5
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
@@ -105,17 +105,18 @@ if __name__ == '__main__':
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
         data_name (str): 対象データセット名 (例: "iris")
     """
-    start = time.time()
-    print(f"start: {start}")
+    experiment_id = 1
+
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
     train_base_dir = Path(train_dir)
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
+
+
         # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
-
         # 対応する tra ファイルを含むディレクトリを決定
         train_dir = train_base_dir / f"{identifier}_tra"
         if not train_dir.exists():
@@ -130,6 +131,10 @@ if __name__ == '__main__':
 
         # 3. traファイルとtstファイルを対応させて処理
         for train_file in train_files:
+
+            start = time.time()
+            print(f"start: {start}")
+
             print(f"Processing Train: {train_file} | Test: {test_file}")
             # 実際の処理 (例: runner.main を呼び出す)
             train_file = str(train_file)
@@ -137,6 +142,7 @@ if __name__ == '__main__':
             # Extract numeric part (e.g., `30` or `45`) from the file name
             match = re.search(r"node(\d+)", Path(train_file).stem)
             node_number = match.group(1) if match else "unknown"
+            args[3] = str(f"{identifier}_node{node_number}")
 
             train_set = Input_density().input_data_set(train_file, False)
             test_set = Input().input_data_set(test_file, False)
@@ -155,7 +161,10 @@ if __name__ == '__main__':
             title = f"MoFGBMLPy with Density {train_file}{int(minCIM*100)} with NSGA-II"
 
             runner.plot_line_interpretability_error_rate_tradeoff(Xs,
-                                                              file_path=num_rules_path, xlim=[0, 10], x_key='num_rules')
+                                                              file_path=num_rules_path, xlim=[0, 20], x_key='num_rules')
+            end = time.time()
+            exec_time = end - start
+            print(f"exec time: {exec_time}")
 
             ##  最適解の中の全ての識別器についてループ
             #for idx, sol in enumerate(results.opt.get("X")[:, 0]):
@@ -165,10 +174,7 @@ if __name__ == '__main__':
             #    for rule_idx, var in enumerate(sol.get_vars(), start=1):
             #        print(f"  ルール {rule_idx}: {var.get_rule().get_linguistic_representation()}")
 
-            objectives = [[sol.get("F")[0], sol.get("F")[1]] for sol in Xs]
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
             #with open("results_density/result_iris_density.txt", "a") as f:
             #    f.write(f"{train_file},{results.exec_time},{objectives} \n")
-    end = time.time()
-    print(f"end: {end}")
