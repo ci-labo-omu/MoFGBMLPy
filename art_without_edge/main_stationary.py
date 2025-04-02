@@ -31,7 +31,7 @@ data, y = make_classification(n_samples=8000,  # サンプル数
                               n_classes=4,  # クラス数（4クラス分類）
                               random_state=42)
 
-with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
+with open(f'../dataset/vehicle/a0_0_vehicle-10tra.dat', 'r') as f:
     #ヘッダ行はサンプル数，次元数，クラス数の3つの整数をカンマ区切りで記述されている
     header = f.readline().strip().split(',')
     num_rows = int(header[0])
@@ -46,20 +46,19 @@ with open(f'../dataset/vehicle/all_data.dat', 'r') as f:
         y[i] = data[-1]
 
 #それぞれのクラスのデータ数を表示
-print(np.unique(y, return_counts=True))
-X = MinMaxScaler().fit_transform(data)
 #dataとyをdatファイルに書き出し，それぞれの行を横に並べて
 data = np.hstack([X, y.reshape(-1, 1)])
 # dataを2次元平面でプロット再現性のための乱数シード
 # dataとyを結合x
 #dataをプロット
+"""
 plt.scatter(data[y == 0, 0], data[y == 0, 1], label='Class 1', s=50, alpha=0.6)
 plt.scatter(data[y == 1, 0], data[y == 1, 1], label='Class 2', s=50, alpha=0.6)
 plt.scatter(data[y == 2, 0], data[y == 2, 1], label='Class 3', s=50, alpha=0.6)
 plt.scatter(data[y == 3, 0], data[y == 3, 1], label='Class 4', s=50, alpha=0.6)
 plt.legend()
 #plt.show()
-"""
+
 numD = 5000
 
 
@@ -80,20 +79,18 @@ y5 = y[60000:60000 + numD]
 y6 = y[75000:75000 + numD]
 y = np.hstack([y1, y2, y3, y4, y5, y6])"""
 
-data1 = data[y == 0]
-data2 = data[y == 1]
-data3 = data[y == 2]
-data4 = data[y == 3]
+data_by_class = {label: data[y == label] for label in np.unique(y)}
 
 
 minCIMs = [0.40]
 for minCIM in minCIMs:
-    for i, data in enumerate([data1, data2, data3]):
+    for i, data in data_by_class.items():
         # Normalization [0-1]
         # Normalization [0-1]
         # Randomize data
         np.random.seed(11)
         data = shuffle(data)
+
         # Noise Setting [0,1]
         #     if NR > 0:
         #      %   noise_data = np.random.rand(int(data.shape[0] * NR), data.shape[1])
@@ -117,6 +114,6 @@ for minCIM in minCIMs:
             print(resultNumNodes)
             print(f' Processing Time: {time_train}')
             print('')
-        myPlot_withoutEdge(data, net)
+        #myPlot_withoutEdge(data, net)
         #ノード座標と数をカウントする
         #estimateDensityByCountNode(net, minCIM)
