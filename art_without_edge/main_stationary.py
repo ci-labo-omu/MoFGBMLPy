@@ -82,7 +82,7 @@ y = np.hstack([y1, y2, y3, y4, y5, y6])"""
 data_by_class = {label: data[y == label] for label in np.unique(y)}
 
 
-minCIMs = [0.40]
+minCIMs = [0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
 for minCIM in minCIMs:
     for i, data in data_by_class.items():
         # Normalization [0-1]
@@ -116,4 +116,4 @@ for minCIM in minCIMs:
             print('')
         #myPlot_withoutEdge(data, net)
         #ノード座標と数をカウントする
-        #estimateDensityByCountNode(net, minCIM)
+        estimateDensityByCountNode(net, minCIM)

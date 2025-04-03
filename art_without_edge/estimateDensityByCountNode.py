@@ -13,9 +13,9 @@ def estimateDensityByCountNode(net, minCIM):
 
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    dir_path = f"dataset_nodes/vehicle/"
+    dir_path = f"dataset_nodes/vowel/"
     os.makedirs(dir_path, exist_ok=True)
-    file_path = os.path.join(dir_path, f'vehicle_node{int(minCIM*100)}.csv')
+    file_path = os.path.join(dir_path, f'vowel_node{int(minCIM*100)}.csv')
     with open(file_path, 'a') as f:
         for i in range(len(node_positions)):
             position = ",".join(map(str, node_positions[i]))
