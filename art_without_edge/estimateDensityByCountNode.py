@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def estimateDensityByCountNode(net, minCIM):
+def estimateDensityByCountNode(net, minCIM, data_name, identifier):
     # ノード位置とカウントを取得
     node_positions = net.weight
     count_node = net.CountNode
@@ -13,9 +13,9 @@ def estimateDensityByCountNode(net, minCIM):
 
     #ノードの座標と，各ノードのカウントをファイルに書き出す．各ノードの座標の後ろにカウントを書く，4次元ベクトルのリストで
     #書き出す．
-    dir_path = f"dataset_nodes/vowel/"
+    dir_path = f"dataset_nodes/{data_name}/"
     os.makedirs(dir_path, exist_ok=True)
-    file_path = os.path.join(dir_path, f'vowel_node{int(minCIM*100)}.csv')
+    file_path = os.path.join(dir_path, f'{identifier}_{data_name}_node{int(minCIM*100)}.csv')
     with open(file_path, 'a') as f:
         for i in range(len(node_positions)):
             position = ",".join(map(str, node_positions[i]))

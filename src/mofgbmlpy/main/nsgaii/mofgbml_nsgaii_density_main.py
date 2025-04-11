@@ -83,6 +83,7 @@ if __name__ == '__main__':
         "--data-name", "bupa_density",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
+        "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--crossover-type", "hybrid-gbml-crossover",
