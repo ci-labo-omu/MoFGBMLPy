@@ -88,3 +88,11 @@ cdef class RuleBuilderCore:
             Dataset: Training set
         """
         return self._consequent_factory.get_training_set()
+
+    def get_consequent_factory(self):
+        """Get the consequent factory
+
+        Returns:
+            AbstractLearning: Consequent factory
+        """
+        return self._consequent_factory

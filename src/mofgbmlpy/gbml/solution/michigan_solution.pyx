@@ -390,3 +390,10 @@ cdef class MichiganSolution(AbstractSolution):
             new_knowledge (Knowledge): New knowledge base
         """
         self.get_antecedent().set_knowledge(new_knowledge)
+
+    def get_confidence(self):
+        learner = self.get_rule_builder().get_consequent_factory()
+        rule = self.get_rule()
+        antecedent = rule.get_antecedent()
+
+        return learner.calc_confidence_py(antecedent)
