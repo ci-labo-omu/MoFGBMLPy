@@ -1,10 +1,3 @@
-import functools
-
-from pymoo.algorithms.moo.moead import MOEAD
-from pymoo.algorithms.moo.nsga2 import NSGA2
-from pymoo.algorithms.moo.nsga3 import NSGA3
-
-
 def dash_case_to_class_name(txt):
     """Convert a text in dash case format to a class name format. e.g. an-example becomes AnExample
 
@@ -14,9 +7,9 @@ def dash_case_to_class_name(txt):
     Returns:
         str: New text
     """
-    parts = txt.split('-')
+    parts = txt.split("-")
     parts = [p.capitalize() for p in parts]
-    return ''.join(parts)
+    return "".join(parts)
 
 
 def dash_case_to_snake_case(txt):
@@ -28,5 +21,4 @@ def dash_case_to_snake_case(txt):
     Returns:
         str: New text
     """
-    return txt.replace('-', '_')
-
+    return txt.replace("-", "_")

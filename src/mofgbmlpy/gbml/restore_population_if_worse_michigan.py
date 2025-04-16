@@ -17,11 +17,13 @@ class RestorePopulationIfWorseMichigan(Callback):
         current_pop = algorithm.pop
         michigan_solutions = current_pop.get("X")[:, 0]
 
-        classifier = PittsburghSolution(num_vars=len(current_pop),
-                                        num_objectives=0,
-                                        num_constraints=0,
-                                        classification=SingleWinnerRuleSelection(),
-                                        do_init_vars=False)
+        classifier = PittsburghSolution(
+            num_vars=len(current_pop),
+            num_objectives=0,
+            num_constraints=0,
+            classification=SingleWinnerRuleSelection(),
+            do_init_vars=False,
+        )
 
         classifier.set_vars(michigan_solutions)
         current_err_rate = classifier.get_error_rate(self._training_set)

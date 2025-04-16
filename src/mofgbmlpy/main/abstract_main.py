@@ -1,6 +1,6 @@
 import xml.etree.cElementTree as xml_tree
 import os
-from abc import ABC, abstractmethod
+from abc import ABC
 from importlib import import_module
 
 import numpy as np
@@ -24,12 +24,8 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMulti
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
-from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
-from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.arguments.arguments import Arguments
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
-from mofgbmlpy.main.michigan.michigan_main import MichiganMain
-from mofgbmlpy.utility.util import get_algo, dash_case_to_snake_case, dash_case_to_class_name
+from mofgbmlpy.utility.util import dash_case_to_snake_case, dash_case_to_class_name
 
 
 class AbstractMain(ABC):
@@ -139,12 +135,14 @@ class AbstractMain(ABC):
             file_name = str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "Consts.txt"))
             Output.writeln(file_name, str(self._mofgbml_args), False)
 
-        res = minimize(self._problem,
-                       self._algo,
-                       termination=self._termination,
-                       seed=self._pymoo_rand_seed,
-                       callback=self._callback,
-                       verbose=self._verbose)
+        res = minimize(
+            self._problem,
+            self._algo,
+            termination=self._termination,
+            seed=self._pymoo_rand_seed,
+            callback=self._callback,
+            verbose=self._verbose,
+        )
 
         return res
 
@@ -153,22 +151,27 @@ class AbstractMain(ABC):
         if antecedent_factory_name == "all-combination-antecedent-factory":
             return AllCombinationAntecedentFactory(knowledge=self._knowledge, random_gen=self._random_gen)
         elif antecedent_factory_name == "heuristic-antecedent-factory":
-            return HeuristicAntecedentFactory(training_set=self._train,
-                                              knowledge=self._knowledge,
-                                              is_dc_probability=self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
-                                              dc_rate=self._mofgbml_args.get("DONT_CARE_RT"),
-                                              antecedent_number_do_not_dont_care=self._mofgbml_args.get(
-                                                  "ANTECEDENT_NUMBER_DO_NOT_DONT_CARE"),
-                                              random_gen=self._random_gen)
+            return HeuristicAntecedentFactory(
+                training_set=self._train,
+                knowledge=self._knowledge,
+                is_dc_probability=self._mofgbml_args.get("IS_PROBABILITY_DONT_CARE"),
+                dc_rate=self._mofgbml_args.get("DONT_CARE_RT"),
+                antecedent_number_do_not_dont_care=self._mofgbml_args.get("ANTECEDENT_NUMBER_DO_NOT_DONT_CARE"),
+                random_gen=self._random_gen,
+            )
         else:
             Exception("Unsupported antecedent factory")
 
     def _get_termination(self):
-        if self._mofgbml_args.has_key("TERMINATE_EVALUATION") and self._mofgbml_args.get(
-                "TERMINATE_EVALUATION") is not None:
+        if (
+            self._mofgbml_args.has_key("TERMINATE_EVALUATION")
+            and self._mofgbml_args.get("TERMINATE_EVALUATION") is not None
+        ):
             return get_termination("n_eval", self._mofgbml_args.get("TERMINATE_EVALUATION"))
-        elif self._mofgbml_args.has_key("TERMINATE_GENERATION") and self._mofgbml_args.get(
-                "TERMINATE_GENERATION") is not None:
+        elif (
+            self._mofgbml_args.has_key("TERMINATE_GENERATION")
+            and self._mofgbml_args.get("TERMINATE_GENERATION") is not None
+        ):
             return get_termination("n_gen", self._mofgbml_args.get("TERMINATE_GENERATION"))
         else:
             raise ValueError("Termination criterion not given or not recognized")
@@ -193,14 +196,10 @@ class AbstractMain(ABC):
         antecedent_factory = self._get_antecedent_factory()
         if self._is_multi_label:
             self._learner = LearningMulti(self._train)
-            return RuleBuilderMulti(antecedent_factory,
-                                    self._learner,
-                                    self._knowledge)
+            return RuleBuilderMulti(antecedent_factory, self._learner, self._knowledge)
         else:
             self._learner = LearningBasic(self._train)
-            return RuleBuilderBasic(antecedent_factory,
-                                    self._learner,
-                                    self._knowledge)
+            return RuleBuilderBasic(antecedent_factory, self._learner, self._knowledge)
 
     def get_pymoo_algo(self):
         algo_name = self._mofgbml_args.get("ALGORITHM")
@@ -212,17 +211,20 @@ class AbstractMain(ABC):
             "sampling": self._sampling,
             "crossover": self._crossover,
             "repair": self._repair,
-            "mutation": self._mutation
+            "mutation": self._mutation,
         }
 
         algos = {
             "nsga2": {"class": NSGA2, "additional_args": ["n_offsprings"]},
             "nsga3": {"class": NSGA3, "additional_args": ["n_offsprings"]},
-            "moead": {"class": MOEAD, "additional_args": [
-                "neighborhood_selection_probability",
-                "neighborhood_size",
-                "offspring_population_size"
-            ]},
+            "moead": {
+                "class": MOEAD,
+                "additional_args": [
+                    "neighborhood_selection_probability",
+                    "neighborhood_size",
+                    "offspring_population_size",
+                ],
+            },
         }
 
         if algo_name not in algos:
@@ -243,23 +245,29 @@ class AbstractMain(ABC):
         archive_solutions = res.non_dominated_archive.get("X")[:, 0]
 
         results_data = AbstractMain.solutions_list_to_dict_array(non_dominated_solutions)
-        Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.csv')))
+        Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "results.csv")))
 
         results_data = AbstractMain.solutions_list_to_dict_array(archive_solutions)
-        Output.save_data(results_data,
-                         str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'resultsARC.csv')))
+        Output.save_data(results_data, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "resultsARC.csv")))
 
         pretty_xml = False
-        if self._mofgbml_args is not None and self._mofgbml_args.has_key("PRETTY_XML") and self._mofgbml_args.get(
-                "PRETTY_XML"):
+        if (
+            self._mofgbml_args is not None
+            and self._mofgbml_args.has_key("PRETTY_XML")
+            and self._mofgbml_args.get("PRETTY_XML")
+        ):
             pretty_xml = True
 
         results_xml = self.get_results_xml(self._knowledge, res.pop)
-        Output.save_data(results_xml, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'results.xml')),
-                         pretty_xml=pretty_xml)
+        Output.save_data(
+            results_xml,
+            str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "results.xml")),
+            pretty_xml=pretty_xml,
+        )
 
-        Output.writeln(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), 'exec_time.txt')),
-                       f"{res.exec_time}")
+        Output.writeln(
+            str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "exec_time.txt")), f"{res.exec_time}"
+        )
 
     @staticmethod
     def solutions_list_to_dict_array(solutions):
@@ -301,7 +309,8 @@ class AbstractMain(ABC):
             knowledge (Knowledge): Knowledge base
             train (Dataset): Training dataset
             test (Dataset):  Test dataset
-            id_start (int): The ID is determined by the order of the solutions in loop. This parameter determines the starting value for the ID
+            id_start (int): The ID is determined by the order of the solutions in loop.
+                This parameter determines the starting value for the ID
         """
         raise AbstractMethodException()
 
@@ -361,7 +370,7 @@ class AbstractMain(ABC):
         return plot
 
     def plot_fuzzy_variables(self):
-        """Plot the fuzzy variables of the knowledge base """
+        """Plot the fuzzy variables of the knowledge base"""
         self._knowledge.plot_fuzzy_variables()
 
     def get_train_set(self):
@@ -392,5 +401,5 @@ class AbstractMain(ABC):
         self._problem.evaluate(solutions)
 
     def _load_additional_args(self):
-        """Load either Michigan or Pittsburgh approach arguments (problem, ...) """
+        """Load either Michigan or Pittsburgh approach arguments (problem, ...)"""
         raise AbstractMethodException()

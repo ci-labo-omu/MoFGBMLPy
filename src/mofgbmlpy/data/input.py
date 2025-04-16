@@ -7,7 +7,8 @@ import csv
 
 
 class Input:
-    """Class of static methods used to read files and load datasets """
+    """Class of static methods used to read files and load datasets"""
+
     @staticmethod
     def input_data_set(file_name, is_multi_label):
         """Load a dataset from a file name
@@ -34,7 +35,7 @@ class Input:
         Returns:
             Dataset: Dataset read from the file
         """
-        with open(file_name, newline='') as csvfile:
+        with open(file_name, newline="") as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
 
@@ -66,7 +67,7 @@ class Input:
 
     @staticmethod
     def input_data_set_basic(file_name):
-        """ Load a (mono label) dataset from a file name
+        """Load a (mono label) dataset from a file name
 
         Args:
             file_name (str): Name of the file containing the dataset
@@ -74,7 +75,7 @@ class Input:
         Returns:
             Dataset: Dataset read from the file
         """
-        with open(file_name, newline='') as csvfile:
+        with open(file_name, newline="") as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
 
@@ -111,10 +112,12 @@ class Input:
             Dataset: Training dataset read from the file
             Dataset: Test dataset read from the file
         """
-        if (arguments is None or
-                not arguments.has_key("TRAIN_FILE") or
-                not arguments.has_key("TEST_FILE") or
-                not arguments.has_key("IS_MULTI_LABEL")):
+        if (
+            arguments is None
+            or not arguments.has_key("TRAIN_FILE")
+            or not arguments.has_key("TEST_FILE")
+            or not arguments.has_key("IS_MULTI_LABEL")
+        ):
             raise ValueError("Invalid arguments")
 
         train_file_name = arguments.get("TRAIN_FILE")
