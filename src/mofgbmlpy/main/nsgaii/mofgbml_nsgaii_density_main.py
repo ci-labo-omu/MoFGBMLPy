@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
 
-
+        experiment_id =
         # tstファイル名から識別子を抽出 (例: "a0_0_iris")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
