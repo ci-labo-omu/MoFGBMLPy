@@ -118,7 +118,7 @@ class CounterFactualExplainer:
 
         return gradient
 
-    def train(self, num_epochs=10, learning_rate=0.01):
+    def train(self, num_epochs=10, learning_rate=0.2):
         antecedent = self._fuzzy_rule.get_antecedent()
         antecedent_indices = antecedent.get_antecedent_indices()
 
@@ -129,6 +129,8 @@ class CounterFactualExplainer:
         mf = [fs.get_function() for fs in fuzzy_sets]
         mf_params = [func.get_params() for func in mf]
 
+        # self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
+
         for epoch in range(num_epochs):
             # forward
             fs_mf_values = [
@@ -138,11 +140,11 @@ class CounterFactualExplainer:
             antecedent_mf_values = np.prod(fs_mf_values, axis=1)
 
             # loss
+            # TODO: change loss function, because it doesn't consider the smallest change here
             loss = self.loss_function()
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss}")
 
             # TODO: find a way to use batches ?
-
             # backward
             gradient = self._compute_gradient(antecedent_mf_values, fs_mf_values, mf_params)
 
@@ -151,19 +153,36 @@ class CounterFactualExplainer:
                 if mf_params[fs_i] is None or len(mf_params[fs_i]) == 0:
                     continue  # Don't care FS
 
-                for p_i, param in enumerate(mf_params[fs_i]):
-                    mf_params[fs_i][p_i] -= learning_rate * gradient[fs_i][p_i]
+                new_params = np.zeros(len(mf_params[fs_i]), dtype=object)
 
-                    prev_val = mf_params[fs_i][p_i - 1] if p_i > 0 else 0
-                    next_val = mf_params[fs_i][p_i + 1] if p_i < len(mf_params[fs_i]) - 1 else 1
+                for p_i, param in enumerate(mf_params[fs_i]):
+                    new_params[p_i] = mf_params[fs_i][p_i] - learning_rate * gradient[fs_i][p_i]
+                    if new_params[p_i] < 0:
+                        new_params[p_i] = 0
+                    elif new_params[p_i] > 1:
+                        new_params[p_i] = 1
+                    elif np.isnan(new_params[p_i]):
+                        new_params[p_i] = mf_params[fs_i][p_i]
+
+                # fix a <= b <= c
+
+                for p_i, param in enumerate(new_params):
+                    prev_val = new_params[p_i - 1] if p_i > 0 else 0
+                    next_val = new_params[p_i + 1] if p_i < len(new_params) - 1 else 1
 
                     # repair
-                    if mf_params[fs_i][p_i] < prev_val:
-                        mf_params[fs_i][p_i] = prev_val
-                    elif mf_params[fs_i][p_i] > next_val:
-                        mf_params[fs_i][p_i] = next_val
+                    if new_params[p_i] < prev_val:
+                        new_params[p_i] = prev_val
+                    elif new_params[p_i] > next_val:
+                        new_params[p_i] = next_val
 
-                    fs.get_function().set_param_value(p_i, mf_params[fs_i][p_i])
+                    fs.get_function().set_param_value(p_i, new_params[p_i])
+
+                mf_params[fs_i] = new_params
+            self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
+
+        # print(f"next ({antecedent_indices[0]})", self._new_knowledge.get_fuzzy_set(0, antecedent_indices[0]).get_function().get_params())
+        self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
 
     def get_counterfactual(self):
         self.train()

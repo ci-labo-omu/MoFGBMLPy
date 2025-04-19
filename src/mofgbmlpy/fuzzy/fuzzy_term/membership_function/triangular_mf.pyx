@@ -99,6 +99,7 @@ cdef class TriangularMF(AbstractMF):
            Returns:
                Points coordinates that define this function shape
            """
+
         return np.array([
             [x_min,0],
             [self._params[0], 0],
