@@ -21,7 +21,7 @@ NR = 0.0
 # Load 2D_ClusteringDATASET
 #data = scipy.io.loadmat('2D_ClusteringDATASET.mat')['data']  # OpenMLデータセットの読み込み
 
-data_name = "banknote"
+data_name = "blood"
 train_dir = Path(f"../dataset/{data_name}/")
 
 for train_file in train_dir.glob(f"*{data_name}-10tra.dat"):

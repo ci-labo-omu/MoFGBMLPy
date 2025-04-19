@@ -340,6 +340,8 @@ class AbstractMoFGBMLDensityMain(ABC):
                     coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
                 total_coverage += coverage
 
+            prediction_train = [sol.predict(train.get_pattern(idx)) for idx in range(train.get_size())]
+            prediction_test = [sol.predict(test.get_pattern(idx)) for idx in range(test.get_size())]
             sol.set_attribute("id", sol_id)
             sol.set_attribute("total_coverage", total_coverage)
             sol.set_attribute("total_rule_length", sol.get_total_rule_length())
@@ -347,7 +349,8 @@ class AbstractMoFGBMLDensityMain(ABC):
             sol.set_attribute("training_error_rate", sol.get_error_rate(train))
             sol.set_attribute("test_error_rate", sol.get_error_rate(test))
             sol.set_attribute("num_rules", sol.get_num_vars())
-
+            sol.set_attribute("prediction_train", prediction_train)
+            sol.set_attribute("prediction_test", prediction_test)
             sol_id += 1
 
     def get_results_xml(self, knowledge, pop):
