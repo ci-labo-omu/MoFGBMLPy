@@ -76,6 +76,16 @@ cdef class FuzzySet:
         """
         return self.__function
 
+    cpdef set_function(self, AbstractMF function):
+        """Set the membership function object
+        
+        Args:
+            function (AbstractMF): Membership function object
+        """
+        if function is None:
+            raise TypeError("function can't be none")
+        self.__function = function
+
     cpdef get_division_type(self):
         """Get the division type of this fuzzy set
         

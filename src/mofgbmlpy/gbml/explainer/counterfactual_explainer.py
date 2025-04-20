@@ -1,18 +1,26 @@
 import copy
 import numpy as np
-from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
-from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.data.dataset import Dataset
-from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
+from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
 
 
 class CounterFactualExplainer:
-    def __init__(self, fuzzy_rule, target_class, train_set, learner, confidence_loss_weight=0.5, area_computation_num_samples=100):
+    def __init__(
+        self,
+        fuzzy_rule,
+        target_class,
+        train_set,
+        learner,
+        confidence_loss_weight=0.5,
+        area_computation_num_samples=100,
+        learning_rate=0.05,
+        max_num_epochs=30,
+    ):
         self._fuzzy_rule = copy.deepcopy(fuzzy_rule)
         self._initial_class = fuzzy_rule.get_class_label()
         self._target_class = target_class
@@ -22,6 +30,8 @@ class CounterFactualExplainer:
         self._learner = learner
         self._confidence_loss_weight = confidence_loss_weight
         self._area_computation_num_samples = area_computation_num_samples
+        self._learning_rate = learning_rate
+        self._max_num_epochs = max_num_epochs
 
     def compute_membership_values(self, fuzzy_sets, min_val=0, max_val=1):
         mfs = [fs.get_function() for fs in fuzzy_sets]
@@ -101,14 +111,14 @@ class CounterFactualExplainer:
             # dµ/da
             return (
                 (x - mf_params[1]) / ((mf_params[1] - mf_params[0]) ** 2)
-                if x >= mf_params[0] and x <= mf_params[1]
+                if x >= mf_params[0] and x <= mf_params[1] and mf_params[0] != mf_params[1]
                 else 0
             )
         elif param_index == 1:
             # dµ/db
-            if x >= mf_params[0] and x <= mf_params[1]:
+            if x >= mf_params[0] and x <= mf_params[1] and mf_params[0] != mf_params[1]:
                 return (mf_params[0] - x) / ((mf_params[1] - mf_params[0]) ** 2)
-            elif x >= mf_params[1] and x <= mf_params[2]:
+            elif x >= mf_params[1] and x <= mf_params[2] and mf_params[1] != mf_params[2]:
                 return (mf_params[2] - x) / ((mf_params[2] - mf_params[1]) ** 2)
             else:
                 return 0
@@ -116,11 +126,20 @@ class CounterFactualExplainer:
             # dµ/dc
             return (
                 (x - mf_params[1]) / ((mf_params[2] - mf_params[1]) ** 2)
-                if x >= mf_params[1] and x <= mf_params[2]
+                if x >= mf_params[1] and x <= mf_params[2] and mf_params[1] != mf_params[2]
                 else 0
             )
 
-    def _compute_gradient(self, antecedent_mf_value, fs_mf_values, mf_params, intersection_value, union_value, mf_1_highest_area, mf_2_highest_area):
+    def _compute_gradient(
+        self,
+        antecedent_mf_value,
+        fs_mf_values,
+        mf_params,
+        intersection_value,
+        union_value,
+        mf_1_highest_area,
+        mf_2_highest_area,
+    ):
         gradient = np.zeros((len(fs_mf_values[0]), 3), dtype=object)  # shape (num_fs, num_params)
 
         # dL_conf/d_membership_aq
@@ -139,33 +158,46 @@ class CounterFactualExplainer:
         sum_initial_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_initial_class])
         sum_target_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_target_class])
 
-        gradient[:, :] = self._confidence_loss_weight*(
-            num_p_initial_class * sum_all_mf_values
-            - num_p * sum_initial_class_mf_values
-            - num_p_target_class * sum_all_mf_values
-            + num_p * sum_target_class_mf_values
-        ) / (sum_target_class_mf_values**2)
+        gradient[:, :] = (
+            self._confidence_loss_weight
+            * (
+                num_p_initial_class * sum_all_mf_values
+                - num_p * sum_initial_class_mf_values
+                - num_p_target_class * sum_all_mf_values
+                + num_p * sum_target_class_mf_values
+            )
+            / (sum_target_class_mf_values**2)
+        )
 
         # dL_change/d_membership_aq
         if intersection_value is not None and union_value is not None:
             sum_values = 0
             for i in range(intersection_value.shape[0]):
-                sum_values += mf_1_highest_area[i]*union_value[i] - intersection_value[i]*mf_2_highest_area[i]
+                sum_values += mf_1_highest_area[i] * union_value[i] - intersection_value[i] * mf_2_highest_area[i]
 
-            gradient[:, :] += (1-self._confidence_loss_weight) * sum_values
+            gradient[:, :] += (1 - self._confidence_loss_weight) * sum_values
 
         #######################################
 
         # (d_membership_aq/d_membership_aqi) * (d_membership_aqi/d_mf_params)
-        prod_all_fs_mf_values = np.prod(fs_mf_values)
         for i in range(len(mf_params)):  # for all dimensions (i.e. fuzzy sets) in the antecedent
             if mf_params[i] is None or len(mf_params[i]) == 0:
                 # Don't care FS
                 gradient[i, :] = 0
                 continue
 
-            # d membership aq / d membership aqi
-            gradient[i, :] *= prod_all_fs_mf_values / fs_mf_values[i]
+            # sum
+            summed_value = 0
+            for j in range(num_p):  # fs_mf_values shape is num_patterns, num_dim
+                if fs_mf_values[j, i] == 0:
+                    continue
+                summed_value += np.prod(fs_mf_values[j, :]) / fs_mf_values[j, i]
+
+            summed_value /= num_p
+
+            gradient[i, :] *= summed_value
+
+            # print(f"Gradient {i}: {gradient[i, :]}")
 
             # d membership aqi / d mf params
             # TODO: put it into the mf function class directly (here temporarily for testing)
@@ -179,7 +211,7 @@ class CounterFactualExplainer:
 
         return gradient
 
-    def train(self, num_epochs=10, learning_rate=0.2):
+    def train(self):
         # TODO: decouple fuzzy sets between vars (copy them in knowledge base and antecedent)
 
         antecedent = self._fuzzy_rule.get_antecedent()
@@ -196,25 +228,34 @@ class CounterFactualExplainer:
 
         prev_mf_values = None
         intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = None, None, None, None
-        for epoch in range(num_epochs):
+        for epoch in range(self._max_num_epochs):
             # forward
-            fs_mf_values = [
-                self._fuzzy_rule.get_antecedent().get_membership_values(pattern.get_attributes_vector())
-                for pattern in self._train_set.get_patterns()
-            ]
+            fs_mf_values = np.array(
+                [
+                    self._fuzzy_rule.get_antecedent().get_membership_values(pattern.get_attributes_vector())
+                    for pattern in self._train_set.get_patterns()
+                ]
+            )
             antecedent_mf_values = np.prod(fs_mf_values, axis=1)
 
             current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
             step = 1 / current_mf_values.shape[1]
 
             if prev_mf_values is not None:
-                intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = self.compute_membership_area_data(prev_mf_values, current_mf_values, step)
+                intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = (
+                    self.compute_membership_area_data(prev_mf_values, current_mf_values, step)
+                )
             prev_mf_values = current_mf_values
 
             # loss
             conf_loss, change_loss = self.loss_functions(intersection_value, union_value)
             loss = self._confidence_loss_weight * conf_loss + (1 - self._confidence_loss_weight) * change_loss
-            print(f"Epoch {epoch+1}/{num_epochs}, Confidence Loss: {conf_loss}, Change Loss: {change_loss}, Total Loss: {loss}")
+            print(
+                f"Epoch {epoch+1}/{self._max_num_epochs}, "
+                f"Confidence Loss: {conf_loss},"
+                f"Change Loss: {change_loss},"
+                f"Total Loss: {loss}"
+            )
 
             if conf_loss < 0:
                 print("INFO: Early stopping: consequent changed")
@@ -222,7 +263,16 @@ class CounterFactualExplainer:
 
             # TODO: find a way to use batches ?
             # backward
-            gradient = self._compute_gradient(antecedent_mf_values, fs_mf_values, mf_params, intersection_value, union_value, mf_1_highest_area, mf_2_highest_area)
+            gradient = self._compute_gradient(
+                antecedent_mf_values,
+                fs_mf_values,
+                mf_params,
+                intersection_value,
+                union_value,
+                mf_1_highest_area,
+                mf_2_highest_area,
+            )
+            # print(f"Gradient: {gradient}")
 
             # update params
             for fs_i, fs in enumerate(fuzzy_sets):
@@ -232,7 +282,7 @@ class CounterFactualExplainer:
                 new_params = np.zeros(len(mf_params[fs_i]), dtype=object)
 
                 for p_i, param in enumerate(mf_params[fs_i]):
-                    new_params[p_i] = mf_params[fs_i][p_i] - learning_rate * gradient[fs_i][p_i]
+                    new_params[p_i] = mf_params[fs_i][p_i] - self._learning_rate * gradient[fs_i][p_i]
                     if new_params[p_i] < 0:
                         new_params[p_i] = 0
                     elif new_params[p_i] > 1:
@@ -252,18 +302,19 @@ class CounterFactualExplainer:
                     elif new_params[p_i] > next_val:
                         new_params[p_i] = next_val
 
-                    fs.get_function().set_param_value(p_i, new_params[p_i])
+                # print(f"New Params: {new_params}")
+
+                fs.set_function(TriangularMF(new_params[0], new_params[1], new_params[2]))
 
                 mf_params[fs_i] = new_params
             self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
 
         self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
-        # print(f"next ({antecedent_indices[0]})", self._new_knowledge.get_fuzzy_set(0, antecedent_indices[0]).get_function().get_params())
         self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
 
     def get_counterfactual(self):
         print(self._fuzzy_rule)
-        self.train(50)
+        self.train()
         # print(self._new_knowledge)
 
         self._fuzzy_rule.get_consequent()
@@ -281,28 +332,65 @@ class CounterFactualExplainer:
 
 
 if __name__ == "__main__":
-    # Test the CounterFactualExplainer class
-    target_class = ClassLabelBasic(1)
-    antecedent_indices = np.array([1, 0, 2], dtype=int)
+    # SIMPLE EXAMPLE
 
-    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
+    # target_class = ClassLabelBasic(1)
+    # antecedent_indices = np.array([1, 0, 2], dtype=int)
+    #
+    # knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
+    #
+    # antecedent = Antecedent(antecedent_indices, knowledge)
+    #
+    # patterns = np.array(
+    #     [
+    #         Pattern(0, np.array([0.1, 0.2, 0.3]), ClassLabelBasic(0)),
+    #         Pattern(1, np.array([0.4, 0.5, 0.6]), ClassLabelBasic(1)),
+    #         Pattern(2, np.array([0.7, 0.8, 0.9]), ClassLabelBasic(0)),
+    #     ]
+    # )
+    #
+    # train_set = Dataset(size=3, n_dim=3, c_num=2, patterns=patterns)
+    #
+    # learner = LearningBasic(train_set)
+    # consequent = learner.learning(antecedent, train_set)
+    #
+    # rule = RuleBasic(antecedent, consequent)
+    #
+    # explainer = CounterFactualExplainer(rule, target_class, train_set, learner, confidence_loss_weight=0.8)
+    # explainer.get_counterfactual()
 
-    antecedent = Antecedent(antecedent_indices, knowledge)
+    # REAL EXAMPLE
 
-    patterns = np.array(
-        [
-            Pattern(0, np.array([0.1, 0.2, 0.3]), ClassLabelBasic(0)),
-            Pattern(1, np.array([0.4, 0.5, 0.6]), ClassLabelBasic(1)),
-            Pattern(2, np.array([0.7, 0.8, 0.9]), ClassLabelBasic(0)),
-        ]
+    args = [
+        "--data-name",
+        "appendicitis",
+        "--algorithm-id",
+        "0",
+        "--experiment-id",
+        "0",
+        "--train-file",
+        "..\\..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        "--test-file",
+        "..\\..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        "--terminate-evaluation",
+        "1000",
+        "--no-output-files",
+        "--objectives",
+        "error-rate",
+        "num-rules",
+    ]
+
+    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
+    res = runner.main(args)
+
+    non_dominated_solutions = res.X
+    objectives_non_dominated_solutions = res.F
+
+    sol1 = non_dominated_solutions[0]
+    rule = sol1[0].get_var(0).get_rule()
+
+    learner = LearningBasic(runner.get_train_set())
+    explainer = CounterFactualExplainer(
+        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.8, learning_rate=0.04
     )
-
-    train_set = Dataset(size=3, n_dim=3, c_num=2, patterns=patterns)
-
-    learner = LearningBasic(train_set)
-    consequent = learner.learning(antecedent, train_set)
-
-    rule = RuleBasic(antecedent, consequent)
-
-    explainer = CounterFactualExplainer(rule, target_class, train_set, learner, confidence_loss_weight=0.2)
     explainer.get_counterfactual()
