@@ -12,21 +12,74 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 
 
 class CounterFactualExplainer:
-    def __init__(self, fuzzy_rule, target_class, train_set, learner):
+    def __init__(self, fuzzy_rule, target_class, train_set, learner, confidence_loss_weight=0.5, area_computation_num_samples=100):
         self._fuzzy_rule = copy.deepcopy(fuzzy_rule)
         self._initial_class = fuzzy_rule.get_class_label()
         self._target_class = target_class
         self._train_set = train_set
         self._new_knowledge = copy.deepcopy(fuzzy_rule.get_knowledge())
+        self._prev_knowledge = None
         self._learner = learner
+        self._confidence_loss_weight = confidence_loss_weight
+        self._area_computation_num_samples = area_computation_num_samples
 
-    def loss_function(self):
+    def compute_membership_values(self, fuzzy_sets, min_val=0, max_val=1):
+        mfs = [fs.get_function() for fs in fuzzy_sets]
+
+        x_samples = np.linspace(min_val, max_val, self._area_computation_num_samples)
+        mf_values = np.zeros((len(fuzzy_sets), len(x_samples)), dtype=object)
+        for i, mf in enumerate(mfs):
+            mf_values[i] = [mf.get_value_py(x) for x in x_samples]
+
+        return mf_values
+
+    def compute_membership_area_data(self, mf_1_y, mf_2_y, step):
+        union_value = np.zeros(mf_1_y.shape[0])
+        intersection_value = np.zeros(mf_1_y.shape[0])
+        mf_1_highest_area = np.zeros(mf_1_y.shape[0])
+        mf_2_highest_area = np.zeros(mf_1_y.shape[0])
+
+        for fs_i in range(mf_1_y.shape[0]):
+            intersection_value[fs_i] = 0
+            union_value[fs_i] = 0
+            mf_1_highest_area[fs_i] = 0
+            mf_2_highest_area[fs_i] = 0
+
+            for i in range(mf_1_y.shape[1]):
+                y_val = max(mf_1_y[fs_i][i], mf_2_y[fs_i][i])
+                union_value[fs_i] += step * y_val
+
+                y_val = min(mf_1_y[fs_i][i], mf_2_y[fs_i][i])
+                intersection_value[fs_i] += step * y_val
+
+                if mf_1_y[fs_i][i] > mf_2_y[fs_i][i]:
+                    mf_1_highest_area[fs_i] += step
+                else:
+                    mf_2_highest_area[fs_i] += step
+
+        return intersection_value, union_value, mf_1_highest_area, mf_2_highest_area
+
+    def loss_functions(self, intersection_values, union_values):
+        # Confidence loss
         # TODO: to be optimized, because for now all confidence are computed
         confidences = self._learner.calc_confidence_py(self._fuzzy_rule.get_antecedent(), self._train_set)
 
         confidence_initial_class = confidences[self._initial_class.get_class_label_value()]
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
-        return confidence_initial_class - confidence_target_class
+        confidence_loss = confidence_initial_class - confidence_target_class
+
+        # Change loss
+        change_loss = 0
+
+        if intersection_values is not None and union_values is not None:
+            for i in range(len(intersection_values)):
+                change_loss += 1 - (intersection_values[i] / union_values[i])
+                # print(f"Intersection: {intersection_values[i]}, Union: {union_values[i]}, Change Loss: {change_loss}")
+
+            change_loss /= len(intersection_values)
+
+        # Final loss
+        return confidence_loss, change_loss
 
     @staticmethod
     def _filter_data_class(dataset, searched_class1, searched_class2):
@@ -67,10 +120,10 @@ class CounterFactualExplainer:
                 else 0
             )
 
-    def _compute_gradient(self, antecedent_mf_value, fs_mf_values, mf_params):
+    def _compute_gradient(self, antecedent_mf_value, fs_mf_values, mf_params, intersection_value, union_value, mf_1_highest_area, mf_2_highest_area):
         gradient = np.zeros((len(fs_mf_values[0]), 3), dtype=object)  # shape (num_fs, num_params)
 
-        # dL/d_membership_aq
+        # dL_conf/d_membership_aq
         patterns_idx_initial_class, patterns_idx_target_class = self._filter_data_class(
             self._train_set, self._initial_class, self._target_class
         )
@@ -86,12 +139,20 @@ class CounterFactualExplainer:
         sum_initial_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_initial_class])
         sum_target_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_target_class])
 
-        gradient[:, :] = (
+        gradient[:, :] = self._confidence_loss_weight*(
             num_p_initial_class * sum_all_mf_values
             - num_p * sum_initial_class_mf_values
             - num_p_target_class * sum_all_mf_values
             + num_p * sum_target_class_mf_values
         ) / (sum_target_class_mf_values**2)
+
+        # dL_change/d_membership_aq
+        if intersection_value is not None and union_value is not None:
+            sum_values = 0
+            for i in range(intersection_value.shape[0]):
+                sum_values += mf_1_highest_area[i]*union_value[i] - intersection_value[i]*mf_2_highest_area[i]
+
+            gradient[:, :] += (1-self._confidence_loss_weight) * sum_values
 
         #######################################
 
@@ -119,6 +180,8 @@ class CounterFactualExplainer:
         return gradient
 
     def train(self, num_epochs=10, learning_rate=0.2):
+        # TODO: decouple fuzzy sets between vars (copy them in knowledge base and antecedent)
+
         antecedent = self._fuzzy_rule.get_antecedent()
         antecedent_indices = antecedent.get_antecedent_indices()
 
@@ -131,6 +194,8 @@ class CounterFactualExplainer:
 
         # self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
 
+        prev_mf_values = None
+        intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = None, None, None, None
         for epoch in range(num_epochs):
             # forward
             fs_mf_values = [
@@ -139,14 +204,25 @@ class CounterFactualExplainer:
             ]
             antecedent_mf_values = np.prod(fs_mf_values, axis=1)
 
+            current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
+            step = 1 / current_mf_values.shape[1]
+
+            if prev_mf_values is not None:
+                intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = self.compute_membership_area_data(prev_mf_values, current_mf_values, step)
+            prev_mf_values = current_mf_values
+
             # loss
-            # TODO: change loss function, because it doesn't consider the smallest change here
-            loss = self.loss_function()
-            print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss}")
+            conf_loss, change_loss = self.loss_functions(intersection_value, union_value)
+            loss = self._confidence_loss_weight * conf_loss + (1 - self._confidence_loss_weight) * change_loss
+            print(f"Epoch {epoch+1}/{num_epochs}, Confidence Loss: {conf_loss}, Change Loss: {change_loss}, Total Loss: {loss}")
+
+            if conf_loss < 0:
+                print("INFO: Early stopping: consequent changed")
+                break
 
             # TODO: find a way to use batches ?
             # backward
-            gradient = self._compute_gradient(antecedent_mf_values, fs_mf_values, mf_params)
+            gradient = self._compute_gradient(antecedent_mf_values, fs_mf_values, mf_params, intersection_value, union_value, mf_1_highest_area, mf_2_highest_area)
 
             # update params
             for fs_i, fs in enumerate(fuzzy_sets):
@@ -181,12 +257,18 @@ class CounterFactualExplainer:
                 mf_params[fs_i] = new_params
             self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
 
+        self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
         # print(f"next ({antecedent_indices[0]})", self._new_knowledge.get_fuzzy_set(0, antecedent_indices[0]).get_function().get_params())
         self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
 
     def get_counterfactual(self):
-        self.train()
-        print(self._new_knowledge)
+        print(self._fuzzy_rule)
+        self.train(50)
+        # print(self._new_knowledge)
+
+        self._fuzzy_rule.get_consequent()
+        print(self._fuzzy_rule)
+
         #
         # new_knowledge, new_classifier = ...
         #
@@ -222,5 +304,5 @@ if __name__ == "__main__":
 
     rule = RuleBasic(antecedent, consequent)
 
-    explainer = CounterFactualExplainer(rule, target_class, train_set, learner)
+    explainer = CounterFactualExplainer(rule, target_class, train_set, learner, confidence_loss_weight=0.2)
     explainer.get_counterfactual()
