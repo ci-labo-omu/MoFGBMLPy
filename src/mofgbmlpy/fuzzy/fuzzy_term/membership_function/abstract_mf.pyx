@@ -98,7 +98,7 @@ cdef class AbstractMF:
         """
         cdef double[:] val_range = self.get_param_range(index, x_min, x_max)
         return val_range[0] <= value and value <= val_range[1]
-
+    
     cpdef bint are_params_points(self):
         """Check if this function parameters represent points (It is true for triangular membership functions but not gaussian ones)
         

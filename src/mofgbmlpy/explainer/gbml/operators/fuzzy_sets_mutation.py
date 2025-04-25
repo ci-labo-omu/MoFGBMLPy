@@ -1,5 +1,8 @@
+import copy
+
 from pymoo.core.mutation import Mutation
 import numpy as np
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 
 
 class FuzzySetsMutation(Mutation):
@@ -7,24 +10,22 @@ class FuzzySetsMutation(Mutation):
         super().__init__(prob=prob)
 
     def _do(self, problem, X, **kwargs):
-        new_x = X.copy()
-        for i in range(len(X)):
-            j = 0
-            fuzzy_set_index = 0
+        new_x = copy.deepcopy(X)
 
-            while j < problem.n_var:
-                fuzzy_set_index_size = problem.fuzzy_set_index(fuzzy_set_index)
-                if fuzzy_set_index_size == 3:  # triangular
+        for i in range(len(new_x)):
+            for j in range(problem.n_var):
+                # Triangular fuzzy set
+                if isinstance(new_x[i][j], TriangularFuzzySet):
                     # We pick a random param to mutate
                     mutation_param = np.random.randint(0, 3)
-                    previous_param = new_x[i][j-1] if mutation_param > 0 else 0
-                    next_param = new_x[i][j+1] if mutation_param < 2 else mutation_param
+                    mf = new_x[i][j].get_function()
+                    params = mf.get_params()
 
-                    new_x[i][j] = np.random.uniform(previous_param, next_param)
+                    previous_param = params[mutation_param - 1] if mutation_param > 0 else 0
+                    next_param = params[mutation_param + 1] if mutation_param < 2 else 1
 
-                    j += 2
-                    fuzzy_set_index += 1
+                    new_value = np.random.uniform(previous_param, next_param)
 
-                j += 1
+                    mf.set_param_value(mutation_param, new_value)
 
         return new_x
