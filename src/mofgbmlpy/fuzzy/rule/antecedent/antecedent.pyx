@@ -10,6 +10,8 @@ cimport cython
 cimport numpy as cnp
 from cython.parallel import prange
 from libc.math cimport round
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
+
 
 cdef class Antecedent:
     """Antecedent part of fuzzy rules
@@ -250,3 +252,26 @@ cdef class Antecedent:
             new_knowledge (Knowledge): New knowledge base
         """
         self.__knowledge = new_knowledge
+
+    def get_plot(self, ax, dim):
+        """Draw the antecedent fuzzy sets on the given matplotlib Axes object
+
+        Args:
+            ax (matplotlib.axes.Axes): Axes object
+            dim (int): Dimension to plot
+
+        Returns:
+            matplotlib.axes.Axes: The axes object where we drew
+        """
+        cdef FuzzySet fuzzy_set
+        cdef cnp.ndarray[double, ndim=2] points
+
+        fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
+
+        points = fuzzy_set.get_function().get_plot_points(0, 1)
+        ax.plot(points[:,0], points[:,1])
+        ax.set_title(f"Antecedent {dim}")
+        ax.set_xlim([0,1])
+        ax.set_ylim([0,1.1])
+
+        return ax

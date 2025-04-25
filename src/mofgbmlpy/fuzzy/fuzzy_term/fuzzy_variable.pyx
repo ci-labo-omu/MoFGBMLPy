@@ -155,7 +155,7 @@ cdef class FuzzyVariable:
         return self.__domain
 
     def get_plot(self, ax):
-        """Draw te fuzzy variable fuzzy sets on the given matplotlib Axes object
+        """Draw the fuzzy variable fuzzy sets on the given matplotlib Axes object
 
         Args:
             ax (matplotlib.axes.Axes): Axes object

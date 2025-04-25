@@ -11,6 +11,8 @@ from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
+import matplotlib.pyplot as plt
+
 
 cdef class AbstractRule:
     """Abstract fuzzy rule class
@@ -199,3 +201,19 @@ cdef class AbstractRule:
             str: Variable name
         """
         return self.get_knowledge().get_fuzzy_variable(dim_index).get_name()
+
+    def plot_antecedent(self):
+        """Get the plot of the antecedent at the given dimension
+
+        Args:
+            ax (matplotlib.axes.Axes): Axes where the plot is drawn
+            dim (int): Dimension where the plot is drawn
+        """
+
+        antecedent = self.get_antecedent()
+        fig, axes = plt.subplots(1, antecedent.get_array_size(), figsize=(25, 3))
+
+        for i in range(self.get_antecedent().get_array_size()):
+            axes[i] = antecedent.get_plot(axes[i], i)
+
+        plt.show()

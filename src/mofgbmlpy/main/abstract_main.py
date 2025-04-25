@@ -35,7 +35,7 @@ class AbstractMain(ABC):
         _algo_name (str): name of the algorithm to run (e.g. nsga2)
         _problem (Problem): Problem object used by Pymoo
         _termination (Termination): Termination criterion used by Pymoo
-        _pymoo_rand_seed (int): Seed for random generation for pymoo
+        _pymoo_rand_seed (int): Seed for random generation for gbml
         _verbose (bool): If true then display more text (e.g. Pymoo progress)
         _callback (Callback): Callback function called after each generation in Pymoo
     """

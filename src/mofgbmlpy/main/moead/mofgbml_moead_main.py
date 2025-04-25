@@ -34,7 +34,7 @@ class MoFGBMLMOEADMain(AbstractMoFGBMLMain):
             "uniform", self._problem.get_num_objectives(), n_partitions=self._mofgbml_args.get("POPULATION_SIZE") - 1
         )  # TODO: works for 2 objectives, but change it for 1 or 3 and more objectives
 
-        # Note: if num_obj <=2, pymoo uses Tschebyscheff
+        # Note: if num_obj <=2, gbml uses Tschebyscheff
         algorithm = MOEAD(
             ref_dirs,
             n_neighbors=self._mofgbml_args.get("NEIGHBORHOOD_SIZE"),

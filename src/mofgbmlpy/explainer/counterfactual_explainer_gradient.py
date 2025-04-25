@@ -9,7 +9,7 @@ from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
 
 
-class CounterFactualExplainer:
+class CounterFactualExplainerGradient:
     def __init__(
         self,
         fuzzy_rule,
@@ -158,15 +158,19 @@ class CounterFactualExplainer:
         sum_initial_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_initial_class])
         sum_target_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_target_class])
 
-        gradient[:, :] = (
-            self._confidence_loss_weight
-            * (
+        confidence_loss = 1
+
+        # Avoid division by zero
+        if sum_target_class_mf_values != 0:
+            confidence_loss = (
                 num_p_initial_class * sum_all_mf_values
                 - num_p * sum_initial_class_mf_values
                 - num_p_target_class * sum_all_mf_values
                 + num_p * sum_target_class_mf_values
-            )
-            / (sum_target_class_mf_values**2)
+            ) / (sum_target_class_mf_values**2)
+
+        gradient[:, :] = (
+            self._confidence_loss_weight * confidence_loss
         )
 
         # dL_change/d_membership_aq
@@ -224,7 +228,7 @@ class CounterFactualExplainer:
         mf = [fs.get_function() for fs in fuzzy_sets]
         mf_params = [func.get_params() for func in mf]
 
-        # self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
+        self._fuzzy_rule.plot_antecedent()
 
         prev_mf_values = None
         intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = None, None, None, None
@@ -310,7 +314,8 @@ class CounterFactualExplainer:
             self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
 
         self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
-        self._fuzzy_rule.get_knowledge().plot_fuzzy_variables()
+
+        self._fuzzy_rule.plot_antecedent()
 
     def get_counterfactual(self):
         print(self._fuzzy_rule)
@@ -369,9 +374,9 @@ if __name__ == "__main__":
         "--experiment-id",
         "0",
         "--train-file",
-        "..\\..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        "..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
         "--test-file",
-        "..\\..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        "..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
         "--terminate-evaluation",
         "1000",
         "--no-output-files",
@@ -390,7 +395,7 @@ if __name__ == "__main__":
     rule = sol1[0].get_var(0).get_rule()
 
     learner = LearningBasic(runner.get_train_set())
-    explainer = CounterFactualExplainer(
-        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.8, learning_rate=0.04
+    explainer = CounterFactualExplainerGradient(
+        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.8, learning_rate=0.1
     )
     explainer.get_counterfactual()
