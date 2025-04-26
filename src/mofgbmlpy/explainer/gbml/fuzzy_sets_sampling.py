@@ -3,7 +3,12 @@ import numpy as np
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 import copy
 
+
 class FuzzySetsSampling(Sampling):
+    def __init__(self, noise_str=0.1):
+        self._noise_str = noise_str
+        super().__init__()
+
     # def _do(self, problem, n_samples, **kwargs):
     #     initial_population = np.zeros((n_samples, problem.n_var), dtype=object)
     #
@@ -31,9 +36,9 @@ class FuzzySetsSampling(Sampling):
                     old_params = initial_params[j]
 
                     # add noise
-                    left = old_params[0] + np.random.normal(0, 0.1)
-                    center = old_params[1] + np.random.normal(0, 0.1)
-                    right = old_params[2] + np.random.normal(0, 0.1)
+                    left = old_params[0] + np.random.normal(0, self._noise_str)
+                    center = old_params[1] + np.random.normal(0, self._noise_str)
+                    right = old_params[2] + np.random.normal(0, self._noise_str)
 
                     # fix
                     left = max(0, min(left, 1))
@@ -44,7 +49,5 @@ class FuzzySetsSampling(Sampling):
                 else:
                     initial_population[i, j] = copy.deepcopy(problem.get_initial_fuzzy_sets()[j])
         initial_population[-1] = np.array([copy.deepcopy(fs) for fs in problem.get_initial_fuzzy_sets()])
-
-
 
         return initial_population

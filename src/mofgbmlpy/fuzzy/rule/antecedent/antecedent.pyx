@@ -11,6 +11,7 @@ cimport numpy as cnp
 from cython.parallel import prange
 from libc.math cimport round
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
+import matplotlib.pyplot as plt
 
 
 cdef class Antecedent:
@@ -275,3 +276,11 @@ cdef class Antecedent:
         ax.set_ylim([0,1.1])
 
         return ax
+
+    def plot_antecedent(self):
+        fig, axes = plt.subplots(1, self.get_array_size(), figsize=(25, 3))
+
+        for i in range(self.get_array_size()):
+            axes[i] = self.get_plot(axes[i], i)
+
+        plt.show()

@@ -33,6 +33,12 @@ class CounterfactualProblem(Problem):
             n_var=n_vars, n_obj=2, xl=0, xu=1
         )
 
+    def get_initial_mfs_y(self):
+        return self._initial_mfs_y
+
+    def get_fuzzy_rule(self):
+        return self._fuzzy_rule
+
     def get_target_class(self):
         return self._target_class
 
@@ -63,6 +69,10 @@ class CounterfactualProblem(Problem):
 
                 y_val = min(mf_1_y[fs_i][i], mf_2_y[fs_i][i])
                 intersection_value[fs_i] += step * y_val
+
+            if union_value[fs_i] == 0:
+                union_value[fs_i] = 1
+                intersection_value[fs_i] = 1
 
         return intersection_value/union_value
 
@@ -103,7 +113,7 @@ class CounterfactualProblem(Problem):
 
         diff_class_part = (max_conf-confidence_target_class)**2
 
-        confidence_loss = diff_loss_part + y_value_loss_part + diff_class_part
+        confidence_loss = diff_class_part  # + diff_loss_part + y_value_loss_part
 
         # Change loss
         change_loss = 0
@@ -131,7 +141,12 @@ class CounterfactualProblem(Problem):
         return rule
 
     def _evaluate(self, X, out, *args, **kwargs):
-        out["F"] = [self.objectives(ind) for ind in X]
+        out["F"] = np.empty((len(X), 2))
+
+        for i, ind in enumerate(X):
+            conf_loss, change_loss = self.objectives(ind)
+            out["F"][i][0] = conf_loss
+            out["F"][i][1] = change_loss
 
 
     def get_objective_names(self):
