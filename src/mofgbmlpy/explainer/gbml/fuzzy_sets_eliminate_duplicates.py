@@ -8,26 +8,37 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
         self.epsilon = epsilon
         self._problem = problem
 
-    def calc_dist(self, pop):
-        # TODO: use instead membership params to compute distance
+    @staticmethod
+    def distance_mfs_params(params_1, params_2, threshold=1e-8):
+        if len(params_1) != len(params_2):
+            return max(len(params_1), len(params_2))
 
+        distance = 0
+        for fs_i in range(len(params_1)):
+            if len(params_1[fs_i]) != len(params_2[fs_i]):
+                distance += 1
+            elif len(params_1[fs_i]) != 0:
+                for i in range(len(params_1[fs_i])):
+                    distance += 1 if abs(params_1[fs_i][i]-params_2[fs_i][i]) > threshold else 0
+
+        return distance
+
+    def calc_dist(self, pop):
         X = self.func(pop)
 
-        x_mf_values = np.array([self._problem.compute_membership_values(x, 0, 1) for x in X])
+        distance = np.empty((len(X), len(X)))
 
-        n = len(x_mf_values)
-        distance = np.empty((n, n))
+        params_x = np.empty((len(X), len(X[0])), dtype=object)
+        for i in range(len(X)):
+            ind = X[i]
+            for j in range(len(ind)):
+                params_x[i][j] = ind[j].get_function().get_params()
 
-        step = 1 / x_mf_values.shape[1]
-
-        for i in range(n):
-            i_values = x_mf_values[i]
-            for j in range(i, n):
-                j_values = x_mf_values[j]
-                iou = self._problem.compute_iou(i_values, j_values, step)
-                dist_ij = 1.0 - np.mean(iou)
-                distance[i, j] = dist_ij
-                distance[j, i] = dist_ij
+        for i in range(len(X)):
+            for j in range(i, (len(X))):
+                distance[i][j] = self.distance_mfs_params(params_x[i], params_x[j])
+                if i != j:
+                    distance[j][i] = distance[i][j]
 
         return distance
 

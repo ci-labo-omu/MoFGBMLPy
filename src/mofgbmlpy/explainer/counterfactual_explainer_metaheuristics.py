@@ -17,6 +17,7 @@ from pyrecorder.writers.video import Video
 import os
 import numpy as np
 from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEliminateDuplicates
+from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
 
 
 class CounterFactualExplainerMetaheuristics:
@@ -26,9 +27,10 @@ class CounterFactualExplainerMetaheuristics:
 
         self._problem = CounterfactualProblem(initial_knowledge, fuzzy_rule, initial_class, target_class, learner)
         self._sampling = FuzzySetsSampling()
-        self._mutation = FuzzySetsMutation(0.5, 0.5)
-        self._crossover = FuzzySetsCrossover(0.5, 0.1)
+        self._mutation = FuzzySetsMutation(0.7, 0.6, prob_change_type=0.5)
+        self._crossover = FuzzySetsCrossover(0.7, 0.5)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
+        self._survival = FuzzySetsSurvival(self._eliminate_duplicates)
 
     @staticmethod
     def _save_generations_video_pymoo(history, out_path, file_name_without_extension):
@@ -68,7 +70,7 @@ class CounterFactualExplainerMetaheuristics:
         # print(f"END consequent: {self._problem.get_fuzzy_rule().get_consequent()}")
 
         pop_size = 100
-        termination = get_termination("n_gen", 50)
+        termination = get_termination("n_gen", 100)
 
         algorithm = NSGA2(
             pop_size=pop_size,
@@ -77,6 +79,7 @@ class CounterFactualExplainerMetaheuristics:
             mutation=self._mutation,  # should consider bounds and conditions of membership functions params
             eliminate_duplicates=self._eliminate_duplicates,
             save_history=True,
+            survival=self._survival
         )
 
         res = minimize(self._problem, algorithm, seed=41, verbose=True, termination=termination)
@@ -87,7 +90,7 @@ class CounterFactualExplainerMetaheuristics:
         plot.axis_labels = self._problem.get_objective_names()
         _ = plot.show()
 
-        self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
+        # self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
 
         non_dominated_solutions = res.opt.get("X")
 
@@ -95,13 +98,12 @@ class CounterFactualExplainerMetaheuristics:
 
         # get rules associated to non_dominated solutions
         rules = [self._problem.build_rule(solution) for solution in non_dominated_solutions]
-        print("Rules of non-dominated solutions:")
-        for rule in rules:
-            print(rule)
+        # print("Rules of non-dominated solutions:")
+        # for rule in rules:
+        #     print(rule)
 
         # Only keep rules with the target class
         target_rules = [rule for rule in rules if rule.get_class_label() == self._problem.get_target_class()]
-
 
         print()
         print("Target rules:")
@@ -112,9 +114,10 @@ class CounterFactualExplainerMetaheuristics:
         if len(target_rules) != 0:
             for i in range(len(target_rules)):
                 target_rules[i].plot_antecedent()
+                print(target_rules[i].get_knowledge())
+                # print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
 
         return res
-
 
 if __name__ == "__main__":
     args = [
