@@ -74,7 +74,7 @@ if __name__ == '__main__':
         "--experiment-id", "1",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "blood",
+        "--data-name", "vehicle2",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "blood"
+    data_name = "vehicle"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -108,6 +108,8 @@ if __name__ == '__main__':
         identifier = test_file.stem.split(f"-10tst")[0]
         # identifier="a0_0_{dataname}"であり，experiment_idはa0_0となるようにする
         experiment_id = re.match(r"a\d+_\d+", identifier).group()
+        if experiment_id != "a2_9":
+            continue
         args[experiment_id_index] = experiment_id
 
         print(f"Processing Train: {train_file} | Test: {test_file}")
