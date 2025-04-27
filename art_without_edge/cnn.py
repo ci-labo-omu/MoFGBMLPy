@@ -5,7 +5,7 @@ from sklearn.utils import shuffle
 from pathlib import Path
 
 # 実験設定
-data_name = "vehicle"
+data_name = "cancer"
 train_dir = Path(f"../dataset/{data_name}/")
 output_base = Path(f"./nodes_cnn/{data_name}/")
 output_base.mkdir(parents=True, exist_ok=True)
