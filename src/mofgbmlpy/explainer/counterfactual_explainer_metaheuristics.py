@@ -114,8 +114,8 @@ class CounterFactualExplainerMetaheuristics:
         if len(target_rules) != 0:
             for i in range(len(target_rules)):
                 target_rules[i].plot_antecedent()
-                print(target_rules[i].get_knowledge())
-                # print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
+        #         print(target_rules[i].get_knowledge())
+        #         print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
 
         return res
 

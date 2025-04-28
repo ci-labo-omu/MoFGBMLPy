@@ -108,10 +108,7 @@ class CounterfactualProblem(Problem):
 
         max_conf = np.max(confidences)
 
-        diff_loss_part = 2 / (1 + np.exp(confidence_initial_class - confidence_target_class) ** 2)
-        y_value_loss_part = np.exp(-2 * confidence_target_class)
-
-        diff_class_part = (max_conf-confidence_target_class)**2
+        diff_class_part = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
 
         confidence_loss = diff_class_part  # + diff_loss_part + y_value_loss_part
 
