@@ -30,7 +30,7 @@ class CounterfactualProblem(Problem):
         self._initial_mfs_y = self.compute_membership_values(self._initial_fuzzy_sets, 0, 1)
 
         super().__init__(
-            n_var=n_vars, n_obj=2, xl=0, xu=1
+            n_var=n_vars, n_obj=2, xl=0, xu=1, n_eq_constr=1
         )
 
     def get_initial_mfs_y(self):
@@ -103,14 +103,11 @@ class CounterfactualProblem(Problem):
         # TODO: to be optimized, because for now all confidences are computed
         confidences = self._learner.calc_confidence_py(antecedent, self._train_set)
 
-        confidence_initial_class = confidences[self._initial_class.get_class_label_value()]
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
 
         max_conf = np.max(confidences)
 
-        diff_class_part = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
-
-        confidence_loss = diff_class_part  # + diff_loss_part + y_value_loss_part
+        confidence_loss = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
 
         # Change loss
         change_loss = 0
@@ -125,8 +122,10 @@ class CounterfactualProblem(Problem):
         if iou is not None:
             change_loss = 1 - np.mean(iou)
 
+        output_class_is_target = np.argmax(confidences) == self._target_class.get_class_label_value()
+
         # print(f"conf loss: {confidence_loss}, change_loss: {change_loss}")
-        return confidence_loss, change_loss
+        return confidence_loss, change_loss, output_class_is_target
 
     def build_rule(self, fuzzy_sets):
         antecedent = self.build_antecedent(fuzzy_sets)
@@ -139,11 +138,13 @@ class CounterfactualProblem(Problem):
 
     def _evaluate(self, X, out, *args, **kwargs):
         out["F"] = np.empty((len(X), 2))
+        out["H"] = np.empty((len(X),))
 
         for i, ind in enumerate(X):
-            conf_loss, change_loss = self.objectives(ind)
+            conf_loss, change_loss, output_class_is_target = self.objectives(ind)
             out["F"][i][0] = conf_loss
             out["F"][i][1] = change_loss
+            out["H"][i] = 0 if output_class_is_target else 1
 
 
     def get_objective_names(self):
