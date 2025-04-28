@@ -105,9 +105,10 @@ class CounterfactualProblem(Problem):
 
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
 
-        max_conf = np.max(confidences)
+        # max_conf = np.max(confidences)
 
-        confidence_loss = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
+        # confidence_loss = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
+        confidence_loss = 1/(1 + np.exp(-(1-confidence_target_class)))
 
         # Change loss
         change_loss = 0
