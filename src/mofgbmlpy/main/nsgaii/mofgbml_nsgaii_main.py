@@ -74,7 +74,7 @@ if __name__ == '__main__':
         "--experiment-id", "1",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "vehicle2",
+        "--data-name", "cancer",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "vehicle"
+    data_name = "cancer"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "bupa")
+        data_name (str): 対象データセット名 (例: "cancer")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
@@ -104,14 +104,15 @@ if __name__ == '__main__':
     train_files = list(test_dir.glob(f"*{data_name}-10tra.dat"))
     test_files = list(test_dir.glob(f"*{data_name}-10tst.dat"))
     for train_file, test_file in zip(train_files, test_files):
-        # tstファイル名から識別子を抽出 (例: "a0_0_bupa")
+        # tstファイル名から識別子を抽出 (例: "a0_0_cancer")
+
         identifier = test_file.stem.split(f"-10tst")[0]
         # identifier="a0_0_{dataname}"であり，experiment_idはa0_0となるようにする
         experiment_id = re.match(r"a\d+_\d+", identifier).group()
-        if experiment_id != "a2_9":
-            continue
         args[experiment_id_index] = experiment_id
-
+        print(experiment_id)
+        if not re.match(r"a2_\d", experiment_id):
+            continue
         print(f"Processing Train: {train_file} | Test: {test_file}")
         # 実際の処理 (例: runner.main を呼び出す)
         train_file = str(train_file)
