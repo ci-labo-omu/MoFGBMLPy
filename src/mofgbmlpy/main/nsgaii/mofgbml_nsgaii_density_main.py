@@ -80,7 +80,7 @@ if __name__ == '__main__':
         "--experiment-id", "2",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "cancer_density",
+        "--data-name", "blood_density",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         "--objectives", "num-rules", "error-rate",
@@ -90,7 +90,7 @@ if __name__ == '__main__':
 
     ]
 
-    data_name = "cancer"
+    data_name = "blood"
     train_dir = f"art_without_edge/dataset_nodes/{data_name}/"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをつっこんで，10-fold CVを複数回行える
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "cancer")
+        data_name (str): 対象データセット名 (例: "blood")
     """
     experiment_id = 1
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     for test_file in test_dir.glob(f"*{data_name}-10tst.dat"):
 
-        # tstファイル名から識別子を抽出 (例: "a0_0_cancer")
+        # tstファイル名から識別子を抽出 (例: "a0_0_blood")
         identifier = test_file.stem.split(f"-10tst")[0]
         print(f"Processing test file: {test_file} | Identifier: {identifier}")
         # 対応する tra ファイルを含むディレクトリを決定
@@ -122,7 +122,7 @@ if __name__ == '__main__':
             print(f"Train directory not found: {train_dir}")
             continue
 
-        # 2. traファイルを探索 (例: "a0_0_cancer_node*.csv")
+        # 2. traファイルを探索 (例: "a0_0_blood_node*.csv")
         train_files = sorted(train_dir.glob(f"{identifier}_node*.csv"))
         if not train_files:
             print(f"No training files found in: {train_dir}")
@@ -176,5 +176,5 @@ if __name__ == '__main__':
 
             # 各セットにおいて，s0_0などのセット番号と，そのセットにおけるexec_time(訓練)，そのセットにおける識別器の数，そして書く識別器のルール長を取得し，
             # それをファイルに書き込む，ファイルは1つのファイルで，どんどん追記していく
-            #with open("results_density/result_cancer_density.txt", "a") as f:
+            #with open("results_density/result_blood_density.txt", "a") as f:
             #    f.write(f"{train_file},{results.exec_time},{objectives} \n")
