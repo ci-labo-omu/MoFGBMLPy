@@ -55,14 +55,14 @@ class CounterFactualExplainerGradient:
     def compute_membership_area_data(self, mf_1_y, mf_2_y, step):
         union_value = np.zeros(mf_1_y.shape[0])
         intersection_value = np.zeros(mf_1_y.shape[0])
-        mf_1_highest_area = np.zeros(mf_1_y.shape[0])
-        mf_2_highest_area = np.zeros(mf_1_y.shape[0])
+        mf_2_smallest_length = np.zeros(mf_1_y.shape[0])
+        mf_2_highest_length = np.zeros(mf_1_y.shape[0])
 
         for fs_i in range(mf_1_y.shape[0]):
             intersection_value[fs_i] = 0
             union_value[fs_i] = 0
-            mf_1_highest_area[fs_i] = 0
-            mf_2_highest_area[fs_i] = 0
+            mf_2_smallest_length[fs_i] = 0
+            mf_2_highest_length[fs_i] = 0
 
             for i in range(mf_1_y.shape[1]):
                 y_val = max(mf_1_y[fs_i][i], mf_2_y[fs_i][i])
@@ -72,11 +72,11 @@ class CounterFactualExplainerGradient:
                 intersection_value[fs_i] += step * y_val
 
                 if mf_1_y[fs_i][i] > mf_2_y[fs_i][i]:
-                    mf_1_highest_area[fs_i] += step
+                    mf_2_smallest_length[fs_i] += step
                 else:
-                    mf_2_highest_area[fs_i] += step
+                    mf_2_highest_length[fs_i] += step
 
-        return intersection_value, union_value, mf_1_highest_area, mf_2_highest_area
+        return intersection_value, union_value, mf_2_smallest_length, mf_2_highest_length
 
     def loss_functions(self, intersection_values, union_values):
         # Confidence loss
@@ -145,8 +145,8 @@ class CounterFactualExplainerGradient:
         mf_params,
         intersection_value,
         union_value,
-        mf_1_highest_area,
-        mf_2_highest_area,
+        mf_current_smallest_length,
+        mf_current_highest_length,
     ):
         gradient = np.zeros((fs_mf_values.shape[1], 3), dtype=object)  # shape (num_fs, num_params)
 
@@ -155,49 +155,23 @@ class CounterFactualExplainerGradient:
             self._train_set, self._initial_class, self._target_class
         )
 
-        num_p_initial_class = len(patterns_idx_initial_class)
-        num_p_target_class = len(patterns_idx_target_class)
-
         patterns = self._train_set.get_patterns()
         num_p = len(patterns)
 
         sum_all_mf_values = np.sum(antecedent_mf_value)
 
-        sum_initial_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_initial_class])
         sum_target_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_target_class])
-
-
-        confidence_loss_derivative = 1
-        #
-        # # Avoid division by zero
-        # if sum_all_mf_values != 0:
-        #     confidence_loss_derivative = (
-        #         # num_p_initial_class * sum_all_mf_values
-        #         # - num_p * sum_initial_class_mf_values
-        #         - num_p_target_class * sum_all_mf_values
-        #         + num_p * sum_target_class_mf_values
-        #     ) / (sum_all_mf_values**2)
-        #
-        # gradient[:, :] = (
-        #     self._confidence_loss_weight * confidence_loss_derivative
-        # )
 
         # # dL_change/d_membership_aq
         loss_change_derivative = 0
         if intersection_value is not None and union_value is not None:
             for i in range(intersection_value.shape[0]):
-                loss_change_derivative += mf_1_highest_area[i] * union_value[i] - intersection_value[i] * mf_2_highest_area[i]
+                loss_change_derivative += (
+                    intersection_value[i] * mf_current_highest_length[i]
+                    - mf_current_smallest_length[i] * union_value[i]
+                ) / (union_value[i] ** 2)
 
         loss_change_derivative /= intersection_value.shape[0]
-
-        #######################################
-
-        # (d_membership_aq/d_membership_aqi) * (d_membership_aqi/d_mf_params)
-
-        # for p in patterns:
-        #     print(p.get_target_class().get_class_label_value())
-        #
-        # raise Exception("Stop here")
 
         for i in range(len(mf_params)):  # for all dimensions (i.e. fuzzy sets) in the antecedent
             if mf_params[i] is None or len(mf_params[i]) == 0:
@@ -221,16 +195,19 @@ class CounterFactualExplainerGradient:
 
                 is_target_class = 1 if p.get_target_class() == self._target_class else 0
 
-                confidence_loss_derivative = -(is_target_class * sum_all_mf_values - sum_target_class_mf_values) / (sum_all_mf_values**2)
+                confidence_loss_derivative = -(is_target_class * sum_all_mf_values - sum_target_class_mf_values) / (
+                    sum_all_mf_values**2
+                )
                 # confidence_loss_derivative = is_target_class
 
                 # d membership aqi / d mf params
                 for k in range(len(mf_params[i])):
                     # TODO: put it into the mf function class directly (here temporarily for testing)
                     derivative2 = self.get_param_derivative(k, mf_params[i], x[i])
-                    combined_loss_derivative = self._confidence_loss_weight * confidence_loss_derivative + (1 - self._confidence_loss_weight) * loss_change_derivative
-
-                    # print(f"Combined Loss Derivative: {combined_loss_derivative}, Confidence Loss Derivative: {confidence_loss_derivative}, Loss Change Derivative: {loss_change_derivative}")
+                    combined_loss_derivative = (
+                        self._confidence_loss_weight * confidence_loss_derivative
+                        + (1 - self._confidence_loss_weight) * loss_change_derivative
+                    )
 
                     mean_value[k] += combined_loss_derivative * derivative1 * derivative2
 
@@ -259,8 +236,6 @@ class CounterFactualExplainerGradient:
 
         self._fuzzy_rule.plot_antecedent()
 
-        prev_mf_values = None
-        intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = None, None, None, None
         for epoch in range(self._max_num_epochs):
             # forward
             fs_mf_values = np.array(
@@ -277,7 +252,7 @@ class CounterFactualExplainerGradient:
             current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
             step = 1 / current_mf_values.shape[1]
 
-            intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = (
+            intersection_value, union_value, mf_current_smallest_length, mf_current_highest_length = (
                 self.compute_membership_area_data(self._initial_mf_values, current_mf_values, step)
             )
 
@@ -304,8 +279,8 @@ class CounterFactualExplainerGradient:
                 mf_params,
                 intersection_value,
                 union_value,
-                mf_1_highest_area,
-                mf_2_highest_area,
+                mf_current_smallest_length,
+                mf_current_highest_length,
             )
             # print(f"Gradient: {gradient}")
 
@@ -368,6 +343,7 @@ class CounterFactualExplainerGradient:
 
 
 if __name__ == "__main__":
+
     # SIMPLE EXAMPLE
 
     # target_class = ClassLabelBasic(1)
@@ -426,7 +402,21 @@ if __name__ == "__main__":
     rule = sol1[0].get_var(0).get_rule()
 
     learner = LearningBasic(runner.get_train_set())
+
+    import time
+
+    start = time.time()
+
     explainer = CounterFactualExplainerGradient(
-        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.9, learning_rate=0.5, max_num_epochs=100
+        rule,
+        ClassLabelBasic(1),
+        runner.get_train_set(),
+        learner,
+        confidence_loss_weight=0.9,
+        learning_rate=0.5,
+        max_num_epochs=100,
     )
     explainer.get_counterfactual()
+
+    end = time.time()
+    print(f"Execution time: {end - start:.2f} seconds")

@@ -1,5 +1,6 @@
 """
-The code in this file is mainly copied from the Pymoo library, since the function _do of the RankAndCrowding class is protected
+The code in this file is mainly copied from the Pymoo library,
+since the function _do of the RankAndCrowding class is protected
 """
 
 import numpy as np
@@ -18,12 +19,7 @@ class FuzzySetsSurvival(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.crowding_func = crowding_func_
 
-    def _do(self,
-            problem,
-            pop,
-            *args,
-            n_survive=None,
-            **kwargs):
+    def _do(self, problem, pop, *args, n_survive=None, **kwargs):
 
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
@@ -36,32 +32,24 @@ class FuzzySetsSurvival(Survival):
 
         for k, front in enumerate(fronts):
 
-            I = np.arange(len(front))
+            indices_I = np.arange(len(front))
 
             # current front sorted by crowding distance if splitting
-            if len(survivors) + len(I) > n_survive:
+            if len(survivors) + len(indices_I) > n_survive:
 
                 # Define how many will be removed
                 n_remove = len(survivors) + len(front) - n_survive
 
                 # re-calculate the crowding distance of the front
-                crowding_of_front = \
-                    self.crowding_func.do(
-                        F[front, :],
-                        n_remove=n_remove
-                    )
+                crowding_of_front = self.crowding_func.do(F[front, :], n_remove=n_remove)
 
-                I = randomized_argsort(crowding_of_front, order='descending', method='numpy')
-                I = I[:-n_remove]
+                indices_I = randomized_argsort(crowding_of_front, order="descending", method="numpy")
+                indices_I = indices_I[:-n_remove]
 
             # otherwise take the whole front unsorted
             else:
                 # calculate the crowding distance of the front
-                crowding_of_front = \
-                    self.crowding_func.do(
-                        F[front, :],
-                        n_remove=0
-                    )
+                crowding_of_front = self.crowding_func.do(F[front, :], n_remove=0)
 
             # save rank and crowding in the individual class
             for j, i in enumerate(front):
@@ -69,7 +57,7 @@ class FuzzySetsSurvival(Survival):
                 pop[i].set("crowding", crowding_of_front[j])
 
             # extend the survivors by all or selected individuals
-            survivors.extend(front[I])
+            survivors.extend(front[indices_I])
 
         survivors = pop[survivors]
         survivors = self._eliminate_duplicates.do(survivors)

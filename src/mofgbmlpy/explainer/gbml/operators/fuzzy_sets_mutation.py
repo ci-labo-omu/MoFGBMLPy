@@ -29,8 +29,8 @@ class FuzzySetsMutation(Mutation):
                     elif isinstance(new_x[i][j].get_function(), DontCareMF):
                         # To triangular
                         left = np.random.rand()
-                        center = np.random.rand()*(1-left) + left
-                        right = np.random.rand()*(1-center) + center
+                        center = np.random.rand() * (1 - left) + left
+                        right = np.random.rand() * (1 - center) + center
 
                         new_x[i][j] = TriangularFuzzySet(left, center, right, 1, "new_term")
                 else:

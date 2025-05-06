@@ -29,9 +29,7 @@ class CounterfactualProblem(Problem):
 
         self._initial_mfs_y = self.compute_membership_values(self._initial_fuzzy_sets, 0, 1)
 
-        super().__init__(
-            n_var=n_vars, n_obj=2, xl=0, xu=1, n_eq_constr=1
-        )
+        super().__init__(n_var=n_vars, n_obj=2, xl=0, xu=1, n_eq_constr=1)
 
     def get_initial_mfs_y(self):
         return self._initial_mfs_y
@@ -74,7 +72,7 @@ class CounterfactualProblem(Problem):
                 union_value[fs_i] = 1
                 intersection_value[fs_i] = 1
 
-        return intersection_value/union_value
+        return intersection_value / union_value
 
     @staticmethod
     def build_antecedent(fuzzy_sets):
@@ -98,7 +96,8 @@ class CounterfactualProblem(Problem):
         antecedent = self.build_antecedent(fuzzy_sets)
 
         # Confidence loss
-        # We want to minimize the confidence difference between the initial class and the target class and we want to maximize the confidence of the target class
+        # We want to minimize the confidence difference between the initial class
+        # and the target class and we want to maximize the confidence of the target class
 
         # TODO: to be optimized, because for now all confidences are computed
         confidences = self._learner.calc_confidence_py(antecedent, self._train_set)
@@ -116,9 +115,7 @@ class CounterfactualProblem(Problem):
         current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
         step = 1 / current_mf_values.shape[1]
 
-        iou = (
-            self.compute_iou(self._initial_mfs_y, current_mf_values, step)
-        )
+        iou = self.compute_iou(self._initial_mfs_y, current_mf_values, step)
 
         if iou is not None:
             change_loss = 1 - np.mean(iou)
@@ -147,6 +144,5 @@ class CounterfactualProblem(Problem):
             out["F"][i][1] = change_loss
             out["H"][i] = 0 if output_class_is_target else 1
 
-
     def get_objective_names(self):
-        return ["conf_loss", "change_loss"]
+        return ["1 - target class confidence", "1 - IoU"]

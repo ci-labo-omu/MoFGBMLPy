@@ -19,7 +19,7 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
                 distance += 1
             elif len(params_1[fs_i]) != 0:
                 for i in range(len(params_1[fs_i])):
-                    distance += 1 if abs(params_1[fs_i][i]-params_2[fs_i][i]) > threshold else 0
+                    distance += 1 if abs(params_1[fs_i][i] - params_2[fs_i][i]) > threshold else 0
 
         return distance
 

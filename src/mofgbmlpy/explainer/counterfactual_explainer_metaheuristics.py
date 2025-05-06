@@ -64,13 +64,13 @@ class CounterFactualExplainerMetaheuristics:
                 # finally record the current visualization to the video
                 rec.record()
 
-    def train(self):
+    def train(self, n_gen=100):
         # self._problem.get_fuzzy_rule().plot_antecedent()
         # print(f"END antecedent: {self._problem.get_fuzzy_rule().get_antecedent()}")
         # print(f"END consequent: {self._problem.get_fuzzy_rule().get_consequent()}")
 
         pop_size = 100
-        termination = get_termination("n_gen", 100)
+        termination = get_termination("n_gen", n_gen)
 
         algorithm = NSGA2(
             pop_size=pop_size,
@@ -79,7 +79,7 @@ class CounterFactualExplainerMetaheuristics:
             mutation=self._mutation,  # should consider bounds and conditions of membership functions params
             eliminate_duplicates=self._eliminate_duplicates,
             save_history=True,
-            survival=self._survival
+            survival=self._survival,
         )
 
         res = minimize(self._problem, algorithm, seed=41, verbose=True, termination=termination)
@@ -119,7 +119,9 @@ class CounterFactualExplainerMetaheuristics:
 
         return res
 
+
 if __name__ == "__main__":
+
     args = [
         "--data-name",
         "appendicitis",
@@ -151,5 +153,12 @@ if __name__ == "__main__":
     learner = LearningBasic(runner.get_train_set())
     target_class = ClassLabelBasic(1)
 
+    import time
+
+    start = time.time()
+
     explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
     explainer.train()
+
+    end = time.time()
+    print(f"Execution time: {end - start:.2f} seconds")
