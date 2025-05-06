@@ -271,7 +271,7 @@ cdef class Antecedent:
 
         points = fuzzy_set.get_function().get_plot_points(0, 1)
         ax.plot(points[:,0], points[:,1])
-        ax.set_title(f"Antecedent {dim}")
+        ax.set_title(f"x_{dim}")
         ax.set_xlim([0,1])
         ax.set_ylim([0,1.1])
 

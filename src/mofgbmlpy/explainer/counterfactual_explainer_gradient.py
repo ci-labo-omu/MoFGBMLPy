@@ -25,13 +25,22 @@ class CounterFactualExplainerGradient:
         self._initial_class = fuzzy_rule.get_class_label()
         self._target_class = target_class
         self._train_set = train_set
+        self._initial_knowledge = copy.deepcopy(fuzzy_rule.get_knowledge())
         self._new_knowledge = copy.deepcopy(fuzzy_rule.get_knowledge())
-        self._prev_knowledge = None
         self._learner = learner
         self._confidence_loss_weight = confidence_loss_weight
         self._area_computation_num_samples = area_computation_num_samples
         self._learning_rate = learning_rate
         self._max_num_epochs = max_num_epochs
+
+        antecedent = self._fuzzy_rule.get_antecedent()
+        antecedent_indices = antecedent.get_antecedent_indices()
+
+        fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
+        for i, idx in enumerate(antecedent_indices):
+            fuzzy_sets[i] = self._initial_knowledge.get_fuzzy_set(i, idx)
+
+        self._initial_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
 
     def compute_membership_values(self, fuzzy_sets, min_val=0, max_val=1):
         mfs = [fs.get_function() for fs in fuzzy_sets]
@@ -74,9 +83,8 @@ class CounterFactualExplainerGradient:
         # TODO: to be optimized, because for now all confidence are computed
         confidences = self._learner.calc_confidence_py(self._fuzzy_rule.get_antecedent(), self._train_set)
 
-        confidence_initial_class = confidences[self._initial_class.get_class_label_value()]
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
-        confidence_loss = confidence_initial_class - confidence_target_class
+        confidence_loss = 1 - confidence_target_class
 
         # Change loss
         change_loss = 0
@@ -140,7 +148,7 @@ class CounterFactualExplainerGradient:
         mf_1_highest_area,
         mf_2_highest_area,
     ):
-        gradient = np.zeros((len(fs_mf_values[0]), 3), dtype=object)  # shape (num_fs, num_params)
+        gradient = np.zeros((fs_mf_values.shape[1], 3), dtype=object)  # shape (num_fs, num_params)
 
         # dL_conf/d_membership_aq
         patterns_idx_initial_class, patterns_idx_target_class = self._filter_data_class(
@@ -158,61 +166,82 @@ class CounterFactualExplainerGradient:
         sum_initial_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_initial_class])
         sum_target_class_mf_values = np.sum(antecedent_mf_value[patterns_idx_target_class])
 
-        confidence_loss = 1
 
-        # Avoid division by zero
-        if sum_target_class_mf_values != 0:
-            confidence_loss = (
-                num_p_initial_class * sum_all_mf_values
-                - num_p * sum_initial_class_mf_values
-                - num_p_target_class * sum_all_mf_values
-                + num_p * sum_target_class_mf_values
-            ) / (sum_target_class_mf_values**2)
+        confidence_loss_derivative = 1
+        #
+        # # Avoid division by zero
+        # if sum_all_mf_values != 0:
+        #     confidence_loss_derivative = (
+        #         # num_p_initial_class * sum_all_mf_values
+        #         # - num_p * sum_initial_class_mf_values
+        #         - num_p_target_class * sum_all_mf_values
+        #         + num_p * sum_target_class_mf_values
+        #     ) / (sum_all_mf_values**2)
+        #
+        # gradient[:, :] = (
+        #     self._confidence_loss_weight * confidence_loss_derivative
+        # )
 
-        gradient[:, :] = (
-            self._confidence_loss_weight * confidence_loss
-        )
-
-        # dL_change/d_membership_aq
+        # # dL_change/d_membership_aq
+        loss_change_derivative = 0
         if intersection_value is not None and union_value is not None:
-            sum_values = 0
             for i in range(intersection_value.shape[0]):
-                sum_values += mf_1_highest_area[i] * union_value[i] - intersection_value[i] * mf_2_highest_area[i]
+                loss_change_derivative += mf_1_highest_area[i] * union_value[i] - intersection_value[i] * mf_2_highest_area[i]
 
-            gradient[:, :] += (1 - self._confidence_loss_weight) * sum_values
+        loss_change_derivative /= intersection_value.shape[0]
 
         #######################################
 
         # (d_membership_aq/d_membership_aqi) * (d_membership_aqi/d_mf_params)
+
+        # for p in patterns:
+        #     print(p.get_target_class().get_class_label_value())
+        #
+        # raise Exception("Stop here")
+
         for i in range(len(mf_params)):  # for all dimensions (i.e. fuzzy sets) in the antecedent
             if mf_params[i] is None or len(mf_params[i]) == 0:
                 # Don't care FS
                 gradient[i, :] = 0
                 continue
 
-            # sum
-            summed_value = 0
+            mean_value = np.zeros(len(mf_params[i]), dtype=object)
             for j in range(num_p):  # fs_mf_values shape is num_patterns, num_dim
                 if fs_mf_values[j, i] == 0:
                     continue
-                summed_value += np.prod(fs_mf_values[j, :]) / fs_mf_values[j, i]
+                p = patterns[j]
 
-            summed_value /= num_p
+                x = p.get_attributes_vector()
 
-            gradient[i, :] *= summed_value
+                # d_membership_aq / d_membership_aqi
+                derivative1 = np.prod(fs_mf_values[j, :]) / fs_mf_values[j, i]
+
+                if derivative1 == 0:
+                    continue
+
+                is_target_class = 1 if p.get_target_class() == self._target_class else 0
+
+                confidence_loss_derivative = -(is_target_class * sum_all_mf_values - sum_target_class_mf_values) / (sum_all_mf_values**2)
+                # confidence_loss_derivative = is_target_class
+
+                # d membership aqi / d mf params
+                for k in range(len(mf_params[i])):
+                    # TODO: put it into the mf function class directly (here temporarily for testing)
+                    derivative2 = self.get_param_derivative(k, mf_params[i], x[i])
+                    combined_loss_derivative = self._confidence_loss_weight * confidence_loss_derivative + (1 - self._confidence_loss_weight) * loss_change_derivative
+
+                    # print(f"Combined Loss Derivative: {combined_loss_derivative}, Confidence Loss Derivative: {confidence_loss_derivative}, Loss Change Derivative: {loss_change_derivative}")
+
+                    mean_value[k] += combined_loss_derivative * derivative1 * derivative2
+
+            mean_value /= num_p
+            gradient[i, :] = mean_value
 
             # print(f"Gradient {i}: {gradient[i, :]}")
 
-            # d membership aqi / d mf params
-            # TODO: put it into the mf function class directly (here temporarily for testing)
-            for j in range(len(mf_params[i])):
-                mean_value = 0
-                for p in patterns:
-                    x = p.get_attributes_vector()
-                    mean_value += self.get_param_derivative(j, mf_params[i], x[i])
-                mean_value /= num_p
-                gradient[i, j] *= mean_value
-
+        # for i in range(len(gradient)):
+        #     print(f"Gradient {i}: {gradient[i, :]}")
+        # print("#" * 50)
         return gradient
 
     def train(self):
@@ -240,28 +269,30 @@ class CounterFactualExplainerGradient:
                     for pattern in self._train_set.get_patterns()
                 ]
             )
+
+            # print("FS MF Values:", np.sum(fs_mf_values, axis=1))
+
             antecedent_mf_values = np.prod(fs_mf_values, axis=1)
 
             current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
             step = 1 / current_mf_values.shape[1]
 
-            if prev_mf_values is not None:
-                intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = (
-                    self.compute_membership_area_data(prev_mf_values, current_mf_values, step)
-                )
-            prev_mf_values = current_mf_values
+            intersection_value, union_value, mf_1_highest_area, mf_2_highest_area = (
+                self.compute_membership_area_data(self._initial_mf_values, current_mf_values, step)
+            )
 
             # loss
             conf_loss, change_loss = self.loss_functions(intersection_value, union_value)
             loss = self._confidence_loss_weight * conf_loss + (1 - self._confidence_loss_weight) * change_loss
             print(
-                f"Epoch {epoch+1}/{self._max_num_epochs}, "
-                f"Confidence Loss: {conf_loss},"
-                f"Change Loss: {change_loss},"
-                f"Total Loss: {loss}"
+                f"Epoch {epoch+1}/{self._max_num_epochs}: "
+                f"\tConfidence Loss: {conf_loss:.3f},"
+                f"\tChange Loss: {change_loss:.3f},"
+                f"\tTotal Loss: {loss:.3f}"
             )
 
-            if conf_loss < 0:
+            # check if class is target
+            if self._fuzzy_rule.get_class_label() == self._target_class:
                 print("INFO: Early stopping: consequent changed")
                 break
 
@@ -313,7 +344,7 @@ class CounterFactualExplainerGradient:
                 mf_params[fs_i] = new_params
             self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
 
-        self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
+            self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
 
         self._fuzzy_rule.plot_antecedent()
 
@@ -396,6 +427,6 @@ if __name__ == "__main__":
 
     learner = LearningBasic(runner.get_train_set())
     explainer = CounterFactualExplainerGradient(
-        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.8, learning_rate=0.1
+        rule, ClassLabelBasic(1), runner.get_train_set(), learner, confidence_loss_weight=0.9, learning_rate=0.5, max_num_epochs=100
     )
     explainer.get_counterfactual()
