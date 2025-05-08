@@ -71,10 +71,10 @@ if __name__ == '__main__':
 
     args = [
         "--algorithm-id", "2",
-        "--experiment-id", "1",
+        "--experiment-id", "3",
         "--train-file", "None",
         "--test-file", "None",
-        "--data-name", "cancer",
+        "--data-name", "vehicle",
         "--terminate-evaluation", "180000",
         "--objectives", "num-rules", "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         "--verbose",
     ]
 
-    data_name = "cancer"
+    data_name = "vehicle"
     test_dir = f"dataset/{data_name}/"
     #for文で，trainとtestのデータをtっ婚で，10-fold CVを複数回行える
     #ここで，dataset_nodes/data_name/の中にある全csvファイルについて再帰的に
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     Args:
         test_dir (str): tstファイルが保存されているディレクトリ
         train_base_dir (str): traファイルが保存されているディレクトリのベースパス
-        data_name (str): 対象データセット名 (例: "cancer")
+        data_name (str): 対象データセット名 (例: "vehicle")
     """
     # 1. tstファイルを探索
     test_dir = Path(test_dir)
@@ -104,14 +104,13 @@ if __name__ == '__main__':
     train_files = list(test_dir.glob(f"*{data_name}-10tra.dat"))
     test_files = list(test_dir.glob(f"*{data_name}-10tst.dat"))
     for train_file, test_file in zip(train_files, test_files):
-        # tstファイル名から識別子を抽出 (例: "a0_0_cancer")
+        # tstファイル名から識別子を抽出 (例: "a0_0_vehicle")
 
         identifier = test_file.stem.split(f"-10tst")[0]
         # identifier="a0_0_{dataname}"であり，experiment_idはa0_0となるようにする
         experiment_id = re.match(r"a\d+_\d+", identifier).group()
         args[experiment_id_index] = experiment_id
-        print(experiment_id)
-        if not re.match(r"a2_\d", experiment_id):
+        if re.match(r"a2_\d", experiment_id):
             continue
         print(f"Processing Train: {train_file} | Test: {test_file}")
         # 実際の処理 (例: runner.main を呼び出す)
@@ -123,8 +122,8 @@ if __name__ == '__main__':
         test_set = Input().input_data_set(test_file, False)
         runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
         results = runner.main(args, train=train_set, test=test_set)
-        Xs = results.opt.get("X")[:, 0]
-        num_rules = [len(sol.get_vars()) for sol in Xs]
+        #Xs = results.opt.get("X")[:, 0]
+        #num_rules = [len(sol.get_vars()) for sol in Xs]
         #plot = runner.get_pareto_front_plot(results.opt)
         #plot.show()
         ## plot.ax.set_ylim([0,1])
