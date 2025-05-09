@@ -12,16 +12,20 @@ from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
+import sys
 
 
 class PittsburghMain(AbstractMain):
-    def __init__(self, knowledge_factory_class):
+    def __init__(self, knowledge_factory_class, algo_name):
         """Constructor
 
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
         """
-        args = PittsburghStyleArguments("nsga2")
+        args = PittsburghStyleArguments(algo_name)
         super().__init__(args, knowledge_factory_class)
 
     def _load_additional_args(self):
@@ -176,3 +180,46 @@ class PittsburghMain(AbstractMain):
             plt.savefig(file_path)
 
         plt.show()
+
+    @staticmethod
+    def update_results_data(solutions, knowledge, train, test, id_start=0):
+        """Update the solutions data (attributes)
+
+        Args:
+            solutions (PittsburghSolution[]): solutions
+            knowledge (Knowledge): Knowledge base
+            train (Dataset): Training dataset
+            test (Dataset):  Test dataset
+            id_start (int): The ID is determined by the order of the solutions in loop.
+                This parameter determines the starting value for the ID
+        """
+        if id_start < 0:
+            raise ValueError("ID must be positive or null")
+
+        sol_id = id_start
+        for i in range(len(solutions)):
+            total_coverage = 0
+            sol = solutions[i]
+            for rule_i in range(sol.get_num_vars()):
+                michigan_solution = sol.get_var(rule_i)
+                fuzzy_set_indices = michigan_solution.get_vars()
+                coverage = 1
+                for dim_i in range(len(fuzzy_set_indices)):
+                    coverage *= knowledge.get_support(dim_i, fuzzy_set_indices[dim_i])
+                total_coverage += coverage
+
+            sol.set_attribute("id", sol_id)
+            sol.set_attribute("total_coverage", total_coverage)
+            sol.set_attribute("total_rule_length", sol.get_total_rule_length())
+            sol.set_attribute("average_rule_weight", sol.get_average_rule_weight())
+            sol.set_attribute("training_error_rate", sol.get_error_rate())
+            sol.set_attribute("test_error_rate", sol.get_error_rate())
+            sol.set_attribute("num_rules", sol.get_num_vars())
+
+            sol_id += 1
+
+
+if __name__ == "__main__":
+    algo_name = AbstractMain.get_algo_name_from_raw_args(sys.argv[1:])
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+    runner.run(sys.argv[1:])

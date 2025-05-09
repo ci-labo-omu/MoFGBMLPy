@@ -17,6 +17,8 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef AbstractClassification __classification
     cdef MichiganSolutionBuilder __michigan_solution_builder
     cdef MichiganSolution[:] _vars
+    cdef double _error_rate
+    cdef object[:] _errored_patterns
 
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
     cpdef void learning(self, Dataset dataset=?)
@@ -32,7 +34,8 @@ cdef class PittsburghSolution(AbstractSolution):
     cdef MichiganSolution classify(self, Pattern pattern)
     cpdef MichiganSolution classify_py(self, Pattern pattern)
     cpdef get_total_rule_length(self)
-    cpdef double get_error_rate(self, Dataset dataset)
-    cpdef object[:] get_errored_patterns(self, Dataset dataset)
+    cpdef void update_winners_and_errors(self, Dataset dataset)
+    cpdef double get_error_rate(self)
+    cpdef object[:] get_errored_patterns(self)
     cpdef AbstractClassification get_classification(self)
     cpdef AbstractClassLabel predict(self, Pattern pattern)

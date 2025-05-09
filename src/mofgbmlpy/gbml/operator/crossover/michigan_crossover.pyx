@@ -71,6 +71,7 @@ class MichiganCrossover(Crossover):
 
             for j in range(len(offspring)):
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
+                    print("WARNING: Invalid rule generated in Michigan crossover")
                     generated_solutions.append(copy.deepcopy(p1_obj))
                     if len(generated_solutions) == num_ga:
                         return generated_solutions
@@ -119,7 +120,7 @@ class MichiganCrossover(Crossover):
             # 3. Heuristic Rule Generation
 
             if num_heuristic > 0:
-                error_patterns = parent.get_errored_patterns(self.__training_set)
+                error_patterns = parent.get_errored_patterns()
                 lack_size = num_heuristic - len(error_patterns)
 
                 if lack_size > 0:
@@ -135,7 +136,7 @@ class MichiganCrossover(Crossover):
             num_ga = num_generating_rules - num_heuristic
 
             if num_ga > 0:
-                michigan_problem = MichiganProblem([], # Not used
+                michigan_problem = MichiganProblem([], # Objectives are not used
                                                    problem.get_num_constraints(),
                                                    problem.get_training_set(),
                                                    problem.get_rule_builder())
@@ -170,6 +171,9 @@ class MichiganCrossover(Crossover):
                 generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
 
             # 5. Replacement: Single objective maximization replacement based on the fitness value
+
+
+
             generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
 
             offspring = copy.deepcopy(parent)

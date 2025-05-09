@@ -129,3 +129,11 @@ cdef class Dataset:
             self.__num_dim == other.get_num_dim() and
             self.__num_classes == other.get_num_classes() and
             np.array_equal(self.__patterns, other.get_patterns()))
+
+    def __len__(self):
+        """Get the number of patterns in this dataset
+
+        Returns:
+            int: Number of patterns
+        """
+        return self.__size

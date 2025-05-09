@@ -33,7 +33,7 @@ cdef class NumWins(ObjectiveFunction):
 
         if isinstance(solutions[0], MichiganSolution):
             # For each pattern, get the winner rule (highest fitness value)
-            winner_rules_indices = np.empty(len(solutions), dtype=np.int_)
+            winner_rules_indices = np.empty(len(self.__data_set), dtype=np.int_)
             winner_rules_fitness = np.full(len(solutions), fill_value=-1)
 
             for i in range(len(self.__data_set)):
@@ -52,7 +52,7 @@ cdef class NumWins(ObjectiveFunction):
                 sol = solutions[i]
                 sol.set_objective(obj_index, out[i])
         else:
-            raise InvalidSolutionTypeException("PittsburghSolution")
+            raise InvalidSolutionTypeException("MichiganSolution")
 
     def __repr__(self):
         """Return a string representation of this object

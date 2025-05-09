@@ -13,13 +13,23 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
-from util import get_a0_0_iris_train_test, get_a0_0_german_train_test
+from util import get_a0_0_iris_train_test, get_a0_0_german_train_test, create_michigan_sol, create_pittsburgh_sol
+from mofgbmlpy.data.dataset import Dataset
+from mofgbmlpy.data.pattern import Pattern
+
+from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_basic import RuleWeightBasic
+from mofgbmlpy.fuzzy.rule.consequent.consequent_basic import ConsequentBasic
+from mofgbmlpy.data.class_label.class_label_multi import ClassLabelMulti
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi import RuleWeightMulti
+from mofgbmlpy.fuzzy.rule.consequent.consequent_multi import ConsequentMulti
+
 
 training_data_set, _ = get_a0_0_iris_train_test()
 
 training_data_set_multi, _ = get_a0_0_german_train_test()
 
-#
+
 #
 # def test_get_length_none_list():
 #     cl = Classifier(SingleWinnerRuleSelection())
@@ -90,249 +100,261 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #     with pytest.raises(TypeError):
 #         cl.get_error_rate_py(solutions, None)
 #
-#
-# class TestGetErrorRateBasic:
-#     def test_get_error_rate_all_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         # for p in dataset.get_patterns():
-#         #     print("fitness: ",sol2.get_fitness_value(p.get_attributes_vector()))
-#         # print()
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#
-#         assert (error_rate == 0.0 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 2 and sol3.get_num_wins() == 2)
-#
-#     def test_get_error_rate_all_but_one_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.0, 0.5, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelBasic(2)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#
-#         antecedent_indices = np.array([14, 0, 4, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#         assert (error_rate == 1 / 4 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 1 and sol3.get_num_wins() == 1)
-#
-#     def test_get_error_rate_all_wins_but_one_classification_error(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(0)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#
-#         assert (error_rate == 1 / 4 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 1 and sol3.get_num_wins() == 2)
-#
-#
-# class TestGetErrorRateMulti:
-#     def test_get_error_rate_all_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#
-#         assert (error_rate == 0.0 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 2 and sol3.get_num_wins() == 2)
-#
-#     def test_get_error_rate_all_but_one_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0, 0.5, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelMulti(np.array([1, 0, 1]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([14, 0, 4, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#         assert (error_rate == 1 / 4 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 1 and sol3.get_num_wins() == 1)
-#
-#     def test_get_error_rate_all_wins_but_one_classification_error(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         error_rate = cl.get_error_rate_py(solutions, dataset)
-#
-#         assert (error_rate == 1 / 4 and
-#                 sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
-#                 sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
-#                 sol3.get_fitness() == 1 and sol3.get_num_wins() == 2)
-#
+
+class TestGetErrorRateBasic:
+    def test_get_error_rate_all_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        # for p in dataset.get_patterns():
+        #     print("fitness: ",sol2.get_fitness_value(p.get_attributes_vector()))
+        # print()
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+
+        assert error_rate == 0.0
+        assert sol1.get_fitness() == 1
+        assert sol1.get_num_wins() == 1
+        assert sol2.get_fitness() == 1
+        assert sol2.get_num_wins() == 1
+        assert sol3.get_fitness() == 2
+        assert sol3.get_num_wins() == 2
+
+    def test_get_error_rate_all_but_one_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.0, 0.5, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelBasic(2)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+
+        antecedent_indices = np.array([14, 0, 4, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+        assert error_rate == 1 / 4
+        assert sol1.get_fitness() == 1
+        assert sol1.get_num_wins() == 1
+        assert sol2.get_fitness() == 1
+        assert sol2.get_num_wins() == 1
+        assert sol3.get_fitness() == 1
+        assert sol3.get_num_wins() == 1
+
+    def test_get_error_rate_all_wins_but_one_classification_error(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(0)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+
+        assert (error_rate == 1 / 4 and
+                sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
+                sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
+                sol3.get_fitness() == 1 and sol3.get_num_wins() == 2)
+
+
+class TestGetErrorRateMulti:
+    def test_get_error_rate_all_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+
+        assert (error_rate == 0.0 and
+                sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
+                sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
+                sol3.get_fitness() == 2 and sol3.get_num_wins() == 2)
+
+    def test_get_error_rate_all_but_one_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0, 0.5, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelMulti(np.array([1, 0, 1]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([14, 0, 4, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+        assert (error_rate == 1 / 4 and
+                sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
+                sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
+                sol3.get_fitness() == 1 and sol3.get_num_wins() == 1)
+
+    def test_get_error_rate_all_wins_but_one_classification_error(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        error_rate = cl.get_error_rate()
+
+        assert (error_rate == 1 / 4 and
+                sol1.get_fitness() == 1 and sol1.get_num_wins() == 1 and
+                sol2.get_fitness() == 1 and sol2.get_num_wins() == 1 and
+                sol3.get_fitness() == 1 and sol3.get_num_wins() == 2)
+
 #
 # def test_get_errored_patterns_none_list():
 #     cl = Classifier(SingleWinnerRuleSelection())
@@ -356,232 +378,238 @@ training_data_set_multi, _ = get_a0_0_german_train_test()
 #
 #     with pytest.raises(TypeError):
 #         cl.get_errored_patterns_py(solutions, None)
-#
-#
-# class TestGetErroredPatternsBasic:
-#     def test_get_errored_patterns_all_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         # for p in dataset.get_patterns():
-#         #     print("fitness: ",sol2.get_fitness_value(p.get_attributes_vector()))
-#         # print()
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#
-#         assert (len(errored_patterns) == 0)
-#
-#     def test_get_errored_patterns_all_but_one_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.0, 0.5, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelBasic(2)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#
-#         antecedent_indices = np.array([14, 0, 4, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#
-#         assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
-#
-#     def test_get_errored_patterns_all_wins_but_one_classification_error(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(0)),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelBasic(0)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelBasic(1)
-#         rule_weight = RuleWeightBasic(0.7)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelBasic(2)
-#         rule_weight = RuleWeightBasic(0.5)
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent))
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#
-#         assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
-#
-#
-# class TestGetErroredPatternsMulti:
-#     def test_get_errored_patterns_all_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#
-#         assert len(errored_patterns) == 0
-#
-#     def test_get_errored_patterns_all_but_one_wins(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0, 0.5, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelMulti(np.array([1, 0, 1]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([14, 0, 4, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#         assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
-#
-#     def test_get_errored_patterns_all_wins_but_one_classification_error(self):
-#         dataset = Dataset(4, 4, 3, np.array([
-#             Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#             Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
-#             Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
-#             Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
-#         ]))
-#
-#         antecedent_indices = np.array([4, 0, 14, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([0, 4, 0, 14], int)
-#         class_label = ClassLabelMulti(np.array([0, 1, 0]))
-#         rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         antecedent_indices = np.array([2, 2, 0, 0], int)
-#         class_label = ClassLabelMulti(np.array([1, 0, 1]))
-#         rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
-#         consequent = Consequent(class_label, rule_weight)
-#         sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
-#                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
-#
-#         solutions = np.array([sol1, sol2, sol3], object)
-#
-#         cl = Classifier(SingleWinnerRuleSelection())
-#         errored_patterns = cl.get_errored_patterns_py(solutions, dataset)
-#
-#         assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
+
+
+class TestGetErroredPatternsBasic:
+    def test_get_errored_patterns_all_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(2)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        # for p in dataset.get_patterns():
+        #     print("fitness: ",sol2.get_fitness_value(p.get_attributes_vector()))
+        # print()
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+
+        assert (len(errored_patterns) == 0)
+
+    def test_get_errored_patterns_all_but_one_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.0, 0.5, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelBasic(2)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+
+        antecedent_indices = np.array([14, 0, 4, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+
+        assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
+
+    def test_get_errored_patterns_all_wins_but_one_classification_error(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelBasic(0)),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelBasic(1)),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelBasic(2)),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelBasic(0)),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelBasic(0)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelBasic(1)
+        rule_weight = RuleWeightBasic(0.7)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelBasic(2)
+        rule_weight = RuleWeightBasic(0.5)
+        consequent = ConsequentBasic(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent))
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+
+        assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
+
+
+class TestGetErroredPatternsMulti:
+    def test_get_errored_patterns_all_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+
+        assert len(errored_patterns) == 0
+
+    def test_get_errored_patterns_all_but_one_wins(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0, 0.5, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.0, 1.0, 0.0, 0.5]), ClassLabelMulti(np.array([1, 0, 1]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([14, 0, 4, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+        assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
+
+    def test_get_errored_patterns_all_wins_but_one_classification_error(self):
+        dataset = Dataset(4, 4, 3, np.array([
+            Pattern(0, np.array([0.5, 0.0, 1.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+            Pattern(1, np.array([0.0, 0.5, 0.0, 1.0]), ClassLabelMulti(np.array([0, 1, 0]))),
+            Pattern(2, np.array([1.0, 0.5, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 1]))),
+            Pattern(3, np.array([0.5, 1.0, 0.0, 0.0]), ClassLabelMulti(np.array([1, 0, 0]))),
+        ]))
+
+        antecedent_indices = np.array([4, 0, 14, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol1 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([0, 4, 0, 14], int)
+        class_label = ClassLabelMulti(np.array([0, 1, 0]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7, 0.7]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        antecedent_indices = np.array([2, 2, 0, 0], int)
+        class_label = ClassLabelMulti(np.array([1, 0, 1]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5, 0.5]))
+        consequent = ConsequentMulti(class_label, rule_weight)
+        sol3 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
+                                   consequent=copy.deepcopy(consequent), is_multi_label=True)
+
+        solutions = np.array([sol1, sol2, sol3], object)
+
+        cl = create_pittsburgh_sol(dataset, SingleWinnerRuleSelection(), solutions)
+        cl.update_winners_and_errors(dataset)
+        errored_patterns = cl.get_errored_patterns()
+
+        assert len(errored_patterns) == 1 and errored_patterns[0] == dataset.get_pattern(3)
 
 def test_deep_copy():
     # Just check if it raises an exception

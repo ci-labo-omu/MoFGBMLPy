@@ -1,7 +1,6 @@
 import os
 
-from mofgbmlpy.utility.parallel_cross_validation import show_results_box_plot, get_results, run_cross_validation, \
-    task_nsgaii_homo_triangle_2_3_4_5
+from mofgbmlpy.utility.parallel_cross_validation import show_results_box_plot, get_results, run_cross_validation
 
 
 def test_runs_iris():
@@ -17,10 +16,11 @@ def test_runs_iris():
         "--terminate-evaluation", "300",
         "--objectives", "num-rules", "error-rate",
         "--algorithm-id", algorithm_id,
-        "--root-folder", results_root_folder
+        "--root-folder", results_root_folder,
+        "--algorithm", "nsga2"
     ]
 
-    run_cross_validation(args, dataset_root, task_nsgaii_homo_triangle_2_3_4_5)
+    run_cross_validation(args, dataset_root)
     results = get_results(results_root_folder, algorithm_id, data_name)
 
     results_solutions = [run["solutions"] for run in results]

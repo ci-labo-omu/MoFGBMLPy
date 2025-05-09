@@ -10,9 +10,8 @@ from matplotlib import pyplot as plt
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
-from mofgbmlpy.main.abstract_mofgbml_main import AbstractMoFGBMLMain
-from mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
+from mofgbmlpy.main.abstract_main import AbstractMain
 
 
 def process_runs_results(
@@ -114,7 +113,7 @@ def show_results_median_line_plot(
     for x, y_vals in data_test.items():
         err_test.append((x, np.median(y_vals)))
 
-    AbstractMoFGBMLMain.plot_line_interpretability_error_rate_tradeoff_from_coords(
+    PittsburghMain.plot_line_interpretability_error_rate_tradeoff_from_coords(
         err_train, err_test, x_label=x_key, y_label="error_rate", xlim=xlim, title=title, file_path=file_path
     )
 
@@ -151,26 +150,17 @@ def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title
     plt.show()
 
 
-def task_nsgaii_homo_triangle_2_3_4_5(args):
-    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object using NSGAII and the
-    knowledge factory for homo triangles with partitions 2, 3, 4, 5
+def task(args, knowledge_factory_class):
+    """Task for the parallel cross validation test: runs MoFGBMLPy on given args
 
     Args:
         args (Arguments): Arguments object used by the runner
+        knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory
     """
-    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    runner.main(args)
 
-
-def task_moead_homo_triangle_2_3_4_5(args):
-    """Task for the parallel cross validation test: runs MoFGBMLPy on one Arguments object using MOEA/D and the
-    knowledge factory for homo triangles with partitions 2, 3, 4, 5
-
-    Args:
-        args (Arguments): Arguments object used by the runner
-    """
-    runner = MoFGBMLMOEADMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    runner.main(args)
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(knowledge_factory_class, algo_name)
+    runner.run(args)
 
 
 def load_result_csv(path):
@@ -205,13 +195,13 @@ def load_results_csv(paths):
     return results
 
 
-def run_cross_validation(args, dataset_root, task):
+def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5):
     """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
 
     Args:
         args (Arguments): Arguments object
         dataset_root (str): Path to the dataset root directory
-        task (function): Task used (e.g. task_nsgaii_homo_triangle_2_3_4_5)
+        knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory
     """
     start = time.time()
 
@@ -219,15 +209,18 @@ def run_cross_validation(args, dataset_root, task):
     data_name = args[data_name_arg_idx]
 
     runs_args = [
-        args
-        + [
-            "--train-file",
-            f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tra.dat",
-            "--test-file",
-            f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tst.dat",
-            "--experiment-id",
-            f"trial{i}{j}",
-        ]
+        (
+            args
+            + [
+                "--train-file",
+                f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tra.dat",
+                "--test-file",
+                f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tst.dat",
+                "--experiment-id",
+                f"trial{i}{j}",
+            ],
+            knowledge_factory_class,
+        )
         for i in range(3)
         for j in range(10)
     ]

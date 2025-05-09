@@ -20,7 +20,7 @@ def test_main_iris():
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--gen-plot",
-        "--algorithm", "nsga2"
+        "--algorithm", "nsga3"
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
@@ -58,7 +58,7 @@ def test_main_multiclass():
         "--is-multi-label",
         "--gen-plot",
         "--verbose",
-        "--algorithm", "nsga2"
+        "--algorithm", "nsga3"
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)

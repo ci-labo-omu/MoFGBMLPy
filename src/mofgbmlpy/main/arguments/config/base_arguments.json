@@ -147,5 +147,11 @@
         "help": "Save results in a pretty XML file (i.e. formated with indentation)",
         "type": "bool",
         "required": false
+    },
+    "algorithm": {
+        "default": "nsga2",
+        "help": "Algorithm name (e.g. nsga2, nsga3, moead...)",
+        "type": "string",
+        "required": false
     }
 }

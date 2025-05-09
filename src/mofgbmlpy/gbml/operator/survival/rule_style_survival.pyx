@@ -17,6 +17,7 @@ cdef class RuleStyleSurvival:
             MichiganSolution[]: Sorted array
         """
         arr = sorted(arr, key=lambda x: x.get_fitness(), reverse=True)
+
         return np.array(arr)
 
     @staticmethod

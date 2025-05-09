@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import copy
 import numpy as np
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
@@ -5,8 +6,9 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
+from mofgbmlpy.main.abstract_main import AbstractMain
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 
 
 class CounterFactualExplainerGradient:
@@ -236,6 +238,8 @@ class CounterFactualExplainerGradient:
 
         self._fuzzy_rule.plot_antecedent()
 
+        losses = []
+
         for epoch in range(self._max_num_epochs):
             # forward
             fs_mf_values = np.array(
@@ -259,6 +263,9 @@ class CounterFactualExplainerGradient:
             # loss
             conf_loss, change_loss = self.loss_functions(intersection_value, union_value)
             loss = self._confidence_loss_weight * conf_loss + (1 - self._confidence_loss_weight) * change_loss
+
+            losses.append(loss)
+
             print(
                 f"Epoch {epoch+1}/{self._max_num_epochs}: "
                 f"\tConfidence Loss: {conf_loss:.3f},"
@@ -322,6 +329,26 @@ class CounterFactualExplainerGradient:
             self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
 
         self._fuzzy_rule.plot_antecedent()
+
+        losses = np.array(losses)
+
+        plt.plot(losses)
+        plt.title("Training Loss")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.grid()
+        plt.show()
+
+        antecedent_indices = self._fuzzy_rule.get_antecedent().get_antecedent_indices()
+        fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
+        for i, idx in enumerate(antecedent_indices):
+            fuzzy_sets[i] = self._new_knowledge.get_fuzzy_set(i, idx)
+        current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
+
+        intersection_value, union_value, _, _ = self.compute_membership_area_data(
+            self._initial_mf_values, current_mf_values, step=1 / current_mf_values.shape[1]
+        )
+        print("IoU:", np.mean(intersection_value / union_value))
 
     def get_counterfactual(self):
         print(self._fuzzy_rule)
@@ -392,8 +419,9 @@ if __name__ == "__main__":
         "num-rules",
     ]
 
-    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    res = runner.main(args)
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+    res = runner.run(args)
 
     non_dominated_solutions = res.X
     objectives_non_dominated_solutions = res.F

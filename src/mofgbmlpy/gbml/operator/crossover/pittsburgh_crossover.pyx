@@ -61,15 +61,21 @@ class PittsburghCrossover(Crossover):
             num_additions = self.__min_num_rules - sum_num_rules
 
             for j in range(num_additions):
-                if num_rules_from_p1 < self.__max_num_rules and num_rules_from_p2 < self.__max_num_rules:
+                if num_rules_from_p1 < num_rules_p1 and num_rules_from_p2 < num_rules_p2:
                     if self._random_gen.random() < 0.5:
                         num_rules_from_p1 += 1
                     else:
                         num_rules_from_p2 += 1
-                elif num_rules_from_p1 == self.__max_num_rules and num_rules_from_p2 < self.__max_num_rules:
+                elif num_rules_from_p1 == num_rules_p1 and num_rules_from_p2 < num_rules_p2:
                     num_rules_from_p2 += 1
-                elif num_rules_from_p2 == self.__max_num_rules and num_rules_from_p1 > self.__max_num_rules:
+                elif num_rules_from_p2 == num_rules_p2 and num_rules_from_p1 > num_rules_p1:
                     num_rules_from_p1 += 1
+                else:
+                    raise ValueError("The number of rules in the parents is not enough to create a valid offspring")
+
+        if num_rules_from_p1 < 1 and num_rules_from_p2 < 1:
+            raise ValueError("number of rule to be generate is less than 1")
+
         return num_rules_from_p1, num_rules_from_p2
 
     def _do(self, problem, X, **kwargs):

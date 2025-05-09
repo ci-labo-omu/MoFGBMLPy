@@ -117,6 +117,10 @@ class PittsburghProblem(Problem):
         cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)
         cdef int i
 
+        # Update eval values
+        for i in range(len(X)):
+            X[i][0].update_winners_and_errors(self.__training_ds)
+
         for i in range(len(self.__objectives)):
             self.__objectives[i].run(X[:, 0], i, eval_values[:,i])
         out["F"] = eval_values
@@ -135,7 +139,7 @@ class PittsburghProblem(Problem):
             sol = solutions[i][0]
 
             # Update eval values
-            sol.get_error_rate(self.__training_ds)
+            sol.update_winners_and_errors(self.__training_ds)
 
             k = 0
             for j in range(sol.get_num_vars()):

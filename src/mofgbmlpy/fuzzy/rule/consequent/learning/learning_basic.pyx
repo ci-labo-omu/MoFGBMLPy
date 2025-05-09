@@ -33,7 +33,7 @@ cdef class LearningBasic(AbstractLearning):
         Returns:
             AbstractConsequent: Created consequent
         """
-        cdef double[:] confidence = self.calc_confidence(antecedent)
+        cdef double[:] confidence = self.calc_confidence(antecedent, dataset)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return ConsequentBasic(class_label, rule_weight)

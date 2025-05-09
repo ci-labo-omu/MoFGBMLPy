@@ -2,7 +2,7 @@ import xml.etree.cElementTree as xml_tree
 import os
 from abc import ABC
 from importlib import import_module
-
+from pymoo.util.ref_dirs import get_reference_directions
 import numpy as np
 from pymoo.algorithms.moo.moead import MOEAD
 from pymoo.algorithms.moo.nsga2 import NSGA2
@@ -26,6 +26,7 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 from mofgbmlpy.utility.util import dash_case_to_snake_case, dash_case_to_class_name
+from mofgbmlpy.main.arguments.arguments import Arguments
 
 
 class AbstractMain(ABC):
@@ -71,6 +72,22 @@ class AbstractMain(ABC):
         self._rule_builder = None
         self._pymoo_rand_seed = None
 
+    @staticmethod
+    def get_algo_name_from_raw_args(args):
+        """Get the algorithm name from the raw arguments
+
+        Args:
+            args (list): List of dash-case arguments
+
+        Returns:
+            str: Algorithm name
+        """
+        try:
+            algo_name = args[args.index("--algorithm") + 1]
+        except ValueError:
+            algo_name = Arguments().get_arg_default("ALGORITHM")  # use default
+        return algo_name
+
     def load_args(self, args, train=None, test=None):
         """Load the arguments
 
@@ -79,10 +96,6 @@ class AbstractMain(ABC):
             train (Dataset): Training dataset
             test (Dataset): Test dataset
         """
-        # Add parameters specific to the algorithm used
-        algo_name = args[args.index("--algorithm") + 1]
-        self._mofgbml_args.load_config_file(algo_name + "_arguments")
-
         # load command arguments
         self._mofgbml_args.load(args)
 
@@ -121,7 +134,7 @@ class AbstractMain(ABC):
 
         self._algo = self.get_pymoo_algo()
 
-    def run(self):
+    def generate_solutions(self):
         """Run MoFGBML
 
         Returns:
@@ -144,6 +157,64 @@ class AbstractMain(ABC):
             verbose=self._verbose,
         )
 
+        return res
+
+    def run(self, args, train=None, test=None):
+        """Main function of the runner
+
+        Args:
+            args (list): List of dash-case arguments
+            train (Dataset): Training dataset
+            test (Dataset): Test dataset
+
+        Returns:
+            pymoo.core.result.Result: Results of the run
+        """
+        # TODO: print information
+        # TODO: modify for michigan solutions
+
+        self.load_args(args, train, test)
+
+        res = self.generate_solutions()
+        exec_time = res.exec_time
+
+        if self._mofgbml_args.get("VERBOSE"):
+            print("Execution time: ", exec_time)
+
+        res.objectives_name = [str(obj) for obj in self._objectives]
+
+        # Keep only non dominated solutions
+        non_dominated_mask = NonDominatedSorting().do(res.opt.get("F"), only_non_dominated_front=True)
+        res.opt = res.opt[non_dominated_mask]
+
+        self.create_and_add_archives(res)
+
+        # We use archive since it contains all solutions of all populations without filter
+        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
+        self.update_results_data(
+            res.pop.get("X")[:, 0], self._knowledge, self._train, self._test, id_start=len(res.archive)
+        )
+
+        if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
+            self.save_results_to_files(res)
+
+        # print(res.history[0].pop.get("X"))
+
+        if self._mofgbml_args.get("GEN_PLOT"):
+            pareto_front_plot = self.get_pareto_front_plot(res.opt)
+            pareto_front_plot.show()
+            pareto_front_plot.save(str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "pareto_front.png")))
+
+            # self.save_video(res.history, str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR")
+            # , 'mofgbml.mp4')))
+            self.plot_line_interpretability_error_rate_tradeoff(
+                res.opt.get("X")[:, 0],
+                str(
+                    os.path.join(
+                        self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "error_rate_interpretability_tradeoff.png"
+                    )
+                ),
+            )
         return res
 
     def _get_antecedent_factory(self):
@@ -214,6 +285,8 @@ class AbstractMain(ABC):
             "mutation": self._mutation,
         }
 
+        conversion_table = {"n_offsprings": "OFFSPRING_POPULATION_SIZE"}
+
         algos = {
             "nsga2": {"class": NSGA2, "additional_args": ["n_offsprings"]},
             "nsga3": {"class": NSGA3, "additional_args": ["n_offsprings"]},
@@ -231,9 +304,27 @@ class AbstractMain(ABC):
             raise ValueError("Unknown algo name")
 
         for arg in algos[algo_name]["additional_args"]:
-            algo_args[arg] = self._mofgbml_args.get(arg.upper())
+            if arg in conversion_table:
+                algo_args[arg] = self._mofgbml_args.get(conversion_table[arg])
+            else:
+                algo_args[arg] = self._mofgbml_args.get(arg.upper())
 
-        return algos[algo_name]["class"](algo_args)
+        if algo_name == "moead":
+            # Note: if num_obj <=2, it uses Tschebyscheff
+            ref_dirs = get_reference_directions(
+                "uniform", self._problem.get_num_objectives(), n_points=self._mofgbml_args.get("POPULATION_SIZE")
+            )
+            algo_args["ref_dirs"] = ref_dirs
+
+            # removed params already defined in Pymoo
+            algo_args.pop("eliminate_duplicates", None)
+            algo_args.pop("pop_size", None)
+
+        elif algo_name == "nsga3":
+            ref_dirs = get_reference_directions("das-dennis", len(self._objectives), n_partitions=12)
+            algo_args["ref_dirs"] = ref_dirs
+
+        return algos[algo_name]["class"](**algo_args)
 
     def save_results_to_files(self, res):
         """Save the results to CSV and XML files
@@ -372,6 +463,18 @@ class AbstractMain(ABC):
     def plot_fuzzy_variables(self):
         """Plot the fuzzy variables of the knowledge base"""
         self._knowledge.plot_fuzzy_variables()
+
+    def show_args(self):
+        """Show MoFGBML arguments"""
+        print(str(self._mofgbml_args))
+
+    def get_args(self):
+        """Get MoFGBML arguments
+
+        Returns:
+            Arguments: MoFGBML arguments
+        """
+        return self._mofgbml_args
 
     def get_train_set(self):
         """Get the training set

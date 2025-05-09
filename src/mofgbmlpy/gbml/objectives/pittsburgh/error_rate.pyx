@@ -31,7 +31,7 @@ cdef class ErrorRate(ObjectiveFunction):
         if isinstance(solutions[0], PittsburghSolution):
             for i in range(len(solutions)):
                 sol = solutions[i]
-                out[i] = sol.get_error_rate(self.__data_set)
+                out[i] = sol.get_error_rate()
                 sol.set_objective(obj_index, out[i])
         else:
             raise InvalidSolutionTypeException("PittsburghSolution")

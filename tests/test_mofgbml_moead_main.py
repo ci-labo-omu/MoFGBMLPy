@@ -1,5 +1,6 @@
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
-from mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
+from mofgbmlpy.main.abstract_main import AbstractMain
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 
 
 def test_main():
@@ -13,8 +14,11 @@ def test_main():
         "--gen-plot",
         # "--objectives", "num-rules", "error-rate",
         # "--terminate-evaluation", "30000",
+        "--algorithm", "moead"
     ]
 
-    runner = MoFGBMLMOEADMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    runner.main(args)
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+    runner.run(args)
+
     assert True

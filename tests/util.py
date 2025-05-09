@@ -14,6 +14,7 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMult
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
+from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 from mofgbmlpy.main.arguments.arguments import Arguments
 
 
@@ -98,6 +99,13 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
 
     return solution
 
+def create_pittsburgh_sol(training_data_set, classification, michigan_sols=None):
+    if michigan_sols is None:
+        michigan_sols = [create_michigan_sol(training_data_set)]
+
+    sol = PittsburghSolution(len(michigan_sols), 2, 0, classification, do_init_vars=False)
+    sol.set_vars(michigan_sols)
+    return sol
 
 def float_eq(value1, value2, precision=1e-6):
     return abs(value1 - value2) < precision

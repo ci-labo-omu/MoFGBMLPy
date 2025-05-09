@@ -42,6 +42,7 @@ cdef class PittsburghSolution(AbstractSolution):
         super().__init__(num_objectives, num_constraints)
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
+        self._error_rate = -1
         if do_init_vars:
             if michigan_solution_builder is None:
                 raise TypeError("Michigan solution builder can't be None if do init vars is True")
@@ -326,14 +327,11 @@ cdef class PittsburghSolution(AbstractSolution):
                length += item.get_length()
         return length
 
-    cpdef double get_error_rate(self, Dataset dataset):
-        """Get the error rate. Note that it update the fitness and number of wins of the Michigan solutions of this classifier
+    cpdef void update_winners_and_errors(self, Dataset dataset):
+        """Update the number of wins and errors of the Michigan solutions in this classifier.
         
         Args:
-            dataset (Dataset): Dataset used to get the error rate (either for training or test) 
-
-        Returns:
-            double: Error rate
+            dataset (Dataset): Dataset used to update the number of wins and errors of the Michigan solutions
         """
         if self._vars is None or dataset is None:
            raise TypeError("Michigan solutions list and dataset can't be None")
@@ -344,6 +342,8 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef MichiganSolution winner_solution
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef Pattern p
+        cdef cvector[int] errored_patterns_indices
+        cdef object[:] errored_patterns
 
         for sol in self._vars:
            sol.reset_num_wins()
@@ -353,50 +353,42 @@ cdef class PittsburghSolution(AbstractSolution):
            p = patterns[i]
            winner_solution = self.classify(p)
            if winner_solution is None:
+               # If output is rejected then continue next pattern.
                num_errors += 1
+               errored_patterns_indices.push_back(i)
                continue
 
            winner_solution.inc_num_wins()
 
            if p.get_target_class() != winner_solution.get_class_label():
                num_errors += 1
+               errored_patterns_indices.push_back(i)
            else:
                winner_solution.inc_fitness()
 
-        return num_errors / dataset_size
+        self._errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
+        for i in range(errored_patterns_indices.size()):
+           self._errored_patterns[i] = patterns[errored_patterns_indices[i]]
+
+        self._error_rate = num_errors / dataset_size
+
+    cpdef double get_error_rate(self):
+        """Get the error rate of the last update.
+    
+        Returns:
+            double: Error rate
+        """
+        return self._error_rate
 
 
-    cpdef object[:] get_errored_patterns(self, Dataset dataset):
-        """Get the patterns that can't be classified by this classifier.
+    cpdef object[:] get_errored_patterns(self):
+        """Get the patterns that can't be classified by this classifier in the last update
  
-        Args:
-            dataset (Dataset): Dataset used to get the errored patterns 
-
         Returns:
             double: Errored patterns
         """
-        if self._vars is None or dataset is None:
-           raise TypeError("Michigan solutions list and dataset can't be None")
 
-        cdef int i
-        cdef cvector[int] errored_patterns_indices
-        cdef object[:] errored_patterns
-        cdef MichiganSolution winner_solution
-        cdef Pattern[:] patterns = dataset.get_patterns()
-        cdef Pattern p
-
-        for i in range(dataset.get_size()):
-           p = patterns[i]
-           winner_solution = self.classify(p)
-
-           if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
-               errored_patterns_indices.push_back(i)
-
-        errored_patterns = np.empty(errored_patterns_indices.size(), dtype=object)
-        for i in range(errored_patterns_indices.size()):
-           errored_patterns[i] = patterns[errored_patterns_indices[i]]
-
-        return errored_patterns
+        return self._errored_patterns
 
 
     cpdef AbstractClassification get_classification(self):

@@ -8,7 +8,6 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
-from mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from pymoo.termination import get_termination
 from pymoo.visualization.scatter import Scatter
@@ -18,6 +17,8 @@ import os
 import numpy as np
 from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEliminateDuplicates
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
+from mofgbmlpy.main.abstract_main import AbstractMain
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 
 
 class CounterFactualExplainerMetaheuristics:
@@ -114,14 +115,58 @@ class CounterFactualExplainerMetaheuristics:
         if len(target_rules) != 0:
             for i in range(len(target_rules)):
                 target_rules[i].plot_antecedent()
-        #         print(target_rules[i].get_knowledge())
-        #         print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
+                #         print(target_rules[i].get_knowledge())
+                #         print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
+
+                antecedent_indices = target_rules[i].get_antecedent().get_antecedent_indices()
+                fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
+                for j, idx in enumerate(antecedent_indices):
+                    fuzzy_sets[j] = target_rules[i].get_knowledge().get_fuzzy_set(j, idx)
+                current_mf_values = self._problem.compute_membership_values(fuzzy_sets, 0, 1)
+
+                iou = self._problem.compute_iou(
+                    self._problem.get_initial_mfs_y(), current_mf_values, step=1 / current_mf_values.shape[1]
+                )
+                print(f"IoU rule {i}: {np.mean(iou):.3f}")
+
+        # # rule with highest confidence
+        # rule = max(rules, key=lambda r: self._problem._learner.calc_confidence_py(
+        # r.get_antecedent(),
+        # self._problem._train_set
+        # )[1])
+        # print("Rule with highest confidence:", rule)
+        #
+        # # print confidence of rule with highest confidence
+        # confidences = self._problem._learner.calc_confidence_py(rule.get_antecedent(), self._problem._train_set)
+        # print([c for c in confidences])
+        # # for p in self._problem._learner.get_training_set().get_patterns():
+        # p = self._problem._learner.get_training_set().get_patterns()[8]
+        # print(p)
+        #
+        # # print compatibility grade with current pattern
+        # fitness_val = rule.get_fitness_value(p.get_attributes_vector())
+        # print(f"Fitness value: {fitness_val:.3f}")
+        #
+        # compatibility_grade = rule.get_antecedent().get_compatible_grade_value_py(p.get_attributes_vector())
+        # print(f"Compatibility grade: {compatibility_grade:.3f}")
+        #
+        # antecedent_indices = rule.get_antecedent().get_antecedent_indices()
+        # for i, idx in enumerate(antecedent_indices):
+        #     mf_val = rule.get_knowledge().get_membership_value_py(p.get_attributes_vector()[i], i, idx)
+        #     print(f"Membership function value: {mf_val:.3f}")
+        #
+        # print(rule.get_knowledge().get_fuzzy_set(1, antecedent_indices[1]).get_function().get_params())
+        #
+        # for p in self._problem._train_set.get_patterns():
+        #     # if fitness > 0 then print
+        #     if rule.get_fitness_value(p.get_attributes_vector()) > 0:
+        #         print(p)
+        #         print(rule.get_antecedent().get_compatible_grade_value_py(p.get_attributes_vector()))
 
         return res
 
 
 if __name__ == "__main__":
-
     args = [
         "--data-name",
         "appendicitis",
@@ -141,8 +186,9 @@ if __name__ == "__main__":
         "num-rules",
     ]
 
-    runner = MoFGBMLNSGAIIMain(HomoTriangleKnowledgeFactory_2_3_4_5)
-    res = runner.main(args)
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+    res = runner.run(args)
 
     non_dominated_solutions = res.X
     objectives_non_dominated_solutions = res.F

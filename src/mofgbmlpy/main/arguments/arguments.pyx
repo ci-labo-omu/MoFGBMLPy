@@ -306,3 +306,23 @@ class Arguments:
             term_xml.text = str(value)
 
         return root
+
+    def get_arg_default(self, arg):
+        """Get the argument definition of a given argument
+
+        Args:
+            arg (str): Argument name
+
+        Returns:
+            dict: Argument definition
+        """
+
+        arg = Arguments.key_to_arg(arg)
+
+        if arg in self.__args_definition:
+            if "default" in self.__args_definition[arg]:
+                return self.__args_definition[arg]["default"]
+            else:
+                return None
+        else:
+            raise Exception(f"Argument {arg} not found in the args definitions")

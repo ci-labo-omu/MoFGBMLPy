@@ -63,7 +63,7 @@ class MichiganMutation(Mutation):
 
                 if var_of_random_pattern >= 0:
                     num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j)
-                    new_fuzzy_set = self._random_gen.integers(0, num_fuzzy_sets - 1)
+                    new_fuzzy_set = self._random_gen.integers(0, num_fuzzy_sets - 1) # -1 and not -2 (Java ver.) because the upper bound is exclusive
 
                     # To avoid getting the same value again we do the following
                     if new_fuzzy_set < indices[j]:
