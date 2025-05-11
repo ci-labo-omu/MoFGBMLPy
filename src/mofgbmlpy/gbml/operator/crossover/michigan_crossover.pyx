@@ -71,7 +71,6 @@ class MichiganCrossover(Crossover):
 
             for j in range(len(offspring)):
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
-                    print("WARNING: Invalid rule generated in Michigan crossover")
                     generated_solutions.append(copy.deepcopy(p1_obj))
                     if len(generated_solutions) == num_ga:
                         return generated_solutions
@@ -172,8 +171,6 @@ class MichiganCrossover(Crossover):
 
             # 5. Replacement: Single objective maximization replacement based on the fitness value
 
-
-
             generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
 
             offspring = copy.deepcopy(parent)
@@ -181,8 +178,6 @@ class MichiganCrossover(Crossover):
             offspring.set_vars(generated_solutions)
 
             Y[0, i, 0] = offspring
-            if not Y[0, i, 0].are_rules_valid():
-                print("WARNING: Invalid rule generated in Michigan crossover")
         return Y
 
     def execute(self, problem, X, **kwargs):

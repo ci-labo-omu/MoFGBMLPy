@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from libc.stdlib cimport qsort
 from pymoo.core.population import Population
@@ -8,7 +10,7 @@ cdef class RuleStyleSurvival:
     """Static methods used to replace a population of Michigan rules with its offsprings (survival step of the genetic algorithm)"""
     @staticmethod
     def sort_by_fitness(arr):
-        """Sort the array of Michigan solutions by the their fitness
+        """Sort the array of Michigan solutions by their fitness
 
         Args:
             arr (MichiganSolution[]): Array of michigan solutions
@@ -30,8 +32,9 @@ cdef class RuleStyleSurvival:
             max_num_rules ():
 
         Returns:
-
+            (Population): New population with the offsprings and the best individuals of the initial population
         """
+
         # Check if we already exceed max num rules
         num_replacements = 0
         if max_num_rules < len(pop) + len(offspring):
@@ -46,7 +49,7 @@ cdef class RuleStyleSurvival:
 
         # Copy individuals that won't be replaced
         for i in range(len(pop)-num_replacements):
-            new_pop[i] = pop[i]
+            new_pop[i] = copy.deepcopy(pop[i])
 
         # Replace the worst individuals in the current population with the offspring and add rules if there is still space
         k = 0

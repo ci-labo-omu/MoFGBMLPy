@@ -41,6 +41,7 @@ cdef class MichiganSolution(AbstractSolution):
         self.__num_wins = 0
         self.__fitness = 0
         self._random_gen = random_gen
+        self._are_scores_updated = False
 
         super().__init__(num_objectives, num_constraints)
 
@@ -66,6 +67,9 @@ cdef class MichiganSolution(AbstractSolution):
                     is_rejected = self._rule.is_rejected_class_label()
                     if cnt > 1000:
                         raise ExceededMaxTrialsNumber("Exceeded maximum number of trials to generate rule")
+
+    def set_scores_update_status(self, new_status: bool):
+        self._are_scores_updated = new_status
 
     cdef void create_rule(self, Pattern pattern=None):
         """Create the rule of this solution
@@ -193,10 +197,12 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef void reset_num_wins(self):
         """Reset to 0 the number of wins"""
         self.__num_wins = 0
+        self.set_scores_update_status(False)
 
     cpdef void reset_fitness(self):
         """Reset to 0 the fitness value"""
         self.__fitness = 0
+        self.set_scores_update_status(False)
 
     cpdef void inc_num_wins(self):
         """Add one to the number of wins"""
@@ -212,6 +218,8 @@ cdef class MichiganSolution(AbstractSolution):
         Returns:
             int: Number of wins
         """
+        if not self._are_scores_updated:
+            raise Exception("num_wins and fitness are not updated.")
         return self.__num_wins
 
     cpdef int get_fitness(self):
@@ -220,6 +228,8 @@ cdef class MichiganSolution(AbstractSolution):
         Returns:
             int: Fitness value
         """
+        if not self._are_scores_updated:
+            raise Exception("num_wins and fitness are not updated.")
         return self.__fitness
 
     def __repr__(self):
@@ -277,6 +287,7 @@ cdef class MichiganSolution(AbstractSolution):
         new_solution._vars = vars_copy
         new_solution._rule.get_antecedent().set_antecedent_indices(vars_copy)
         new_solution._objectives = objectives_copy
+        new_solution._are_scores_updated = self._are_scores_updated
 
         memo[id(self)] = new_solution
 
@@ -299,6 +310,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef void clear_vars(self):
         """Clear the variables """
         self._vars = np.empty(0, dtype=int)
+        self._are_scores_updated = False
 
     cpdef int[:] get_vars(self):
         """Get the array of variables
@@ -327,6 +339,7 @@ cdef class MichiganSolution(AbstractSolution):
             value (int): New variable value 
         """
         self._vars[index] = value
+        self._are_scores_updated = False
 
     cpdef void set_vars(self, int[:] new_vars):
         """Set the variables (antecedent indices)
@@ -335,6 +348,7 @@ cdef class MichiganSolution(AbstractSolution):
             new_vars (int[]): New vars 
         """
         self._vars = new_vars
+        self._are_scores_updated = False
 
     cpdef int get_num_vars(self):
         """Get the number of variables (number of antecedent indices, i.e. the number of dimensions)
@@ -390,6 +404,7 @@ cdef class MichiganSolution(AbstractSolution):
             new_knowledge (Knowledge): New knowledge base
         """
         self.get_antecedent().set_knowledge(new_knowledge)
+        self._are_scores_updated = False
 
     def get_confidence(self):
         learner = self.get_rule_builder().get_consequent_factory()

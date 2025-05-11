@@ -36,7 +36,6 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
                     winner = P[i, j]
 
             S[i] = winner
-
         return S[:, None].astype(int, copy=False)
 
     def __init__(self, tournament_size=2):

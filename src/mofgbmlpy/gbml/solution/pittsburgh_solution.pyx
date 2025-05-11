@@ -43,6 +43,7 @@ cdef class PittsburghSolution(AbstractSolution):
         self.__michigan_solution_builder = michigan_solution_builder
         self.__classification = classification
         self._error_rate = -1
+        self._errored_patterns = None
         if do_init_vars:
             if michigan_solution_builder is None:
                 raise TypeError("Michigan solution builder can't be None if do init vars is True")
@@ -115,8 +116,16 @@ cdef class PittsburghSolution(AbstractSolution):
         for i in range(objectives_copy.shape[0]):
             objectives_copy[i] = self._objectives[i]
 
+        errored_patterns_copy = None
+        if self._errored_patterns is not None:
+            errored_patterns_copy = np.empty(self._errored_patterns.shape[0], dtype=object)
+            for i in range(self._errored_patterns.shape[0]):
+                errored_patterns_copy[i] = self._errored_patterns[i]
+
         new_solution._vars = vars_copy
         new_solution._objectives = objectives_copy
+        new_solution._error_rate = self._error_rate
+        new_solution._errored_patterns = errored_patterns_copy
 
         memo[id(self)] = new_solution
 
@@ -370,6 +379,9 @@ cdef class PittsburghSolution(AbstractSolution):
         for i in range(errored_patterns_indices.size()):
            self._errored_patterns[i] = patterns[errored_patterns_indices[i]]
 
+        for sol in self._vars:
+            sol.set_scores_update_status(True)
+
         self._error_rate = num_errors / dataset_size
 
     cpdef double get_error_rate(self):
@@ -378,6 +390,8 @@ cdef class PittsburghSolution(AbstractSolution):
         Returns:
             double: Error rate
         """
+        if self._error_rate == -1:
+            raise Exception("Error rate was not initialized. Please call update_winners_and_errors first")
         return self._error_rate
 
 

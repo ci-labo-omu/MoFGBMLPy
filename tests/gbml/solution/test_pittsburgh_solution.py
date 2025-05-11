@@ -628,10 +628,11 @@ def test_deep_copy():
         v1 = obj.get_var(i)
         v2 = copied_obj.get_var(i)
 
-        assert (v1 == v2 and id(v1) != id(v2) and
-                id(v1.get_vars().base) != id(v2.get_vars().base) and
-                id(v1.get_antecedent()) != id(v2.get_antecedent()) and
-                id(v1.get_antecedent().get_antecedent_indices().base) != id(v2.get_antecedent().get_antecedent_indices().base))
+        assert v1 == v2
+        assert id(v1) != id(v2)
+        assert id(v1.get_vars().base) != id(v2.get_vars().base)
+        assert id(v1.get_antecedent()) != id(v2.get_antecedent())
+        assert id(v1.get_antecedent().get_antecedent_indices().base) != id(v2.get_antecedent().get_antecedent_indices().base)
 
 
 def test_to_xml_run():
