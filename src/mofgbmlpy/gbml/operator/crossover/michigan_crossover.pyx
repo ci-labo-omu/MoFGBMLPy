@@ -70,6 +70,8 @@ class MichiganCrossover(Crossover):
             offspring = mutation.do(problem, offspring)
 
             for j in range(len(offspring)):
+                offspring[j].X[0].learning()
+
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
                     generated_solutions.append(copy.deepcopy(p1_obj))
                     if len(generated_solutions) == num_ga:

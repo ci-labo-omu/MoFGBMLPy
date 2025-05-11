@@ -212,8 +212,8 @@ class PittsburghMain(AbstractMain):
             sol.set_attribute("total_coverage", total_coverage)
             sol.set_attribute("total_rule_length", sol.get_total_rule_length())
             sol.set_attribute("average_rule_weight", sol.get_average_rule_weight())
-            sol.set_attribute("training_error_rate", sol.get_error_rate())
-            sol.set_attribute("test_error_rate", sol.get_error_rate())
+            sol.set_attribute("training_error_rate", sol.calc_error_rate(train))
+            sol.set_attribute("test_error_rate", sol.calc_error_rate(test))
             sol.set_attribute("num_rules", sol.get_num_vars())
 
             sol_id += 1

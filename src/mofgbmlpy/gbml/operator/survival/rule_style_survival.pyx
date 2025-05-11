@@ -37,10 +37,12 @@ cdef class RuleStyleSurvival:
 
         # Check if we already exceed max num rules
         num_replacements = 0
-        if max_num_rules < len(pop) + len(offspring):
-            num_replacements = len(pop) + len(offspring) - max_num_rules
+        new_size = len(pop) + len(offspring)
+        if max_num_rules < new_size:
+            num_replacements = new_size - max_num_rules
+            new_size = max_num_rules
 
-        new_shape = (pop.shape[0] + len(offspring) - num_replacements,) + pop.shape[1:]
+        new_shape = (new_size,) + pop.shape[1:]
         new_pop = np.empty(new_shape, dtype=object)
 
         # Sort by fitness if we need to replace the worst individuals (if not we just have to append to the current pop)

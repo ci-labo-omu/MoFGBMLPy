@@ -90,5 +90,4 @@ class PittsburghMutation(Mutation):
                         if not new_michigan_solution.get_consequent().is_rejected():
                             X[s][i].set_var(michigan_sol_i, new_michigan_solution)
 
-
         return X

@@ -88,6 +88,7 @@ cdef class PittsburghSolution(AbstractSolution):
 
         return total_rule_weight/self._vars.shape[0]
 
+
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
 
@@ -383,6 +384,37 @@ cdef class PittsburghSolution(AbstractSolution):
             sol.set_scores_update_status(True)
 
         self._error_rate = num_errors / dataset_size
+
+    cpdef double calc_error_rate(self, Dataset dataset):
+        """Calculate the error rate of this classifier using the given dataset
+
+        Args:
+            dataset (Dataset): Dataset used to calculate the error rate
+
+        Returns:
+            double: Error rate
+        """
+        if self._vars is None or dataset is None:
+           raise TypeError("Michigan solutions list and dataset can't be None")
+
+        cdef int num_errors = 0
+        cdef int dataset_size = dataset.get_size()
+        cdef int i
+        cdef MichiganSolution winner_solution
+        cdef Pattern[:] patterns = dataset.get_patterns()
+        cdef Pattern p
+
+        for sol in self._vars:
+           sol.reset_num_wins()
+           sol.reset_fitness()
+
+        for i in range(dataset.get_size()):
+           p = patterns[i]
+           winner_solution = self.classify(p)
+           if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
+               num_errors += 1
+
+        return num_errors / dataset_size
 
     cpdef double get_error_rate(self):
         """Get the error rate of the last update.

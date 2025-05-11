@@ -2,7 +2,7 @@ import csv
 import os
 import time
 from collections import OrderedDict
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -205,28 +205,38 @@ def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangl
     """
     start = time.time()
 
-    data_name_arg_idx = args.index("--data-name") + 1
-    data_name = args[data_name_arg_idx]
+    try:
+        data_name_arg_idx = args.index("--data-name") + 1
+        data_name = args[data_name_arg_idx]
 
-    runs_args = [
-        (
-            args
-            + [
-                "--train-file",
-                f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tra.dat",
-                "--test-file",
-                f"{dataset_root}/{data_name}/a{i}_{j}_{data_name}-10tst.dat",
-                "--experiment-id",
-                f"trial{i}{j}",
-            ],
-            knowledge_factory_class,
-        )
-        for i in range(3)
-        for j in range(10)
-    ]
+        runs_args = [
+            (
+                args
+                + [
+                    "--train-file",
+                    f"{dataset_root}{os.sep}{data_name}{os.sep}a{i}_{j}_{data_name}-10tra.dat",
+                    "--test-file",
+                    f"{dataset_root}{os.sep}{data_name}{os.sep}a{i}_{j}_{data_name}-10tst.dat",
+                    "--experiment-id",
+                    f"trial{i}{j}",
+                ],
+                knowledge_factory_class,
+            )
+            for i in range(3)
+            for j in range(10)
+        ]
 
-    with ProcessPoolExecutor() as executor:
-        executor.map(task, runs_args)
+        with ProcessPoolExecutor() as executor:
+            futures = [executor.submit(task, *run_args) for run_args in runs_args]
+
+            for future in as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    print(f"Task failed with exception: {e}")
+
+    except Exception as main_e:
+        print(f"Main setup failed: {main_e}")
 
     print("Execution time:", time.time() - start)
 
@@ -243,7 +253,7 @@ def get_results(root_folder, algorithm_id, data_name):
         list: List of results
     """
     results_path = root_folder + os.sep + algorithm_id + os.sep + data_name
-    runs_results_folders = [f"{results_path}/trial{i}{j}" for i in range(3) for j in range(10)]
+    runs_results_folders = [f"{results_path}{os.sep}trial{i}{j}" for i in range(3) for j in range(10)]
 
     return load_results_data(runs_results_folders)
 
@@ -261,12 +271,12 @@ def load_results_data(paths):
     for path in paths:
         exec_time = None
 
-        with open(path + "/exec_time.txt", "r") as file:
+        with open(path + os.sep + "exec_time.txt", "r") as file:
             line = file.readline().strip()
             exec_time = float(line)
 
         if exec_time is None:
             raise Exception("Invalid exec_time read from file")
 
-        results.append({"solutions": load_result_csv(path + "/results.csv"), "exec_time": exec_time})
+        results.append({"solutions": load_result_csv(path + os.sep + "results.csv"), "exec_time": exec_time})
     return results

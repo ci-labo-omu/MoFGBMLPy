@@ -12,7 +12,7 @@ def test_main():
         "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
         "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
         "--gen-plot",
-        # "--objectives", "num-rules", "error-rate",
+        "--objectives", "num-rules", "error-rate",
         # "--terminate-evaluation", "30000",
         "--algorithm", "moead"
     ]

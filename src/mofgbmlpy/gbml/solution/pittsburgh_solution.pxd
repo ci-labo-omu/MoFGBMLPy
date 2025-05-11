@@ -35,6 +35,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef MichiganSolution classify_py(self, Pattern pattern)
     cpdef get_total_rule_length(self)
     cpdef void update_winners_and_errors(self, Dataset dataset)
+    cpdef double calc_error_rate(self, Dataset dataset)
     cpdef double get_error_rate(self)
     cpdef object[:] get_errored_patterns(self)
     cpdef AbstractClassification get_classification(self)

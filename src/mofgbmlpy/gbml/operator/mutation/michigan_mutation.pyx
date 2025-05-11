@@ -73,5 +73,4 @@ class MichiganMutation(Mutation):
                 else:
                     # Categorical attribute
                     indices[j] = round(var_of_random_pattern)
-            sol.learning()
         return X
