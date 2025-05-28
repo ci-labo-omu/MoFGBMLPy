@@ -293,6 +293,13 @@ cdef class MichiganSolution(AbstractSolution):
 
         return new_solution
 
+    def __copy__(self):
+        """Return a copy of this object. This is a deep copy to avoid issues with Pymoo
+
+        Returns:
+            object: Deep copy of this object
+        """
+        return self.__deepcopy__()
 
     def __hash__(self):
         """Hash function

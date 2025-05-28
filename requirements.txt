@@ -7,3 +7,4 @@ Cython
 pyrecorder
 gprof2dot
 jproperties
+tqdm

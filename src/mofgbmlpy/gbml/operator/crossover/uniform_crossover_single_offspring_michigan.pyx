@@ -17,7 +17,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
             prob (float): Crossover probability
             **kwargs (dict): Other Pymoo arguments
         """
-        super().__init__(2, 1, random_gen, prob=prob, **kwargs)
+        super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob, **kwargs)
 
     def _do(self, _, X, **kwargs):
         """Run the crossover on the given population

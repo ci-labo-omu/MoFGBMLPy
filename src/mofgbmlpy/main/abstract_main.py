@@ -179,7 +179,7 @@ class AbstractMain(ABC):
         exec_time = res.exec_time
 
         if self._mofgbml_args.get("VERBOSE"):
-            print("Execution time: ", exec_time)
+            print(f"Execution time: {exec_time:.2f}")
 
         res.objectives_name = [str(obj) for obj in self._objectives]
 

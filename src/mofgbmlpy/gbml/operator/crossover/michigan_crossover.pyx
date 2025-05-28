@@ -1,6 +1,7 @@
 import copy
 
 import numpy as np
+from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
 
@@ -11,7 +12,7 @@ from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurviv
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 
 
-class MichiganCrossover(Crossover):
+class MichiganCrossover(PymooDeepcopyCrossover):
     """Apply the Michigan crossover on the Michigan solutions of one Pittsburgh solution
 
     Attributes:
@@ -23,7 +24,7 @@ class MichiganCrossover(Crossover):
         _random_gen (numpy.random.Generator): Random generator
     """
 
-    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, random_gen, prob=0.9):
+    def __init__(self, rule_change_rate, training_set, knowledge, max_num_rules, random_gen, prob=1, **kwargs):
         """Constructor
 
         Args:
@@ -34,7 +35,7 @@ class MichiganCrossover(Crossover):
             random_gen (numpy.random.Generator): Random generator
             prob (float): Probability that a crossover occurs
         """
-        super().__init__(1, 1, 1)
+        super().__init__(n_parents=1, n_offsprings=1, random_gen=random_gen, prob=prob, **kwargs)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
         self.__training_set = training_set

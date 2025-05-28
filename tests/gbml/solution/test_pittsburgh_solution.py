@@ -171,7 +171,6 @@ class TestGetErrorRateBasic:
         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent))
 
-
         antecedent_indices = np.array([14, 0, 4, 0], int)
         class_label = ClassLabelBasic(2)
         rule_weight = RuleWeightBasic(0.5)
@@ -481,7 +480,6 @@ class TestGetErroredPatternsBasic:
         consequent = ConsequentBasic(class_label, rule_weight)
         sol2 = create_michigan_sol(dataset, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent))
-
 
         antecedent_indices = np.array([2, 2, 0, 0], int)
         class_label = ClassLabelBasic(2)

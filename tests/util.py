@@ -82,7 +82,6 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
         consequent_factory = LearningBasic(training_data_set)
         rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
 
-
     solution = MichiganSolution(random_gen,
                                 2,
                                 0,

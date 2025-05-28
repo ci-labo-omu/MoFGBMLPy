@@ -3,6 +3,7 @@ import os
 import time
 from collections import OrderedDict
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from tqdm import tqdm
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -229,7 +230,12 @@ def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangl
         with ProcessPoolExecutor() as executor:
             futures = [executor.submit(task, *run_args) for run_args in runs_args]
 
-            for future in as_completed(futures):
+            for future in tqdm(
+                as_completed(futures),
+                total=len(futures),
+                desc="Running cross-validation experiments",
+                unit=" experiment",
+            ):
                 try:
                     future.result()
                 except Exception as e:
@@ -238,7 +244,7 @@ def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangl
     except Exception as main_e:
         print(f"Main setup failed: {main_e}")
 
-    print("Execution time:", time.time() - start)
+    print(f"Execution time: {time.time() - start:.2f}")
 
 
 def get_results(root_folder, algorithm_id, data_name):

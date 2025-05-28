@@ -1,9 +1,10 @@
 import copy
 
+from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.core.crossover import Crossover
 import numpy as np
 
-class HybridGBMLCrossover(Crossover):
+class HybridGBMLCrossover(PymooDeepcopyCrossover):
     """Hybrid crossover between Michigan and Pittsburgh crossovers
 
     Attributes:
@@ -22,7 +23,7 @@ class HybridGBMLCrossover(Crossover):
             pittsburgh_crossover (PittsburghCrossover): Pittsburgh crossover used here depending on the Michigan crossover probability
             prob (float): Probability that a crossover occurs
         """
-        super().__init__(2, 1, prob)
+        super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob)
         self._random_gen = random_gen
         self.__michigan_crossover_probability = michigan_crossover_probability
         self.__michigan_crossover = michigan_crossover

@@ -1,10 +1,11 @@
 import copy
 
+from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.core.crossover import Crossover
 import numpy as np
 
 
-class PittsburghCrossover(Crossover):
+class PittsburghCrossover(PymooDeepcopyCrossover):
     """Pittsburgh crossover
 
     Attributes:
@@ -21,7 +22,7 @@ class PittsburghCrossover(Crossover):
             random_gen (numpy.random.Generator): Random generator
             prob (float): Crossover probability
         """
-        super().__init__(2, 1, prob)
+        super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob)
         self.__min_num_rules = min_num_rules
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
