@@ -190,10 +190,8 @@ class AbstractMain(ABC):
         self.create_and_add_archives(res)
 
         # We use archive since it contains all solutions of all populations without filter
-        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test)
-        self.update_results_data(
-            res.pop.get("X")[:, 0], self._knowledge, self._train, self._test, id_start=len(res.archive)
-        )
+        self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test)
+        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test, id_start=len(res.pop))
 
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
             self.save_results_to_files(res)
@@ -386,6 +384,9 @@ class AbstractMain(ABC):
         res.archive = Population.empty()
         for i in range(len(res.history)):
             res.archive = Population.merge(res.archive, res.history[i].pop)
+
+        # We also add optimal population to archive if not already included
+        res.archive = Population.merge(res.archive, res.opt)
 
         archive_objectives = res.archive.get("F")
         non_dominated_mask = NonDominatedSorting().do(archive_objectives, only_non_dominated_front=True)
