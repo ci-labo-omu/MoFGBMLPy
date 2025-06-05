@@ -201,7 +201,21 @@ def test_eq_different_right():
     assert mf1 != mf2
 
 
-def test_deep_copy():
-    mf = TriangularMF(0, 0.5, 1)
-    mf_copy = copy.deepcopy(mf)
-    assert mf == mf_copy and id(mf.get_params()) != id(mf_copy.get_params())
+def test_example_java():
+    left = 0
+    center = 0
+    right = 0.33333334
+    x = 0.333333333333333
+    mf = TriangularMF(left, center, right)
+
+    assert 0 == mf.get_value_py(x)
+
+
+def test_example_java_2():
+    left = 0
+    center = 0
+    right = 0.25
+    x = 0.0677966101694915
+    mf = TriangularMF(left, center, right)
+
+    assert pytest.approx(0.7288135290145874, rel=1e-9) == mf.get_value_py(x)

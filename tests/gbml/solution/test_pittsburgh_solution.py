@@ -1,10 +1,11 @@
+import pytest
 import xml.etree.cElementTree as xml_tree
 import copy
 from xml.dom import minidom
 
 import numpy as np
 
-
+from pymoo.core.population import Population
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
@@ -13,6 +14,10 @@ from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
+
+from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
+
+from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from util import get_a0_0_iris_train_test, get_a0_0_german_train_test, create_michigan_sol, create_pittsburgh_sol
 from mofgbmlpy.data.dataset import Dataset
 from mofgbmlpy.data.pattern import Pattern
@@ -646,3 +651,39 @@ def test_to_xml_run():
     _ = reparsed.toprettyxml(indent="  ")
 
     assert True
+
+def test_rule_example():
+    train, _ = get_a0_0_iris_train_test()
+    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+
+    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
+    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
+    consequent_factory = LearningBasic(train)
+    rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
+
+    classification = SingleWinnerRuleSelection()
+    objectives = np.array([ErrorRate(train), NumRules()])
+    michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
+
+    problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
+
+    michigan_sol_1 = create_michigan_sol(train, antecedent_indices=np.array([1, 3, 7, 0], dtype=np.int32))
+    michigan_sol_2 = create_michigan_sol(train, antecedent_indices=np.array([6, 0, 10, 0], dtype=np.int32))
+    sol1 = create_pittsburgh_sol(train, classification, np.array([michigan_sol_1, michigan_sol_2], dtype=object))
+
+    pop = Population.new(X=np.array([[sol1]], dtype=object))
+    problem.evaluate(pop.get("X"))
+
+    michigan_sol_1 = pop.get("X")[0][0].get_vars()[0]
+    michigan_sol_2 = pop.get("X")[0][0].get_vars()[1]
+
+    assert michigan_sol_1.get_num_wins() == 44
+    assert michigan_sol_1.get_fitness() == 39
+    assert michigan_sol_1.get_rule_weight_py().get_value() == pytest.approx(0.8186, rel=1e-3)
+    assert michigan_sol_1.get_rule().get_class_label().get_class_label_value() == 1
+
+    assert michigan_sol_2.get_num_wins() == 41
+    assert michigan_sol_2.get_fitness() == 41
+    assert michigan_sol_2.get_rule_weight_py().get_value() == pytest.approx(1.0, rel=1e-3)
+    assert michigan_sol_2.get_rule().get_class_label().get_class_label_value() == 0
+

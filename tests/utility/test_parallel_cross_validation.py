@@ -7,7 +7,7 @@ def test_runs_iris():
     data_name = "iris"
     root_folder = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     results_root_folder = root_folder + os.sep + "results"
-    algorithm_id = f"Basic{data_name}Basic"
+    algorithm_id = f"test_Basic{data_name}Basic"
     dataset_root = root_folder + os.sep + "dataset"
 
     args = [

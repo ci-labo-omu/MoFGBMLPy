@@ -12,6 +12,8 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 
+from util import get_a0_0_iris_train_test
+
 
 def test_none_antecedent():
     with pytest.raises(TypeError):
@@ -251,3 +253,20 @@ def test_deepcopy():
 
     assert (antecedent == antecedent_copy and
             id(antecedent.get_antecedent_indices().base) != id(antecedent_copy.get_antecedent_indices().base))
+
+def test_get_compatible_grade_value_example():
+    train, _ = get_a0_0_iris_train_test()
+    pattern = train.get_pattern(30)
+
+    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
+
+    antecedent = Antecedent(np.array([6, 0, 10, 0], dtype=np.int32), knowledge)
+    membership_values = antecedent.get_membership_values(pattern.get_attributes_vector())
+    compatible_grade_value = antecedent.get_compatible_grade_value_py(pattern.get_attributes_vector())
+
+    assert 0 == membership_values[0]
+    assert 1 == membership_values[1]
+    assert pytest.approx(0.7288135290145874, rel=1e-6) == membership_values[2]
+    assert 1 == membership_values[3]
+
+    assert compatible_grade_value == 0

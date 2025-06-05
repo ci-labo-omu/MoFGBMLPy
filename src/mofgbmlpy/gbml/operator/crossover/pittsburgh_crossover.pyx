@@ -40,8 +40,8 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             int: Number of rules taken from the 1st parent
             int: Number of rules taken from the 2nd parent
         """
-        num_rules_from_p1 = self._random_gen.integers(0, num_rules_p1)
-        num_rules_from_p2 = self._random_gen.integers(0, num_rules_p2)
+        num_rules_from_p1 = self._random_gen.integers(0, num_rules_p1, endpoint=True)
+        num_rules_from_p2 = self._random_gen.integers(0, num_rules_p2, endpoint=True)
         sum_num_rules = num_rules_from_p1 + num_rules_from_p2
 
         if sum_num_rules > self.__max_num_rules:
@@ -69,13 +69,13 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
                         num_rules_from_p2 += 1
                 elif num_rules_from_p1 == num_rules_p1 and num_rules_from_p2 < num_rules_p2:
                     num_rules_from_p2 += 1
-                elif num_rules_from_p2 == num_rules_p2 and num_rules_from_p1 > num_rules_p1:
+                elif num_rules_from_p2 == num_rules_p2 and num_rules_from_p1 < num_rules_p1:
                     num_rules_from_p1 += 1
                 else:
                     raise ValueError("The number of rules in the parents is not enough to create a valid offspring")
 
         if num_rules_from_p1 < 1 and num_rules_from_p2 < 1:
-            raise ValueError("number of rule to be generate is less than 1")
+            raise ValueError("number of rule to be generated is less than 1")
 
         return num_rules_from_p1, num_rules_from_p2
 
