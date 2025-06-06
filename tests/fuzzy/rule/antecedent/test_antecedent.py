@@ -38,7 +38,7 @@ def test_set_antecedent_indices_none():
 
 def test_get_compatible_grade_no_knowledge():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0])
+    vector = np.array([1.0, 2.0], np.float32)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -47,7 +47,7 @@ def test_get_compatible_grade_smaller_num_vars_knowledge():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
-    vector = np.array([1.0, 2.0])
+    vector = np.array([1.0, 2.0], np.float32)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -56,7 +56,7 @@ def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
     fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)
-    vector = np.array([1.0])
+    vector = np.array([1.0], np.float32)
 
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
@@ -94,7 +94,7 @@ def test_get_compatible_grade_invalid_vector_different_sign_1():
                           object)
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
-    vector = np.array([1.0, -2.0])
+    vector = np.array([1.0, -2.0], np.float32)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -104,14 +104,14 @@ def test_get_compatible_grade_invalid_vector_different_sign_2():
                           object)
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1, -2], int), knowledge)
-    vector = np.array([1.0, 2.0])
+    vector = np.array([1.0, 2.0], np.float32)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_value_no_knowledge():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0])
+    vector = np.array([1.0, 2.0], np.float32)
     with pytest.raises(IndexError):
         antecedent.get_compatible_grade_value_py(vector)
 

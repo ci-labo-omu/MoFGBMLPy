@@ -9,8 +9,8 @@ cdef class RectangularFuzzySet(FuzzySet):
         """Constructor
 
         Args:
-            left (double): X coordinate of the leftmost side of the rectangle: membership is equals to 0 before this point and 1 after it
-            right (double): X coordinate of the leftmost side of the rectangle: membership is equals to 0 after this point and 1 before it
+            left (float): X coordinate of the leftmost side of the rectangle: membership is equals to 0 before this point and 1 after it
+            right (float): X coordinate of the leftmost side of the rectangle: membership is equals to 0 after this point and 1 before it
             id (int): ID of the fuzzy set
             term (str): Name of the fuzzy set (e.g. small)
         """

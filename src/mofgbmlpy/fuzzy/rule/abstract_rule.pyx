@@ -55,25 +55,25 @@ cdef class AbstractRule:
         """
         self._consequent = consequent
 
-    cdef double[:] get_membership_values(self, double[:] attribute_vector):
+    cdef float[:] get_membership_values(self, float[:] attribute_vector):
         """Get the membership values array for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (double[]): Input vector whose membership values are computed
+            attribute_vector (float[]): Input vector whose membership values are computed
 
         Returns:
-            double[]: Membership values
+            float[]: Membership values
         """
         return self._antecedent.get_membership_values(attribute_vector)
 
-    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
+    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
         """Get the compatible grade value for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (double[]): Input vector whose compatible grade value is computed
+            attribute_vector (float[]): Input vector whose compatible grade value is computed
 
         Returns:
-            double: Compatible grade value
+            float: Compatible grade value
         """
         return self._antecedent.get_compatible_grade_value(attribute_vector)
 
@@ -118,14 +118,14 @@ cdef class AbstractRule:
         """
         return self.get_antecedent().get_array_size()
 
-    cpdef double get_fitness_value(self, double[:] attribute_vector):
+    cpdef float get_fitness_value(self, float[:] attribute_vector):
         """Get the fitness value of the rule for the given input vector
         
         Args:
-            attribute_vector (double[]): Input vector 
+            attribute_vector (float[]): Input vector 
 
         Returns:
-            double: Fitness value
+            float: Fitness value
         """
         Exception("AbstractRule is abstract")
 

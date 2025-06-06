@@ -51,7 +51,7 @@ def test_invalid_right_center():
         TriangularMF(0, 0.5, 0.2)
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 0.5, 1.1]), np.random.uniform(low=-1, high=2, size=(10,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
 def test_get_value_different_params(x):
     left = -0.5
     center = 0.5
@@ -69,7 +69,7 @@ def test_get_value_different_params(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1]), np.random.uniform(low=-1, high=2, size=(10,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
 def test_get_value_same_left_center(x):
     left = 0
     center = left
@@ -87,7 +87,7 @@ def test_get_value_same_left_center(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1]), np.random.uniform(low=-1, high=2, size=(10,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
 def test_get_value_same_left_center(x):
     left = 0
     center = 1
@@ -105,7 +105,7 @@ def test_get_value_same_left_center(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0]), np.random.uniform(low=-1, high=2, size=(10,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
 def test_get_value_all_equal(x):
     left = 0
     center = left
@@ -119,7 +119,7 @@ def test_get_value_all_equal(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)))
+@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)).astype(np.float32))
 def test_get_param_range_left(x_min, x_max):
     left = 0
     center = 0.5
@@ -135,7 +135,7 @@ def test_get_param_range_left(x_min, x_max):
         assert param_range[0] == x_min and param_range[1] == center
 
 
-@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)))
+@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)).astype(np.float32))
 def test_get_param_range_center(x_min, x_max):
     left = 0
     center = 0.5
@@ -151,7 +151,7 @@ def test_get_param_range_center(x_min, x_max):
         assert param_range[0] == left and param_range[1] == right
 
 
-@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)))
+@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)).astype(np.float32))
 def test_get_param_range_right(x_min, x_max):
     left = 0
     center = 0.5

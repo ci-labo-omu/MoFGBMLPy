@@ -14,18 +14,18 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         __training_set (Dataset): Training dataset from where patterns are extracted to generate antecedent when no pattern is provided
         __knowledge (Knowledge): Knowledge base
         __is_dc_probability (bool): If True then use dc_rate to determine the number of don't care in the generated antecedent otherwise use antecedent_number_do_not_dont_care to compute the dc_rate
-        __dc_rate (double): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
+        __dc_rate (float): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
         __antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
         _random_gen (numpy.random.Generator): Random generator
     """
-    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, double dc_rate, int antecedent_number_do_not_dont_care, random_gen):
+    def __init__(self, Dataset training_set, Knowledge knowledge, bint is_dc_probability, float dc_rate, int antecedent_number_do_not_dont_care, random_gen):
         """Constructor
 
         Args:
             training_set (Dataset): Training dataset from where patterns are extracted to generate antecedent when no pattern is provided
             knowledge (Knowledge): Knowledge base
             is_dc_probability (bool): If True then use dc_rate to determine the number of don't care in the generated antecedent otherwise use antecedent_number_do_not_dont_care to compute the dc_rate
-            dc_rate (double): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
+            dc_rate (float): Between 0 and 1, gives the ratio of don't care compared to not don't care fuzzy sets in the antecedent
             antecedent_number_do_not_dont_care (int): Number of fuzzy sets that should not be don't care
             random_gen (numpy.random.Generator): Random generator
         """
@@ -81,7 +81,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         if pattern is None:
             raise TypeError("The pattern is none")
 
-        cdef double[:] attribute_array = pattern.get_attributes_vector()
+        cdef float[:] attribute_array = pattern.get_attributes_vector()
         cdef int dim_i
         cdef int h
         cdef int dimension = self.__knowledge.get_num_dim()
@@ -109,7 +109,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
                 antecedent_indices[dim_i] = 0  # don't care
                 continue
 
-            mb_values_inc_sums = np.zeros(num_fuzzy_sets_not_dc, dtype=np.float64)
+            mb_values_inc_sums = np.zeros(num_fuzzy_sets_not_dc, dtype=np.float32)
             sum_mb_values = 0
             for h in range(num_fuzzy_sets_not_dc):
                 sum_mb_values += self.__knowledge.get_membership_value(attribute_array[dim_i], dim_i, h+1)
@@ -318,7 +318,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
         """Get the dc_rate
 
         Returns:
-            double: dc_rate
+            float: dc_rate
         """
         return self.__dc_rate
 

@@ -94,7 +94,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         # Note: X contains Pittsburgh solutions
         n_matings, n_var = X.shape
@@ -192,6 +192,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         return self._do(problem, X, **kwargs)

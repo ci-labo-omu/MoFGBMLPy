@@ -38,11 +38,11 @@ class MichiganProblem(Problem):
 
         Args:
             X (Population): Population evaluated
-            out (double[,]): Objective function values for each solution
+            out (float[,]): Objective function values for each solution
             *args (tuple): Other arguments for Pymoo
             **kwargs (dict): Other arguments for Pymoo
         """
-        cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)
+        cdef cnp.ndarray[float, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float32)
         cdef int i
 
         for i in range(len(self.__objectives)):

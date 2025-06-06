@@ -33,14 +33,14 @@ cdef class FuzzySet:
         """
         return f"Fuzzy set {self.__term}"
 
-    cdef double get_membership_value(self, double x):
+    cdef float get_membership_value(self, float x):
         """Get the membership value of a value for this fuzzy set
         
         Args:
-            x (double): Value whose membership value is calculated
+            x (float): Value whose membership value is calculated
 
         Returns:
-            double: Membership value
+            float: Membership value
         """
         return self.__function.get_value(x)
 
@@ -146,12 +146,12 @@ cdef class FuzzySet:
         memo[id(self)] = new_object
         return new_object
 
-    cpdef double get_support(self, double x_min=0, double x_max=0):
+    cpdef float get_support(self, float x_min=0, float x_max=0):
         """Get the support value associated to this function: area covered by this function in the space "domain x [0, 1]"
 
         Args:
-            x_min (double): Min value of the domain for the x axis
-            x_max (double): Max value of the domain for the x axis
+            x_min (float): Min value of the domain for the x axis
+            x_max (float): Max value of the domain for the x axis
 
         Returns:
             Support value

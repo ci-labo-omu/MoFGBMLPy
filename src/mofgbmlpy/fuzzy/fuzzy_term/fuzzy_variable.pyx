@@ -12,7 +12,7 @@ cdef class FuzzyVariable:
     Attributes:
         __fuzzy_sets (FuzzySet[]): List of the fuzzy sets of this variable
         __name (str): Name of the fuzzy variable (e.g. Petal length)
-        __domain (double[]): Domain of the values in the variable (uses only for plotting purposes for now)
+        __domain (float[]): Domain of the values in the variable (uses only for plotting purposes for now)
     """
     def __init__(self, FuzzySet[:] fuzzy_sets, str name="unnamed_var", domain=None):
         """Constructor
@@ -20,7 +20,7 @@ cdef class FuzzyVariable:
         Args:
             fuzzy_sets (FuzzySet[]): List of the fuzzy sets of this variable
             name (str): Name of the fuzzy variable (e.g. Petal length)
-            domain (double[]): List of the fuzzy sets of this variable
+            domain (float[]): List of the fuzzy sets of this variable
 
         Raises:
             Exception: None name or empty or None fuzzy sets array
@@ -36,10 +36,10 @@ cdef class FuzzyVariable:
         self.__name = name
 
         if domain is None:
-            self.__domain = np.array([0.0, 1.0])
+            self.__domain = np.array([0.0, 1.0], dtype=np.float32)
         else:
             if len(domain) != 2:
-                raise ValueError("domain must be an array of double size 2 (min, max)")
+                raise ValueError("domain must be an array of float size 2 (min, max)")
             elif domain[0] > domain[1]:
                 raise ValueError("domain's first value must be lesser than the second one")
             self.__domain = domain
@@ -52,15 +52,15 @@ cdef class FuzzyVariable:
         """
         return self.__name
 
-    cdef double get_membership_value(self, int fuzzy_set_index, double x):
+    cdef float get_membership_value(self, int fuzzy_set_index, float x):
         """Get the membership value for the value x with the given fuzzy set (Accessible only from Cython code)
         
         Args:
             fuzzy_set_index (int): Index of the fuzzy set used to compute the membership value 
-            x (double): Value whose membership value is computed
+            x (float): Value whose membership value is computed
 
         Returns:
-            double: Membership value
+            float: Membership value
         
         Raises:
             Exception: The index is out of range
@@ -70,15 +70,15 @@ cdef class FuzzyVariable:
         cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
         return fuzzy_set.get_membership_value(x)
 
-    def get_membership_value_py(self, int fuzzy_set_index, double x):
+    def get_membership_value_py(self, int fuzzy_set_index, float x):
         """Get the membership value for the value x with the given fuzzy set
 
         Args:
             fuzzy_set_index (int): Index of the fuzzy set used to compute the membership value
-            x (double): Value whose membership value is computed
+            x (float): Value whose membership value is computed
 
         Returns:
-            double: Membership value
+            float: Membership value
         """
         self.get_membership_value(fuzzy_set_index, x)
 
@@ -106,14 +106,14 @@ cdef class FuzzyVariable:
             raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
         return self.__fuzzy_sets[fuzzy_set_index]
 
-    cpdef double get_support(self, int fuzzy_set_index):
+    cpdef float get_support(self, int fuzzy_set_index):
         """Get the support value of a fuzzy set. This value corresponds to the area covered by the membership function in the search space (e.g. for don't care in [0,1] it's 1)
         
         Args:
             fuzzy_set_index (int): Index of the fuzzy set whose support value is computed 
 
         Returns:
-            double: Support value
+            float: Support value
         Raises:
             Exception: The index is out of range
         """
@@ -135,9 +135,9 @@ cdef class FuzzyVariable:
         """Get all the support values (one per fuzzy set) in an array
         
         Returns:
-            double[]: Array of support values
+            float[]: Array of support values
         """
-        cdef double[:] support_values = np.empty(len(self.__fuzzy_sets))
+        cdef float[:] support_values = np.empty(len(self.__fuzzy_sets))
         cdef int i
         cdef FuzzySet fuzzy_set
 
@@ -150,7 +150,7 @@ cdef class FuzzyVariable:
         """Get the domain of this variable (e.g [0,1])
         
         Returns:
-            double[]: Domain of this variable (min and max values)
+            float[]: Domain of this variable (min and max values)
         """
         return self.__domain
 
@@ -165,7 +165,7 @@ cdef class FuzzyVariable:
         """
         cdef int i
         cdef FuzzySet fuzzy_set
-        cdef cnp.ndarray[double, ndim=2] points
+        cdef cnp.ndarray[float, ndim=2] points
 
         ax.set_title(self.get_name())
         for i in range(self.get_length()):

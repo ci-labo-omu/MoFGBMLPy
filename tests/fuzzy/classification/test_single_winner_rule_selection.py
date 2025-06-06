@@ -27,7 +27,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_none_solutions_list(self):
         classification = SingleWinnerRuleSelection()
         solutions = None
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelBasic(0))
 
         with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
@@ -35,7 +35,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_empty_solutions_list(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.empty(0, object)
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelBasic(0))
 
         with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
@@ -43,7 +43,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_solutions_list_none_items(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([None], object)
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelBasic(0))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelBasic(0))
 
         with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
@@ -52,7 +52,7 @@ class TestSingleWinnerRuleSelectionBasic:
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
         solutions[0].get_rule().get_consequent().set_rejected()
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelBasic(0))
 
         with pytest.raises(RejectedClassLabelException):
@@ -69,7 +69,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_empty_pattern_attributes(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
-        pattern = Pattern(0, np.empty(0), ClassLabelBasic(0))
+        pattern = Pattern(0, np.empty(0, dtype=np.float32), ClassLabelBasic(0))
 
         with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
@@ -77,7 +77,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_incompatible_dimensions_1(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)], dtype=np.float32),
                           ClassLabelBasic(0))
 
         with pytest.raises(ValueError):
@@ -86,7 +86,7 @@ class TestSingleWinnerRuleSelectionBasic:
     def test_classify_incompatible_dimensions_2(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set)], object)
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)], dtype=np.float32),
                           ClassLabelBasic(0))
 
         with pytest.raises(ValueError):
@@ -122,7 +122,7 @@ class TestSingleWinnerRuleSelectionBasic:
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         solutions = np.array([sol1, sol2, sol3], object)
-        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelBasic(0))
 
         classification = SingleWinnerRuleSelection()
@@ -146,7 +146,7 @@ class TestSingleWinnerRuleSelectionBasic:
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices), consequent=copy.deepcopy(consequent))
 
         solutions = np.array([sol1, sol2, sol3], object)
-        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelBasic(0))
 
         classification = SingleWinnerRuleSelection()
@@ -165,7 +165,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_none_solutions_list(self):
         classification = SingleWinnerRuleSelection()
         solutions = None
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
@@ -173,7 +173,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_empty_solutions_list(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.empty(0, object)
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
@@ -181,7 +181,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_solutions_list_none_items(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([None], object)
-        pattern = Pattern(0, np.array([0.0, 1.0, 2.0]), ClassLabelMulti(np.array([0, 1])))
+        pattern = Pattern(0, np.array([0.0, 1.0, 2.0], dtype=np.float32), ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(TypeError):
             classification.classify(solutions, pattern)
@@ -190,7 +190,7 @@ class TestSingleWinnerRuleSelectionMulti:
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
         solutions[0].get_rule().get_consequent().set_rejected()
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(RejectedClassLabelException):
@@ -207,7 +207,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_empty_pattern_attributes(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
-        pattern = Pattern(0, np.empty(0), ClassLabelMulti(np.array([0, 1])))
+        pattern = Pattern(0, np.empty(0, dtype=np.float32), ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(ValueError):
             classification.classify(solutions, pattern)
@@ -215,7 +215,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_incompatible_dimensions_1(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() + 1)], dtype=np.float32),
                           ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(ValueError):
@@ -224,7 +224,7 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_incompatible_dimensions_2(self):
         classification = SingleWinnerRuleSelection()
         solutions = np.array([create_michigan_sol(self.training_data_set, is_multi_label=True)], object)
-        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)]),
+        pattern = Pattern(0, np.array([float(i) for i in range(self.training_data_set.get_num_dim() - 1)], dtype=np.float32),
                           ClassLabelMulti(np.array([0, 1])))
 
         with pytest.raises(ValueError):
@@ -244,25 +244,25 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_same_fitness_values_different_class(self):
         antecedent_indices = np.array([0 if i != 1 else 1 for i in range(self.training_data_set.get_num_dim())], int)
         class_label = ClassLabelMulti(np.array([0, 1]))
-        rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([1, 1]))
-        rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([0, 0]))
-        rule_weight = RuleWeightMulti(np.array([0.5, 0.5]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         solutions = np.array([sol1, sol2, sol3], object)
-        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelMulti(np.array([0, 1])))
 
         classification = SingleWinnerRuleSelection()
@@ -271,25 +271,25 @@ class TestSingleWinnerRuleSelectionMulti:
     def test_classify_same_fitness_values_same_class(self):
         antecedent_indices = np.array([0 if i != 1 else 1 for i in range(self.training_data_set.get_num_dim())], int)
         class_label = ClassLabelMulti(np.array([0, 1]))
-        rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol1 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([0, 1]))
-        rule_weight = RuleWeightMulti(np.array([0.7, 0.7]))
+        rule_weight = RuleWeightMulti(np.array([0.7, 0.7], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol2 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         class_label = ClassLabelMulti(np.array([1, 1]))
-        rule_weight = RuleWeightMulti(np.array([0.5, 0.5]))
+        rule_weight = RuleWeightMulti(np.array([0.5, 0.5], dtype=np.float32))
         consequent = ConsequentMulti(class_label, rule_weight)
         sol3 = create_michigan_sol(self.training_data_set, antecedent_indices=np.copy(antecedent_indices),
                                    consequent=copy.deepcopy(consequent), is_multi_label=True)
 
         solutions = np.array([sol1, sol2, sol3], object)
-        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())]),
+        pattern = Pattern(0, np.array([i / 10 for i in range(self.training_data_set.get_num_dim())], dtype=np.float32),
                           ClassLabelMulti(np.array([0, 1])))
 
         classification = SingleWinnerRuleSelection()

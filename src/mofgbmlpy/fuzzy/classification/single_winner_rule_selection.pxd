@@ -10,5 +10,5 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
     # cdef LRUCache __cache
     # cdef int __cache_size
 
-    # cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern)
+    # cdef float get_fitness_value(self, MichiganSolution solution, Pattern pattern)
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern)

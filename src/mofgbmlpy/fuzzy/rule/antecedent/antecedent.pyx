@@ -60,18 +60,18 @@ cdef class Antecedent:
             raise TypeError("new_indices can't be None")
         self.__antecedent_indices = new_indices
 
-    cpdef double[:] get_membership_values(self, double[:] attribute_vector):
+    cpdef float[:] get_membership_values(self, float[:] attribute_vector):
         """Get the membership values of the given attribute vector with this antecedent for each dimension
         
         Args:
-            attribute_vector (double[]): Attribute vector whose membership values are computed 
+            attribute_vector (float[]): Attribute vector whose membership values are computed 
 
         Returns:
-            double[]: Membership value for each dimension
+            float[]: Membership value for each dimension
         """
         cdef int i
         cdef int size = self.get_array_size()
-        cdef double[:] grade = np.zeros(size, dtype=np.float64)
+        cdef float[:] grade = np.zeros(size, dtype=np.float32)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
         if attribute_vector is None :
@@ -98,19 +98,19 @@ cdef class Antecedent:
 
         return grade
 
-    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
+    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent. Can only be accesses from Cython code
 
         Args:
-            attribute_vector (double[]): Attribute vector whose compatibility is computed 
+            attribute_vector (float[]): Attribute vector whose compatibility is computed 
 
         Returns:
-            double[]: Compatibility grade
+            float[]: Compatibility grade
         """
         cdef int i
         cdef int size = self.get_array_size()
-        cdef double grade_value = 1
-        cdef double val
+        cdef float grade_value = 1
+        cdef float val
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
         if size != attribute_vector.shape[0]:
@@ -137,14 +137,14 @@ cdef class Antecedent:
 
         return grade_value
 
-    def get_compatible_grade_value_py(self, double[:] attribute_vector):
+    def get_compatible_grade_value_py(self, float[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent
 
         Args:
-            attribute_vector (double[]): Attribute vector whose compatibility is computed
+            attribute_vector (float[]): Attribute vector whose compatibility is computed
 
         Returns:
-            double[]: Compatibility grade
+            float[]: Compatibility grade
         """
         return self.get_compatible_grade_value(attribute_vector)
 
@@ -265,7 +265,7 @@ cdef class Antecedent:
             matplotlib.axes.Axes: The axes object where we drew
         """
         cdef FuzzySet fuzzy_set
-        cdef cnp.ndarray[double, ndim=2] points
+        cdef cnp.ndarray[float, ndim=2] points
 
         fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
 

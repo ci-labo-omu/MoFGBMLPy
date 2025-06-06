@@ -8,9 +8,9 @@ cdef class TriangularFuzzySet(FuzzySet):
         """Constructor
 
         Args:
-            left (double): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 before it
-            center (double): X coordinate of the vertex in the center of the triangle: membership is equals to 1 at this point
-            right (double): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 after it
+            left (float): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 before it
+            center (float): X coordinate of the vertex in the center of the triangle: membership is equals to 1 at this point
+            right (float): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 after it
             id (int): ID of the fuzzy set
             term (str): Name of the fuzzy set (e.g. small)
         """

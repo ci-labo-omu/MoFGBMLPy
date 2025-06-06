@@ -9,13 +9,13 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
     """Rule weight for multilabel classification
 
     Attributes:
-        __rule_weight (double[]): Value of the rule weight
+        __rule_weight (float[]): Value of the rule weight
     """
-    def __init__(self, double[:] rule_weight):
+    def __init__(self, float[:] rule_weight):
         """Constructor
 
         Args:
-            rule_weight (double[]): Value of the rule weight
+            rule_weight (float[]): Value of the rule weight
         """
         if rule_weight is None:
             raise TypeError("Rule weight can't be none")
@@ -32,7 +32,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         Returns:
             object: Deep copy of this object
         """
-        cdef double[:] values_copy = np.empty(self.get_length())
+        cdef float[:] values_copy = np.empty(self.get_length(), dtype=np.float32)
         cdef int i
 
         for i in range(values_copy.shape[0]):
@@ -67,7 +67,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
             index (int): Index of the class whose rule weight value is fetched 
 
         Returns:
-            double: Rule weight value
+            float: Rule weight value
         """
         return self.get_value()[index]
 
@@ -83,7 +83,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         """Get the rule weight value
         
         Returns:
-            double[]: Rule weight value
+            float[]: Rule weight value
         """
         return self.__rule_weight
 
@@ -91,7 +91,7 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
         """Set the value of the rule weight
 
         Args:
-            rule_weight (double[]): New rule weight value
+            rule_weight (float[]): New rule weight value
         """
         self.__rule_weight = rule_weight
 
@@ -125,24 +125,24 @@ cdef class RuleWeightMulti(AbstractRuleWeight):
 
         return root
 
-    cdef double get_mean(self):
+    cdef float get_mean(self):
         """Get the mean of all the rule weight values. Only callable from Cython code
         
         Returns:
-            double: Mean value
+            float: Mean value
         """
         cdef int i
-        cdef double sum = 0
+        cdef float sum = 0
         cdef int arr_length = self.__rule_weight.shape[0]
 
         for i in range(arr_length):
             sum += self.__rule_weight[i]
         return sum/arr_length
 
-    cpdef double get_mean_py(self):
+    cpdef float get_mean_py(self):
         """Get the mean of all the rule weight values
 
         Returns:
-            double: Mean value
+            float: Mean value
         """
         return self.get_mean()

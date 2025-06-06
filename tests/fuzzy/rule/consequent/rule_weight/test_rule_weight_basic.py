@@ -28,11 +28,11 @@ def test_set_value_rule_weight_valid():
     rw = RuleWeightBasic(0)
     rw.set_value(0.1)
 
-    assert rw.get_value() == 0.1
+    assert rw.get_value() == np.float32(0.1)
 
 
 def test_eq_different_types():
-    assert RuleWeightBasic(0.0) != RuleWeightMulti(np.array([0.0]))
+    assert RuleWeightBasic(0.0) != RuleWeightMulti(np.array([0.0], np.float32))
 
 
 def test_eq_different_content():

@@ -111,8 +111,8 @@ def test_eq_different_domain():
     fuzzy_sets1 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
     fuzzy_sets2 = np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")])
 
-    var = FuzzyVariable(fuzzy_sets1, domain=np.array([0.0, 1.0]))
-    var2 = FuzzyVariable(fuzzy_sets2, domain=np.array([0.1, 0.5]))
+    var = FuzzyVariable(fuzzy_sets1, domain=np.array([0.0, 1.0], np.float32))
+    var2 = FuzzyVariable(fuzzy_sets2, domain=np.array([0.1, 0.5], np.float32))
     assert var != var2
 
 

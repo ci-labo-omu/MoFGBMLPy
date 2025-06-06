@@ -70,23 +70,23 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
             num_fuzzy_sets (int): Number of fuzzy sets in the partition (DC excluded)
 
         Returns:
-            double[,]: Parameters of the membership function of each fuzzy set in the partition
+            float[,]: Parameters of the membership function of each fuzzy set in the partition
 
         Raises:
             Invalid number of fuzzy sets in the partition (>1 expected)
         """
         cdef int i
-        cdef double left
-        cdef double center
-        cdef double right
-        cdef cnp.ndarray[double, ndim=2] params
-        cdef double[:] partition
+        cdef float left
+        cdef float center
+        cdef float right
+        cdef cnp.ndarray[float, ndim=2] params
+        cdef float[:] partition
 
         if num_fuzzy_sets <= 1:
             raise ValueError("num_fuzzy_sets can't be lesser or equal to 1")
 
-        params = np.zeros((num_fuzzy_sets, 3))
-        partition = np.zeros(num_fuzzy_sets+1)
+        params = np.zeros((num_fuzzy_sets, 3), dtype=np.float32)
+        partition = np.zeros(num_fuzzy_sets+1, dtype=np.float32)
 
         # e.g.: K = 2: 0, 1/2, 1
         # e.g.: K = 3: 0, 1/4, 3/4, 1
@@ -99,14 +99,14 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
 
         for i in range(num_fuzzy_sets):
             if i == 0:  # 1st partition
-                params[i] = np.array([0, 0, 2*partition[1]])
+                params[i] = np.array([0, 0, 2*partition[1]], dtype=np.float32)
             elif i == partition.shape[0]-2:  # last partition
-                params[i] = np.array([2*partition[i]-1, 1, 1])
+                params[i] = np.array([2*partition[i]-1, 1, 1], dtype=np.float32)
             elif i>0 and i<partition.shape[0]-2:  # If the index is valid
                 left = partition[i]*3/2 - partition[i+1]/2
                 center = (partition[i] + partition[i + 1]) / 2
                 right = partition[i+1]*3/2 - partition[i]/2
-                params[i] = np.array([left, center, right])
+                params[i] = np.array([left, center, right], dtype=np.float32)
 
         return params
 

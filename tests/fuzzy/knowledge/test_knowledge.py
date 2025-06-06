@@ -295,7 +295,7 @@ def test_plot_fuzzy_variables_no_var():
 
 def test_plot_fuzzy_variables_2_vars_1_set():
     var1 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object), name="x0")
-    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0.1, 0.5, 1.1, 1, "small")], object), domain=np.array([0.0, 1.1]), name="x1")
+    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0.1, 0.5, 1.1, 1, "small")], object), domain=np.array([0.0, 1.1], np.float32), name="x1")
 
     knowledge = Knowledge(np.array([var1, var2], object))
     knowledge.plot_fuzzy_variables()

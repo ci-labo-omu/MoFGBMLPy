@@ -10,14 +10,14 @@ cdef class DontCareMF(AbstractMF):
         """Constructor """
         super().__init__(None)
 
-    cdef double get_value(self, double _):
+    cdef float get_value(self, float _):
         """Get membership value (accessible only from Cython code)
         
         Args:
-            _ (double): Value whose membership value is calculated
+            _ (float): Value whose membership value is calculated
 
         Returns:
-            double: Membership value
+            float: Membership value
         """
         return 1.0
 
@@ -29,27 +29,27 @@ cdef class DontCareMF(AbstractMF):
         """
         return "<Dont Care MF>"
 
-    cpdef cnp.ndarray[double, ndim=1] get_param_range(self, int index, double x_min=0, double x_max=1):
+    cpdef cnp.ndarray[float, ndim=1] get_param_range(self, int index, float x_min=0, float x_max=1):
         """Get the range of acceptable values a given parameter as a numpy array of two values
 
         Args:
             index (int): Index of the parameter whose range is got
-            x_min (double): Min value of the domain for the x axis (e.g. if index is 0 for the triangular set then we get [xmin, center]
-            x_max (double): Max value of the domain for the x axis (e.g. if index is 2 for the triangular set then we get [center, max]
+            x_min (float): Min value of the domain for the x axis (e.g. if index is 0 for the triangular set then we get [xmin, center]
+            x_max (float): Max value of the domain for the x axis (e.g. if index is 2 for the triangular set then we get [center, max]
 
         Returns:
-            double[]: Range of possible values
+            float[]: Range of possible values
         """
-        return np.empty(0, dtype=np.float64)
+        return np.empty(0, dtype=np.float32)
 
-    cpdef bint is_param_value_valid(self, int index, double value, double x_min=0, double x_max=1):
+    cpdef bint is_param_value_valid(self, int index, float value, float x_min=0, float x_max=1):
         """Check if the provided value for the parameter at the given index is valid
 
         Args:
             index (int): Index of the parameter
-            value (double): Value that is checked for the parameter
-            x_min (double): Min value of the domain for the x axis
-            x_max (double): Max value of the domain for the x axis
+            value (float): Value that is checked for the parameter
+            x_min (float): Min value of the domain for the x axis
+            x_max (float): Max value of the domain for the x axis
 
         Returns:
             bool: True if it is valid and false otherwise
@@ -69,23 +69,23 @@ cdef class DontCareMF(AbstractMF):
         memo[id(self)] = new_object
         return new_object
 
-    cpdef cnp.ndarray[double, ndim=2] get_plot_points(self, double x_min=0, double x_max=1):
+    cpdef cnp.ndarray[float, ndim=2] get_plot_points(self, float x_min=0, float x_max=1):
         """Get the plot points coordinates
 
        Args:
-           x_min (double): Min value of the domain for the x axis
-           x_max (double): Max value of the domain for the x axis
+           x_min (float): Min value of the domain for the x axis
+           x_max (float): Max value of the domain for the x axis
        Returns:
            Points coordinates that define this function shape
        """
-        return np.array([[x_min,1], [x_max,1]], np.float64)
+        return np.array([[x_min,1], [x_max,1]], np.float32)
 
-    cpdef double get_support(self, double x_min=0, double x_max=0):
+    cpdef float get_support(self, float x_min=0, float x_max=0):
         """Get the support value associated to this function: area covered by this function in the space "domain x [0, 1]"
 
         Args:
-            x_min (double): Min value of the domain for the x axis
-            x_max (double): Max value of the domain for the x axis
+            x_min (float): Min value of the domain for the x axis
+            x_max (float): Max value of the domain for the x axis
 
         Returns:
             Support value

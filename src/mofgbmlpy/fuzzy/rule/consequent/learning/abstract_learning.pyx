@@ -22,13 +22,13 @@ cdef class AbstractLearning:
             raise TypeError("The training dataset cannot be None")
         self._train_ds = training_dataset
 
-    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, float reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
         
         Args:
             antecedent (Antecedent): Antecedent whose consequent part is learnt
             dataset (Dataset): Training dataset
-            reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
+            reject_threshold (float): Threshold for the rule weight under which the rule is considered rejected
 
         Returns:
             AbstractConsequent: Created consequent

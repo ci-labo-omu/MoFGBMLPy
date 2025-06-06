@@ -21,20 +21,22 @@ def test_invalid_left_right():
         RectangularMF(2, 1)
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 1.1]), np.random.uniform(low=-1, high=2, size=(10,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
 def test_get_value_different_params(x):
-    left = -0.5
-    right = 1.1
+    left = np.float32(-0.5)
+    right = np.float32(1.1)
     mf = RectangularMF(left, right)
     precision = 1e-6
+    print(x, x > right)
 
     if x < left or x > right:
-        assert abs(mf.get_value_py(x)) < precision
+        assert mf.get_value_py(x) == pytest.approx(0, rel=precision)
     else:
-        assert abs(mf.get_value_py(x) - 1) < precision
+        assert mf.get_value_py(x) == pytest.approx(1, rel=precision)
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0]), np.random.uniform(low=-1, high=1, size=(5,))]))
+@pytest.mark.parametrize("x", np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=1, size=(5,)).astype(np.float32)]))
 def test_get_value_all_equal(x):
+    # print dtype of x
     left = 0
     right = 0
     mf = RectangularMF(left, right)
@@ -46,7 +48,7 @@ def test_get_value_all_equal(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)))
+@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)).astype(np.float32))
 def test_get_param_range_left(x_min, x_max):
     left = 0
     right = 1
@@ -61,7 +63,7 @@ def test_get_param_range_left(x_min, x_max):
         assert param_range[0] == x_min and param_range[1] == right
 
 
-@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)))
+@pytest.mark.parametrize(("x_min", "x_max"), np.random.uniform(low=-1, high=2, size=(5, 2)).astype(np.float32))
 def test_get_param_range_right(x_min, x_max):
     left = 0
     right = 1

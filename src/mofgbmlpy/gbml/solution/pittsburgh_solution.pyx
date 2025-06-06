@@ -69,13 +69,13 @@ cdef class PittsburghSolution(AbstractSolution):
         for var in self._vars:
             var.learning(dataset)
 
-    cpdef double get_average_rule_weight(self):
+    cpdef float get_average_rule_weight(self):
         """Get the average rule weight
         
         Returns:
-            double: Average rule weight
+            float: Average rule weight
         """
-        cdef double total_rule_weight = 0
+        cdef float total_rule_weight = 0
         cdef int i
         cdef MichiganSolution var
 
@@ -106,7 +106,7 @@ cdef class PittsburghSolution(AbstractSolution):
                                           do_init_vars=False)
 
         cdef MichiganSolution[:] vars_copy = np.empty(self.get_num_vars(), dtype=object)
-        cdef double[:] objectives_copy = np.empty(self.get_num_objectives())
+        cdef float[:] objectives_copy = np.empty(self.get_num_objectives(), dtype=np.float32)
         cdef int i
         cdef MichiganSolution var
 
@@ -392,14 +392,14 @@ cdef class PittsburghSolution(AbstractSolution):
 
         self._error_rate = num_errors / dataset_size
 
-    cpdef double calc_error_rate(self, Dataset dataset):
+    cpdef float calc_error_rate(self, Dataset dataset):
         """Calculate the error rate of this classifier using the given dataset
 
         Args:
             dataset (Dataset): Dataset used to calculate the error rate
 
         Returns:
-            double: Error rate
+            float: Error rate
         """
         if self._vars is None or dataset is None:
            raise TypeError("Michigan solutions list and dataset can't be None")
@@ -423,11 +423,11 @@ cdef class PittsburghSolution(AbstractSolution):
 
         return num_errors / dataset_size
 
-    cpdef double get_error_rate(self):
+    cpdef float get_error_rate(self):
         """Get the error rate of the last update.
     
         Returns:
-            double: Error rate
+            float: Error rate
         """
         if self._error_rate == -1:
             raise Exception("Error rate was not initialized. Please call update_winners_and_errors first")
@@ -438,7 +438,7 @@ cdef class PittsburghSolution(AbstractSolution):
         """Get the patterns that can't be classified by this classifier in the last update
  
         Returns:
-            double: Errored patterns
+            float: Errored patterns
         """
 
         return self._errored_patterns

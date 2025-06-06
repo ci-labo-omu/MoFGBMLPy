@@ -9,16 +9,16 @@ cdef class Pattern:
 
     Attributes:
         __id (int): ID of the pattern
-        __attributes_vector (double[]): Array of the attributes. The size of this array is the number of dimensions
+        __attributes_vector (float[]): Array of the attributes. The size of this array is the number of dimensions
         __target_class (AbstractClassLabel): Class label associated to this pattern
     """
 
-    def __init__(self, int pattern_id, double[:] attributes_vector, AbstractClassLabel target_class):
+    def __init__(self, int pattern_id, float[:] attributes_vector, AbstractClassLabel target_class):
         """Constructor
 
         Args:
             pattern_id (int): ID of the pattern
-            attributes_vector (double[]): Array of the attributes. The size of this array is the number of dimensions
+            attributes_vector (float[]): Array of the attributes. The size of this array is the number of dimensions
             target_class (AbstractClassLabel): Class label associated to this pattern
         """
         if pattern_id < 0:
@@ -40,22 +40,22 @@ cdef class Pattern:
         """
         return self.__id
 
-    cpdef double[:] get_attributes_vector(self):
+    cpdef float[:] get_attributes_vector(self):
         """Get the attributes vector
         
         Returns:
-            double[]: Array of attributes values
+            float[]: Array of attributes values
         """
         return self.__attributes_vector
 
-    cpdef double get_attribute_value(self, int index):
+    cpdef float get_attribute_value(self, int index):
         """Get the attribute value at the given index
         
         Args:
             index (int): Index of the attribute whose value is returned 
 
         Returns:
-            double: Attribute value
+            float: Attribute value
         """
         if index < 0 or index >= self.__attributes_vector.shape[0]:
             Exception("Index is out of bounds")
@@ -97,7 +97,7 @@ cdef class Pattern:
         Returns:
             object: Deep copy of this object
         """
-        cdef double[:] vector_copy = np.copy(self.__attributes_vector)
+        cdef float[:] vector_copy = np.copy(self.__attributes_vector)
         cdef Pattern new_object = Pattern(self.__id, vector_copy, copy.deepcopy(self.__target_class))
         memo[id(self)] = new_object
         return new_object

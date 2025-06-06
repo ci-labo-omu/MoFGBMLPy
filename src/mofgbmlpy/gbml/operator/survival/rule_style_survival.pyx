@@ -20,7 +20,7 @@ cdef class RuleStyleSurvival:
         """
         arr = sorted(arr, key=lambda x: x.get_fitness(), reverse=True)
 
-        return np.array(arr)
+        return np.array(arr, dtype=np.float32)
 
     @staticmethod
     def replace(pop, offspring, max_num_rules):

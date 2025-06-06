@@ -88,7 +88,7 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         _, n_matings, _ = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
@@ -130,6 +130,6 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         return self._do(problem, X, **kwargs)

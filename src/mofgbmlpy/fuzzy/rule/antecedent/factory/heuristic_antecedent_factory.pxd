@@ -10,7 +10,7 @@ cdef class HeuristicAntecedentFactory(AbstractAntecedentFactory):
     cdef Dataset __training_set
     cdef Knowledge __knowledge
     cdef bint __is_dc_probability
-    cdef double __dc_rate
+    cdef float __dc_rate
     cdef int __antecedent_number_do_not_dont_care
     cdef object _random_gen
 

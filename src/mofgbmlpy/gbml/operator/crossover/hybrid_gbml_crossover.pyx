@@ -38,7 +38,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         _, n_matings, n_var = X.shape
 

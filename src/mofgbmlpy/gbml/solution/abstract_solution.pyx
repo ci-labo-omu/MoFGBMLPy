@@ -17,18 +17,18 @@ cdef class AbstractSolution:
             num_constraints (int): Number of constraints (not used in the current version
         """
         self._attributes = {}
-        self._objectives = np.zeros(num_objectives, dtype=np.float64)
-        # self.__constraints = np.empty(num_constraints, dtype=np.float64)
+        self._objectives = np.zeros(num_objectives, dtype=np.float32)
+        # self.__constraints = np.empty(num_constraints, dtype=np.float32)
 
-    cpdef double[:] get_objectives(self):
+    cpdef float[:] get_objectives(self):
         """Get the array of objectives
         
         Returns:
-            double[]: Objectives
+            float[]: Objectives
         """
         return self._objectives
 
-    # cpdef double[:] get_constraints(self):
+    # cpdef float[:] get_constraints(self):
     #     return self.__constraints
 
     cpdef void set_attribute(self, str key, object value):
@@ -63,23 +63,23 @@ cdef class AbstractSolution:
         """
         return key in self._attributes
 
-    cpdef void set_objective(self, int index, double value):
+    cpdef void set_objective(self, int index, float value):
         """Set the objective at the given index
         
         Args:
             index (int): Index of the objective whose value is changed
-            value (double): New value 
+            value (float): New value 
         """
         self._objectives[index] = value
 
-    cpdef double get_objective(self, int index):
+    cpdef float get_objective(self, int index):
         """Get the objective at the given index
         
         Args:
             index (int): Index where the objective is fetched
 
         Returns:
-            double: Objective value fetched
+            float: Objective value fetched
         """
         return self._objectives[index]
 
@@ -95,10 +95,10 @@ cdef class AbstractSolution:
         """Clear the variables"""
         raise AbstractMethodException()
 
-    # cpdef double get_constraint(self, int index):
+    # cpdef float get_constraint(self, int index):
     #     return self.__constraints[index]
     #
-    # cpdef void set_constraint(self, int index, double value):
+    # cpdef void set_constraint(self, int index, float value):
     #     self.__constraints[index] = value
 
     cpdef int get_num_objectives(self):

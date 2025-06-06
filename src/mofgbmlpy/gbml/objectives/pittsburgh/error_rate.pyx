@@ -17,13 +17,13 @@ cdef class ErrorRate(ObjectiveFunction):
         """
         self.__data_set = data_set
 
-    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
+    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, float[:] out):
         """Run the objective function on the given parameters
 
         Args:
             solutions (PittsburghSolution[]): Solutions that are evaluated
             obj_index (int): Index of the objective in the solution objectives array
-            out (double[]): Output array, it will contain the objective value of all the solutions
+            out (float[]): Output array, it will contain the objective value of all the solutions
         """
         cdef int i = 0
         cdef PittsburghSolution sol

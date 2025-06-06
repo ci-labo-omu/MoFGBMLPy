@@ -28,7 +28,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            double[,,]: Crossover offspring. Shape: (1, n_matings, n_vars)
+            float[,,]: Crossover offspring. Shape: (1, n_matings, n_vars)
         """
         n_parents, n_matings, _ = X.shape
 

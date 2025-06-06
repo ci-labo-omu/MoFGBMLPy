@@ -6,13 +6,13 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
     """Rule weight for single label classification (with one or multi classes, but only one target class at a time)
 
     Attributes:
-        __rule_weight (double): Value of the rule weight
+        __rule_weight (float): Value of the rule weight
     """
-    def __init__(self, double rule_weight):
+    def __init__(self, float rule_weight):
         """Constructor
 
         Args:
-            rule_weight (double): Value of the rule weight
+            rule_weight (float): Value of the rule weight
         """
         self.__rule_weight = rule_weight
 
@@ -43,7 +43,7 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         """Get the rule weight value
         
         Returns:
-            double: Rule weight value
+            float: Rule weight value
         """
         return self.__rule_weight
 
@@ -51,7 +51,7 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         """Set the value of the rule weight
         
         Args:
-            rule_weight (double): New rule weight value
+            rule_weight (float): New rule weight value
         """
         self.__rule_weight = rule_weight
 
