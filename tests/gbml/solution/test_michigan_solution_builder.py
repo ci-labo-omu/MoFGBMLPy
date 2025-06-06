@@ -6,7 +6,9 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
@@ -15,6 +17,7 @@ from util import get_a0_0_iris_train_test
 
 training_data_set, _ = get_a0_0_iris_train_test()
 
+
 def test_deep_copy():
     # Just check if it raises an exception
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
@@ -22,6 +25,5 @@ def test_deep_copy():
 
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
     consequent_factory = LearningBasic(training_data_set)
-    obj = MichiganSolutionBuilder(random_gen, 1, 0,
-                                                        RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    obj = MichiganSolutionBuilder(random_gen, 1, 0, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
     _ = copy.deepcopy(obj)

@@ -7,8 +7,9 @@ from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.dataset import Dataset
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.main.arguments.arguments import Arguments
@@ -39,16 +40,27 @@ def test_calc_confidence_antecedent_iris():
     antecedent = Antecedent(np.array([0, 1, 2, 3]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
     confidence = learner.calc_confidence_py(antecedent)
 
-    assert float_eq(confidence[0], 0.5602049144376764) and float_eq(confidence[1], 0.4397950855623236) and float_eq(confidence[2], 0.0)
+    assert (
+        float_eq(confidence[0], 0.5602049144376764)
+        and float_eq(confidence[1], 0.4397950855623236)
+        and float_eq(confidence[2], 0.0)
+    )
 
 
 def test_calc_confidence_custom_dataset():
-    dataset = Dataset(4, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
-        Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-        Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-    ]))
+    dataset = Dataset(
+        4,
+        4,
+        3,
+        np.array(
+            [
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
+                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
+            ]
+        ),
+    )
 
     learner = LearningBasic(dataset)
     antecedent = Antecedent(np.array([1, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
@@ -61,12 +73,19 @@ def test_calc_confidence_custom_dataset():
 
 
 def test_calc_confidence_all_zero():
-    dataset = Dataset(4, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
-        Pattern(2, np.array([0.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-        Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-    ]))
+    dataset = Dataset(
+        4,
+        4,
+        3,
+        np.array(
+            [
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
+                Pattern(2, np.array([0.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
+            ]
+        ),
+    )
 
     learner = LearningBasic(dataset)
     antecedent = Antecedent(np.array([14, 0, 0, 0]), knowledge=HomoTriangleKnowledgeFactory_2_3_4_5(4).create())
@@ -209,10 +228,17 @@ def test_eq_same():
 
 
 def test_eq_different():
-    dataset = Dataset(2, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
-    ]))
+    dataset = Dataset(
+        2,
+        4,
+        3,
+        np.array(
+            [
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
+            ]
+        ),
+    )
     assert LearningBasic(train) != LearningBasic(dataset)
 
 

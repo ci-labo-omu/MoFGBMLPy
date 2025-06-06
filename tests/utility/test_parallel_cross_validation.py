@@ -11,13 +11,21 @@ def test_runs_iris():
     dataset_root = root_folder + os.sep + "dataset"
 
     args = [
-        "--data-name", data_name,
-        "--rand-seed", "2020",
-        "--terminate-evaluation", "300",
-        "--objectives", "num-rules", "error-rate",
-        "--algorithm-id", algorithm_id,
-        "--root-folder", results_root_folder,
-        "--algorithm", "nsga2"
+        "--data-name",
+        data_name,
+        "--rand-seed",
+        "2020",
+        "--terminate-evaluation",
+        "300",
+        "--objectives",
+        "num-rules",
+        "error-rate",
+        "--algorithm-id",
+        algorithm_id,
+        "--root-folder",
+        results_root_folder,
+        "--algorithm",
+        "nsga2",
     ]
 
     run_cross_validation(args, dataset_root)
@@ -27,6 +35,3 @@ def test_runs_iris():
     _ = [run["exec_time"] for run in results]
 
     show_results_box_plot(results_solutions, "num_rules", title="Cross validation on Iris with NSGA-II")
-
-
-

@@ -7,8 +7,9 @@ import copy
 
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 
@@ -44,7 +45,9 @@ def test_get_compatible_grade_no_knowledge():
 
 
 def test_get_compatible_grade_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
     vector = np.array([1.0, 2.0], np.float32)
@@ -53,7 +56,9 @@ def test_get_compatible_grade_smaller_num_vars_knowledge():
 
 
 def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)
     vector = np.array([1.0], np.float32)
@@ -70,8 +75,9 @@ def test_get_compatible_grade_none_vector():
 
 
 def test_get_compatible_grade_too_small_vector():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0])
@@ -80,8 +86,9 @@ def test_get_compatible_grade_too_small_vector():
 
 
 def test_get_compatible_grade_too_big_vector():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0, 2.0, 1.0])
@@ -90,8 +97,9 @@ def test_get_compatible_grade_too_big_vector():
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_1():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0, -2.0], np.float32)
@@ -100,8 +108,9 @@ def test_get_compatible_grade_invalid_vector_different_sign_1():
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_2():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1, -2], int), knowledge)
     vector = np.array([1.0, 2.0], np.float32)
@@ -117,7 +126,9 @@ def test_get_compatible_grade_value_no_knowledge():
 
 
 def test_get_compatible_grade_value_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
     vector = np.array([1.0, 2.0])
@@ -126,7 +137,9 @@ def test_get_compatible_grade_value_smaller_num_vars_knowledge():
 
 
 def test_get_compatible_grade_value_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
 
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)
@@ -137,8 +150,9 @@ def test_get_compatible_grade_value_smaller_num_fuzzy_sets_knowledge():
 
 
 def test_get_compatible_grade_value_none_vector():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = None
@@ -147,8 +161,9 @@ def test_get_compatible_grade_value_none_vector():
 
 
 def test_get_compatible_grade_value_too_small_vector():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0])
@@ -157,8 +172,9 @@ def test_get_compatible_grade_value_too_small_vector():
 
 
 def test_get_compatible_grade_value_too_big_vector():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0, 2.0, 1.0])
@@ -167,8 +183,9 @@ def test_get_compatible_grade_value_too_big_vector():
 
 
 def test_get_compatible_grade_value_invalid_vector_different_sign_1():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
     vector = np.array([1.0, -2.0])
@@ -177,8 +194,9 @@ def test_get_compatible_grade_value_invalid_vector_different_sign_1():
 
 
 def test_get_compatible_grade_value_invalid_vector_different_sign_2():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1, -2], int), knowledge)
     vector = np.array([1.0, 2.0])
@@ -192,8 +210,9 @@ def test_get_length_empty():
 
 
 def test_get_length():
-    fuzzy_vars = np.array([FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))],
-                          object)
+    fuzzy_vars = np.array(
+        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
+    )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1, -2, 0, 0, 5], int), knowledge)
     assert antecedent.get_length() == 3
@@ -251,8 +270,10 @@ def test_deepcopy():
     antecedent = Antecedent(np.array([0, 2, 1]), knowledge)
     antecedent_copy = copy.deepcopy(antecedent)
 
-    assert (antecedent == antecedent_copy and
-            id(antecedent.get_antecedent_indices().base) != id(antecedent_copy.get_antecedent_indices().base))
+    assert antecedent == antecedent_copy and id(antecedent.get_antecedent_indices().base) != id(
+        antecedent_copy.get_antecedent_indices().base
+    )
+
 
 def test_get_compatible_grade_value_example():
     train, _ = get_a0_0_iris_train_test()

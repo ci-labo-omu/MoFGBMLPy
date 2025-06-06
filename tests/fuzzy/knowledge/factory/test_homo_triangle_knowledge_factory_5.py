@@ -23,4 +23,3 @@ def test_null_num_dims():
 def test_different_num_dims_var_names_size():
     with pytest.raises(Exception):
         HomoTriangleKnowledgeFactory_5(3, np.array(["x0", "x1"]))
-

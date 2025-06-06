@@ -1,8 +1,11 @@
 import numpy as np
-from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import UniformCrossoverSingleOffspringMichigan
+from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import (
+    UniformCrossoverSingleOffspringMichigan,
+)
 
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 
@@ -60,4 +63,6 @@ def test_uniform_crossover_single_offspring_michigan_copy(prob):
 
     if prob == 0:
         for i in range(2):
-            assert np.array_equal(offspring[i].X[0].get_vars(), pop[0].X[0].get_vars()) or np.array_equal(offspring[i].X[0].get_vars(), pop[1].X[1].get_vars())
+            assert np.array_equal(offspring[i].X[0].get_vars(), pop[0].X[0].get_vars()) or np.array_equal(
+                offspring[i].X[0].get_vars(), pop[1].X[1].get_vars()
+            )

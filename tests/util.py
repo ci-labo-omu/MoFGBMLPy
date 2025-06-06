@@ -5,8 +5,9 @@ import os
 import numpy as np
 
 from mofgbmlpy.data.input import Input
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
@@ -29,7 +30,7 @@ def get_datasets(datasets_dir="../dataset"):
             for file in items[2]:
                 path = os.path.join(items[0], file)
                 try:
-                    with open(path, newline='') as f:
+                    with open(path, newline="") as f:
                         reader = csv.reader(f)
                         header = next(reader)
                         if len(header) < 3:
@@ -68,12 +69,7 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
     random_gen = np.random.Generator(np.random.MT19937(seed))
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_data_set.get_num_dim()).create()
-    antecedent_factory = HeuristicAntecedentFactory(training_data_set,
-                                                    knowledge,
-                                                    False,
-                                                    0.7,
-                                                    5,
-                                                    random_gen)
+    antecedent_factory = HeuristicAntecedentFactory(training_data_set, knowledge, False, 0.7, 5, random_gen)
 
     if is_multi_label:
         consequent_factory = LearningMulti(training_data_set)
@@ -82,12 +78,7 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
         consequent_factory = LearningBasic(training_data_set)
         rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
 
-    solution = MichiganSolution(random_gen,
-                                2,
-                                0,
-                                rule_builder)
-
-
+    solution = MichiganSolution(random_gen, 2, 0, rule_builder)
 
     if antecedent_indices is not None:
         solution.set_vars(antecedent_indices)
@@ -98,6 +89,7 @@ def create_michigan_sol(training_data_set, seed=2022, antecedent_indices=None, c
 
     return solution
 
+
 def create_pittsburgh_sol(training_data_set, classification, michigan_sols=None):
     if michigan_sols is None:
         michigan_sols = [create_michigan_sol(training_data_set)]
@@ -105,6 +97,7 @@ def create_pittsburgh_sol(training_data_set, classification, michigan_sols=None)
     sol = PittsburghSolution(len(michigan_sols), 2, 0, classification, do_init_vars=False)
     sol.set_vars(michigan_sols)
     return sol
+
 
 def float_eq(value1, value2, precision=1e-6):
     return abs(value1 - value2) < precision

@@ -65,4 +65,3 @@ def test_eq_false():
     label1 = ClassLabelBasic(0)
     label2 = ClassLabelBasic(1)
     assert label1 != label2
-

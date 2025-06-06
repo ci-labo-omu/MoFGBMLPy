@@ -3,7 +3,9 @@ import pytest
 import xml.etree.cElementTree as xml_tree
 from xml.dom import minidom
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_basic import ConsequentBasic
@@ -22,5 +24,3 @@ def test_to_xml_run():
     _ = reparsed.toprettyxml(indent="  ")
 
     assert True
-
-

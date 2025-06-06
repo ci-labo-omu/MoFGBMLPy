@@ -21,7 +21,12 @@ def test_invalid_left_right():
         RectangularMF(2, 1)
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate(
+        [np.array([-0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+    ),
+)
 def test_get_value_different_params(x):
     left = np.float32(-0.5)
     right = np.float32(1.1)
@@ -34,7 +39,11 @@ def test_get_value_different_params(x):
     else:
         assert mf.get_value_py(x) == pytest.approx(1, rel=precision)
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=1, size=(5,)).astype(np.float32)]))
+
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=1, size=(5,)).astype(np.float32)]),
+)
 def test_get_value_all_equal(x):
     # print dtype of x
     left = 0
@@ -84,7 +93,7 @@ def test_get_plot_points():
 
     mf = RectangularMF(left, right)
     plot_points = mf.get_plot_points()
-    assert np.array_equal(plot_points, np.array([[0,0], [left,1], [right,1], [1,0]], dtype=np.float64))
+    assert np.array_equal(plot_points, np.array([[0, 0], [left, 1], [right, 1], [1, 0]], dtype=np.float64))
 
 
 def test_eq_true_dc():

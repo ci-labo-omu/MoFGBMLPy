@@ -85,16 +85,23 @@ def test_eq_true():
 
 
 def test_eq_different_fuzzy_sets_support_size():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"), TriangularFuzzySet(0, 0.5, 1, 1, "small")]), name="x0")
+    var = FuzzyVariable(
+        fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"), TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
+        name="x0",
+    )
     var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
     assert var != var2
 
 
 def test_eq_different_fuzzy_sets_order():
-    var = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"),
-                                             TriangularFuzzySet(0, 0.5, 1, 1, "small")]), name="x0")
-    var2 = FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 1, "small"),
-                                              TriangularFuzzySet(0, 0.5, 1, 0, "small")]), name="x0")
+    var = FuzzyVariable(
+        fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small"), TriangularFuzzySet(0, 0.5, 1, 1, "small")]),
+        name="x0",
+    )
+    var2 = FuzzyVariable(
+        fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 1, "small"), TriangularFuzzySet(0, 0.5, 1, 0, "small")]),
+        name="x0",
+    )
     assert var != var2
 
 

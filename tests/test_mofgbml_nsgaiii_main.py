@@ -1,7 +1,9 @@
 import time
 
 from mofgbmlpy.data.output import Output
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 
@@ -9,18 +11,28 @@ from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 def test_main_iris():
     # start = time.time()
     args = [
-        "--data-name", "iris",
-        "--algorithm-id", "1",
-        "--experiment-id", "2",
-        "--rand-seed", "2020",
-        "--train-file", "../dataset/iris/a0_0_iris-10tra.dat",
-        "--test-file", "../dataset/iris/a0_0_iris-10tst.dat",
-        "--terminate-evaluation", "3000",
-        "--objectives", "total-rule-length", "error-rate",
+        "--data-name",
+        "iris",
+        "--algorithm-id",
+        "1",
+        "--experiment-id",
+        "2",
+        "--rand-seed",
+        "2020",
+        "--train-file",
+        "../dataset/iris/a0_0_iris-10tra.dat",
+        "--test-file",
+        "../dataset/iris/a0_0_iris-10tst.dat",
+        "--terminate-evaluation",
+        "3000",
+        "--objectives",
+        "total-rule-length",
+        "error-rate",
         # "--crossover-type", "pittsburgh-crossover",
         # "--antecedent-factory", "all-combination-antecedent-factory",
         "--gen-plot",
-        "--algorithm", "nsga3"
+        "--algorithm",
+        "nsga3",
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
@@ -43,22 +55,32 @@ def test_main_multiclass():
     args = [
         # "--data-name", "flags",
         # "--data-name", "richromatic",
-        "--data-name", "german",
-        "--algorithm-id", "1",
-        "--experiment-id", "2",
-        "--rand-seed", "2020",
+        "--data-name",
+        "german",
+        "--algorithm-id",
+        "1",
+        "--experiment-id",
+        "2",
+        "--rand-seed",
+        "2020",
         # "--train-file", "../dataset/flags/a0_0_flags-10tra.dat",
         # "--test-file", "../dataset/flags/a0_0_flags-10tst.dat",
         # "--train-file", "../dataset/richromatic/a0_0_richromatic-10tra.dat",
         # "--test-file", "../dataset/richromatic/a0_0_richromatic-10tst.dat",
-        "--train-file", "../dataset/german/a0_0_german-10tra.dat",
-        "--test-file", "../dataset/german/a0_0_german-10tst.dat",
-        "--terminate-evaluation", "100",
-        "--objectives", "total-rule-length", "error-rate",
+        "--train-file",
+        "../dataset/german/a0_0_german-10tra.dat",
+        "--test-file",
+        "../dataset/german/a0_0_german-10tst.dat",
+        "--terminate-evaluation",
+        "100",
+        "--objectives",
+        "total-rule-length",
+        "error-rate",
         "--is-multi-label",
         "--gen-plot",
         "--verbose",
-        "--algorithm", "nsga3"
+        "--algorithm",
+        "nsga3",
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)

@@ -24,8 +24,8 @@ def test_none_right():
 def test_invalid_center_left():
     with pytest.raises(ValueError):
         TriangularMF(0, -1, 1)
-  
-    
+
+
 def test_invalid_center_right():
     with pytest.raises(ValueError):
         TriangularMF(0, 2, 1)
@@ -39,8 +39,8 @@ def test_invalid_left_center():
 def test_invalid_left_right():
     with pytest.raises(ValueError):
         TriangularMF(2, 0.5, 1)
-    
-    
+
+
 def test_invalid_right_left():
     with pytest.raises(ValueError):
         TriangularMF(0, 0.5, -1)
@@ -51,7 +51,12 @@ def test_invalid_right_center():
         TriangularMF(0, 0.5, 0.2)
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([-0.5, 0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate(
+        [np.array([-0.5, 0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+    ),
+)
 def test_get_value_different_params(x):
     left = -0.5
     center = 0.5
@@ -69,7 +74,12 @@ def test_get_value_different_params(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate(
+        [np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+    ),
+)
 def test_get_value_same_left_center(x):
     left = 0
     center = left
@@ -87,7 +97,12 @@ def test_get_value_same_left_center(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate(
+        [np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+    ),
+)
 def test_get_value_same_left_center(x):
     left = 0
     center = 1
@@ -105,7 +120,10 @@ def test_get_value_same_left_center(x):
         assert abs(mf.get_value_py(x)) < precision
 
 
-@pytest.mark.parametrize("x", np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]))
+@pytest.mark.parametrize(
+    "x",
+    np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]),
+)
 def test_get_value_all_equal(x):
     left = 0
     center = left
@@ -174,7 +192,7 @@ def test_get_plot_points():
 
     mf = TriangularMF(left, center, right)
     plot_points = mf.get_plot_points()
-    assert np.array_equal(plot_points, np.array([[0,0], [left,0], [center,1], [right,0], [1,0]], dtype=np.float64))
+    assert np.array_equal(plot_points, np.array([[0, 0], [left, 0], [center, 1], [right, 0], [1, 0]], dtype=np.float64))
 
 
 def test_eq_true_dc():

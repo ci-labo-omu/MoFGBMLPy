@@ -8,8 +8,9 @@ from mofgbmlpy.data.dataset import Dataset
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
@@ -20,10 +21,21 @@ from util import get_a0_0_iris_train_test
 training_set, _ = get_a0_0_iris_train_test()
 
 
-def create_example(knowledge=None, is_dc_probability=True, dc_rate=0.5, antecedent_number_do_not_dont_care=1, random_gen=np.random.Generator(np.random.MT19937(seed=2022))):
+def create_example(
+    knowledge=None,
+    is_dc_probability=True,
+    dc_rate=0.5,
+    antecedent_number_do_not_dont_care=1,
+    random_gen=np.random.Generator(np.random.MT19937(seed=2022)),
+):
     if knowledge is None:
         knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
-    return HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen), knowledge
+    return (
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        ),
+        knowledge,
+    )
 
 
 def test_none_knowledge():
@@ -34,7 +46,9 @@ def test_none_knowledge():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(TypeError):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_no_fuzzy_vars_knowledge():
@@ -45,7 +59,9 @@ def test_no_fuzzy_vars_knowledge():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(UninitializedKnowledgeException):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_none_training_set():
@@ -55,7 +71,9 @@ def test_none_training_set():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
     with pytest.raises(TypeError):
-        HeuristicAntecedentFactory(None, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            None, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_different_num_dim_training_set():
@@ -66,7 +84,9 @@ def test_different_num_dim_training_set():
     antecedent_number_do_not_dont_care = 1
 
     with pytest.raises(ValueError):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_is_dc_probability_none():
@@ -76,7 +96,9 @@ def test_is_dc_probability_none():
     dc_rate = 0.5
     antecedent_number_do_not_dont_care = 1
 
-    factory = HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+    factory = HeuristicAntecedentFactory(
+        training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+    )
     assert not factory.get_is_dc_probability()
 
 
@@ -90,9 +112,13 @@ def test_dc_rate(value):
 
     if dc_rate < 0 or dc_rate > 1:
         with pytest.raises(ValueError):
-            HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+            HeuristicAntecedentFactory(
+                training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+            )
     else:
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_antecedent_number_do_not_dont_care_negative():
@@ -103,7 +129,9 @@ def test_antecedent_number_do_not_dont_care_negative():
     antecedent_number_do_not_dont_care = -1
 
     with pytest.raises(ValueError):
-        HeuristicAntecedentFactory(training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen)
+        HeuristicAntecedentFactory(
+            training_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
 
 
 def test_calculate_antecedent_part_none_pattern():
@@ -232,17 +260,23 @@ def test_create_antecedent_indices_num_rules_null():
 
 
 def test_create_antecedent_indices_num_rules_greater_than_dataset():
-    custom_training_set = Dataset(4, 4, 3, np.array([
-        Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
-        Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
-        Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-        Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(0)),
-    ]))
+    custom_training_set = Dataset(
+        4,
+        4,
+        3,
+        np.array(
+            [
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
+                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(0)),
+            ]
+        ),
+    )
 
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(4).create()
-    factory = HeuristicAntecedentFactory(custom_training_set, knowledge, False, 0.5,
-                                      5, random_gen)
+    factory = HeuristicAntecedentFactory(custom_training_set, knowledge, False, 0.5, 5, random_gen)
 
     antecedent_indices = factory.create_antecedent_indices_py(5)
 

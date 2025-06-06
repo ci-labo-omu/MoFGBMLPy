@@ -121,4 +121,3 @@ def test_eq_false_same_length():
     label1 = ClassLabelMulti(np.array([0, 1, 2], dtype=int))
     label2 = ClassLabelMulti(np.array([0, 2, 1], dtype=int))
     assert label1 != label2
-

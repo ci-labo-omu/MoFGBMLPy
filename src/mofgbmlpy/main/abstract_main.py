@@ -191,7 +191,9 @@ class AbstractMain(ABC):
 
         # We use archive since it contains all solutions of all populations without filter
         self.update_results_data(res.pop.get("X")[:, 0], self._knowledge, self._train, self._test)
-        self.update_results_data(res.archive.get("X")[:, 0], self._knowledge, self._train, self._test, id_start=len(res.pop))
+        self.update_results_data(
+            res.archive.get("X")[:, 0], self._knowledge, self._train, self._test, id_start=len(res.pop)
+        )
 
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
             self.save_results_to_files(res)

@@ -3,8 +3,9 @@ import copy
 import numpy as np
 
 from mofgbmlpy.data.input import Input
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
-    HomoTriangleKnowledgeFactory_2_3_4_5
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
 from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
@@ -25,7 +26,9 @@ def test_deep_copy():
     antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
     consequent_factory = LearningBasic(train)
 
-    obj = MichiganProblem(np.array([NumRules()]), 0, train, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge))
+    obj = MichiganProblem(
+        np.array([NumRules()]), 0, train, RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
+    )
     _ = copy.deepcopy(obj)
 
     assert True

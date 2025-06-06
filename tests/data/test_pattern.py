@@ -112,6 +112,3 @@ def test_eq_different_vector_different_size():
     p2 = Pattern(0, np.array([0.0, 1.0, 2.0, 1.0], dtype=np.float32), ClassLabelBasic(0))
 
     assert p1 != p2
-
-
-

@@ -77,7 +77,7 @@ def test_eq_different_term():
 
 
 def test_deep_copy():
-    fs = FuzzySet(TriangularMF(1.0,2.0,3.0), 0, DivisionType.EQUAL_DIVISION)
+    fs = FuzzySet(TriangularMF(1.0, 2.0, 3.0), 0, DivisionType.EQUAL_DIVISION)
     fs_copy = copy.deepcopy(fs)
 
     assert fs == fs_copy
