@@ -105,6 +105,14 @@ class PittsburghProblem(Problem):
         """
         self.__michigan_solution_builder.get_rule_builder()
 
+    def get_knowledge(self):
+        """Get the knowledge used by the Michigan solution builder
+
+        Returns:
+            Knowledge: Knowledge used by the Michigan solution builder
+        """
+        return self.__michigan_solution_builder.get_rule_builder().get_knowledge()
+
     def _evaluate(self, X, out, *args, **kwargs):
         """Evaluate the solutions in the population
 

@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import numpy as np
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import (
     UniformCrossoverSingleOffspringMichigan,
@@ -18,7 +21,8 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBu
 from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from pymoo.core.population import Population
 
-from util import get_a0_0_iris_train_test
+from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
+from util import get_a0_0_iris_train_test, crossover_test_helper_init_config, crossover_test_helper_run
 import pytest
 
 
@@ -66,3 +70,34 @@ def test_crossover_copy(prob):
             assert np.array_equal(offspring[i].X[0].get_vars(), pop[0].X[0].get_vars()) or np.array_equal(
                 offspring[i].X[0].get_vars(), pop[1].X[0].get_vars()
             )
+
+
+def test_distribution_java():
+    max_num_rules = 60
+    michigan_crossover_probability = 0.9
+    rule_change_rate = 0.2
+
+    tests_root = Path(__file__).parents[3]
+    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+
+    # get list of folders in java_data
+    data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
+
+    for data_name in data_names:
+        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+        parents = np.array([[0]])
+
+        problem.evaluate(pop.get("X"))
+
+        crossover = MichiganCrossover(
+            rule_change_rate,
+            problem.get_training_set(),
+            problem.get_knowledge(),
+            max_num_rules,
+            random_gen,
+            michigan_crossover_probability
+        )
+
+        crossover_test_helper_run(
+            crossover, problem, pop, parents, data_name, data_name_config_path
+        )

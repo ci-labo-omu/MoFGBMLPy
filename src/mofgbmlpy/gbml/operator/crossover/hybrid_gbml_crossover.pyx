@@ -64,7 +64,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
             Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
 
         if at_least_one_michigan_crossover:
-            Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
+            Y_michigan = self.__michigan_crossover.execute(problem, np.expand_dims(X[0, michigan_crossover_mask], axis=0), **kwargs)
 
         if at_least_one_michigan_crossover and at_least_one_pittsburgh_crossover:
             return np.concatenate((Y_michigan, Y_pittsburgh), axis=1)

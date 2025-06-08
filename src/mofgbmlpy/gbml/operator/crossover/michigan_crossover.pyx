@@ -90,22 +90,22 @@ class MichiganCrossover(PymooDeepcopyCrossover):
 
         Args:
             problem (Problem): Optimization problem (e.g. PittsburghProblem)
-            X (object[,]): Population. The shape is (n_matings, n_var),
+            X (object[,]): Population. The shape is (1, n_matings, n_var),
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
             float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         # Note: X contains Pittsburgh solutions
-        n_matings, n_var = X.shape
+        _, n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
-        num_dim = X[0, 0].get_var(0).get_num_vars()
+        num_dim = X[0, 0, 0].get_var(0).get_num_vars()
 
         for i in range(n_matings):
             generated_solutions = []
 
-            parent = X[i, 0]
+            parent = X[0, i, 0]
 
             # 1. Calculate number of all of generating rules
 
@@ -173,7 +173,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                 generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
 
             # 5. Replacement: Single objective maximization replacement based on the fitness value
-
             generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
 
             offspring = copy.deepcopy(parent)
