@@ -1,5 +1,5 @@
+from scipy.stats import wasserstein_distance
 import json
-from scipy.stats import ttest_ind
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from pymoo.core.population import Population
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
@@ -119,12 +119,35 @@ def create_pittsburgh_sol(training_data_set, classification, michigan_sols=None,
     if michigan_sols is None:
         michigan_sols = [create_michigan_sol(training_data_set)]
 
-    sol = PittsburghSolution(len(michigan_sols), 2, 0, classification, michigan_solution_builder=michigan_solution_builder, do_init_vars=False)
+    sol = PittsburghSolution(
+        len(michigan_sols),
+        2,
+        0,
+        classification,
+        michigan_solution_builder=michigan_solution_builder,
+        do_init_vars=False,
+    )
     sol.set_vars(michigan_sols)
     return sol
 
+
 def float_eq(value1, value2, precision=1e-6):
-    return abs(value1 - value2) < precision
+    return abs(value1 - value2) < precision  # TODO: change to use pytest.approx, or another function instead
+
+
+def compare_distribution(x, y, var_name, relative_tol=0.01):
+    combined = np.concatenate([x, y])
+    data_range = np.max(combined) - np.min(combined)
+
+    if data_range == 0:
+        return
+
+    threshold = relative_tol * data_range
+    w_dist = wasserstein_distance(x, y)
+
+    assert (
+        w_dist < threshold
+    ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
 
 
 def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path):
@@ -157,10 +180,29 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
             num_wins.append(rule.get_num_wins())
             num_classified_patterns.append(rule.get_fitness())
 
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-    fig.suptitle(f"Pittsburgh Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations", fontweight="bold")
+    # fix imprecision issues
+    precision = 6  # 1e-6
+    error_rate = np.round(error_rate, precision)
+    total_rule_length = np.round(total_rule_length, precision)
+    rule_weight = np.round(rule_weight, precision)
+    rule_length = np.round(rule_length, precision)
+    num_wins = np.round(num_wins, precision)
+    num_classified_patterns = np.round(num_classified_patterns, precision)
 
-    axs[0].hist(df["error_rate"], bins=50, alpha=0.5, label="Java", color="blue")
+    java_error_rate = np.round(df["error_rate"].values, precision)
+    java_total_rule_length = np.round(df["total_rule_length"].values, precision)
+    java_rule_weight = np.round(df_rules["rule_weight"].values, precision)
+    java_rule_length = np.round(df_rules["rule_length"].values, precision)
+    java_num_wins = np.round(df_rules["num_wins"].values, precision)
+    java_num_classified_patterns = np.round(df_rules["num_classified_patterns"].values, precision)
+
+    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+    fig.suptitle(
+        f"Pittsburgh Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
+        fontweight="bold",
+    )
+
+    axs[0].hist(java_error_rate, bins=50, alpha=0.5, label="Java", color="blue")
     axs[0].hist(error_rate, bins=50, alpha=0.5, label="Python", color="orange")
     axs[0].set_title(f"Error Rate Distribution ({data_name})")
     axs[0].set_xlabel("Error Rate")
@@ -168,9 +210,9 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     axs[0].set_xlim(0, 1)
     axs[0].legend()
 
-    max_rule_length = max(df["total_rule_length"].max(), total_rule_length.max())
+    max_rule_length = max(np.max(java_total_rule_length), np.max(total_rule_length))
     x = np.arange(0, max_rule_length + 1)
-    java_counts = df["total_rule_length"].value_counts().reindex(x, fill_value=0)
+    java_counts = pd.Series(java_total_rule_length).value_counts().reindex(x, fill_value=0)
     python_counts = pd.Series(total_rule_length).value_counts().reindex(x, fill_value=0)
     axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
     axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
@@ -186,17 +228,20 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     # now compare rules, plot each vars on one row (2 plots) similarly
     fig, axs = plt.subplots(2, 2, figsize=(12, 12))
     axs = axs.flatten()
-    fig.suptitle(f"Michigan Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations", fontweight="bold")
-    axs[0].hist(df_rules["rule_weight"], bins=50, alpha=0.5, label="Java", color="blue")
+    fig.suptitle(
+        f"Michigan Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
+        fontweight="bold",
+    )
+    axs[0].hist(java_rule_weight, bins=50, alpha=0.5, label="Java", color="blue")
     axs[0].hist(rule_weight, bins=50, alpha=0.5, label="Python", color="orange")
     axs[0].set_title(f"Rule Weight Distribution ({data_name})")
     axs[0].set_xlabel("Rule Weight")
     axs[0].set_ylabel("Frequency")
     axs[0].legend()
 
-    max_rule_length = max(df_rules["rule_length"].max(), max(rule_length))
+    max_rule_length = max(np.max(java_rule_length), np.max(rule_length))
     x = np.arange(0, max_rule_length + 1)
-    java_counts = df_rules["rule_length"].value_counts().reindex(x, fill_value=0)
+    java_counts = pd.Series(java_rule_length).value_counts().reindex(x, fill_value=0)
     python_counts = pd.Series(rule_length).value_counts().reindex(x, fill_value=0)
     axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
     axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
@@ -206,14 +251,14 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     axs[1].legend()
     axs[1].set_xlim(0, max_rule_length + 1)
 
-    axs[2].hist(df_rules["num_wins"], bins=50, alpha=0.5, label="Java", color="blue")
+    axs[2].hist(java_num_wins, bins=50, alpha=0.5, label="Java", color="blue")
     axs[2].hist(num_wins, bins=50, alpha=0.5, label="Python", color="orange")
     axs[2].set_title(f"Number of Wins Distribution ({data_name})")
     axs[2].set_xlabel("Number of Wins")
     axs[2].set_ylabel("Frequency")
     axs[2].legend()
 
-    axs[3].hist(df_rules["num_classified_patterns"], bins=50, alpha=0.5, label="Java", color="blue")
+    axs[3].hist(java_num_classified_patterns, bins=50, alpha=0.5, label="Java", color="blue")
     axs[3].hist(num_classified_patterns, bins=50, alpha=0.5, label="Python", color="orange")
     axs[3].set_title(f"Number of Classified Patterns Distribution ({data_name})")
     axs[3].set_xlabel("Number of Classified Patterns")
@@ -223,27 +268,12 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     plt.tight_layout()
     plt.show()
 
-    # statistical test to compare distributions
-
-    t_stat, p_value = ttest_ind(df["error_rate"], error_rate)
-    assert p_value > 0.05, f"Error rate distributions are significantly different (p-value: {p_value})"
-
-    t_stat, p_value = ttest_ind(df["total_rule_length"], total_rule_length)
-    assert p_value > 0.05, f"Total rule length distributions are significantly different (p-value: {p_value})"
-
-    t_stat, p_value = ttest_ind(df_rules["rule_weight"], rule_weight)
-    assert p_value > 0.05, f"Rule weight distributions are significantly different (p-value: {p_value})"
-
-    t_stat, p_value = ttest_ind(df_rules["rule_length"], rule_length)
-    assert p_value > 0.05, f"Rule length distributions are significantly different (p-value: {p_value})"
-
-    t_stat, p_value = ttest_ind(df_rules["num_wins"], num_wins)
-    assert p_value > 0.05, f"Number of wins distributions are significantly different (p-value: {p_value})"
-
-    t_stat, p_value = ttest_ind(df_rules["num_classified_patterns"], num_classified_patterns)
-    assert (
-            p_value > 0.05
-    ), f"Number of classified patterns distributions are significantly different (p-value: {p_value})"
+    compare_distribution(java_error_rate, error_rate, "Error rate")
+    compare_distribution(java_total_rule_length, total_rule_length, "Total rule length")
+    compare_distribution(java_rule_weight, rule_weight, "Rule weight")
+    compare_distribution(java_rule_length, rule_length, "Rule length")
+    compare_distribution(java_num_wins, num_wins, "Number of wins")
+    compare_distribution(java_num_classified_patterns, num_classified_patterns, "Number of classified patterns")
 
 
 def crossover_test_helper_init_config(tests_data_root, data_name):
@@ -297,12 +327,20 @@ def crossover_test_helper_init_config(tests_data_root, data_name):
     return pop, problem, data_name_config_path, random_gen
 
 
-def get_hybrid_crossover(problem, random_gen, min_num_rules=1, max_num_rules=60,
-                         pittsburgh_crossover_probability=0.9,
-                         michigan_crossover_probability=0.9, crossover_probability=1, rule_change_rate=0.2):
+def get_hybrid_crossover(
+    problem,
+    random_gen,
+    min_num_rules=1,
+    max_num_rules=60,
+    pittsburgh_crossover_probability=0.9,
+    michigan_crossover_probability=0.9,
+    crossover_probability=1,
+    rule_change_rate=0.2,
+):
 
-    pittsburgh_crossover = PittsburghCrossover(min_num_rules, max_num_rules, random_gen,
-                                               pittsburgh_crossover_probability)
+    pittsburgh_crossover = PittsburghCrossover(
+        min_num_rules, max_num_rules, random_gen, pittsburgh_crossover_probability
+    )
 
     michigan_crossover = MichiganCrossover(
         rule_change_rate,
@@ -310,15 +348,11 @@ def get_hybrid_crossover(problem, random_gen, min_num_rules=1, max_num_rules=60,
         problem.get_knowledge(),
         max_num_rules,
         random_gen,
-        michigan_crossover_probability
+        michigan_crossover_probability,
     )
 
     crossover = HybridGBMLCrossover(
-        random_gen,
-        michigan_crossover_probability,
-        michigan_crossover,
-        pittsburgh_crossover,
-        crossover_probability
+        random_gen, michigan_crossover_probability, michigan_crossover, pittsburgh_crossover, crossover_probability
     )
 
     return crossover

@@ -95,9 +95,7 @@ def test_distribution_java():
             problem.get_knowledge(),
             max_num_rules,
             random_gen,
-            michigan_crossover_probability
+            michigan_crossover_probability,
         )
 
-        crossover_test_helper_run(
-            crossover, problem, pop, parents, data_name, data_name_config_path
-        )
+        crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)

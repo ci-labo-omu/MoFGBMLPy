@@ -35,8 +35,14 @@ from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
 
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
-from util import (get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol,
-                  crossover_test_helper_init_config, crossover_test_helper_run, get_hybrid_crossover)
+from util import (
+    get_a0_0_iris_train_test,
+    create_pittsburgh_sol,
+    create_michigan_sol,
+    crossover_test_helper_init_config,
+    crossover_test_helper_run,
+    get_hybrid_crossover,
+)
 import pytest
 import os
 
@@ -57,6 +63,4 @@ def test_distribution_java():
 
         crossover = get_hybrid_crossover(problem, random_gen)
 
-        crossover_test_helper_run(
-            crossover, problem, pop, parents, data_name, data_name_config_path
-        )
+        crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)

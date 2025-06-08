@@ -31,8 +31,13 @@ from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCro
 from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
-from util import (get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol,
-                  crossover_test_helper_init_config, crossover_test_helper_run)
+from util import (
+    get_a0_0_iris_train_test,
+    create_pittsburgh_sol,
+    create_michigan_sol,
+    crossover_test_helper_init_config,
+    crossover_test_helper_run,
+)
 import pytest
 import os
 
@@ -229,6 +234,7 @@ def test_get_num_rules_from_parents_uniform(min_num_rules, max_num_rules, num_ru
             # if either one of those is null, it's normal to get an error
             raise e
 
+
 def test_distribution_java():
     min_num_rules, max_num_rules = 1, 60
     crossover_probability = 0.9
@@ -248,6 +254,4 @@ def test_distribution_java():
 
         crossover = PittsburghCrossover(min_num_rules, max_num_rules, random_gen, prob=crossover_probability)
 
-        crossover_test_helper_run(
-            crossover, problem, pop, parents, data_name, data_name_config_path
-        )
+        crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)
