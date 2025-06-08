@@ -7,7 +7,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
 
-from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 
@@ -29,7 +29,7 @@ def test_crossover_copy(prob):
     crossover = UniformCrossoverSingleOffspringMichigan(random_gen, prob=prob)
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
-    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
+    antecedent_factory = HeuristicAntecedentFactory(train, knowledge, False, 0.8, 5, random_gen)
     consequent_factory = LearningBasic(train)
     rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
 
@@ -64,5 +64,5 @@ def test_crossover_copy(prob):
     if prob == 0:
         for i in range(2):
             assert np.array_equal(offspring[i].X[0].get_vars(), pop[0].X[0].get_vars()) or np.array_equal(
-                offspring[i].X[0].get_vars(), pop[1].X[1].get_vars()
+                offspring[i].X[0].get_vars(), pop[1].X[0].get_vars()
             )

@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import (
     UniformCrossoverSingleOffspringMichigan,
@@ -7,7 +9,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
 
-from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 
@@ -29,7 +31,7 @@ from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCro
 from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
-from util import get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol
+from util import get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol, get_a0_0_pima_train_test
 import pytest
 import os
 import pandas as pd
@@ -50,7 +52,7 @@ def get_config(sol1_num_rules, sol2_num_rules):
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
-    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
+    antecedent_factory = HeuristicAntecedentFactory(train, knowledge, False, 0.8, 5, random_gen)
     consequent_factory = LearningBasic(train)
     rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
 
@@ -233,153 +235,168 @@ def test_distribution_java():
     min_num_rules, max_num_rules = 1, 60
     crossover_probability = 0.9
 
-    train, _ = get_a0_0_iris_train_test()
-    random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-
-    knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
-    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
-    consequent_factory = LearningBasic(train)
-    rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
-
-    classification = SingleWinnerRuleSelection()
-    objectives = np.array([ErrorRate(train), NumRules()])
-    michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
-
-    problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
-
-    sol1_indices = np.array([[1, 2, 0, 8], [1, 0, 1, 4], [1, 0, 0, 4], [3, 0, 5, 2], [9, 0, 0, 8]], dtype=np.int32)
-    sol2_indices = np.array([[1, 3, 7, 0], [6, 0, 10, 0], [1, 3, 7, 3]], dtype=np.int32)
-
-    michigan_sols = np.empty(len(sol1_indices), dtype=object)
-    for i, indices in enumerate(sol1_indices):
-        michigan_sols[i] = create_michigan_sol(train, antecedent_indices=indices)
-
-    sol1 = create_pittsburgh_sol(train, classification, michigan_sols)
-
-    michigan_sols = np.empty(len(sol2_indices), dtype=object)
-    for i, indices in enumerate(sol2_indices):
-        michigan_sols[i] = create_michigan_sol(train, antecedent_indices=indices)
-
-    sol2 = create_pittsburgh_sol(train, classification, michigan_sols)
-
-    pop = Population.new(X=np.array([[sol1], [sol2]], dtype=object))
-    parents = np.array([[0, 1]])
-
-    problem.evaluate(pop.get("X"))
-
-    crossover = PittsburghCrossover(min_num_rules, max_num_rules, random_gen, prob=crossover_probability)
-
     tests_root = Path(__file__).parents[3]
-    file_path = os.path.join(tests_root, "java_data", "pittsburgh_crossover_offsprings.csv")
-    df = pd.read_csv(file_path, header=0)
+    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "pittsburgh")
 
-    file_path = os.path.join(tests_root, "java_data", "pittsburgh_crossover_offsprings_rules.csv")
-    df_rules = pd.read_csv(file_path, header=0)
+    # get list of folders in java_data
+    data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
-    num_iters = len(df)
-    error_rate = np.zeros(num_iters)
-    total_rule_length = np.zeros(num_iters)
+    for data_name in data_names:
+        data_name_config_path = os.path.join(tests_data_root, data_name)
+        if data_name == "iris":
+            train, _ = get_a0_0_iris_train_test()
+        elif data_name == "pima":
+            train, _ = get_a0_0_pima_train_test()
+        else:
+            raise ValueError(f"Unknown data name: {data_name}")
 
-    rule_weight = []
-    rule_length = []
-    num_wins = []
-    num_classified_patterns = []
+        random_gen = np.random.Generator(np.random.MT19937(seed=2022))
 
-    for i in range(num_iters):
-        offspring = crossover.do(problem, pop, parents=parents)
-        problem.evaluate(offspring.get("X"))
+        knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
+        antecedent_factory = HeuristicAntecedentFactory(train, knowledge, False, 0.8, 5, random_gen)
+        consequent_factory = LearningBasic(train)
+        rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
 
-        child = offspring[0].X[0]
-        error_rate[i] = child.get_objective(0)
-        total_rule_length[i] = child.get_objective(1)
+        classification = SingleWinnerRuleSelection()
+        objectives = np.array([ErrorRate(train), NumRules()])
+        michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
-        for rule in child.get_vars():
-            rule_weight.append(rule.get_rule_weight_py().get_value())
-            rule_length.append(rule.get_length())
-            num_wins.append(rule.get_num_wins())
-            num_classified_patterns.append(rule.get_fitness())
+        problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
 
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-    axs[0].hist(df["error_rate"], bins=50, alpha=0.5, label="Java", color="blue")
-    axs[0].hist(error_rate, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[0].set_title("Error Rate Distribution")
-    axs[0].set_xlabel("Error Rate")
-    axs[0].set_ylabel("Frequency")
-    axs[0].set_xlim(0, 1)
-    axs[0].legend()
+        indices = json.load(open(os.path.join(data_name_config_path, "parents.json"), "r"))
 
-    max_rule_length = max(df["total_rule_length"].max(), total_rule_length.max())
-    x = np.arange(0, max_rule_length + 1)
-    java_counts = df["total_rule_length"].value_counts().reindex(x, fill_value=0)
-    python_counts = pd.Series(total_rule_length).value_counts().reindex(x, fill_value=0)
-    axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
-    axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
-    axs[1].set_title("Total Rule Length Distribution")
-    axs[1].set_xlabel("Total Rule Length")
-    axs[1].set_ylabel("Frequency")
-    axs[1].set_xlim(0, max_rule_length + 1)
-    axs[1].legend()
+        sol1_indices = np.array(indices[0], dtype=np.int32)
+        sol2_indices = np.array(indices[1], dtype=np.int32)
 
-    plt.tight_layout()
-    plt.show()
+        michigan_sols = np.empty(len(sol1_indices), dtype=object)
+        for i, indices in enumerate(sol1_indices):
+            michigan_sols[i] = create_michigan_sol(train, antecedent_indices=indices)
 
-    # now compare rules, plot each vars on one row (2 plots) similarly
-    fig, axs = plt.subplots(2, 2, figsize=(12, 12))
-    axs = axs.flatten()
-    axs[0].hist(df_rules["rule_weight"], bins=50, alpha=0.5, label="Java", color="blue")
-    axs[0].hist(rule_weight, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[0].set_title("Rule Weight Distribution")
-    axs[0].set_xlabel("Rule Weight")
-    axs[0].set_ylabel("Frequency")
-    axs[0].legend()
+        sol1 = create_pittsburgh_sol(train, classification, michigan_sols)
 
-    max_rule_length = max(df_rules["rule_length"].max(), max(rule_length))
-    x = np.arange(0, max_rule_length + 1)
-    java_counts = df_rules["rule_length"].value_counts().reindex(x, fill_value=0)
-    python_counts = pd.Series(rule_length).value_counts().reindex(x, fill_value=0)
-    axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
-    axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
-    axs[1].set_title("Rule Length Distribution")
-    axs[1].set_xlabel("Rule Length")
-    axs[1].set_ylabel("Frequency")
-    axs[1].legend()
-    axs[1].set_xlim(0, max_rule_length + 1)
+        michigan_sols = np.empty(len(sol2_indices), dtype=object)
+        for i, indices in enumerate(sol2_indices):
+            michigan_sols[i] = create_michigan_sol(train, antecedent_indices=indices)
 
-    axs[2].hist(df_rules["num_wins"], bins=50, alpha=0.5, label="Java", color="blue")
-    axs[2].hist(num_wins, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[2].set_title("Number of Wins Distribution")
-    axs[2].set_xlabel("Number of Wins")
-    axs[2].set_ylabel("Frequency")
-    axs[2].legend()
+        sol2 = create_pittsburgh_sol(train, classification, michigan_sols)
 
-    axs[3].hist(df_rules["num_classified_patterns"], bins=50, alpha=0.5, label="Java", color="blue")
-    axs[3].hist(num_classified_patterns, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[3].set_title("Number of Classified Patterns Distribution")
-    axs[3].set_xlabel("Number of Classified Patterns")
-    axs[3].set_ylabel("Frequency")
-    axs[3].legend()
+        pop = Population.new(X=np.array([[sol1], [sol2]], dtype=object))
+        parents = np.array([[0, 1]])
 
-    plt.tight_layout()
-    plt.show()
+        problem.evaluate(pop.get("X"))
 
-    # statistical test to compare distributions
+        crossover = PittsburghCrossover(min_num_rules, max_num_rules, random_gen, prob=crossover_probability)
 
-    t_stat, p_value = ttest_ind(df["error_rate"], error_rate)
-    assert p_value > 0.05, f"Error rate distributions are significantly different (p-value: {p_value})"
+        file_path = os.path.join(data_name_config_path, "offsprings.csv")
+        df = pd.read_csv(file_path, header=0)
 
-    t_stat, p_value = ttest_ind(df["total_rule_length"], total_rule_length)
-    assert p_value > 0.05, f"Total rule length distributions are significantly different (p-value: {p_value})"
+        file_path = os.path.join(data_name_config_path, "offsprings_rules.csv")
+        df_rules = pd.read_csv(file_path, header=0)
 
-    t_stat, p_value = ttest_ind(df_rules["rule_weight"], rule_weight)
-    assert p_value > 0.05, f"Rule weight distributions are significantly different (p-value: {p_value})"
+        num_iters = len(df)
+        error_rate = np.zeros(num_iters)
+        total_rule_length = np.zeros(num_iters)
 
-    t_stat, p_value = ttest_ind(df_rules["rule_length"], rule_length)
-    assert p_value > 0.05, f"Rule length distributions are significantly different (p-value: {p_value})"
+        rule_weight = []
+        rule_length = []
+        num_wins = []
+        num_classified_patterns = []
 
-    t_stat, p_value = ttest_ind(df_rules["num_wins"], num_wins)
-    assert p_value > 0.05, f"Number of wins distributions are significantly different (p-value: {p_value})"
+        for i in range(num_iters):
+            offspring = crossover.do(problem, pop, parents=parents)
+            problem.evaluate(offspring.get("X"))
 
-    t_stat, p_value = ttest_ind(df_rules["num_classified_patterns"], num_classified_patterns)
-    assert (
-        p_value > 0.05
-    ), f"Number of classified patterns distributions are significantly different (p-value: {p_value})"
+            child = offspring[0].X[0]
+            error_rate[i] = child.get_objective(0)
+            total_rule_length[i] = child.get_objective(1)
+
+            for rule in child.get_vars():
+                rule_weight.append(rule.get_rule_weight_py().get_value())
+                rule_length.append(rule.get_length())
+                num_wins.append(rule.get_num_wins())
+                num_classified_patterns.append(rule.get_fitness())
+
+        fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+        axs[0].hist(df["error_rate"], bins=50, alpha=0.5, label="Java", color="blue")
+        axs[0].hist(error_rate, bins=50, alpha=0.5, label="Python", color="orange")
+        axs[0].set_title(f"Error Rate Distribution ({data_name})")
+        axs[0].set_xlabel("Error Rate")
+        axs[0].set_ylabel("Frequency")
+        axs[0].set_xlim(0, 1)
+        axs[0].legend()
+
+        max_rule_length = max(df["total_rule_length"].max(), total_rule_length.max())
+        x = np.arange(0, max_rule_length + 1)
+        java_counts = df["total_rule_length"].value_counts().reindex(x, fill_value=0)
+        python_counts = pd.Series(total_rule_length).value_counts().reindex(x, fill_value=0)
+        axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
+        axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
+        axs[1].set_title(f"Total Rule Length Distribution ({data_name})")
+        axs[1].set_xlabel("Total Rule Length")
+        axs[1].set_ylabel("Frequency")
+        axs[1].set_xlim(0, max_rule_length + 1)
+        axs[1].legend()
+
+        plt.tight_layout()
+        plt.show()
+
+        # now compare rules, plot each vars on one row (2 plots) similarly
+        fig, axs = plt.subplots(2, 2, figsize=(12, 12))
+        axs = axs.flatten()
+        axs[0].hist(df_rules["rule_weight"], bins=50, alpha=0.5, label="Java", color="blue")
+        axs[0].hist(rule_weight, bins=50, alpha=0.5, label="Python", color="orange")
+        axs[0].set_title(f"Rule Weight Distribution ({data_name})")
+        axs[0].set_xlabel("Rule Weight")
+        axs[0].set_ylabel("Frequency")
+        axs[0].legend()
+
+        max_rule_length = max(df_rules["rule_length"].max(), max(rule_length))
+        x = np.arange(0, max_rule_length + 1)
+        java_counts = df_rules["rule_length"].value_counts().reindex(x, fill_value=0)
+        python_counts = pd.Series(rule_length).value_counts().reindex(x, fill_value=0)
+        axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
+        axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
+        axs[1].set_title(f"Rule Length Distribution ({data_name})")
+        axs[1].set_xlabel("Rule Length")
+        axs[1].set_ylabel("Frequency")
+        axs[1].legend()
+        axs[1].set_xlim(0, max_rule_length + 1)
+
+        axs[2].hist(df_rules["num_wins"], bins=50, alpha=0.5, label="Java", color="blue")
+        axs[2].hist(num_wins, bins=50, alpha=0.5, label="Python", color="orange")
+        axs[2].set_title(f"Number of Wins Distribution ({data_name})")
+        axs[2].set_xlabel("Number of Wins")
+        axs[2].set_ylabel("Frequency")
+        axs[2].legend()
+
+        axs[3].hist(df_rules["num_classified_patterns"], bins=50, alpha=0.5, label="Java", color="blue")
+        axs[3].hist(num_classified_patterns, bins=50, alpha=0.5, label="Python", color="orange")
+        axs[3].set_title(f"Number of Classified Patterns Distribution ({data_name})")
+        axs[3].set_xlabel("Number of Classified Patterns")
+        axs[3].set_ylabel("Frequency")
+        axs[3].legend()
+
+        plt.tight_layout()
+        plt.show()
+
+        # statistical test to compare distributions
+
+        t_stat, p_value = ttest_ind(df["error_rate"], error_rate)
+        assert p_value > 0.05, f"Error rate distributions are significantly different (p-value: {p_value})"
+
+        t_stat, p_value = ttest_ind(df["total_rule_length"], total_rule_length)
+        assert p_value > 0.05, f"Total rule length distributions are significantly different (p-value: {p_value})"
+
+        t_stat, p_value = ttest_ind(df_rules["rule_weight"], rule_weight)
+        assert p_value > 0.05, f"Rule weight distributions are significantly different (p-value: {p_value})"
+
+        t_stat, p_value = ttest_ind(df_rules["rule_length"], rule_length)
+        assert p_value > 0.05, f"Rule length distributions are significantly different (p-value: {p_value})"
+
+        t_stat, p_value = ttest_ind(df_rules["num_wins"], num_wins)
+        assert p_value > 0.05, f"Number of wins distributions are significantly different (p-value: {p_value})"
+
+        t_stat, p_value = ttest_ind(df_rules["num_classified_patterns"], num_classified_patterns)
+        assert (
+            p_value > 0.05
+        ), f"Number of classified patterns distributions are significantly different (p-value: {p_value})"

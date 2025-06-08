@@ -7,7 +7,7 @@ from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWi
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
-from mofgbmlpy.fuzzy.rule.antecedent.factory.all_combination_antecedent_factory import AllCombinationAntecedentFactory
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
@@ -28,7 +28,7 @@ def test_sampling():
     pop_size = 10
 
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
-    antecedent_factory = AllCombinationAntecedentFactory(knowledge, random_gen)
+    antecedent_factory = HeuristicAntecedentFactory(train, knowledge, False, 0.8, 5, random_gen)
     consequent_factory = LearningBasic(train)
     rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
     objectives = np.array([ErrorRate(train), NumRules()])

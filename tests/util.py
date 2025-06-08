@@ -55,6 +55,16 @@ def get_a0_0_iris_train_test():
     return Input.get_train_test_files(args)
 
 
+def get_a0_0_pima_train_test():
+    root_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    args = Arguments()
+    args.set("TRAIN_FILE", f"{root_folder}/dataset/pima/a0_0_pima-10tra.dat")
+    args.set("TEST_FILE", f"{root_folder}/dataset/pima/a0_0_pima-10tst.dat")
+    args.set("IS_MULTI_LABEL", False)
+
+    return Input.get_train_test_files(args)
+
+
 def get_a0_0_german_train_test():
     root_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     args = Arguments()
