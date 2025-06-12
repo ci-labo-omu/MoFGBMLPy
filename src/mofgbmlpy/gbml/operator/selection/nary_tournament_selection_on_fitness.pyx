@@ -23,7 +23,7 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
         elif n_candidates == 1:
             return P # TODO: test this conditional branch
 
-        S = np.full(n_tournaments, np.nan)
+        S = np.empty(n_tournaments, dtype=int)
 
         for i in range(n_tournaments):
             winner = None
@@ -36,7 +36,7 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
                     winner = P[i, j]
 
             S[i] = winner
-        return S[:, None].astype(int, copy=False)
+        return S[:, None]
 
     def __init__(self, tournament_size=2):
         """Constructor

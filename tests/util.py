@@ -149,6 +149,33 @@ def compare_distribution(x, y, var_name, relative_tol=0.01):
         w_dist < threshold
     ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
 
+def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_bars=False):
+    max_val = max(np.max(java_data), np.max(python_data))
+    min_val = min(np.min(java_data), np.min(python_data))
+    space = 0.1 * (max_val - min_val)
+
+    if use_bars:
+        x = np.arange(0, max_val + 1)
+        java_counts = pd.Series(java_data).value_counts().reindex(x, fill_value=0)
+        python_counts = pd.Series(python_data).value_counts().reindex(x, fill_value=0)
+
+        ax.bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
+        ax.bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
+        ax.set_xlim((-2 * space, max_val + 2 * space))
+    else:
+        ax.hist(java_data, bins=50, alpha=0.5, label="Java", color="blue")
+        ax.hist(python_data, bins=50, alpha=0.5, label="Python", color="orange")
+        ax.set_xlim((-space, max_val + space))
+
+    if x_lim is not None:
+        ax.set_xlim(x_lim)
+
+    ax.set_title(f"{var_name} Distribution")
+    ax.set_xlabel(var_name),
+    ax.set_ylabel("Frequency")
+    ax.legend()
+
+    return ax
 
 def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path):
     file_path = os.path.join(data_name_config_path, "offsprings.csv")
@@ -202,68 +229,30 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
         fontweight="bold",
     )
 
-    axs[0].hist(java_error_rate, bins=50, alpha=0.5, label="Java", color="blue")
-    axs[0].hist(error_rate, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[0].set_title(f"Error Rate Distribution ({data_name})")
-    axs[0].set_xlabel("Error Rate")
-    axs[0].set_ylabel("Frequency")
-    axs[0].set_xlim(0, 1)
-    axs[0].legend()
+    axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
 
-    max_rule_length = max(np.max(java_total_rule_length), np.max(total_rule_length))
-    x = np.arange(0, max_rule_length + 1)
-    java_counts = pd.Series(java_total_rule_length).value_counts().reindex(x, fill_value=0)
-    python_counts = pd.Series(total_rule_length).value_counts().reindex(x, fill_value=0)
-    axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
-    axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
-    axs[1].set_title(f"Total Rule Length Distribution ({data_name})")
-    axs[1].set_xlabel("Total Rule Length")
-    axs[1].set_ylabel("Frequency")
-    axs[1].set_xlim(0, max_rule_length + 1)
-    axs[1].legend()
+    axs[1] = plot_comparison_plot(axs[1], total_rule_length, java_total_rule_length, f"Total Rule Length Distribution",
+                                  use_bars=True)
 
     plt.tight_layout()
     plt.show()
 
-    # now compare rules, plot each vars on one row (2 plots) similarly
+    # now we compare rules, we plot each vars on one row (2 plots) similarly
     fig, axs = plt.subplots(2, 2, figsize=(12, 12))
     axs = axs.flatten()
     fig.suptitle(
         f"Michigan Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
         fontweight="bold",
     )
-    axs[0].hist(java_rule_weight, bins=50, alpha=0.5, label="Java", color="blue")
-    axs[0].hist(rule_weight, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[0].set_title(f"Rule Weight Distribution ({data_name})")
-    axs[0].set_xlabel("Rule Weight")
-    axs[0].set_ylabel("Frequency")
-    axs[0].legend()
 
-    max_rule_length = max(np.max(java_rule_length), np.max(rule_length))
-    x = np.arange(0, max_rule_length + 1)
-    java_counts = pd.Series(java_rule_length).value_counts().reindex(x, fill_value=0)
-    python_counts = pd.Series(rule_length).value_counts().reindex(x, fill_value=0)
-    axs[1].bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
-    axs[1].bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
-    axs[1].set_title(f"Rule Length Distribution ({data_name})")
-    axs[1].set_xlabel("Rule Length")
-    axs[1].set_ylabel("Frequency")
-    axs[1].legend()
-    axs[1].set_xlim(0, max_rule_length + 1)
+    axs[0] = plot_comparison_plot(axs[0], rule_weight, java_rule_weight, "Rule Weight")
 
-    axs[2].hist(java_num_wins, bins=50, alpha=0.5, label="Java", color="blue")
-    axs[2].hist(num_wins, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[2].set_title(f"Number of Wins Distribution ({data_name})")
-    axs[2].set_xlabel("Number of Wins")
-    axs[2].set_ylabel("Frequency")
-    axs[2].legend()
+    axs[1] = plot_comparison_plot(axs[1], rule_length, java_rule_length, f"Rule Length", use_bars=True)
 
-    axs[3].hist(java_num_classified_patterns, bins=50, alpha=0.5, label="Java", color="blue")
-    axs[3].hist(num_classified_patterns, bins=50, alpha=0.5, label="Python", color="orange")
-    axs[3].set_title(f"Number of Classified Patterns Distribution ({data_name})")
-    axs[3].set_xlabel("Number of Classified Patterns")
-    axs[3].set_ylabel("Frequency")
-    axs[3].legend()
+    axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins")
+
+    axs[3] = plot_comparison_plot(axs[3], num_classified_patterns, java_num_classified_patterns,
+                                  f"Number of Classified Patterns")
 
     plt.tight_layout()
     plt.show()

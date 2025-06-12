@@ -1,5 +1,6 @@
 import copy
 
+from functools import cmp_to_key
 import numpy as np
 from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.core.crossover import Crossover
@@ -43,7 +44,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
 
-    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, mating_pool_size, n_parents, num_ga):
+    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, num_offspring, n_parents, num_ga):
         """Generate rules using a genetic algorithm
 
         Args:
@@ -52,17 +53,17 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             selection (Selection): Selection operator object (select the mating pool in a population)
             pop (Population): Population
             problem (Problem): Optimization problem definition
-            mating_pool_size (int): Maximum size of the mating pool
+            num_offspring (int): Number of offspring (rules) to be generated
             n_parents (int): Number of parents used to generate the rules
             num_ga (int): Number of rules that need to be generated
 
         Returns:
             list: Generated rules
         """
-        mating_pop = selection.do(problem, pop, mating_pool_size, n_parents, to_pop=False)
+        mating_pop = selection.do(problem, pop, num_offspring, n_parents, to_pop=False)
         generated_solutions = []
 
-        for i in range(0, mating_pool_size, 2):
+        for i in range(0, num_offspring):
             parents = mating_pop[i]
             p1_obj = pop[parents[0]].X[0]
             p2_obj = pop[parents[1]].X[0]
@@ -80,10 +81,32 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                     generated_solutions.append(copy.deepcopy(p2_obj))
                 else:
                     generated_solutions.append(offspring[j].X[0])
+
                 if len(generated_solutions) == num_ga:
                     return generated_solutions
 
         return generated_solutions
+
+    @staticmethod
+    def radix_sort_michigan(x, y):
+        """Radix sort Michigan solutions based on their antecedent indices
+
+        Args:
+            x (MichiganSolution): First Michigan solution
+            y (MichiganSolution): Second Michigan solution
+
+        Returns:
+            int: Comparison result
+        """
+        for i in range(x.get_num_vars()):
+            x_var = x.get_var(i)
+            y_var = y.get_var(i)
+
+            if x_var < y_var:
+                return -1
+            elif x_var > y_var:
+                return 1
+        return 0
 
     def _do(self, problem, X, **kwargs):
         """Run the crossover on the given population
@@ -152,7 +175,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                     tournament_size = 1
                 else:
                     tournament_size = 2
-                mating_pool_size = num_ga * crossover.n_parents // crossover.n_offsprings
                 selection = NaryTournamentSelectionOnFitness(tournament_size)
 
                 michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
@@ -166,7 +188,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                                                             selection,
                                                             michigan_population,
                                                             michigan_problem,
-                                                            mating_pool_size,
+                                                            num_ga,
                                                             2,
                                                             num_ga)
 
@@ -175,8 +197,14 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             # 5. Replacement: Single objective maximization replacement based on the fitness value
             generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
 
+            # generated_solutions = np.array(sorted(
+            #     generated_solutions,
+            #     key=cmp_to_key(lambda x, y: MichiganCrossover.radix_sort_michigan(x, y))
+            # ))
+
             offspring = copy.deepcopy(parent)
             offspring.clear_vars()
+            offspring.clear_attributes()
             offspring.set_vars(generated_solutions)
 
             Y[0, i, 0] = offspring
