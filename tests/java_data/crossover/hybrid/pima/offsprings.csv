@@ -1,4 +1,4 @@
-iteration,error_rate,total_rule_length
+iteration,error_rate,num_rules
 0,0.532561505065123,7.0
 1,0.5904486251808972,5.0
 2,0.5947901591895803,3.0

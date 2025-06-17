@@ -152,10 +152,11 @@ def compare_distribution(x, y, var_name, relative_tol=0.01):
 def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_bars=False):
     max_val = max(np.max(java_data), np.max(python_data))
     min_val = min(np.min(java_data), np.min(python_data))
-    space = 0.1 * (max_val - min_val)
 
     if use_bars:
         x = np.arange(0, max_val + 1)
+        space = max_val / 10
+
         java_counts = pd.Series(java_data).value_counts().reindex(x, fill_value=0)
         python_counts = pd.Series(python_data).value_counts().reindex(x, fill_value=0)
 
@@ -163,6 +164,7 @@ def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_b
         ax.bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
         ax.set_xlim((-2 * space, max_val + 2 * space))
     else:
+        space = (max_val - min_val) / 10
         ax.hist(java_data, bins=50, alpha=0.5, label="Java", color="blue")
         ax.hist(python_data, bins=50, alpha=0.5, label="Python", color="orange")
         ax.set_xlim((-space, max_val + space))
@@ -177,47 +179,21 @@ def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_b
 
     return ax
 
-def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path):
-    file_path = os.path.join(data_name_config_path, "offsprings.csv")
-    df = pd.read_csv(file_path, header=0)
 
-    file_path = os.path.join(data_name_config_path, "offsprings_rules.csv")
-    df_rules = pd.read_csv(file_path, header=0)
-
-    num_iters = len(df)
-    error_rate = np.zeros(num_iters)
-    total_rule_length = np.zeros(num_iters)
-
-    rule_weight = []
-    rule_length = []
-    num_wins = []
-    num_classified_patterns = []
-
-    for i in range(num_iters):
-        offspring = crossover.do(problem, pop, parents=parents)
-        problem.evaluate(offspring.get("X"))
-
-        child = offspring[0].X[0]
-        error_rate[i] = child.get_objective(0)
-        total_rule_length[i] = child.get_objective(1)
-
-        for rule in child.get_vars():
-            rule_weight.append(rule.get_rule_weight_py().get_value())
-            rule_length.append(rule.get_length())
-            num_wins.append(rule.get_num_wins())
-            num_classified_patterns.append(rule.get_fitness())
-
+def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_length,
+                                      num_wins, num_classified_patterns,
+                                      df, df_rules, title):
     # fix imprecision issues
     precision = 6  # 1e-6
     error_rate = np.round(error_rate, precision)
-    total_rule_length = np.round(total_rule_length, precision)
+    num_rules = np.round(num_rules, precision)
     rule_weight = np.round(rule_weight, precision)
     rule_length = np.round(rule_length, precision)
     num_wins = np.round(num_wins, precision)
     num_classified_patterns = np.round(num_classified_patterns, precision)
 
     java_error_rate = np.round(df["error_rate"].values, precision)
-    java_total_rule_length = np.round(df["total_rule_length"].values, precision)
+    java_num_rules = np.round(df["num_rules"].values, precision)
     java_rule_weight = np.round(df_rules["rule_weight"].values, precision)
     java_rule_length = np.round(df_rules["rule_length"].values, precision)
     java_num_wins = np.round(df_rules["num_wins"].values, precision)
@@ -225,13 +201,13 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
 
     fig, axs = plt.subplots(1, 2, figsize=(12, 6))
     fig.suptitle(
-        f"Pittsburgh Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
+        f"(Pittsburgh Solutions) {title}",
         fontweight="bold",
     )
 
     axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
 
-    axs[1] = plot_comparison_plot(axs[1], total_rule_length, java_total_rule_length, f"Total Rule Length Distribution",
+    axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules",
                                   use_bars=True)
 
     plt.tight_layout()
@@ -241,7 +217,7 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     fig, axs = plt.subplots(2, 2, figsize=(12, 12))
     axs = axs.flatten()
     fig.suptitle(
-        f"Michigan Solutions Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
+        f"(Michigan Solutions) {title}",
         fontweight="bold",
     )
 
@@ -258,14 +234,56 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     plt.show()
 
     compare_distribution(java_error_rate, error_rate, "Error rate")
-    compare_distribution(java_total_rule_length, total_rule_length, "Total rule length")
+    compare_distribution(java_num_rules, num_rules, "Number of rules")
     compare_distribution(java_rule_weight, rule_weight, "Rule weight")
     compare_distribution(java_rule_length, rule_length, "Rule length")
     compare_distribution(java_num_wins, num_wins, "Number of wins")
     compare_distribution(java_num_classified_patterns, num_classified_patterns, "Number of classified patterns")
 
 
+def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path):
+    file_path = os.path.join(data_name_config_path, "offsprings.csv")
+    df = pd.read_csv(file_path, header=0)
+
+    file_path = os.path.join(data_name_config_path, "offsprings_rules.csv")
+    df_rules = pd.read_csv(file_path, header=0)
+
+    num_iters = len(df)
+    error_rate = np.zeros(num_iters)
+    num_rules = np.zeros(num_iters)
+
+    rule_weight = []
+    rule_length = []
+    num_wins = []
+    num_classified_patterns = []
+
+    for i in range(num_iters):
+        offspring = crossover.do(problem, pop, parents=parents)
+        problem.evaluate(offspring.get("X"))
+
+        child = offspring[0].X[0]
+        error_rate[i] = child.get_error_rate()
+        num_rules[i] = child.get_num_vars()
+
+        assert child.get_error_rate() == child.get_objective(0)
+        assert child.get_num_vars() == child.get_objective(1)
+
+        for rule in child.get_vars():
+            rule_weight.append(rule.get_rule_weight_py().get_value())
+            rule_length.append(rule.get_length())
+            num_wins.append(rule.get_num_wins())
+            num_classified_patterns.append(rule.get_fitness())
+
+    crossover_test_helper_plot_assert(
+        error_rate, num_rules, rule_weight, rule_length,
+        num_wins, num_classified_patterns, df, df_rules,
+        title=f"Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations"
+    )
+
+
 def crossover_test_helper_init_config(tests_data_root, data_name):
+    # set seed of pymoo
+    np.random.seed(2022)
     data_name_config_path = os.path.join(tests_data_root, data_name)
     if data_name == "iris":
         train, _ = get_a0_0_iris_train_test()
@@ -323,6 +341,7 @@ def get_hybrid_crossover(
     max_num_rules=60,
     pittsburgh_crossover_probability=0.9,
     michigan_crossover_probability=0.9,
+    michigan_ope_probability=0.5,
     crossover_probability=1,
     rule_change_rate=0.2,
 ):
@@ -341,7 +360,7 @@ def get_hybrid_crossover(
     )
 
     crossover = HybridGBMLCrossover(
-        random_gen, michigan_crossover_probability, michigan_crossover, pittsburgh_crossover, crossover_probability
+        random_gen, michigan_ope_probability, michigan_crossover, pittsburgh_crossover, crossover_probability
     )
 
     return crossover

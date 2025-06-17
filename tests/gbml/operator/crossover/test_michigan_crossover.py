@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import (
     UniformCrossoverSingleOffspringMichigan,
 )
@@ -22,7 +24,14 @@ from mofgbmlpy.gbml.problem.michigan_problem import MichiganProblem
 from pymoo.core.population import Population
 
 from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
-from util import get_a0_0_iris_train_test, crossover_test_helper_init_config, crossover_test_helper_run
+
+from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
+
+from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
+
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
+from util import get_a0_0_iris_train_test, crossover_test_helper_init_config, crossover_test_helper_run, \
+    plot_comparison_plot, compare_distribution, create_pittsburgh_sol, crossover_test_helper_plot_assert
 import pytest
 
 
@@ -74,7 +83,7 @@ def test_crossover_copy(prob):
 
 def test_distribution_java():
     max_num_rules = 60
-    michigan_crossover_probability = 0.9
+    michigan_crossover_probability = 1.0
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
@@ -99,3 +108,211 @@ def test_distribution_java():
         )
 
         crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)
+
+def test_distribution_ga_rules_gen():
+    # set seed of pymoo
+    np.random.seed(2022)
+
+    max_num_rules = 60
+    michigan_crossover_probability = 1.0
+    rule_change_rate = 0.2
+
+    tests_root = Path(__file__).parents[3]
+    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+
+    # get list of folders in java_data
+    data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
+
+    for data_name in data_names:
+        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+
+        problem.evaluate(pop.get("X"))
+
+        crossover = MichiganCrossover(
+            rule_change_rate,
+            problem.get_training_set(),
+            problem.get_knowledge(),
+            max_num_rules,
+            random_gen,
+            michigan_crossover_probability,
+        )
+
+        michigan_problem = MichiganProblem([],  # Objectives are not used
+                                           problem.get_num_constraints(),
+                                           problem.get_training_set(),
+                                           problem.get_rule_builder())
+
+        m_crossover = UniformCrossoverSingleOffspringMichigan(random_gen, michigan_crossover_probability)
+
+        mutation_rt = 1 / problem.get_training_set().get_num_dim()
+        mutation = MichiganMutation(problem.get_knowledge(), mutation_rt, random_gen)
+
+        parent = pop[0].X[0]
+
+        if parent.get_num_vars() == 1:
+            # no crossover
+            tournament_size = 1
+        else:
+            tournament_size = 2
+        selection = NaryTournamentSelectionOnFitness(tournament_size)
+
+        ga_gen_files_path = os.path.join(data_name_config_path, "ga_gen")
+        file_path = os.path.join(ga_gen_files_path, "offsprings_rules.csv")
+        df_rules = pd.read_csv(file_path, header=0)
+
+        file_path = os.path.join(ga_gen_files_path, "offsprings.csv")
+        df = pd.read_csv(file_path, header=0)
+
+        num_ga = len(df_rules) // len(df)
+        num_offspring = len(df)
+
+        error_rate = []
+        num_rules = []
+
+        rule_length = []
+        num_wins = []
+        num_classified_patterns = []
+        rule_weight = []
+
+        for i in range(num_offspring):
+            michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
+            parent_vars = parent.get_vars()
+            for j in range(michigan_solutions_array.shape[0]):
+                michigan_solutions_array[j, 0] = parent_vars[j]
+            michigan_population = Population.new(X=michigan_solutions_array)
+
+            generated_solutions = crossover.ga_rules_gen(
+                m_crossover,
+                mutation,
+                selection,
+                michigan_population,
+                michigan_problem,
+                num_ga,
+                2
+            )
+
+            p_sol = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object))
+
+            p_sol.update_winners_and_errors(problem.get_training_set())
+            problem.evaluate(np.array([[p_sol]], dtype=object))
+
+            error_rate.append(p_sol.get_error_rate())
+            num_rules.append(p_sol.get_num_vars())
+
+            assert p_sol.get_error_rate() == p_sol.get_objective(0)
+            assert p_sol.get_num_vars() == p_sol.get_objective(1)
+
+            for sol in generated_solutions:
+                rule_length.append(sol.get_rule().get_length())
+                num_wins.append(sol.get_num_wins())
+                num_classified_patterns.append(sol.get_fitness())
+                rule_weight.append(sol.get_rule_weight_py().get_value())
+
+        error_rate = np.array(error_rate)
+        num_rules = np.array(num_rules)
+        rule_length = np.array(rule_length)
+        num_wins = np.array(num_wins)
+        num_classified_patterns = np.array(num_classified_patterns)
+        rule_weight = np.array(rule_weight)
+
+        crossover_test_helper_plot_assert(
+            error_rate,
+            num_rules,
+            rule_weight,
+            rule_length,
+            num_wins,
+            num_classified_patterns,
+            df,
+            df_rules,
+            f"Comparison on {data_name} Using GA Rules Generation on {num_offspring} solutions with {num_ga} rules",
+        )
+
+
+def test_distribution_heuristic_rules_gen():
+    max_num_rules = 60
+    michigan_crossover_probability = 1.0
+    rule_change_rate = 0.2
+
+    tests_root = Path(__file__).parents[3]
+    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+
+    # get list of folders in java_data
+    data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
+
+    for data_name in data_names:
+        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+
+        problem.evaluate(pop.get("X"))
+
+        crossover = MichiganCrossover(
+            rule_change_rate,
+            problem.get_training_set(),
+            problem.get_knowledge(),
+            max_num_rules,
+            random_gen,
+            michigan_crossover_probability,
+        )
+
+        parent = pop[0].X[0]
+
+        ga_gen_files_path = os.path.join(data_name_config_path, "heuristic_gen")
+        file_path = os.path.join(ga_gen_files_path, "offsprings_rules.csv")
+        df_rules = pd.read_csv(file_path, header=0)
+
+        file_path = os.path.join(ga_gen_files_path, "offsprings.csv")
+        df = pd.read_csv(file_path, header=0)
+
+        num_heuristic = len(df_rules) // len(df)
+        num_offspring = len(df)
+
+        error_rate = []
+        num_rules = []
+
+        rule_length = []
+        num_wins = []
+        num_classified_patterns = []
+        rule_weight = []
+
+        for i in range(num_offspring):
+            michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
+            parent_vars = parent.get_vars()
+            for j in range(michigan_solutions_array.shape[0]):
+                michigan_solutions_array[j, 0] = parent_vars[j]
+
+            generated_solutions = crossover.heuristic_rules_gen(parent, num_heuristic)
+
+            p_sol = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object))
+
+            p_sol.update_winners_and_errors(problem.get_training_set())
+            problem.evaluate(np.array([[p_sol]], dtype=object))
+
+            error_rate.append(p_sol.get_error_rate())
+            num_rules.append(p_sol.get_num_vars())
+
+            assert p_sol.get_error_rate() == p_sol.get_objective(0)
+            assert p_sol.get_num_vars() == p_sol.get_objective(1)
+
+            for sol in generated_solutions:
+                rule_length.append(sol.get_rule().get_length())
+                num_wins.append(sol.get_num_wins())
+                num_classified_patterns.append(sol.get_fitness())
+                rule_weight.append(sol.get_rule_weight_py().get_value())
+
+        error_rate = np.array(error_rate)
+        num_rules = np.array(num_rules)
+        rule_length = np.array(rule_length)
+        num_wins = np.array(num_wins)
+        num_classified_patterns = np.array(num_classified_patterns)
+        rule_weight = np.array(rule_weight)
+
+        crossover_test_helper_plot_assert(
+            error_rate,
+            num_rules,
+            rule_weight,
+            rule_length,
+            num_wins,
+            num_classified_patterns,
+            df,
+            df_rules,
+            f"Comparison on {data_name} Using Heuristic Rules Generation on {num_offspring} solutions with {num_heuristic} rules",
+        )

@@ -44,7 +44,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
 
-    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, num_offspring, n_parents, num_ga):
+    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, num_offspring, n_parents):
         """Generate rules using a genetic algorithm
 
         Args:
@@ -55,7 +55,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             problem (Problem): Optimization problem definition
             num_offspring (int): Number of offspring (rules) to be generated
             n_parents (int): Number of parents used to generate the rules
-            num_ga (int): Number of rules that need to be generated
 
         Returns:
             list: Generated rules
@@ -76,14 +75,15 @@ class MichiganCrossover(PymooDeepcopyCrossover):
 
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
                     generated_solutions.append(copy.deepcopy(p1_obj))
-                    if len(generated_solutions) == num_ga:
+                    if len(generated_solutions) == num_offspring:
                         return generated_solutions
                     generated_solutions.append(copy.deepcopy(p2_obj))
                 else:
                     generated_solutions.append(offspring[j].X[0])
 
-                if len(generated_solutions) == num_ga:
-                    return generated_solutions
+                if len(generated_solutions) == num_offspring:
+                    # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
+                    break
 
         return generated_solutions
 
@@ -107,6 +107,22 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             elif x_var > y_var:
                 return 1
         return 0
+
+    def heuristic_rules_gen(self, parent, num_heuristic):
+        generated_solutions = np.empty(num_heuristic, dtype=object)
+        error_patterns = parent.get_errored_patterns()
+        lack_size = num_heuristic - len(error_patterns)
+
+        if lack_size > 0:
+            new_patterns = self._random_gen.choice(self.__training_set.get_patterns(), lack_size)
+            error_patterns = np.concatenate((error_patterns, new_patterns))
+        selected_error_patterns_indices = self._random_gen.choice(np.arange(len(error_patterns)),
+                                                                  num_heuristic,
+                                                                  replace=False)
+
+        for j in range(num_heuristic):
+            generated_solutions[j] = parent.get_michigan_solution_builder().create(pattern=error_patterns[selected_error_patterns_indices[j]])[0]
+        return generated_solutions
 
     def _do(self, problem, X, **kwargs):
         """Run the crossover on the given population
@@ -145,17 +161,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             # 3. Heuristic Rule Generation
 
             if num_heuristic > 0:
-                error_patterns = parent.get_errored_patterns()
-                lack_size = num_heuristic - len(error_patterns)
-
-                if lack_size > 0:
-                    new_patterns = self._random_gen.choice(self.__training_set.get_patterns(), lack_size)
-                    error_patterns = np.concatenate((error_patterns, new_patterns))
-                selected_error_patterns = self._random_gen.choice(error_patterns, num_heuristic, replace=False)
-
-                for j in range(num_heuristic):
-                    generated_solutions.append(
-                        parent.get_michigan_solution_builder().create(pattern=selected_error_patterns[j])[0])
+                generated_solutions = self.heuristic_rules_gen(parent, num_heuristic)
 
             # 4. Rule Generation by Genetic Algorithm - Michigan-style GA
             num_ga = num_generating_rules - num_heuristic
@@ -172,6 +178,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                 mutation = MichiganMutation(self.__knowledge, mutation_rt, self._random_gen)
 
                 if parent.get_num_vars() == 1:
+                    # no crossover
                     tournament_size = 1
                 else:
                     tournament_size = 2
@@ -189,8 +196,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                                                             michigan_population,
                                                             michigan_problem,
                                                             num_ga,
-                                                            2,
-                                                            num_ga)
+                                                            2)
 
                 generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
 
