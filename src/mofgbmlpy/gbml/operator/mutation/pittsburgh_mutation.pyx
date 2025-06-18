@@ -24,7 +24,7 @@ class PittsburghMutation(Mutation):
             mutation_rate (float): Mutation rate
         """
         super().__init__()
-        self.__mutation_rate = mutation_rate
+        self.__mutation_rate = mutation_rate # TODO: This is not used in the Java version, should we use it?
         self.__knowledge = knowledge
         self._random_gen = random_gen
 
@@ -54,6 +54,9 @@ class PittsburghMutation(Mutation):
             for i in range(len(X[s])):
                 # for each michigan solution (rule)
                 for michigan_sol_i in range(X[s][i].get_num_vars()):
+                    if self._random_gen.integers(X[s][i].get_num_vars()) != 0:
+                        continue
+
                     mutated_dim = self._random_gen.integers(0, dim)
 
                     # Check if the mutated dim is categorical (<0) or numerical (>=0)

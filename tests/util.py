@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from scipy.stats import wasserstein_distance
 import json
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
@@ -281,10 +283,12 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     )
 
 
-def crossover_test_helper_init_config(tests_data_root, data_name):
+def crossover_test_helper_init_config(data_name):
     # set seed of pymoo
     np.random.seed(2022)
-    data_name_config_path = os.path.join(tests_data_root, data_name)
+    tests_root = Path(__file__).parent
+    tests_data_parents_path = os.path.join(tests_root, "test_data", "population_samples", f"{data_name}.json")
+
     if data_name == "iris":
         train, _ = get_a0_0_iris_train_test()
     elif data_name == "pima":
@@ -304,8 +308,7 @@ def crossover_test_helper_init_config(tests_data_root, data_name):
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
     problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
-
-    indices = json.load(open(os.path.join(data_name_config_path, "parents.json"), "r"))
+    indices = json.load(open(tests_data_parents_path, "r"))
 
     sol1_indices = np.array(indices[0], dtype=np.int32)
     sol2_indices = None
@@ -331,7 +334,7 @@ def crossover_test_helper_init_config(tests_data_root, data_name):
     else:
         pop = Population.new(X=np.array([[sol1], [sol2]], dtype=object))
 
-    return pop, problem, data_name_config_path, random_gen
+    return pop, problem, random_gen
 
 
 def get_hybrid_crossover(

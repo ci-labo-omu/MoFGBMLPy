@@ -40,7 +40,7 @@ def get_config():
     train, _ = get_a0_0_iris_train_test()
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "survival", "rule_addition_style_replacement")
+    tests_data_root = os.path.join(tests_root, "test_data", "population_samples", "survival", "rule_addition_style_replacement")
 
     indices_pop = np.array(json.load(open(os.path.join(tests_data_root, "pop.json"), "r")), int)
     indices_offspring = np.array(json.load(open(os.path.join(tests_data_root, "offspring_pop.json"), "r")), int)

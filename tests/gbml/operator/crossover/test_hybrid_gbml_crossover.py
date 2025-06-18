@@ -49,13 +49,12 @@ import os
 
 def test_distribution_java():
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "hybrid")
+    tests_data_root = os.path.join(tests_root, "test_data", "crossover", "hybrid")
 
-    # get list of folders in java_data
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
 
         parents = np.array([[0, 1]])
 
@@ -63,4 +62,5 @@ def test_distribution_java():
 
         crossover = get_hybrid_crossover(problem, random_gen)
 
+        data_name_config_path = os.path.join(tests_data_root, data_name)
         crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)

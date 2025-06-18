@@ -52,7 +52,7 @@ def get_config(pop_size, tournament_size):
     # michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "selection", "nary_tournament_selection_on_fitness")
+    tests_data_root = os.path.join(tests_root, "test_data", "population_samples", "selection", "nary_tournament_selection_on_fitness")
     indices_file = os.path.join(tests_data_root, "michigan_solutions.json")
     indices = np.array(json.load(open(os.path.join(indices_file), "r")), dtype=int)
 
@@ -105,7 +105,7 @@ def test_distribution():
                 l += 1
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "selection", "nary_tournament_selection_on_fitness")
+    tests_data_root = os.path.join(tests_root, "test_data", "selection", "nary_tournament_selection_on_fitness")
     file_path = os.path.join(tests_data_root, "results.csv")
 
     java_df = pd.read_csv(file_path, header=0)

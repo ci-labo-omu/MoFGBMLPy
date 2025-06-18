@@ -87,13 +87,12 @@ def test_distribution_java():
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+    tests_data_root = os.path.join(tests_root, "test_data", "crossover", "michigan")
 
-    # get list of folders in java_data
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
         parents = np.array([[0]])
 
         problem.evaluate(pop.get("X"))
@@ -107,6 +106,7 @@ def test_distribution_java():
             michigan_crossover_probability,
         )
 
+        data_name_config_path = os.path.join(tests_data_root, data_name)
         crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)
 
 def test_distribution_ga_rules_gen():
@@ -118,13 +118,12 @@ def test_distribution_ga_rules_gen():
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+    tests_data_root = os.path.join(tests_root, "test_data", "crossover", "michigan")
 
-    # get list of folders in java_data
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
 
         problem.evaluate(pop.get("X"))
 
@@ -155,6 +154,8 @@ def test_distribution_ga_rules_gen():
         else:
             tournament_size = 2
         selection = NaryTournamentSelectionOnFitness(tournament_size)
+
+        data_name_config_path = os.path.join(tests_data_root, data_name)
 
         ga_gen_files_path = os.path.join(data_name_config_path, "ga_gen")
         file_path = os.path.join(ga_gen_files_path, "offsprings_rules.csv")
@@ -234,13 +235,12 @@ def test_distribution_heuristic_rules_gen():
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "java_data", "crossover", "michigan")
+    tests_data_root = os.path.join(tests_root, "test_data", "crossover", "michigan")
 
-    # get list of folders in java_data
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, data_name_config_path, random_gen = crossover_test_helper_init_config(tests_data_root, data_name)
+        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
 
         problem.evaluate(pop.get("X"))
 
@@ -255,6 +255,7 @@ def test_distribution_heuristic_rules_gen():
 
         parent = pop[0].X[0]
 
+        data_name_config_path = os.path.join(tests_data_root, data_name)
         ga_gen_files_path = os.path.join(data_name_config_path, "heuristic_gen")
         file_path = os.path.join(ga_gen_files_path, "offsprings_rules.csv")
         df_rules = pd.read_csv(file_path, header=0)
