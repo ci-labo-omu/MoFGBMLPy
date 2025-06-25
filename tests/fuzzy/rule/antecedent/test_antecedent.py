@@ -39,7 +39,7 @@ def test_set_antecedent_indices_none():
 
 def test_get_compatible_grade_no_knowledge():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0], np.float32)
+    vector = np.array([1.0, 2.0], np.float64)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -50,7 +50,7 @@ def test_get_compatible_grade_smaller_num_vars_knowledge():
     )
 
     antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
-    vector = np.array([1.0, 2.0], np.float32)
+    vector = np.array([1.0, 2.0], np.float64)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -61,7 +61,7 @@ def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
     )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1], int), knowledge)
-    vector = np.array([1.0], np.float32)
+    vector = np.array([1.0], np.float64)
 
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
@@ -102,7 +102,7 @@ def test_get_compatible_grade_invalid_vector_different_sign_1():
     )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([0, 1], int), knowledge)
-    vector = np.array([1.0, -2.0], np.float32)
+    vector = np.array([1.0, -2.0], np.float64)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
@@ -113,14 +113,14 @@ def test_get_compatible_grade_invalid_vector_different_sign_2():
     )
     knowledge = Knowledge(fuzzy_vars)
     antecedent = Antecedent(np.array([1, -2], int), knowledge)
-    vector = np.array([1.0, 2.0], np.float32)
+    vector = np.array([1.0, 2.0], np.float64)
     with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_value_no_knowledge():
     antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0], np.float32)
+    vector = np.array([1.0, 2.0], np.float64)
     with pytest.raises(IndexError):
         antecedent.get_compatible_grade_value_py(vector)
 

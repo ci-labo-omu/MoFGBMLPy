@@ -102,7 +102,7 @@ def test_is_dc_probability_none():
     assert not factory.get_is_dc_probability()
 
 
-@pytest.mark.parametrize("value", np.random.uniform(-1, 1, 5).astype(np.float32))
+@pytest.mark.parametrize("value", np.random.uniform(-1, 1, 5).astype(np.float64))
 def test_dc_rate(value):
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(training_set.get_num_dim()).create()
@@ -144,7 +144,7 @@ def test_calculate_antecedent_part_none_pattern():
 
 def test_calculate_antecedent_part_empty_pattern():
     factory, _ = create_example()
-    pattern = Pattern(0, np.empty(0, dtype=np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.empty(0, dtype=np.float64), ClassLabelBasic(0))
 
     with pytest.raises(ValueError):
         factory.calculate_antecedent_part_py(pattern)
@@ -152,7 +152,7 @@ def test_calculate_antecedent_part_empty_pattern():
 
 def test_calculate_antecedent_part_different_dimension_than_knowledge():
     factory, _ = create_example()
-    pattern = Pattern(0, np.array([1.0], np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.array([1.0], np.float64), ClassLabelBasic(0))
 
     with pytest.raises(ValueError):
         factory.calculate_antecedent_part_py(pattern)
@@ -160,7 +160,7 @@ def test_calculate_antecedent_part_different_dimension_than_knowledge():
 
 def test_calculate_antecedent_part_no_dc_from_dc_rate():
     factory, _ = create_example(dc_rate=0)
-    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float64), ClassLabelBasic(0))
 
     antecedent_indices = factory.calculate_antecedent_part_py(pattern)
     for i in range(len(antecedent_indices)):
@@ -169,7 +169,7 @@ def test_calculate_antecedent_part_no_dc_from_dc_rate():
 
 def test_calculate_antecedent_part_categorical_attribute():
     factory, _ = create_example(dc_rate=0)
-    pattern = Pattern(0, np.array([-1.0, -2.0, -3.0, -4.0], np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.array([-1.0, -2.0, -3.0, -4.0], np.float64), ClassLabelBasic(0))
 
     antecedent_indices = factory.calculate_antecedent_part_py(pattern)
     for i in range(len(antecedent_indices)):
@@ -178,7 +178,7 @@ def test_calculate_antecedent_part_categorical_attribute():
 
 def test_calculate_antecedent_part_all_dc_from_dc_rate():
     factory, _ = create_example(dc_rate=1)
-    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float64), ClassLabelBasic(0))
 
     antecedent_indices = factory.calculate_antecedent_part_py(pattern)
     for i in range(len(antecedent_indices)):
@@ -187,7 +187,7 @@ def test_calculate_antecedent_part_all_dc_from_dc_rate():
 
 def test_calculate_antecedent_part_all_dc_from_not_dc_probability():
     factory, _ = create_example(antecedent_number_do_not_dont_care=0, is_dc_probability=False)
-    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float32), ClassLabelBasic(0))
+    pattern = Pattern(0, np.array([0.2, 0.4, 0.6, 0.8], np.float64), ClassLabelBasic(0))
 
     antecedent_indices = factory.calculate_antecedent_part_py(pattern)
     for i in range(len(antecedent_indices)):
@@ -266,10 +266,10 @@ def test_create_antecedent_indices_num_rules_greater_than_dataset():
         3,
         np.array(
             [
-                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelBasic(0)),
-                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelBasic(1)),
-                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelBasic(2)),
-                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelBasic(0)),
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float64), ClassLabelBasic(0)),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float64), ClassLabelBasic(1)),
+                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float64), ClassLabelBasic(2)),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float64), ClassLabelBasic(0)),
             ]
         ),
     )

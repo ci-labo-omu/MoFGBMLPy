@@ -20,7 +20,7 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             min_num_rules (int): Min number of rules that the Pittsburgh solution must contain
             max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
             random_gen (numpy.random.Generator): Random generator
-            prob (float): Crossover probability
+            prob (double): Crossover probability
         """
         super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob)
         self.__min_num_rules = min_num_rules
@@ -88,7 +88,7 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         _, n_matings, _ = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
@@ -130,6 +130,6 @@ class PittsburghCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         return self._do(problem, X, **kwargs)

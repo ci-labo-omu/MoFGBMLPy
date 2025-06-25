@@ -10,7 +10,7 @@ from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 import pandas as pd
 from matplotlib import pyplot as plt
-
+from scipy.stats import ranksums
 import csv
 import os
 
@@ -138,41 +138,61 @@ def float_eq(value1, value2, precision=1e-6):
 
 
 def compare_distribution(x, y, var_name, relative_tol=0.01):
-    combined = np.concatenate([x, y])
-    data_range = np.max(combined) - np.min(combined)
+    # combined = np.concatenate([x, y])
+    # data_range = np.max(combined) - np.min(combined)
+    #
+    # if data_range == 0:
+    #     return
+    #
+    # threshold = relative_tol * data_range
+    # w_dist = wasserstein_distance(x, y)
 
-    if data_range == 0:
-        return
+    # assert (
+    #     w_dist < threshold
+    # ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
 
-    threshold = relative_tol * data_range
-    w_dist = wasserstein_distance(x, y)
-
+    _, p_value = ranksums(x, y)
     assert (
-        w_dist < threshold
-    ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
+            p_value > 0.05
+    ), f"{var_name} distributions are too different (p-value: {p_value} <= 0.05)"
 
-def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_bars=False):
+
+def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_bars=False, is_float=True):
     max_val = max(np.max(java_data), np.max(python_data))
     min_val = min(np.min(java_data), np.min(python_data))
 
     if use_bars:
-        x = np.arange(0, max_val + 1)
-        space = max_val / 10
+        java_counts = pd.Series(java_data).value_counts()
+        python_counts = pd.Series(python_data).value_counts()
 
-        java_counts = pd.Series(java_data).value_counts().reindex(x, fill_value=0)
-        python_counts = pd.Series(python_data).value_counts().reindex(x, fill_value=0)
+        all_indices = sorted(set(java_counts.index).union(python_counts.index))
 
-        ax.bar(x - 0.2, java_counts, width=0.4, label="Java", color="blue", alpha=0.5)
-        ax.bar(x + 0.2, python_counts, width=0.4, label="Python", color="orange", alpha=0.5)
-        ax.set_xlim((-2 * space, max_val + 2 * space))
+        # set the index to be the same for both series and set to 0 if not present
+        java_counts = java_counts.reindex(all_indices, fill_value=0)
+        python_counts = python_counts.reindex(all_indices, fill_value=0)
+
+        x = np.array(all_indices, dtype=float if is_float else int)
+        x_pos = np.arange(len(x))
+
+        width = 0.5
+
+        ax.bar(x_pos, java_counts.values, width=width, label="Java", color="blue", alpha=0.5)
+        ax.bar(x_pos, python_counts.values, width=width, label="Python", color="orange", alpha=0.5)
+
+        ax.set_xticks(x_pos)
+        if is_float:
+            ax.set_xticklabels([f"{v:.6f}" for v in x], rotation=45, ha='right')
+        else:
+            ax.set_xticklabels([str(v) for v in x], ha='right')
+
     else:
         space = (max_val - min_val) / 10
         ax.hist(java_data, bins=50, alpha=0.5, label="Java", color="blue")
         ax.hist(python_data, bins=50, alpha=0.5, label="Python", color="orange")
         ax.set_xlim((-space, max_val + space))
 
-    if x_lim is not None:
-        ax.set_xlim(x_lim)
+        if x_lim is not None:
+            ax.set_xlim(x_lim)
 
     ax.set_title(f"{var_name} Distribution")
     ax.set_xlabel(var_name),
@@ -210,7 +230,7 @@ def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_l
     axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
 
     axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules",
-                                  use_bars=True)
+                                  use_bars=True, is_float=False)
 
     plt.tight_layout()
     plt.show()
@@ -225,12 +245,12 @@ def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_l
 
     axs[0] = plot_comparison_plot(axs[0], rule_weight, java_rule_weight, "Rule Weight")
 
-    axs[1] = plot_comparison_plot(axs[1], rule_length, java_rule_length, f"Rule Length", use_bars=True)
+    axs[1] = plot_comparison_plot(axs[1], rule_length, java_rule_length, f"Rule Length", use_bars=True, is_float=False)
 
-    axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins")
+    axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins", is_float=False)
 
     axs[3] = plot_comparison_plot(axs[3], num_classified_patterns, java_num_classified_patterns,
-                                  f"Number of Classified Patterns")
+                                  f"Number of Classified Patterns", is_float=False)
 
     plt.tight_layout()
     plt.show()

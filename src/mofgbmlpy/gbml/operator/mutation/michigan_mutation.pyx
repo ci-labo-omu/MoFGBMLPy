@@ -12,7 +12,7 @@ class MichiganMutation(Mutation):
 
     Attributes:
         __knowledge (Knowledge): Knowledge base
-        __mutation_rt (float): Mutation rate
+        __mutation_rt (double): Mutation rate
         _random_gen (numpy.random.Generator): Random generator
     """
 
@@ -21,7 +21,7 @@ class MichiganMutation(Mutation):
 
         Args:
             knowledge (Knowledge): Knowledge base
-            mutation_rt (float): Mutation rate
+            mutation_rt (double): Mutation rate
             random_gen (numpy.random.Generator)
         """
         super().__init__()

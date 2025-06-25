@@ -5,13 +5,13 @@ from mofgbmlpy.gbml.solution.pittsburgh_solution cimport PittsburghSolution
 
 cdef class TotalRuleLength(ObjectiveFunction):
     """Objective function that considers the total rule length (sum of all its rule length) to evaluate Pittsburgh solutions"""
-    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, float[:] out):
+    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
         """Run the objective function on the given parameters
 
         Args:
             solutions (AbstractSolution[]): Solutions that are evaluated
             obj_index (int): Index of the objective in the solution objectives array
-            out (float[]): Output array, it will contain the objective value of all the solutions
+            out (double[]): Output array, it will contain the objective value of all the solutions
         """
         cdef int i = 0
         cdef PittsburghSolution sol

@@ -23,7 +23,7 @@ def test_label_value_empty():
 
 
 def test_invalid_label_value_list():
-    label_value = np.array([0.0, 1.0, 2.0], dtype=np.float32)
+    label_value = np.array([0.0, 1.0, 2.0], dtype=np.float64)
     with pytest.raises(ValueError):
         _ = ClassLabelMulti(label_value)
 
@@ -56,7 +56,7 @@ def test_set_label_value_empty():
 
 def test_set_invalid_label_value_list():
     label = ClassLabelMulti(np.array([0, 1, 2], dtype=int))
-    label_value = np.array([0.0, 1.0, 2.0], dtype=np.float32)
+    label_value = np.array([0.0, 1.0, 2.0], dtype=np.float64)
     with pytest.raises(ValueError):
         label.set_class_label_value(label_value)
 

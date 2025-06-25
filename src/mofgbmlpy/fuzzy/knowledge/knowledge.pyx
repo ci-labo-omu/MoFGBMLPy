@@ -89,29 +89,29 @@ cdef class Knowledge:
         """
         return self.__fuzzy_vars
 
-    cpdef float get_membership_value_py(self, float attribute_value, int dim, int fuzzy_set_index):
+    cpdef double get_membership_value_py(self, double attribute_value, int dim, int fuzzy_set_index):
         """Get the membership value of the given attribute value with the fuzzy set at the given dimension and given index
         
         Args:
-            attribute_value (float): Attribute value whose compatibility is computed 
+            attribute_value (double): Attribute value whose compatibility is computed 
             dim (int): Dimension index where there is the fuzzy variable where the fuzzy set is 
             fuzzy_set_index (int): Index of the fuzzy set in the fuzzy variable 
 
         Returns:
-            float: Membership value
+            double: Membership value
         """
         return self.get_membership_value(attribute_value, dim, fuzzy_set_index)
 
-    cdef float get_membership_value(self, float attribute_value, int dim, int fuzzy_set_index):
+    cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_index):
         """Get the membership value of the given attribute value with the fuzzy set at the given dimension and given index (Can only be accessed from Cython code)
         
         Args:
-            attribute_value (float): Attribute value whose compatibility is computed 
+            attribute_value (double): Attribute value whose compatibility is computed 
             dim (int): Dimension index where there is the fuzzy variable where the fuzzy set is 
             fuzzy_set_index (int): Index of the fuzzy set in the fuzzy variable 
 
         Returns:
-            float: Membership value
+            double: Membership value
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
         if fuzzy_vars.shape[0] == 0:
@@ -131,13 +131,13 @@ cdef class Knowledge:
         cdef FuzzyVariable[:] fuzzy_sets = self.__fuzzy_vars
         return fuzzy_sets.shape[0]
 
-    cpdef float get_support(self, int dim, int fuzzy_set_index):
+    cpdef double get_support(self, int dim, int fuzzy_set_index):
         """Get the support value associated to the membership function of the fuzzy set at the given index in the variable at the given dimension: area covered by this function in the space "variable_domain x [0, 1]"
         Args:
             dim (int): Dimension index where there is the fuzzy variable where the fuzzy set is 
             fuzzy_set_index (int): Index of the fuzzy set in the fuzzy variable 
         Returns:
-            float: Support value
+            double: Support value
         """
         return self.get_fuzzy_variable(dim).get_support(fuzzy_set_index)
 

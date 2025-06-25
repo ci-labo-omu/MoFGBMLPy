@@ -54,7 +54,7 @@ def test_invalid_right_center():
 @pytest.mark.parametrize(
     "x",
     np.concatenate(
-        [np.array([-0.5, 0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+        [np.array([-0.5, 0.5, 1.1], dtype=np.float64), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float64)]
     ),
 )
 def test_get_value_different_params(x):
@@ -77,7 +77,7 @@ def test_get_value_different_params(x):
 @pytest.mark.parametrize(
     "x",
     np.concatenate(
-        [np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+        [np.array([0, 1], dtype=np.float64), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float64)]
     ),
 )
 def test_get_value_same_left_center(x):
@@ -100,7 +100,7 @@ def test_get_value_same_left_center(x):
 @pytest.mark.parametrize(
     "x",
     np.concatenate(
-        [np.array([0, 1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+        [np.array([0, 1], dtype=np.float64), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float64)]
     ),
 )
 def test_get_value_same_left_center(x):
@@ -122,7 +122,7 @@ def test_get_value_same_left_center(x):
 
 @pytest.mark.parametrize(
     "x",
-    np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]),
+    np.concatenate([np.array([0], dtype=np.float64), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float64)]),
 )
 def test_get_value_all_equal(x):
     left = 0
@@ -237,3 +237,13 @@ def test_example_java_2():
     mf = TriangularMF(left, center, right)
 
     assert pytest.approx(0.7288135290145874, rel=1e-9) == mf.get_value_py(x)
+
+
+def test_example_java_3():
+    left = np.float32(0.6666666)
+    center = np.float32(1.000000)
+    right = np.float32(1.000000)
+    x = np.float32(0.764705882352941)
+    mf = TriangularMF(left, center, right)
+
+    assert mf.get_value_py(x) == pytest.approx(0.29411778, rel=1e-8)

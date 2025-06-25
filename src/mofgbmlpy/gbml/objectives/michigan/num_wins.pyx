@@ -19,13 +19,13 @@ cdef class NumWins(ObjectiveFunction):
         """
         self.__data_set = data_set
 
-    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, float[:] out):
+    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out):
         """Run the objective function on the given parameters
 
         Args:
             solutions (MichiganSolution[]): Solutions that are evaluated
             obj_index (int): Index of the objective in the solution objectives array
-            out (float[]): Output array, it will contain the objective value of all the solutions
+            out (double[]): Output array, it will contain the objective value of all the solutions
         """
         cdef int i = 0
         cdef int k = 0
@@ -33,8 +33,8 @@ cdef class NumWins(ObjectiveFunction):
 
         if isinstance(solutions[0], MichiganSolution):
             # For each pattern, get the winner rule (highest fitness value)
-            winner_rules_indices = np.empty(len(self.__data_set), dtype=np.int_)
-            winner_rules_fitness = np.full(len(solutions), fill_value=-1, dtype=np.float32)
+            winner_rules_indices = np.empty(len(self.__data_set), dtype=np.int32)
+            winner_rules_fitness = np.full(len(solutions), fill_value=-1, dtype=np.float64)
 
             for i in range(len(self.__data_set)):
                 for j in range(len(solutions)):

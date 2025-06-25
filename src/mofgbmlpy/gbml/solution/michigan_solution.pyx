@@ -100,14 +100,14 @@ cdef class MichiganSolution(AbstractSolution):
             antecedent_object.set_antecedent_indices(self._vars)
             self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object, dataset))
 
-    cpdef float get_fitness_value(self, float[:] in_vector):
+    cpdef double get_fitness_value(self, double[:] in_vector):
         """Get the fitness value for the given attribute vector
         
         Args:
-            in_vector (float[]): Vector for which the fitness value is returned
+            in_vector (double[]): Vector for which the fitness value is returned
 
         Returns:
-            float: Fitness value
+            double: Fitness value
         """
         return self._rule.get_fitness_value(in_vector)
 
@@ -175,22 +175,22 @@ cdef class MichiganSolution(AbstractSolution):
         """
         return self._rule.get_antecedent()
 
-    cdef float[:] get_membership_values(self, float[:] attribute_vector):
+    cdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values for the given vector
 
         Returns:
-            float[]: Membership values
+            double[]: Membership values
         """
         return self._rule.get_membership_values(attribute_vector)
 
-    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatible grade value for the given vector
         
         Args:
-            attribute_vector (float[]): Attribute vector 
+            attribute_vector (double[]): Attribute vector 
 
         Returns:
-            float: Compatible grade value
+            double: Compatible grade value
         """
         return self._rule.get_compatible_grade_value(attribute_vector)
 
@@ -272,7 +272,7 @@ cdef class MichiganSolution(AbstractSolution):
                                         do_init_vars=False)
 
         cdef int[:] vars_copy = np.empty(self.get_num_vars(), dtype=int)
-        cdef float[:] objectives_copy = np.empty(self.get_num_objectives(), np.float32)
+        cdef double[:] objectives_copy = np.empty(self.get_num_objectives(), np.float64)
 
 
         for i in range(vars_copy.shape[0]):

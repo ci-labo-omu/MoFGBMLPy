@@ -9,7 +9,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
 
     Attributes:
         _random_gen (numpy.random.Generator): Random generator
-        __michigan_crossover_probability (float): Probability that a Michigan crossover occurs instead of a Pittsburgh one
+        __michigan_crossover_probability (double): Probability that a Michigan crossover occurs instead of a Pittsburgh one
         __michigan_crossover (MichiganCrossover): Probability that a Michigan crossover occurs after it has been decided that the crossover type would be the Michigan one
         __pittsburgh_crossover (PittsburghCrossover): Pittsburgh crossover used here depending on the Michigan crossover probability
     """
@@ -18,10 +18,10 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
 
         Args:
             random_gen (numpy.random.Generator): Random generator
-            michigan_crossover_probability (float): Probability that a Michigan crossover occurs instead of a Pittsburgh one
+            michigan_crossover_probability (double): Probability that a Michigan crossover occurs instead of a Pittsburgh one
             michigan_crossover (MichiganCrossover): Probability that a Michigan crossover occurs after it has been decided that the crossover type would be the Michigan one
             pittsburgh_crossover (PittsburghCrossover): Pittsburgh crossover used here depending on the Michigan crossover probability
-            prob (float): Probability that a crossover occurs
+            prob (double): Probability that a crossover occurs
         """
         super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob)
         self._random_gen = random_gen
@@ -38,7 +38,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         _, n_matings, n_var = X.shape
 

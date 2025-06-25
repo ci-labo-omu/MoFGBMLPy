@@ -44,8 +44,8 @@ class Input:
             pattern_id = 0
             patterns = []
             for row in reader:
-                in_vector = np.zeros(num_dim, dtype=np.float32)
-                c_vector = np.zeros(num_classes, dtype=np.int_)
+                in_vector = np.zeros(num_dim, dtype=np.float64)
+                c_vector = np.zeros(num_classes, dtype=np.int32)
 
                 for i in range(len(in_vector)):
                     in_vector[i] = float(row[i])
@@ -86,7 +86,7 @@ class Input:
             patterns = []
 
             for row in reader:
-                in_vector = np.zeros(num_dim, dtype=np.float32)
+                in_vector = np.zeros(num_dim, dtype=np.float64)
 
                 for i in range(len(in_vector)):
                     in_vector[i] = float(row[i])

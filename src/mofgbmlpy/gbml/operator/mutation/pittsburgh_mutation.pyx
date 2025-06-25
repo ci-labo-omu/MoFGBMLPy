@@ -13,7 +13,7 @@ class PittsburghMutation(Mutation):
     Attributes:
         __knowledge (Knowledge): Knowledge base
         _random_gen (numpy.random.Generator): Random generator
-        __mutation_rate (float): Mutation rate
+        __mutation_rate (double): Mutation rate
     """
     def __init__(self, knowledge, random_gen, mutation_rate=1.0):
         """Constructor
@@ -21,7 +21,7 @@ class PittsburghMutation(Mutation):
         Args:
             knowledge (Knowledge): Knowledge base
             random_gen (numpy.random.Generator)
-            mutation_rate (float): Mutation rate
+            mutation_rate (double): Mutation rate
         """
         super().__init__()
         self.__mutation_rate = mutation_rate # TODO: This is not used in the Java version, should we use it?

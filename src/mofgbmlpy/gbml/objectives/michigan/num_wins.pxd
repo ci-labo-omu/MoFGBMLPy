@@ -6,4 +6,4 @@ from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
 cdef class NumWins(ObjectiveFunction):
     cdef Dataset __data_set
-    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, float[:] out)
+    cpdef void run(self, AbstractSolution[:] solutions, int obj_index, double[:] out)

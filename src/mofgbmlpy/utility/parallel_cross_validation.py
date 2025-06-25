@@ -196,13 +196,14 @@ def load_results_csv(paths):
     return results
 
 
-def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5):
+def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5, max_workers=None):
     """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
 
     Args:
         args (Arguments): Arguments object
         dataset_root (str): Path to the dataset root directory
         knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory
+        max_workers (int): Maximum number of workers to use for parallel processing (None for number of CPU cores)
     """
     start = time.time()
 
@@ -227,7 +228,7 @@ def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangl
             for j in range(10)
         ]
 
-        with ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor(max_workers=max_workers) as executor:
             futures = [executor.submit(task, *run_args) for run_args in runs_args]
 
             for future in tqdm(

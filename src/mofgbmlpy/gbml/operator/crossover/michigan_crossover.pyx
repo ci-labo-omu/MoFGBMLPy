@@ -17,8 +17,8 @@ class MichiganCrossover(PymooDeepcopyCrossover):
     """Apply the Michigan crossover on the Michigan solutions of one Pittsburgh solution
 
     Attributes:
-        __crossover_rate (float): Probability that a crossover occurs
-        __rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+        __crossover_rate (double): Probability that a crossover occurs
+        __rule_change_rate (double): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
         __training_set (Dataset): Training dataset
         __knowledge (Knowledge): Knowledge base
         __max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
@@ -29,14 +29,15 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         """Constructor
 
         Args:
-            rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+            rule_change_rate (double): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
             training_set (Dataset): Training dataset
             knowledge (Knowledge): Knowledge base
             max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
             random_gen (numpy.random.Generator): Random generator
-            prob (float): Probability that a crossover occurs
+            prob (double): Probability that a crossover occurs
         """
-        super().__init__(n_parents=1, n_offsprings=1, random_gen=random_gen, prob=prob, **kwargs)
+        # TODO prob=prob would be more maybe consistent, but it is not used in the Java version
+        super().__init__(n_parents=1, n_offsprings=1, random_gen=random_gen, prob=1.0, **kwargs)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
         self.__training_set = training_set
@@ -133,7 +134,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         # Note: X contains Pittsburgh solutions
         _, n_matings, n_var = X.shape
@@ -225,6 +226,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         return self._do(problem, X, **kwargs)

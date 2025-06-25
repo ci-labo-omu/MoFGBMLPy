@@ -55,25 +55,25 @@ cdef class AbstractRule:
         """
         self._consequent = consequent
 
-    cdef float[:] get_membership_values(self, float[:] attribute_vector):
+    cdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values array for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (float[]): Input vector whose membership values are computed
+            attribute_vector (double[]): Input vector whose membership values are computed
 
         Returns:
-            float[]: Membership values
+            double[]: Membership values
         """
         return self._antecedent.get_membership_values(attribute_vector)
 
-    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatible grade value for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (float[]): Input vector whose compatible grade value is computed
+            attribute_vector (double[]): Input vector whose compatible grade value is computed
 
         Returns:
-            float: Compatible grade value
+            double: Compatible grade value
         """
         return self._antecedent.get_compatible_grade_value(attribute_vector)
 
@@ -96,7 +96,15 @@ cdef class AbstractRule:
 
     cdef AbstractRuleWeight get_rule_weight(self):
         """Get the rule weight object. Can only be accessed from Cython
-        
+
+        Returns:
+            AbstractRuleWeight: Rule weight object
+        """
+        return self._consequent.get_rule_weight()
+
+    def get_rule_weight_py(self):
+        """Get the rule weight object.
+
         Returns:
             AbstractRuleWeight: Rule weight object
         """
@@ -118,14 +126,14 @@ cdef class AbstractRule:
         """
         return self.get_antecedent().get_array_size()
 
-    cpdef float get_fitness_value(self, float[:] attribute_vector):
+    cpdef double get_fitness_value(self, double[:] attribute_vector):
         """Get the fitness value of the rule for the given input vector
         
         Args:
-            attribute_vector (float[]): Input vector 
+            attribute_vector (double[]): Input vector 
 
         Returns:
-            float: Fitness value
+            double: Fitness value
         """
         Exception("AbstractRule is abstract")
 
