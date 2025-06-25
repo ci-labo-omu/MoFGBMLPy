@@ -30,9 +30,15 @@ from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
 
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from util import get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol, plot_comparison_plot, \
-    compare_distribution
+from util import (
+    get_a0_0_iris_train_test,
+    create_pittsburgh_sol,
+    create_michigan_sol,
+    plot_comparison_plot,
+    compare_distribution,
+)
 import pytest
+
 
 def get_config(pop_size, tournament_size):
     train, _ = get_a0_0_iris_train_test()
@@ -52,7 +58,9 @@ def get_config(pop_size, tournament_size):
     # michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "test_data", "population_samples", "selection", "nary_tournament_selection_on_fitness")
+    tests_data_root = os.path.join(
+        tests_root, "test_data", "population_samples", "selection", "nary_tournament_selection_on_fitness"
+    )
     indices_file = os.path.join(tests_data_root, "michigan_solutions.json")
     indices = np.array(json.load(open(os.path.join(indices_file), "r")), dtype=int)
 

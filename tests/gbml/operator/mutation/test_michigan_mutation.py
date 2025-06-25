@@ -23,6 +23,7 @@ from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from util import get_a0_0_iris_train_test
 import pytest
 
+
 def get_config(mutation_rt):
     train, _ = get_a0_0_iris_train_test()
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
@@ -47,6 +48,7 @@ def get_config(mutation_rt):
 
     return problem, sol, sol_vars, num_dims, num_iters, mutation
 
+
 def test_mutation_rt_1():
     mutation_rt = 1
     problem, sol, sol_vars, num_dims, num_iters, mutation = get_config(mutation_rt)
@@ -69,8 +71,9 @@ def test_mutation_rt_1():
         expected_prob = 1 / len(unique_values)
 
         # Check if the distribution is uniform
-        assert np.all(np.isclose(probabilities, expected_prob, atol=0.1)), \
-            f"Distribution of values for dimension {j} is not uniform: {probabilities}"
+        assert np.all(
+            np.isclose(probabilities, expected_prob, atol=0.1)
+        ), f"Distribution of values for dimension {j} is not uniform: {probabilities}"
 
 
 def test_mutation_rt_0():

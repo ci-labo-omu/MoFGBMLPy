@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from scipy.stats import wasserstein_distance
 import json
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from pymoo.core.population import Population
@@ -152,9 +151,7 @@ def compare_distribution(x, y, var_name, relative_tol=0.01):
     # ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
 
     _, p_value = ranksums(x, y)
-    assert (
-            p_value > 0.05
-    ), f"{var_name} distributions are too different (p-value: {p_value} <= 0.05)"
+    assert p_value > 0.05, f"{var_name} distributions are too different (p-value: {p_value} <= 0.05)"
 
 
 def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_bars=False, is_float=True):
@@ -181,15 +178,17 @@ def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_b
 
         ax.set_xticks(x_pos)
         if is_float:
-            ax.set_xticklabels([f"{v:.6f}" for v in x], rotation=45, ha='right')
+            ax.set_xticklabels([f"{v:.6f}" for v in x], rotation=45, ha="right")
         else:
-            ax.set_xticklabels([str(v) for v in x], ha='right')
+            ax.set_xticklabels([str(v) for v in x], ha="right")
 
     else:
         space = (max_val - min_val) / 10
-        ax.hist(java_data, bins=50, alpha=0.5, label="Java", color="blue")
-        ax.hist(python_data, bins=50, alpha=0.5, label="Python", color="orange")
-        ax.set_xlim((-space, max_val + space))
+        bins = np.linspace(min_val - space, max_val + space, 51)
+
+        ax.hist(java_data, bins=bins, alpha=0.5, label="Java", color="blue")
+        ax.hist(python_data, bins=bins, alpha=0.5, label="Python", color="orange")
+        ax.set_xlim((min_val-space, max_val + space))
 
         if x_lim is not None:
             ax.set_xlim(x_lim)
@@ -202,9 +201,9 @@ def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_b
     return ax
 
 
-def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_length,
-                                      num_wins, num_classified_patterns,
-                                      df, df_rules, title):
+def crossover_test_helper_plot_assert(
+    error_rate, num_rules, rule_weight, rule_length, num_wins, num_classified_patterns, df, df_rules, title
+):
     # fix imprecision issues
     precision = 6  # 1e-6
     error_rate = np.round(error_rate, precision)
@@ -229,8 +228,7 @@ def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_l
 
     axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
 
-    axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules",
-                                  use_bars=True, is_float=False)
+    axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules", use_bars=True, is_float=False)
 
     plt.tight_layout()
     plt.show()
@@ -249,8 +247,9 @@ def crossover_test_helper_plot_assert(error_rate, num_rules, rule_weight, rule_l
 
     axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins", is_float=False)
 
-    axs[3] = plot_comparison_plot(axs[3], num_classified_patterns, java_num_classified_patterns,
-                                  f"Number of Classified Patterns", is_float=False)
+    axs[3] = plot_comparison_plot(
+        axs[3], num_classified_patterns, java_num_classified_patterns, f"Number of Classified Patterns", is_float=False
+    )
 
     plt.tight_layout()
     plt.show()
@@ -297,9 +296,15 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
             num_classified_patterns.append(rule.get_fitness())
 
     crossover_test_helper_plot_assert(
-        error_rate, num_rules, rule_weight, rule_length,
-        num_wins, num_classified_patterns, df, df_rules,
-        title=f"Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations"
+        error_rate,
+        num_rules,
+        rule_weight,
+        rule_length,
+        num_wins,
+        num_classified_patterns,
+        df,
+        df_rules,
+        title=f"Comparison on {data_name} using {crossover.__class__.__name__} on {num_iters} iterations",
     )
 
 

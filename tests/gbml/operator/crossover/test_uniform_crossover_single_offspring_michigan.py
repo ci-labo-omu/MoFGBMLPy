@@ -21,6 +21,7 @@ from pymoo.core.population import Population
 from util import get_a0_0_iris_train_test
 import pytest
 
+
 def get_config(prob):
     train, _ = get_a0_0_iris_train_test()
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
@@ -72,6 +73,7 @@ def test_single_offspring_michigan_copy(prob):
                 offspring[i].X[0].get_vars(), pop[1].X[0].get_vars()
             )
 
+
 def test_uniform_distribution():
     problem, crossover, pop = get_config(1)
 
@@ -82,7 +84,6 @@ def test_uniform_distribution():
     num_iters = 10000
     num_dims = pop[0].X[0].get_num_vars()
     total_known = 0
-
 
     for i in range(num_iters):
         offspring = crossover.do(problem, pop, parents=parents)

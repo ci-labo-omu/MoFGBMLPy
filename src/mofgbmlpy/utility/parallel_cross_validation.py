@@ -196,7 +196,9 @@ def load_results_csv(paths):
     return results
 
 
-def run_cross_validation(args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5, max_workers=None):
+def run_cross_validation(
+    args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5, max_workers=None
+):
     """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
 
     Args:

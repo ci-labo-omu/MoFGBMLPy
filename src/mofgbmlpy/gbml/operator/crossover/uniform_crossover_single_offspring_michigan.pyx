@@ -42,7 +42,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
         offspring = np.empty(new_shape, dtype=X.dtype)
 
         for i in range(n_matings):
-            child_1 = copy.deepcopy(X[0, i, 0])
+            child_1 = copy.deepcopy(X[0, i, 0]) #TODO: deep copies are maybe not useful if done in parent class, recheck
             child_2 = copy.deepcopy(X[1, i, 0])
 
             indices_1 = child_1.get_vars()

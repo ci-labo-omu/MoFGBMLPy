@@ -16,6 +16,7 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 from util import get_a0_0_iris_train_test, get_a0_0_pima_train_test
 import pytest
 
+
 def test_deep_copy():
     # Just check if it raises an exception
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
@@ -26,6 +27,7 @@ def test_deep_copy():
     _ = copy.deepcopy(obj)
 
     assert True
+
 
 def test_example_from_java_iris():
     train, _ = get_a0_0_iris_train_test()
@@ -61,8 +63,9 @@ def test_example_from_java_iris():
     confidences = consequent_factory.calc_confidence_py(antecedent)
     assert len(confidences) == len(expected_confidence)
     for i in range(len(confidences)):
-        assert pytest.approx(confidences[i], 1e-14) == expected_confidence[i], f"Confidence mismatch at index {i}: expected {expected_confidence[i]}, got {confidences[i]}"
-
+        assert (
+            pytest.approx(confidences[i], 1e-14) == expected_confidence[i]
+        ), f"Confidence mismatch at index {i}: expected {expected_confidence[i]}, got {confidences[i]}"
 
     assert pytest.approx(rule.get_rule_weight_py().get_value(), 1e-14) == 0.3286364425761894
 
@@ -101,6 +104,8 @@ def test_example_from_java_pimas():
     confidences = consequent_factory.calc_confidence_py(antecedent)
     assert len(confidences) == len(expected_confidence)
     for i in range(len(confidences)):
-        assert pytest.approx(confidences[i], 1e-14) == expected_confidence[i], f"Confidence mismatch at index {i}: expected {expected_confidence[i]}, got {confidences[i]}"
+        assert (
+            pytest.approx(confidences[i], 1e-14) == expected_confidence[i]
+        ), f"Confidence mismatch at index {i}: expected {expected_confidence[i]}, got {confidences[i]}"
 
     assert pytest.approx(rule.get_rule_weight_py().get_value(), 1e-14) == 0.10032346616200627

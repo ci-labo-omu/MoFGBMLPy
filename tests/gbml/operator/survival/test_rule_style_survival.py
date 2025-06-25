@@ -32,15 +32,23 @@ from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness impo
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 
 from mofgbmlpy.gbml.operator.survival.rule_style_survival import RuleStyleSurvival
-from util import get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol, plot_comparison_plot, \
-    compare_distribution
+from util import (
+    get_a0_0_iris_train_test,
+    create_pittsburgh_sol,
+    create_michigan_sol,
+    plot_comparison_plot,
+    compare_distribution,
+)
 import pytest
+
 
 def get_config():
     train, _ = get_a0_0_iris_train_test()
 
     tests_root = Path(__file__).parents[3]
-    tests_data_root = os.path.join(tests_root, "test_data", "population_samples", "survival", "rule_addition_style_replacement")
+    tests_data_root = os.path.join(
+        tests_root, "test_data", "population_samples", "survival", "rule_addition_style_replacement"
+    )
 
     indices_pop = np.array(json.load(open(os.path.join(tests_data_root, "pop.json"), "r")), int)
     indices_offspring = np.array(json.load(open(os.path.join(tests_data_root, "offspring_pop.json"), "r")), int)
@@ -48,7 +56,9 @@ def get_config():
     sols_pop = np.array([create_michigan_sol(train, antecedent_indices=indices) for indices in indices_pop], object)
     create_pittsburgh_sol(train, SingleWinnerRuleSelection(), sols_pop).update_winners_and_errors(train)
 
-    sols_offspring = np.array([create_michigan_sol(train, antecedent_indices=indices) for indices in indices_offspring], object)
+    sols_offspring = np.array(
+        [create_michigan_sol(train, antecedent_indices=indices) for indices in indices_offspring], object
+    )
     create_pittsburgh_sol(train, SingleWinnerRuleSelection(), sols_offspring).update_winners_and_errors(train)
 
     new_pop_data = json.load(open(os.path.join(tests_data_root, "new_pop.json"), "r"))
@@ -60,7 +70,7 @@ def get_config():
 
 def test_valid():
     pop_size = 9
-    pop_1_size = int(pop_size * (2/3))
+    pop_1_size = int(pop_size * (2 / 3))
     max_num_rules = pop_1_size
 
     sols_pop, sols_offspring, new_pop_expected_indices, new_pop_fitness_expected = get_config()
@@ -83,7 +93,9 @@ def test_valid():
 
     assert new_pop.shape[0] == new_pop_expected_indices.shape[0]
     for i in range(new_pop.shape[0]):
-        assert np.array_equal(np.array(new_pop[i].get_antecedent().get_antecedent_indices(), int), new_pop_expected_indices[i])
+        assert np.array_equal(
+            np.array(new_pop[i].get_antecedent().get_antecedent_indices(), int), new_pop_expected_indices[i]
+        )
         assert new_pop[i].get_fitness() == new_pop_fitness_expected[i]
 
     #
@@ -114,7 +126,3 @@ def test_valid():
 
     # with open("offspring_pop.json", "w") as f:
     #     json.dump([[idx for idx in sol.get_antecedent().get_antecedent_indices()] for sol in pop2], f)
-
-
-
-

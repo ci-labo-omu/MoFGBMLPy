@@ -77,7 +77,8 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
                     generated_solutions.append(copy.deepcopy(p1_obj))
                     if len(generated_solutions) == num_offspring:
-                        return generated_solutions
+                        # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
+                        break
                     generated_solutions.append(copy.deepcopy(p2_obj))
                 else:
                     generated_solutions.append(offspring[j].X[0])

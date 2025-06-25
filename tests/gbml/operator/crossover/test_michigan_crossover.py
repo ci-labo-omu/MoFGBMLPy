@@ -30,8 +30,15 @@ from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness import NaryTournamentSelectionOnFitness
 
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
-from util import get_a0_0_iris_train_test, crossover_test_helper_init_config, crossover_test_helper_run, \
-    plot_comparison_plot, compare_distribution, create_pittsburgh_sol, crossover_test_helper_plot_assert
+from util import (
+    get_a0_0_iris_train_test,
+    crossover_test_helper_init_config,
+    crossover_test_helper_run,
+    plot_comparison_plot,
+    compare_distribution,
+    create_pittsburgh_sol,
+    crossover_test_helper_plot_assert,
+)
 import pytest
 
 
@@ -109,12 +116,13 @@ def test_distribution_java():
         data_name_config_path = os.path.join(tests_data_root, data_name)
         crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path)
 
+
 def test_distribution_ga_rules_gen():
     # set seed of pymoo
     np.random.seed(2022)
 
     max_num_rules = 60
-    michigan_crossover_probability = 1.0
+    michigan_crossover_probability = 0.9
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
@@ -136,10 +144,12 @@ def test_distribution_ga_rules_gen():
             michigan_crossover_probability,
         )
 
-        michigan_problem = MichiganProblem([],  # Objectives are not used
-                                           problem.get_num_constraints(),
-                                           problem.get_training_set(),
-                                           problem.get_rule_builder())
+        michigan_problem = MichiganProblem(
+            [],  # Objectives are not used
+            problem.get_num_constraints(),
+            problem.get_training_set(),
+            problem.get_rule_builder(),
+        )
 
         m_crossover = UniformCrossoverSingleOffspringMichigan(random_gen, michigan_crossover_probability)
 
@@ -183,16 +193,16 @@ def test_distribution_ga_rules_gen():
             michigan_population = Population.new(X=michigan_solutions_array)
 
             generated_solutions = crossover.ga_rules_gen(
-                m_crossover,
-                mutation,
-                selection,
-                michigan_population,
-                michigan_problem,
-                num_ga,
-                2
+                m_crossover, mutation, selection, michigan_population, michigan_problem, num_ga, 2
             )
+            for sol in generated_solutions:
+                for var in parent_vars:
+                    assert id(var) != id(sol)
+                    assert id(var.get_vars().base) != id(sol.get_vars().base)
 
-            p_sol = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object))
+            p_sol = create_pittsburgh_sol(
+                problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object)
+            )
 
             p_sol.update_winners_and_errors(problem.get_training_set())
             problem.evaluate(np.array([[p_sol]], dtype=object))
@@ -282,7 +292,9 @@ def test_distribution_heuristic_rules_gen():
 
             generated_solutions = crossover.heuristic_rules_gen(parent, num_heuristic)
 
-            p_sol = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object))
+            p_sol = create_pittsburgh_sol(
+                problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object)
+            )
 
             p_sol.update_winners_and_errors(problem.get_training_set())
             problem.evaluate(np.array([[p_sol]], dtype=object))

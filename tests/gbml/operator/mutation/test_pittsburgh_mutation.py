@@ -1,6 +1,6 @@
 # TODO: The Java version is not consistent (mutation rate param is not used), so this test won't pass if the Python version is like the Java one
 
-
+#
 # import copy
 # import json
 # import os
@@ -28,7 +28,7 @@
 #
 # from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 #
-   # from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
+# from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
 #
 # from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 #
