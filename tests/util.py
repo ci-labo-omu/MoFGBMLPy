@@ -136,20 +136,7 @@ def float_eq(value1, value2, precision=1e-6):
     return abs(value1 - value2) < precision  # TODO: change to use pytest.approx, or another function instead
 
 
-def compare_distribution(x, y, var_name, relative_tol=0.01):
-    # combined = np.concatenate([x, y])
-    # data_range = np.max(combined) - np.min(combined)
-    #
-    # if data_range == 0:
-    #     return
-    #
-    # threshold = relative_tol * data_range
-    # w_dist = wasserstein_distance(x, y)
-
-    # assert (
-    #     w_dist < threshold
-    # ), f"{var_name} distributions are too different (Wasserstein distance: {w_dist} >= {threshold})"
-
+def compare_distribution(x, y, var_name):
     _, p_value = ranksums(x, y)
     assert p_value > 0.05, f"{var_name} distributions are too different (p-value: {p_value} <= 0.05)"
 
@@ -201,9 +188,16 @@ def plot_comparison_plot(ax, python_data, java_data, var_name, x_lim=None, use_b
     return ax
 
 
-def crossover_test_helper_plot_assert(
+def distribution_test_helper_plot_assert(
     error_rate, num_rules, rule_weight, rule_length, num_wins, num_classified_patterns, df, df_rules, title
 ):
+    error_rate = np.array(error_rate)
+    num_rules = np.array(num_rules)
+    rule_length = np.array(rule_length)
+    num_wins = np.array(num_wins)
+    num_classified_patterns = np.array(num_classified_patterns)
+    rule_weight = np.array(rule_weight)
+
     # fix imprecision issues
     precision = 6  # 1e-6
     error_rate = np.round(error_rate, precision)
@@ -295,7 +289,7 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
             num_wins.append(rule.get_num_wins())
             num_classified_patterns.append(rule.get_fitness())
 
-    crossover_test_helper_plot_assert(
+    distribution_test_helper_plot_assert(
         error_rate,
         num_rules,
         rule_weight,
@@ -332,7 +326,7 @@ def crossover_test_helper_init_config(data_name):
     objectives = np.array([ErrorRate(train), NumRules()])
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
-    problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
+    problem = PittsburghProblem(30, objectives, 0, train, michigan_solution_builder, classification)
     indices = json.load(open(tests_data_parents_path, "r"))
 
     sol1_indices = np.array(indices[0], dtype=np.int32)

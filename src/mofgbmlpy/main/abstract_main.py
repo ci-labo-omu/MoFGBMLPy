@@ -24,6 +24,8 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMulti
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
+
+from mofgbmlpy.gbml.operator.survival.rank_and_crowding_deterministic import RankAndCrowdingDeterministic
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 from mofgbmlpy.utility.util import dash_case_to_snake_case, dash_case_to_class_name
 from mofgbmlpy.main.arguments.arguments import Arguments

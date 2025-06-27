@@ -63,7 +63,7 @@ def get_config(sol1_num_rules, sol2_num_rules):
     objectives = np.array([])
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
-    num_vars = train.get_num_dim()
+    num_vars = 30
     objectives = np.array([ErrorRate(train), NumRules()])
 
     problem = PittsburghProblem(num_vars, objectives, 0, train, michigan_solution_builder, classification)

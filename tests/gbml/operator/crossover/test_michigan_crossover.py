@@ -37,7 +37,7 @@ from util import (
     plot_comparison_plot,
     compare_distribution,
     create_pittsburgh_sol,
-    crossover_test_helper_plot_assert,
+    distribution_test_helper_plot_assert,
 )
 import pytest
 
@@ -219,14 +219,7 @@ def test_distribution_ga_rules_gen():
                 num_classified_patterns.append(sol.get_fitness())
                 rule_weight.append(sol.get_rule_weight_py().get_value())
 
-        error_rate = np.array(error_rate)
-        num_rules = np.array(num_rules)
-        rule_length = np.array(rule_length)
-        num_wins = np.array(num_wins)
-        num_classified_patterns = np.array(num_classified_patterns)
-        rule_weight = np.array(rule_weight)
-
-        crossover_test_helper_plot_assert(
+        distribution_test_helper_plot_assert(
             error_rate,
             num_rules,
             rule_weight,
@@ -311,14 +304,8 @@ def test_distribution_heuristic_rules_gen():
                 num_classified_patterns.append(sol.get_fitness())
                 rule_weight.append(sol.get_rule_weight_py().get_value())
 
-        error_rate = np.array(error_rate)
-        num_rules = np.array(num_rules)
-        rule_length = np.array(rule_length)
-        num_wins = np.array(num_wins)
-        num_classified_patterns = np.array(num_classified_patterns)
-        rule_weight = np.array(rule_weight)
 
-        crossover_test_helper_plot_assert(
+        distribution_test_helper_plot_assert(
             error_rate,
             num_rules,
             rule_weight,

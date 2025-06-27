@@ -149,12 +149,13 @@ class PittsburghProblem(Problem):
             # Update eval values
             sol.update_winners_and_errors(self.__training_ds)
 
-            k = 0
+            indices_to_remove = []
             for j in range(sol.get_num_vars()):
-                if sol.get_var(k).get_num_wins() < 1:
-                    sol.remove_var(k)
-                else:
-                    k += 1
+                if sol.get_var(j).get_num_wins() < 1:
+                    indices_to_remove.append(j)
+
+            if len(indices_to_remove) != 0:
+                sol.remove_vars(np.array(indices_to_remove, dtype=np.int32))
 
             if sol.get_num_vars() == 0:
                 raise EmptyPittsburghSolution()

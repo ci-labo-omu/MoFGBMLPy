@@ -866,7 +866,7 @@ def test_rule_example():
     objectives = np.array([ErrorRate(train), NumRules()])
     michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
-    problem = PittsburghProblem(train.get_num_dim(), objectives, 0, train, michigan_solution_builder, classification)
+    problem = PittsburghProblem(30, objectives, 0, train, michigan_solution_builder, classification)
 
     michigan_sol_1 = create_michigan_sol(train, antecedent_indices=np.array([1, 3, 7, 0], dtype=np.int32))
     michigan_sol_2 = create_michigan_sol(train, antecedent_indices=np.array([6, 0, 10, 0], dtype=np.int32))

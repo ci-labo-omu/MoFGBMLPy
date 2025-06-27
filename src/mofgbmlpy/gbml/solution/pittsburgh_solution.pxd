@@ -23,7 +23,7 @@ cdef class PittsburghSolution(AbstractSolution):
     cpdef MichiganSolutionBuilder get_michigan_solution_builder(self)
     cpdef void learning(self, Dataset dataset=?)
     cpdef double get_average_rule_weight(self)
-    cpdef void remove_var(self, int index)
+    cpdef void remove_vars(self, int[:] indices)
     cpdef void clear_vars(self)
     cpdef MichiganSolution[:] get_vars(self)
     cpdef MichiganSolution get_var(self, int index)

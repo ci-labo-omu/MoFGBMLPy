@@ -48,49 +48,48 @@ class PittsburghMutation(Mutation):
         training_set_size = training_set.get_size()
         dim = training_set.get_num_dim()
 
-        # for each individual
-
+        # for each individual (Pittsburgh solution)
         for s in range(len(X)):
-            for i in range(len(X[s])):
-                # for each michigan solution (rule)
-                for michigan_sol_i in range(X[s][i].get_num_vars()):
-                    if self._random_gen.integers(X[s][i].get_num_vars()) != 0:
-                        continue
+            sol = X[s, 0]
+            num_rules = sol.get_num_vars()
+            # for each michigan solution (rule)
+            for michigan_sol_i in range(num_rules):
+                if self._random_gen.integers(num_rules) != 0:
+                    continue
 
-                    mutated_dim = self._random_gen.integers(0, dim)
+                current_michigan_solution = sol.get_var(michigan_sol_i)
 
-                    # Check if the mutated dim is categorical (<0) or numerical (>=0)
-                    var_of_random_pattern = (training_set.get_pattern(self._random_gen.integers(0, training_set_size))
-                                             .get_attribute_value(mutated_dim))
+                mutated_dim = self._random_gen.integers(dim)
 
-                    if var_of_random_pattern >= 0:
-                        num_candidate_values = self.__knowledge.get_num_fuzzy_sets(mutated_dim)
-                        if num_candidate_values <= 1:
-                            break  # Only one possible value so we can't change it
+                # Check if the mutated dim is categorical (<0) or numerical (>=0)
+                var_of_random_pattern = (training_set.get_pattern(self._random_gen.integers(training_set_size))
+                                         .get_attribute_value(mutated_dim))
 
-                        current_michigan_solution = X[s][i].get_var(michigan_sol_i)
-                        # print(mutated_dim, current_michigan_solution.get_num_vars(), current_michigan_solution)
-                        current_fuzzy_set_index = current_michigan_solution.get_var(mutated_dim)
-                        new_fuzzy_set_index = self._random_gen.integers(0, num_candidate_values - 1)
+                if var_of_random_pattern >= 0:
+                    num_candidate_values = self.__knowledge.get_num_fuzzy_sets(mutated_dim)
+                    if num_candidate_values <= 1:
+                        break  # Only one possible value so we can't change it
 
-                        # Prevent the value from staying the same
-                        if new_fuzzy_set_index >= current_fuzzy_set_index:
-                            new_fuzzy_set_index += 1
+                    current_fuzzy_set_index = current_michigan_solution.get_var(mutated_dim)
+                    new_fuzzy_set_index = self._random_gen.integers(0, num_candidate_values - 1)
 
-                        new_michigan_solution = copy.deepcopy(current_michigan_solution)
-                        new_michigan_solution.set_var(mutated_dim, new_fuzzy_set_index)
-                        new_michigan_solution.learning()
+                    # Prevent the value from staying the same
+                    if new_fuzzy_set_index >= current_fuzzy_set_index:
+                        new_fuzzy_set_index += 1
 
-                        if not new_michigan_solution.get_consequent().is_rejected():
-                            X[s][i].set_var(michigan_sol_i, new_michigan_solution)
-                    else:
-                        current_michigan_solution = X[s][i].get_var(michigan_sol_i)
-                        new_michigan_solution = copy.deepcopy(current_michigan_solution)
+                    new_michigan_solution = copy.deepcopy(current_michigan_solution)
+                    new_michigan_solution.set_var(mutated_dim, new_fuzzy_set_index)
+                    new_michigan_solution.learning()
 
-                        new_michigan_solution.set_var(mutated_dim, round(var_of_random_pattern))
-                        new_michigan_solution.learning()
+                    if not new_michigan_solution.get_consequent().is_rejected():
+                        sol.set_var(michigan_sol_i, new_michigan_solution)
+                else:
+                    new_michigan_solution = copy.deepcopy(current_michigan_solution)
 
-                        if not new_michigan_solution.get_consequent().is_rejected():
-                            X[s][i].set_var(michigan_sol_i, new_michigan_solution)
+                    new_michigan_solution.set_var(mutated_dim, round(var_of_random_pattern))
+                    new_michigan_solution.learning()
+
+                    if not new_michigan_solution.get_consequent().is_rejected():
+                        sol.set_var(michigan_sol_i, new_michigan_solution)
 
         return X

@@ -153,13 +153,13 @@ cdef class PittsburghSolution(AbstractSolution):
             hash_val += hash_val * 17 + hash(self._vars[i]) * 17
         return hash_val
 
-    cpdef void remove_var(self, int index):
+    cpdef void remove_vars(self, int[:] indices):
         """Remove the variable at the given index
-        
+
         Args:
-            index (int): Index of the variable removed 
+            indices (int[]): Indices of the variables removed 
         """
-        self._vars = np.delete(self._vars, index)
+        self._vars = np.delete(self._vars, indices)
 
     cpdef void clear_vars(self):
         """Clear the variables"""
@@ -410,10 +410,6 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef MichiganSolution winner_solution
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef Pattern p
-
-        for sol in self._vars:
-           sol.reset_num_wins()
-           sol.reset_fitness()
 
         for i in range(dataset.get_size()):
            p = patterns[i]
