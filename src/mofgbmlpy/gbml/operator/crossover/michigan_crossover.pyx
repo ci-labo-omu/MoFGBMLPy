@@ -63,7 +63,11 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         mating_pop = selection.do(problem, pop, num_offspring, n_parents, to_pop=False)
         generated_solutions = []
 
-        for i in range(0, num_offspring):
+        # print(f"mating_pop shape: {mating_pop.shape}, num_offspring: {num_offspring}, n_parents: {n_parents}")
+        for i in range(num_offspring):
+            # print(f"parents - {mating_pop[i][0]}: {pop[mating_pop[i][1]].X[0]} | {mating_pop[i][1]}: {pop[mating_pop[i][0]].X[0]}")
+            # if mating_pop[i][0] == mating_pop[i][1]:
+            #     raise ValueError("The two parents for the crossover are the same, which is not allowed in Michigan crossover.")
             parents = mating_pop[i]
             p1_obj = pop[parents[0]].X[0]
             p2_obj = pop[parents[1]].X[0]
@@ -74,18 +78,24 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             for j in range(len(offspring)):
                 offspring[j].X[0].learning()
 
+            is_offspring_invalid = False
+            for j in range(len(offspring)):
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
-                    generated_solutions.append(copy.deepcopy(p1_obj))
+                    is_offspring_invalid = True
+                    break
+
+            if is_offspring_invalid:
+                generated_solutions.append(copy.deepcopy(p1_obj))
+                if len(generated_solutions) == num_offspring:
+                    # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
+                    continue
+                generated_solutions.append(copy.deepcopy(p2_obj))
+            else:
+                for j in range(len(offspring)):
+                    generated_solutions.append(offspring[j].X[0])
                     if len(generated_solutions) == num_offspring:
                         # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
                         break
-                    generated_solutions.append(copy.deepcopy(p2_obj))
-                else:
-                    generated_solutions.append(offspring[j].X[0])
-
-                if len(generated_solutions) == num_offspring:
-                    # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
-                    break
 
         return generated_solutions
 
@@ -176,7 +186,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
 
                 crossover = UniformCrossoverSingleOffspringMichigan(self._random_gen, self.__crossover_rate)
 
-                mutation_rt = 1/self.__training_set.get_num_dim()
+                mutation_rt = 1 / self.__training_set.get_num_dim()
                 mutation = MichiganMutation(self.__knowledge, mutation_rt, self._random_gen)
 
                 if parent.get_num_vars() == 1:
@@ -184,7 +194,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                     tournament_size = 1
                 else:
                     tournament_size = 2
-                selection = NaryTournamentSelectionOnFitness(tournament_size)
+                selection = NaryTournamentSelectionOnFitness(self._random_gen, tournament_size)
 
                 michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
                 parent_vars = parent.get_vars()
@@ -203,12 +213,17 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                 generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
 
             # 5. Replacement: Single objective maximization replacement based on the fitness value
-            generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
+            parent_copy = copy.deepcopy(parent)
+            generated_solutions = RuleStyleSurvival.replace(parent_copy.get_vars(), generated_solutions, self.__max_num_rules)
 
-            # generated_solutions = np.array(sorted(
-            #     generated_solutions,
-            #     key=cmp_to_key(lambda x, y: MichiganCrossover.radix_sort_michigan(x, y))
-            # ))
+
+            # Hypothesis: This radix sort might be needed when we compare Michigan solutions between two parents
+            # (e.g. in Hybrid crossover), since rules order is not considered when we check if they are the same or not
+            # (if we have the same rules in another orders it would be considered different)
+            generated_solutions = np.array(sorted(
+                generated_solutions,
+                key=cmp_to_key(lambda x, y: MichiganCrossover.radix_sort_michigan(x, y))
+            ))
 
             offspring = copy.deepcopy(parent)
             offspring.clear_vars()

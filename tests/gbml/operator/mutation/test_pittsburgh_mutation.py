@@ -37,7 +37,7 @@ from mofgbmlpy.gbml.objectives.pittsburgh.error_rate import ErrorRate
 
 from mofgbmlpy.gbml.objectives.pittsburgh.num_rules import NumRules
 from util import get_a0_0_iris_train_test, create_pittsburgh_sol, create_michigan_sol, \
-    crossover_test_helper_init_config, distribution_test_helper_plot_assert
+    helper_init_config, distribution_test_helper_plot_assert
 import pytest
 
 def test_java_distribution():
@@ -47,7 +47,7 @@ def test_java_distribution():
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
         train = problem.get_training_set()
         knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
 

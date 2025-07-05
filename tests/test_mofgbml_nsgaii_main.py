@@ -154,7 +154,7 @@ def test_deepcopy_generations():
     assert True
 
 def test_java_distribution_iris():
-    num_evals = 8
+    num_evals = 12
     num_iters = 200
     pop_size = 5
 

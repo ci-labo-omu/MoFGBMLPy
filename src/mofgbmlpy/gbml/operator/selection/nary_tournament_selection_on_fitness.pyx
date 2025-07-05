@@ -1,8 +1,8 @@
 import numpy as np
-from pymoo.operators.selection.tournament import TournamentSelection
+from pymoo.operators.selection.tournament import Selection
 
 
-class NaryTournamentSelectionOnFitness(TournamentSelection):
+class NaryTournamentSelectionOnFitness(Selection):
     """N-ary tournament selection operator for Michigan solutions based on fitness. Used to select parents"""
     @staticmethod
     def nary_fitness_tournament(pop, P, **kwargs):
@@ -38,10 +38,28 @@ class NaryTournamentSelectionOnFitness(TournamentSelection):
             S[i] = winner
         return S[:, None]
 
-    def __init__(self, tournament_size=2):
+    def __init__(self, random_gen, tournament_size=2, **kwargs):
         """Constructor
 
         Args:
             tournament_size (int): Size of the tournament
         """
-        super().__init__(func_comp=NaryTournamentSelectionOnFitness.nary_fitness_tournament, pressure=tournament_size)
+        super().__init__(**kwargs)
+
+        # selection pressure to be applied
+        self.pressure = tournament_size
+        self.func_comp = NaryTournamentSelectionOnFitness.nary_fitness_tournament
+        self._random_gen = random_gen
+
+    def _do(self, _, pop, n_select, n_parents=1, **kwargs):
+        mating_pool_size = n_select * n_parents
+        P = np.empty((mating_pool_size, self.pressure), dtype=int)
+        for i in range(mating_pool_size):
+            tournament = self._random_gen.choice(len(pop), size=self.pressure, replace=False)
+            # tournament = set()
+            # while len(tournament) < self.pressure:
+            #     tournament.add(self._random_gen.integers(len(pop)))
+            P[i] = np.array(list(tournament), dtype=int)
+
+        S = self.func_comp(pop, P, **kwargs)
+        return np.reshape(S, (n_select, n_parents))

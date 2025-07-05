@@ -214,46 +214,50 @@ def distribution_test_helper_plot_assert(
     java_num_wins = np.round(df_rules["num_wins"].values, precision)
     java_num_classified_patterns = np.round(df_rules["num_classified_patterns"].values, precision)
 
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-    fig.suptitle(
-        f"(Pittsburgh Solutions) {title}",
-        fontweight="bold",
-    )
+    try:
+        compare_distribution(java_rule_weight, rule_weight, "Rule weight")
+        compare_distribution(java_rule_length, rule_length, "Rule length")
+        compare_distribution(java_num_wins, num_wins, "Number of wins")
+        compare_distribution(java_num_classified_patterns, num_classified_patterns, "Number of classified patterns")
+    except AssertionError as e:
+        fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+        fig.suptitle(
+            f"(Pittsburgh Solutions) {title}",
+            fontweight="bold",
+        )
 
-    axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
+        axs[0] = plot_comparison_plot(axs[0], error_rate, java_error_rate, "Error Rate")
 
-    axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules", use_bars=True, is_float=False)
+        axs[1] = plot_comparison_plot(axs[1], num_rules, java_num_rules, f"Number of Rules", use_bars=True,
+                                      is_float=False)
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
 
-    # now we compare rules, we plot each vars on one row (2 plots) similarly
-    fig, axs = plt.subplots(2, 2, figsize=(12, 12))
-    axs = axs.flatten()
-    fig.suptitle(
-        f"(Michigan Solutions) {title}",
-        fontweight="bold",
-    )
+        # now we compare rules, we plot each vars on one row (2 plots) similarly
+        fig, axs = plt.subplots(2, 2, figsize=(12, 12))
+        axs = axs.flatten()
+        fig.suptitle(
+            f"(Michigan Solutions) {title}",
+            fontweight="bold",
+        )
 
-    axs[0] = plot_comparison_plot(axs[0], rule_weight, java_rule_weight, "Rule Weight")
+        axs[0] = plot_comparison_plot(axs[0], rule_weight, java_rule_weight, "Rule Weight")
 
-    axs[1] = plot_comparison_plot(axs[1], rule_length, java_rule_length, f"Rule Length", use_bars=True, is_float=False)
+        axs[1] = plot_comparison_plot(axs[1], rule_length, java_rule_length, f"Rule Length", use_bars=True,
+                                      is_float=False)
 
-    axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins", is_float=False)
+        axs[2] = plot_comparison_plot(axs[2], num_wins, java_num_wins, f"Number of Wins", is_float=False)
 
-    axs[3] = plot_comparison_plot(
-        axs[3], num_classified_patterns, java_num_classified_patterns, f"Number of Classified Patterns", is_float=False
-    )
+        axs[3] = plot_comparison_plot(
+            axs[3], num_classified_patterns, java_num_classified_patterns, f"Number of Classified Patterns",
+            is_float=False
+        )
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
 
-    compare_distribution(java_error_rate, error_rate, "Error rate")
-    compare_distribution(java_num_rules, num_rules, "Number of rules")
-    compare_distribution(java_rule_weight, rule_weight, "Rule weight")
-    compare_distribution(java_rule_length, rule_length, "Rule length")
-    compare_distribution(java_num_wins, num_wins, "Number of wins")
-    compare_distribution(java_num_classified_patterns, num_classified_patterns, "Number of classified patterns")
+        raise e
 
 
 def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_name_config_path):
@@ -302,7 +306,7 @@ def crossover_test_helper_run(crossover, problem, pop, parents, data_name, data_
     )
 
 
-def crossover_test_helper_init_config(data_name):
+def helper_init_config(data_name):
     # set seed of pymoo
     np.random.seed(2022)
     tests_root = Path(__file__).parent

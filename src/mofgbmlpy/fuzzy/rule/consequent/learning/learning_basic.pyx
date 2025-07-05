@@ -4,6 +4,7 @@ cimport numpy as cnp
 
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_basic cimport ConsequentBasic
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
@@ -154,11 +155,10 @@ cdef class LearningBasic(AbstractLearning):
         if label_value < 0 or label_value >= len(confidence):
             raise IndexError("Label value is out of bounds for the confidence array")
 
+        cdef double sum_confidence = np.sum(confidence)
+        cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
         # TODO Re-check the effect of this modification on the results and recheck it's validity
-        # cdef double sum_confidence = np.sum(confidence)
-        # cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
-        cdef double rule_weight_val = (confidence[label_value] * 2) - 1
-
+        # cdef double rule_weight_val = (confidence[label_value] * 2) - 1
 
         if rule_weight_val <= reject_threshold:
             class_label.set_rejected()

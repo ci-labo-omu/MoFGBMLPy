@@ -32,7 +32,7 @@ from mofgbmlpy.gbml.operator.selection.nary_tournament_selection_on_fitness impo
 from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
 from util import (
     get_a0_0_iris_train_test,
-    crossover_test_helper_init_config,
+    helper_init_config,
     crossover_test_helper_run,
     plot_comparison_plot,
     compare_distribution,
@@ -90,7 +90,7 @@ def test_crossover_copy(prob):
 
 def test_distribution_java():
     max_num_rules = 60
-    michigan_crossover_probability = 1.0
+    michigan_crossover_probability = 0.9
     rule_change_rate = 0.2
 
     tests_root = Path(__file__).parents[3]
@@ -99,7 +99,7 @@ def test_distribution_java():
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
         parents = np.array([[0]])
 
         problem.evaluate(pop.get("X"))
@@ -131,7 +131,7 @@ def test_distribution_ga_rules_gen():
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
 
         problem.evaluate(pop.get("X"))
 
@@ -157,13 +157,14 @@ def test_distribution_ga_rules_gen():
         mutation = MichiganMutation(problem.get_knowledge(), mutation_rt, random_gen)
 
         parent = pop[0].X[0]
+        rules = parent.get_vars()[:2]  # Simplify the Pittsburgh solution
 
-        if parent.get_num_vars() == 1:
-            # no crossover
-            tournament_size = 1
-        else:
-            tournament_size = 2
-        selection = NaryTournamentSelectionOnFitness(tournament_size)
+        parent = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(rules, object))
+
+        problem.evaluate(np.array([[parent]], dtype=object))
+
+        tournament_size = 2
+        selection = NaryTournamentSelectionOnFitness(random_gen, tournament_size)
 
         data_name_config_path = os.path.join(tests_data_root, data_name)
 
@@ -174,7 +175,7 @@ def test_distribution_ga_rules_gen():
         file_path = os.path.join(ga_gen_files_path, "offsprings.csv")
         df = pd.read_csv(file_path, header=0)
 
-        num_ga = len(df_rules) // len(df)
+        num_ga = 5
         num_offspring = len(df)
 
         error_rate = []
@@ -204,7 +205,8 @@ def test_distribution_ga_rules_gen():
                 problem.get_training_set(), SingleWinnerRuleSelection(), np.array(generated_solutions, object)
             )
 
-            p_sol.update_winners_and_errors(problem.get_training_set())
+            p_sol.learning()
+
             problem.evaluate(np.array([[p_sol]], dtype=object))
 
             error_rate.append(p_sol.get_error_rate())
@@ -243,7 +245,7 @@ def test_distribution_heuristic_rules_gen():
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
 
         problem.evaluate(pop.get("X"))
 

@@ -21,7 +21,7 @@ from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBu
 
 from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 from mofgbmlpy.main.arguments.arguments import Arguments
-from util import get_a0_0_iris_train_test, crossover_test_helper_init_config, distribution_test_helper_plot_assert
+from util import get_a0_0_iris_train_test, helper_init_config, distribution_test_helper_plot_assert
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 
 
@@ -64,7 +64,7 @@ def test_java_distribution():
         file_path = os.path.join(data_name_config_path, "offsprings_rules.csv")
         df_rules = pd.read_csv(file_path, header=0)
 
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
         train = problem.get_training_set()
 
         consequent_factory = LearningBasic(train)
@@ -79,7 +79,7 @@ def test_java_distribution():
         num_wins = []
         num_classified_patterns = []
 
-        _, problem, random_gen = crossover_test_helper_init_config(data_name)
+        _, problem, random_gen = helper_init_config(data_name)
 
         num_iters = len(df) // pop_size
 

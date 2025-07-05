@@ -39,7 +39,7 @@ from util import (
     get_a0_0_iris_train_test,
     create_pittsburgh_sol,
     create_michigan_sol,
-    crossover_test_helper_init_config,
+    helper_init_config,
     crossover_test_helper_run,
     get_hybrid_crossover,
 )
@@ -54,7 +54,7 @@ def test_distribution_java():
     data_names = [name for name in os.listdir(tests_data_root) if os.path.isdir(os.path.join(tests_data_root, name))]
 
     for data_name in data_names:
-        pop, problem, random_gen = crossover_test_helper_init_config(data_name)
+        pop, problem, random_gen = helper_init_config(data_name)
 
         parents = np.array([[0, 1]])
 

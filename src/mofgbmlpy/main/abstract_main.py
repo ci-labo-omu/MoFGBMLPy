@@ -285,6 +285,7 @@ class AbstractMain(ABC):
             "crossover": self._crossover,
             "repair": self._repair,
             "mutation": self._mutation,
+            "survival": RankAndCrowdingDeterministic(),
         }
 
         conversion_table = {"n_offsprings": "OFFSPRING_POPULATION_SIZE"}

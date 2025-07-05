@@ -77,17 +77,17 @@ def test_valid():
 
     new_pop = RuleStyleSurvival.replace(sols_pop, sols_offspring, max_num_rules=max_num_rules)
 
-    print("\nPopulation size:", sols_pop.shape[0])
-    for sol in sols_pop:
-        print(sol)
-
-    print("\nOffspring population size:", sols_offspring.shape[0])
-    for sol in sols_offspring:
-        print(sol)
-
-    print("\nNew population size:", new_pop.shape[0])
-    for sol in new_pop:
-        print(sol)
+    # print("\nPopulation size:", sols_pop.shape[0])
+    # for sol in sols_pop:
+    #     print(sol)
+    #
+    # print("\nOffspring population size:", sols_offspring.shape[0])
+    # for sol in sols_offspring:
+    #     print(sol)
+    #
+    # print("\nNew population size:", new_pop.shape[0])
+    # for sol in new_pop:
+    #     print(sol)
 
     assert new_pop.shape[0] == min(pop_size, max_num_rules)
 

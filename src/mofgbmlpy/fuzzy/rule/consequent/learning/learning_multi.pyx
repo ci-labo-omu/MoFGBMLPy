@@ -3,10 +3,13 @@ import numpy as np
 cimport numpy as cnp
 
 from mofgbmlpy.data.class_label.abstract_class_label import AbstractClassLabel
+from mofgbmlpy.data.class_label.class_label_multi cimport ClassLabelMulti
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_multi cimport ConsequentMulti
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi cimport RuleWeightMulti
 from mofgbmlpy.data.pattern cimport Pattern
 from libc.math cimport INFINITY
 

@@ -61,16 +61,16 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
                     at_least_one_pittsburgh_crossover = True
 
         if at_least_one_pittsburgh_crossover:
-            Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
+            Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, ~michigan_crossover_mask], **kwargs)
 
         if at_least_one_michigan_crossover:
             Y_michigan = self.__michigan_crossover.execute(problem, np.expand_dims(X[0, michigan_crossover_mask], axis=0), **kwargs)
 
         if at_least_one_michigan_crossover and at_least_one_pittsburgh_crossover:
             return np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
-        elif not at_least_one_michigan_crossover:
-            return Y_pittsburgh
-        elif not at_least_one_pittsburgh_crossover:
+        elif at_least_one_michigan_crossover:
             return Y_michigan
+        elif at_least_one_pittsburgh_crossover:
+            return Y_pittsburgh
         else:
             raise ValueError("No offspring created during hybrid crossover. It might be because n_matings is null")

@@ -35,7 +35,7 @@ from util import (
     create_pittsburgh_sol,
     create_michigan_sol,
     plot_comparison_plot,
-    compare_distribution,
+    compare_distribution, helper_init_config,
 )
 import pytest
 
@@ -45,7 +45,7 @@ def get_config(pop_size, tournament_size):
     random_gen = np.random.Generator(np.random.MT19937(seed=2022))
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(train.get_num_dim()).create()
 
-    selection = NaryTournamentSelectionOnFitness(tournament_size=tournament_size)
+    selection = NaryTournamentSelectionOnFitness(random_gen, tournament_size=tournament_size)
 
     antecedent_factory = HeuristicAntecedentFactory(train, knowledge, False, 0.8, 5, random_gen)
     consequent_factory = LearningBasic(train)
@@ -87,7 +87,7 @@ def get_config(pop_size, tournament_size):
     return problem, pop, selection
 
 
-def test_distribution():
+def test_distribution_java():
     num_parents = 2
     num_offspring = 100
     pop_size = 100
@@ -120,22 +120,26 @@ def test_distribution():
     java_fitness = np.array(java_df["num_classified_patterns"].values)
     java_indices = np.array(java_df["rule_index"].values)
 
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-    axs = axs.flatten()
-    fig.suptitle(
-        f"Comparison of Binary Tournament Selection on Fitness on {num_iters} iterations",
-        fontweight="bold",
-    )
+    try:
+        compare_distribution(java_fitness, fitness, "Fitness")
+        compare_distribution(java_indices, selected_indices, "Selected Indices")
+    except AssertionError as e:
+        fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+        axs = axs.flatten()
+        fig.suptitle(
+            f"Comparison of Binary Tournament Selection on Fitness on {num_iters} iterations",
+            fontweight="bold",
+        )
 
-    max_fitness = max(np.max(fitness), np.max(java_fitness))
-    max_indices = max(np.max(selected_indices), np.max(java_indices))
+        max_fitness = max(np.max(fitness), np.max(java_fitness))
+        max_indices = max(np.max(selected_indices), np.max(java_indices))
 
-    axs[0] = plot_comparison_plot(axs[0], fitness, java_fitness, "Fitness", x_lim=(0, max_fitness))
+        axs[0] = plot_comparison_plot(axs[0], fitness, java_fitness, "Fitness", x_lim=(0, max_fitness))
 
-    axs[1] = plot_comparison_plot(axs[1], selected_indices, java_indices, "Selected Indices", x_lim=(0, max_indices))
+        axs[1] = plot_comparison_plot(axs[1], selected_indices, java_indices, "Selected Indices",
+                                      x_lim=(0, max_indices))
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
+        raise e
 
-    compare_distribution(java_fitness, fitness, "Fitness")
-    compare_distribution(java_indices, selected_indices, "Selected Indices")
