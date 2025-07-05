@@ -63,11 +63,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         mating_pop = selection.do(problem, pop, num_offspring, n_parents, to_pop=False)
         generated_solutions = []
 
-        # print(f"mating_pop shape: {mating_pop.shape}, num_offspring: {num_offspring}, n_parents: {n_parents}")
         for i in range(num_offspring):
-            # print(f"parents - {mating_pop[i][0]}: {pop[mating_pop[i][1]].X[0]} | {mating_pop[i][1]}: {pop[mating_pop[i][0]].X[0]}")
-            # if mating_pop[i][0] == mating_pop[i][1]:
-            #     raise ValueError("The two parents for the crossover are the same, which is not allowed in Michigan crossover.")
             parents = mating_pop[i]
             p1_obj = pop[parents[0]].X[0]
             p2_obj = pop[parents[1]].X[0]

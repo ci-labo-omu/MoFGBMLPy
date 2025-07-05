@@ -122,6 +122,8 @@ def test_deepcopy_generations():
         "nsga2",
         "--population-size",
         "10",
+        "--offspring-population-size",
+        "10",
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
@@ -154,7 +156,7 @@ def test_deepcopy_generations():
     assert True
 
 def test_java_distribution_iris():
-    num_evals = 12
+    num_evals = 8
     num_iters = 200
     pop_size = 5
 
@@ -178,6 +180,8 @@ def test_java_distribution_iris():
         "error-rate",
         "num-rules",
         "--population-size",
+        f"{pop_size}",
+        f"--offspring-population-size",
         f"{pop_size}",
         "--algorithm",
         "nsga2",

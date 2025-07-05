@@ -157,7 +157,7 @@ def test_distribution_ga_rules_gen():
         mutation = MichiganMutation(problem.get_knowledge(), mutation_rt, random_gen)
 
         parent = pop[0].X[0]
-        rules = parent.get_vars()[:2]  # Simplify the Pittsburgh solution
+        rules = parent.get_vars()[:3]  # Simplify the Pittsburgh solution
 
         parent = create_pittsburgh_sol(problem.get_training_set(), SingleWinnerRuleSelection(), np.array(rules, object))
 
