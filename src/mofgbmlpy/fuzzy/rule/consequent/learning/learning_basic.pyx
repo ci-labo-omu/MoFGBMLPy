@@ -41,7 +41,7 @@ cdef class LearningBasic(AbstractLearning):
 
     cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
         """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code
-        
+
         Args:
             antecedent (Antecedent): Antecedent whose confidence is computed 
             dataset (Dataset): Training dataset
@@ -55,36 +55,26 @@ cdef class LearningBasic(AbstractLearning):
             raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
+        cdef int dataset_size = dataset.get_size()
         cdef double[:] confidence = np.zeros(num_classes, dtype=np.float64)
         cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes, dtype=np.float64)
-        cdef double[:] compatible_grades = np.zeros(dataset.get_size(), dtype=np.float64)
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef int i
-        cdef Pattern p
-
-        # for i in prange(dataset.get_size(), nogil=True):
-        for i in range(dataset.get_size()):
-            p = patterns[i]
-            compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())
-
         cdef double all_sum = 0
-        cdef int c
-        cdef double part_sum = 0
+        cdef double compatible_grade
         cdef int class_label
+        cdef Pattern pattern
 
-        for c in range(num_classes):
-            part_sum = 0
-            # TODO: Add multithreading
-            for i in range(dataset.get_size()):
-                pattern = patterns[i]
-                if pattern.get_target_class().get_class_label_value() == c:
-                    part_sum += compatible_grades[i]
-
-            sum_compatible_grade_for_each_class[c] = part_sum
-            all_sum += part_sum
+        for i in range(dataset_size):
+            pattern = patterns[i]
+            compatible_grade = antecedent.get_compatible_grade_value(pattern.get_attributes_vector())
+            class_label = pattern.get_target_class().get_class_label_value()
+            sum_compatible_grade_for_each_class[class_label] += compatible_grade
+            all_sum += compatible_grade
 
         if all_sum != 0:
-            confidence = sum_compatible_grade_for_each_class/all_sum
+            for i in range(num_classes):
+                confidence[i] = sum_compatible_grade_for_each_class[i] / all_sum
 
         return confidence
 

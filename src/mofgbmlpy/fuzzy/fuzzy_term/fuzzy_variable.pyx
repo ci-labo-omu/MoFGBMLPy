@@ -80,7 +80,7 @@ cdef class FuzzyVariable:
         Returns:
             float: Membership value
         """
-        self.get_membership_value(fuzzy_set_index, x)
+        return self.get_membership_value(fuzzy_set_index, x)
 
     cpdef int get_length(self):
         """Get the length of the fuzzy sets array (number of fuzzy sets for this variable including don't care)

@@ -3,49 +3,37 @@ import os
 import sys
 from datetime import datetime
 
+from mofgbmlpy.main.abstract_main import AbstractMain
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
+
 new_path = f"{os.getcwd()}{os.sep}src"
 if new_path not in sys.path:
     sys.path.append(new_path)
 
-from src.mofgbmlpy.main.nsgaii.mofgbml_nsgaii_main import MoFGBMLNSGAIIMain
-from src.mofgbmlpy.main.moead.mofgbml_moead_main import MoFGBMLMOEADMain
 from mofgbmlpy.data.output import Output
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
 
 
-def run_profiler(mofgbml_class_name):
+def run_profiler():
     args = [
         "--data-name", "iris",
         "--algorithm-id", "1",
         "--experiment-id", "2",
         # "--num-parallel-cores", "1",
-        "--train-file", "dataset/iris/a0_0_iris-10tra.dat",
-        "--test-file", "dataset/iris/a0_0_iris-10tst.dat",
-        "--terminate-evaluation", "1000",
-        "--objectives", "total-rule-length", "error-rate"
+        "--train-file", "dataset/contraceptive/a0_0_contraceptive-10tra.dat",
+        "--test-file", "dataset/contraceptive/a0_0_contraceptive-10tst.dat",
+        "--terminate-evaluation", "500",
+        "--population-size", "60",
+        "--offspring-population-size", "60",
+        "--objectives", "num-rules", "error-rate",
+        "--algorithm", "nsga2",
+        "--verbose"
     ]
 
-    # args = [
-    #     # "--data-name", "flags",
-    #     # "--data-name", "richromatic",
-    #     "--data-name", "german",
-    #     "--algorithm-id", "1",
-    #     "--experiment-id", "2",
-    #     "--rand-seed", "2020",
-    #     # "--train-file", "../dataset/flags/a0_0_flags-10tra.dat",
-    #     # "--test-file", "../dataset/flags/a0_0_flags-10tst.dat",
-    #     # "--train-file", "../dataset/richromatic/a0_0_richromatic-10tra.dat",
-    #     # "--test-file", "../dataset/richromatic/a0_0_richromatic-10tst.dat",
-    #     "--train-file", "dataset/german/a0_0_german-10tra.dat",
-    #     "--test-file", "dataset/german/a0_0_german-10tst.dat",
-    #     "--terminate-evaluation", "200",
-    #     "--objectives", "num-rules", "error-rate",
-    #     "--is-multi-label",
-    #     "--gen-plot",
-    #     "--verbose",
-    # ]
-
-    cProfile.runctx(f"{mofgbml_class_name}(HomoTriangleKnowledgeFactory_2_3_4_5).main(args)", globals(), locals(), "Profile.pstats")
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    cProfile.runctx(f"PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name).run(args)", globals(), locals(), "Profile.pstats")
     os.system("gprof2dot -f pstats Profile.pstats -o Profile.dot -n 0.3 --color-nodes-by-selftime --node-label=self-time-percentage --node-label=total-time --node-label=total-time-percentage")
 
     profiler_results_folder = "profiler_results"
@@ -58,7 +46,5 @@ def run_profiler(mofgbml_class_name):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise Exception("1 argument expected (MoFGBML class name), e.g. MoFGBMLNSGAIIMain")
-    run_profiler(str(sys.argv[1]))
+    run_profiler()
 

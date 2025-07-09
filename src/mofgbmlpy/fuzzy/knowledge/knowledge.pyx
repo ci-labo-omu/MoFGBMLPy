@@ -3,6 +3,7 @@ from copy import deepcopy
 
 import matplotlib.pyplot as plt
 import numpy as np
+import cython
 
 from mofgbmlpy.exception.uninitialized_knowledge_exception import UninitializedKnowledgeException
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
@@ -102,7 +103,11 @@ cdef class Knowledge:
         """
         return self.get_membership_value(attribute_value, dim, fuzzy_set_index)
 
-    cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_index):
+    @cython.boundscheck(True)
+    @cython.wraparound(False)
+    @cython.cdivision(True)
+    @cython.initializedcheck(False)
+    cdef inline double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_index):
         """Get the membership value of the given attribute value with the fuzzy set at the given dimension and given index (Can only be accessed from Cython code)
         
         Args:
@@ -113,13 +118,10 @@ cdef class Knowledge:
         Returns:
             double: Membership value
         """
-        cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
-        if fuzzy_vars.shape[0] == 0:
+        if self.__fuzzy_vars.shape[0] == 0:
             raise UninitializedKnowledgeException()
-        if dim < 0 or dim >= fuzzy_vars.shape[0]:
-            raise IndexError("The dim index is out of bounds for the current knowledge")
 
-        cdef FuzzyVariable var = fuzzy_vars[dim]
+        cdef FuzzyVariable var = self.__fuzzy_vars[dim]
         return var.get_membership_value(fuzzy_set_index, attribute_value)
 
     cpdef int get_num_dim(self):
