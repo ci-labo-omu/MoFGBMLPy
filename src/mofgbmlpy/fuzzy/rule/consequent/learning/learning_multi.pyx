@@ -34,7 +34,7 @@ cdef class LearningMulti(AbstractLearning):
         Returns:
             AbstractConsequent: Created consequent
         """
-        cdef double[:,:] confidence = self.calc_confidence(antecedent)
+        cdef double[:,:] confidence = self.calc_confidence(antecedent, dataset)
         cdef ClassLabelMulti class_label = self.calc_class_label(confidence)
         cdef RuleWeightMulti rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return ConsequentMulti(class_label, rule_weight)

@@ -135,7 +135,7 @@ cdef class AbstractRule:
         Returns:
             double: Fitness value
         """
-        Exception("AbstractRule is abstract")
+        raise Exception("AbstractRule is abstract")
 
     def __eq__(self, other):
         """Check if another object is equal to this one

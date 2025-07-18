@@ -178,3 +178,4 @@ Profile.pstats
 # DOCS
 docs/_build
 docs/source
+!src/mofgbmlpy/core/**/*.cpp

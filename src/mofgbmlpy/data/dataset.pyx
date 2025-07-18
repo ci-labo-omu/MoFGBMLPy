@@ -1,3 +1,4 @@
+# distutils: language = c++
 import copy
 
 import numpy as np

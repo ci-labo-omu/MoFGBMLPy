@@ -1,10 +1,14 @@
+# distutils: language = c++
+
 import xml.etree.cElementTree as xml_tree
 import copy
 import numpy as np
 
-from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel, AbstractClassLabelCpp
+from mofgbmlpy.data.class_label.class_label_multi cimport ClassLabelMultiCpp
 cimport numpy as cnp
 import cython
+from libcpp.vector cimport vector
 
 
 cdef class ClassLabelMulti(AbstractClassLabel):
@@ -14,17 +18,20 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         __class_label (int[]): Values associated to class labels
     """
 
-    def __init__(self, int[:] class_label):
+    def __cinit__(self, int[:] class_label=None):
         """Constructor
 
         Args:
             class_label (int[]): Class label values
         """
+        cdef vector[int] cpp_vector
         if class_label is None:
-            self.__class_label = np.empty(0, int)
+            self.ptr = new ClassLabelMultiCpp(cpp_vector)
         else:
-            self.__class_label = class_label
-        super().__init__()
+            cpp_vector.reserve(class_label.shape[0])
+            for i in range(class_label.shape[0]):
+                cpp_vector.push_back(class_label[i])
+            self.ptr = new ClassLabelMultiCpp(cpp_vector)
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -38,25 +45,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         if not isinstance(other, ClassLabelMulti):
             return False
 
-        cdef int[:] label = self.__class_label
-        cdef int[:] other_label = other.get_class_label_value()
-
-        # XOR
-        if (label is None) ^ (other_label is None):
-            return False
-
-        if label is None and other_label is None:
-            return True
-
-        if self.get_length() != other.get_length():
-            return False
-
-        cdef int i
-
-        for i in range(self.get_length()):
-            if label[i] != other_label[i]:
-                return False
-        return True
+        cdef ClassLabelMulti other_c = <ClassLabelMulti> other
+        return other_c.get_multi_ptr() == self.get_multi_ptr()
 
     cpdef int get_length(self):
         """Returns the length of the array of class label values
@@ -64,7 +54,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int: Length of the class label values array
         """
-        return self.__class_label.shape[0]
+        return self.get_multi_ptr().get_length()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -75,11 +65,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             object: Deep copy of this object
         """
-        cdef int[:] value_copy = None
-        if self.__class_label is not None:
-            value_copy = np.copy(self.__class_label)
-
-        cdef ClassLabelMulti new_object = ClassLabelMulti(value_copy)
+        cdef ClassLabelMultiCpp * ptr_copy = self.get_multi_ptr().clone()
+        new_object = ClassLabelMulti.wrap(ptr_copy)
         memo[id(self)] = new_object
         return new_object
 
@@ -89,14 +76,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             str: String representation
         """
-        cdef int[:] label_value = self.__class_label
-        txt = f"{label_value[0]:2d}"
-
-        if self.get_length() > 1:
-            for i in range(1, self.get_length()):
-                txt = f"{txt}, {label_value[i]:2d}"
-
-        return txt
+        return self.get_multi_ptr().to_string().decode('utf-8')
 
     cpdef object get_class_label_value(self):
         """Get the class label values
@@ -104,7 +84,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int[]: Class label values
         """
-        return self.__class_label
+        return self.get_multi_ptr().get_class_label_value()
 
     cpdef int get_class_label_value_at(self, int index):
         """Get the class label value at the given index
@@ -112,10 +92,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int: Class label value
         """
-        if index < 0 or index > self.__class_label.shape[0]:
-            raise IndexError("index is out of bounds for the class label object")
-
-        return self.__class_label[index]
+        return self.get_multi_ptr().get_class_label_value_at(index)
 
     cpdef void set_class_label_value(self, object class_label):
         """Set the class label values
@@ -123,10 +100,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             Args:
                 class_label (int[]): New class label values 
             """
-        if class_label is None:
-            raise TypeError("class_label can't be None")
-        cdef int[:] value = class_label
-        self.__class_label = class_label
+        self.get_multi_ptr().set_class_label_value(class_label)
 
     def to_xml(self):
         """Get the XML representation of this object.
@@ -138,3 +112,12 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         root.text = str(self)
 
         return root
+
+    cdef ClassLabelMultiCpp * get_multi_ptr(self):
+        return <ClassLabelMultiCpp*> self.ptr
+
+    @staticmethod
+    cdef ClassLabelMulti wrap(ClassLabelMultiCpp * ptr):
+        cdef ClassLabelMulti new_object = ClassLabelMulti.__new__(ClassLabelMulti)
+        new_object.ptr = <AbstractClassLabelCpp *> ptr
+        return new_object

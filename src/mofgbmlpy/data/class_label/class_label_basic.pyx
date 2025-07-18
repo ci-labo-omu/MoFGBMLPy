@@ -1,5 +1,8 @@
+# distutils: language = c++
+
 import xml.etree.cElementTree as xml_tree
-from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel, AbstractClassLabelCpp
+from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasicCpp
 import cython
 
 
@@ -10,14 +13,13 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         __class_label (int): Class label
     """
 
-    def __init__(self, int class_label):
+    def __cinit__(self, int class_label):
         """Constructor
 
         Args:
             class_label (int): Class label value
         """
-        super().__init__()
-        self.__class_label = class_label
+        self.ptr = new ClassLabelBasicCpp(class_label)
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -30,7 +32,8 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         """
         if not isinstance(other, ClassLabelBasic):
             return False
-        return other.get_class_label_value() == self.__class_label
+        cdef ClassLabelBasic other_c = <ClassLabelBasic> other
+        return other_c.get_basic_ptr() == self.get_basic_ptr()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -41,35 +44,26 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         Returns:
             object: Deep copy of this object
         """
-        new_object = ClassLabelBasic(self.__class_label)
+        cdef ClassLabelBasicCpp * ptr_copy = self.get_basic_ptr().clone()
+        new_object = ClassLabelBasic.wrap(ptr_copy)
         memo[id(self)] = new_object
         return new_object
 
-    def __repr__(self):
-        """Return a string representation of this object
-
-        Returns:
-            str: String representation
-        """
-        return f"{self.__class_label:2d}"
-
-    cpdef object get_class_label_value(self):
+    cpdef int get_class_label_value(self):
         """Get the class label value
 
             Returns:
                 int: Class label value
             """
-        return self.__class_label
+        return self.get_basic_ptr().get_class_label_value()
 
-    cpdef void set_class_label_value(self, object class_label):
+    cpdef void set_class_label_value(self, int class_label):
         """Set the class label value
 
             Args:
                 class_label (int): New class label value 
             """
-        if class_label is None:
-            raise TypeError("class_label can't be None")
-        self.__class_label = class_label
+        self.get_basic_ptr().set_class_label_value(class_label)
 
 
     def to_xml(self):
@@ -82,3 +76,12 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         root.text = str(self)
 
         return root
+
+    cdef ClassLabelBasicCpp * get_basic_ptr(self):
+        return <ClassLabelBasicCpp*> self.ptr
+
+    @staticmethod
+    cdef ClassLabelBasic wrap(ClassLabelBasicCpp * ptr):
+        cdef ClassLabelBasic new_object = ClassLabelBasic.__new__(ClassLabelBasic)
+        new_object.ptr = <AbstractClassLabelCpp *> ptr
+        return new_object

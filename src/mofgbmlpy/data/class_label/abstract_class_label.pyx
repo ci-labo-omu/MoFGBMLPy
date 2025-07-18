@@ -1,4 +1,7 @@
+# distutils: language = c++
+
 from mofgbmlpy.exception.abstract_method_exception import AbstractMethodException
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabelCpp
 
 cdef class AbstractClassLabel:
     """Abstract class for class labels
@@ -7,26 +10,12 @@ cdef class AbstractClassLabel:
         __is_rejected (bool): If True then the class label is rejected (it can't be used for classification)
     """
 
-    def __init__(self):
-        """Constructor of this class. Initialize is_rejected to False
-        """
-        self.__is_rejected = False
+    def __cinit__(self):
+        self.ptr = NULL
 
-    cpdef object get_class_label_value(self):
-        """Get the class label value (array of int if it's a multilabel and int if it's not). Must be overridden.
-        
-        Returns:
-            object: Class label value
-        """
-        raise AbstractMethodException()
+    def __dealloc__(self):
+        del self.ptr
 
-    cpdef void set_class_label_value(self, object class_label):
-        """Set the class label value. Must be overridden.
-        
-        Args:
-            class_label (object): New class label value, either a int or an array of int depending on the label type (multi or nsgaii) 
-        """
-        raise AbstractMethodException()
 
     cpdef bint is_rejected(self):
         """Check if the class label is rejected
@@ -34,13 +23,13 @@ cdef class AbstractClassLabel:
         Returns:
             bool: True if it's rejected and False otherwise
         """
-        return self.__is_rejected
+        return self.ptr.is_rejected()
 
     cpdef void set_rejected(self):
         """Set this class label to "rejected"
         
         """
-        self.__is_rejected = True
+        self.ptr.set_rejected()
 
     def to_xml(self):
         """Get the XML representation of this object. Must be overridden.
@@ -49,3 +38,14 @@ cdef class AbstractClassLabel:
             :xml.etree.ElementTree: XML element representing this object
         """
         raise AbstractMethodException()
+
+    def __repr__(self):
+        """Return a string representation of this object
+
+           Returns:
+               str: String representation
+           """
+        return self.ptr.to_string().decode('utf-8')
+
+    cdef AbstractClassLabelCpp * get_ptr(self):
+        return self.ptr

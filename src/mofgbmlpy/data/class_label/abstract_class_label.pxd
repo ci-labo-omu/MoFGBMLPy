@@ -1,9 +1,16 @@
-cimport numpy as cnp
+from libcpp.string cimport string as std_string
+
+cdef extern from "data/class_label/abstract_class_label.hpp":
+    cdef cppclass AbstractClassLabelCpp "AbstractClassLabel":
+        AbstractClassLabelCpp() except +
+
+        bint is_rejected() const;
+        void set_rejected();
+        std_string to_string() const
 
 cdef class AbstractClassLabel:
-    cdef bint __is_rejected
+    cdef AbstractClassLabelCpp * ptr
 
-    cpdef object get_class_label_value(self)
-    cpdef void set_class_label_value(self, object class_label)
     cpdef bint is_rejected(self)
     cpdef void set_rejected(self)
+    cdef AbstractClassLabelCpp * get_ptr(self)

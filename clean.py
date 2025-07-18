@@ -3,7 +3,7 @@ import shutil
 
 
 def clean():
-    extensions = ['.pyd', 'html']
+    extensions = ['.pyd', '.html', '.c', '.cpp']
 
     try:
         shutil.rmtree("build")
@@ -12,6 +12,8 @@ def clean():
         print(f"Error deleting build folder: {e}")
 
     for dir_path, _, filenames in os.walk("src"):
+        if "core" in dir_path:
+            continue
         for filename in filenames:
             if any(filename.endswith(ext) for ext in extensions):
                 file_path = os.path.join(dir_path, filename)

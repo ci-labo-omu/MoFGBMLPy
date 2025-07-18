@@ -30,13 +30,17 @@ for root, dirs, files in os.walk('src'):
             name = ".".join(path_without_extension.split(os.sep)[1:])
             cython_files.append(Extension(name,
                                           [path],
-                                          extra_compile_args=[openmp_arg, optimization_arg]))
+                                          extra_compile_args=[openmp_arg, optimization_arg],
+                                          language='c++'))
 
 
 setup(
     ext_modules=cythonize(
         cython_files,
-        compiler_directives={"language_level": "3", "profile": True}
+        compiler_directives={"language_level": "3", "profile": True},
+        language="c++",
+        language_level=3,
+        force=True
     ),
     name="mofgbmlpy",
     version="1.0.2",
@@ -80,7 +84,7 @@ setup(
 
     packages=find_packages(where="src"),  # Required
 
-    include_dirs=[numpy.get_include()],
+    include_dirs=[numpy.get_include(), "src/core"],
 
     install_requires=[
         'numpy<2.0.0',
@@ -134,3 +138,4 @@ setup(
     #     "Source": "https://github.com/pypa/sampleproject/",
     # },
 )
+
