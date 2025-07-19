@@ -35,12 +35,11 @@ cdef class MichiganSolutionBuilder(SolutionBuilderCore):
         Returns:
             MichiganSolution[]: New solutions
         """
-        cdef MichiganSolution[:] solutions = np.empty(num_solutions, dtype=object)
-        cdef int i
-
+        solutions_list = []
         for i in range(num_solutions):
-            solutions[i] = MichiganSolution(self._random_gen, self._num_objectives, self._num_constraints, self._rule_builder,
-                                            pattern=pattern)
+            solutions_list.append(MichiganSolution(self._random_gen, self._num_objectives, self._num_constraints, self._rule_builder,
+                                                  pattern=pattern))
+        cdef MichiganSolution[:] solutions = np.array(solutions_list, dtype=object)
 
         return solutions
 

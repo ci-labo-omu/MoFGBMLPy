@@ -1,6 +1,6 @@
 from libcpp.string cimport string as std_string
 
-cdef extern from "data/class_label/abstract_class_label.hpp":
+cdef extern from "core/data/class_label/abstract_class_label.hpp":
     cdef cppclass AbstractClassLabelCpp "AbstractClassLabel":
         AbstractClassLabelCpp() except +
 

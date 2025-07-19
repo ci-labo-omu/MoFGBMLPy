@@ -1,7 +1,7 @@
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel, AbstractClassLabelCpp
 cimport cython
 
-cdef extern from "data/class_label/class_label_basic.hpp":
+cdef extern from "core/data/class_label/class_label_basic.hpp":
     cdef cppclass ClassLabelBasicCpp "ClassLabelBasic"(AbstractClassLabelCpp):
         ClassLabelBasicCpp(int class_label) except +
         ClassLabelBasicCpp(const ClassLabelBasicCpp& other)  except +

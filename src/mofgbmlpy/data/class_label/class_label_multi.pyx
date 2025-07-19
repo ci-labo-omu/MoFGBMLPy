@@ -46,7 +46,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             return False
 
         cdef ClassLabelMulti other_c = <ClassLabelMulti> other
-        return other_c.get_multi_ptr() == self.get_multi_ptr()
+        return other_c.get_multi_ptr()[0] == self.get_multi_ptr()[0]
 
     cpdef int get_length(self):
         """Returns the length of the array of class label values
@@ -84,7 +84,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             int[]: Class label values
         """
-        return self.get_multi_ptr().get_class_label_value()
+        return np.array(self.get_multi_ptr().get_class_label_value(), dtype=np.int32)
 
     cpdef int get_class_label_value_at(self, int index):
         """Get the class label value at the given index
@@ -100,6 +100,8 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             Args:
                 class_label (int[]): New class label values 
             """
+        if isinstance(class_label, np.ndarray) and class_label.dtype != np.int32:
+            raise ValueError("Class label values must be of type int32")
         self.get_multi_ptr().set_class_label_value(class_label)
 
     def to_xml(self):
@@ -118,6 +120,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
 
     @staticmethod
     cdef ClassLabelMulti wrap(ClassLabelMultiCpp * ptr):
+        cdef vector[int] cpp_vector
         cdef ClassLabelMulti new_object = ClassLabelMulti.__new__(ClassLabelMulti)
         new_object.ptr = <AbstractClassLabelCpp *> ptr
         return new_object

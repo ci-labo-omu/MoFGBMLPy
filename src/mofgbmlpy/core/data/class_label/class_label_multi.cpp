@@ -12,7 +12,7 @@ ClassLabelMulti::ClassLabelMulti(const ClassLabelMulti& other)
 
 int ClassLabelMulti::get_length() const
 {
-    return class_label.size();
+    return static_cast<int>(class_label.size());
 }
 
 const std::vector<int>& ClassLabelMulti::get_class_label_value() const {
@@ -22,11 +22,6 @@ const std::vector<int>& ClassLabelMulti::get_class_label_value() const {
 int ClassLabelMulti::get_class_label_value_at(int index) const
 {
     return class_label.at(index);
-}
-
-void ClassLabelMulti::set_class_label_vector(const std::vector<int>& class_label)
-{
-    this->class_label = class_label;
 }
 
 ClassLabelMulti::operator std::string() const

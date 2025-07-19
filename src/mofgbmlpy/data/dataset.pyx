@@ -106,9 +106,10 @@ cdef class Dataset:
         Returns:
             object: Deep copy of this object
         """
-        cdef Pattern[:] patterns_copy = np.empty(self.__size, dtype=object)
+        patterns_copy_list = []
         for i in range(self.__size):
-            patterns_copy[i] = copy.deepcopy(self.__patterns[i])
+            patterns_copy_list.append(copy.deepcopy(self.__patterns[i]))
+        cdef Pattern[:] patterns_copy = np.array(patterns_copy_list, dtype=object)
 
         cdef Dataset new_object = Dataset(self.__size, self.__num_dim, self.__num_classes, patterns_copy)
         memo[id(self)] = new_object

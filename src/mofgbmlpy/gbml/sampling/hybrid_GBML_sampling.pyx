@@ -39,9 +39,9 @@ class HybridGBMLSampling(Sampling):
             AbstractSolution[,]: Population of generated solutions as an array of shape (n_samples, 1)
         """
         cdef int i
-        cdef AbstractSolution[:,:] initial_population = np.zeros((n_samples,1), dtype=object)
-
+        individuals_list = []
         for i in range(n_samples):
-            initial_population[i][0] = problem.create_solution()
+            individuals_list.append(problem.create_solution())
+        cdef AbstractSolution[:,:] initial_population = np.array(individuals_list, dtype=object).reshape(n_samples, 1)
 
         return initial_population

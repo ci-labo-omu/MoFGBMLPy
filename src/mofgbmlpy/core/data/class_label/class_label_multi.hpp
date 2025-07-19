@@ -17,7 +17,6 @@ public:
     void set_class_label_value(const std::vector<int>& class_label);
     const std::vector<int>& get_class_label_value() const;
     int get_class_label_value_at(int index) const;
-    void set_class_label_vector(const std::vector<int>& class_label);
 
     operator std::string() const override;
     bool operator==(const AbstractClassLabel& other) const override;

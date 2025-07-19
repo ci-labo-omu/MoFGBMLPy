@@ -199,11 +199,11 @@ cdef class FuzzyVariable:
         Returns:
             object: Deep copy of this object
         """
-        cdef FuzzySet[:] fuzzy_sets_copy = np.empty(self.__fuzzy_sets.shape[0], dtype=object)
+        fuzzy_sets_copy_list = []
         cdef int i
-
-        for i in range(fuzzy_sets_copy.shape[0]):
-            fuzzy_sets_copy[i] = copy.deepcopy(self.__fuzzy_sets[i])
+        for i in range(self.__fuzzy_sets.shape[0]):
+            fuzzy_sets_copy_list.append(copy.deepcopy(self.__fuzzy_sets[i]))
+        cdef FuzzySet[:] fuzzy_sets_copy = np.array(fuzzy_sets_copy_list, dtype=object)
 
         cdef FuzzyVariable new_object = FuzzyVariable(fuzzy_sets_copy, self.__name, np.copy(self.__domain))
         memo[id(self)] = new_object

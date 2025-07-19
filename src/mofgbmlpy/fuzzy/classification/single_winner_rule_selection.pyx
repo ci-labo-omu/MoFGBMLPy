@@ -13,7 +13,6 @@ from mofgbmlpy.fuzzy.classification.abstract_classification cimport AbstractClas
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 cimport numpy as cnp
 from libc.math cimport INFINITY
-# from mofgbmlpy.utility.lru_cache cimport LRUCache
 
 
 cdef class SingleWinnerRuleSelection(AbstractClassification):

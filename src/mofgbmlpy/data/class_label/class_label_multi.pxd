@@ -1,7 +1,7 @@
 from libcpp.vector cimport vector
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel, AbstractClassLabelCpp
 
-cdef extern from "data/class_label/class_label_multi.hpp":
+cdef extern from "core/data/class_label/class_label_multi.hpp":
     cdef cppclass ClassLabelMultiCpp "ClassLabelMulti"(AbstractClassLabelCpp):
         ClassLabelMultiCpp(const vector[int]& class_label) except +
         ClassLabelMultiCpp(const ClassLabelMultiCpp& other) except +

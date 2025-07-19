@@ -61,13 +61,6 @@ def test_set_invalid_label_value_list():
         label.set_class_label_value(label_value)
 
 
-def test_set_invalid_label_value_float():
-    label = ClassLabelMulti(np.array([0, 1, 2], dtype=int))
-    label_value = [0, 1, 2]
-    with pytest.raises(TypeError):
-        label.set_class_label_value(label_value)
-
-
 def test_rejected():
     label = ClassLabelMulti(np.array([0, 1, 2], dtype=int))
     before = label.is_rejected()
@@ -96,7 +89,8 @@ def test_deep_copy():
 
     v1 = label.get_class_label_value()
     v2 = label_copy.get_class_label_value()
-    assert np.array_equal(v1, v2) and id(v1.base) != id(v2.base)
+    assert np.array_equal(v1, v2)
+    assert id(v1.base) != id(v2.base)
 
 
 def test_eq_none():

@@ -167,8 +167,10 @@ cdef class Knowledge:
         cdef FuzzyVariable[:] fuzzy_vars_copy = np.empty(fuzzy_vars.shape[0], dtype=object)
         cdef int i
 
+        fuzzy_vars_copy_list = []
         for i in range(fuzzy_vars.shape[0]):
-            fuzzy_vars_copy[i] = deepcopy(fuzzy_vars[i])
+            fuzzy_vars_copy_list.append(deepcopy(fuzzy_vars[i]))
+        cdef FuzzyVariable[:] patterns_copy = np.array(fuzzy_vars_copy_list, dtype=object)
 
         new_knowledge = Knowledge(fuzzy_vars_copy)
         memo[id(self)] = new_knowledge

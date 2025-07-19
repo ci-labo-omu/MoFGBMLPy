@@ -38,7 +38,7 @@ std::shared_ptr<AbstractClassLabel> Pattern::get_target_class() const {
 }
 
 int Pattern::get_num_dim() const {
-    return attributes_vector.size();
+    return static_cast<int>(attributes_vector.size());
 }
 
 bool Pattern::operator==(const Pattern& other) const
