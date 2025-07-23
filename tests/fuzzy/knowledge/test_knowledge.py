@@ -13,6 +13,8 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_5 import HomoTriangleKnowledgeFactory_5
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.dont_care_mf import DontCareMF
+
 
 def test_none_fuzzy_sets():
     var = Knowledge(None)
@@ -318,10 +320,13 @@ def test_deepcopy():
     knowledge = Knowledge(np.array([var1, var2], object))
     knowledge_copy = copy.deepcopy(knowledge)
 
-    assert knowledge == knowledge_copy and id(knowledge.get_fuzzy_vars().base) != id(
-        knowledge_copy.get_fuzzy_vars().base
-    )
+    assert knowledge == knowledge_copy
+    assert id(knowledge.get_fuzzy_vars()) != id(knowledge_copy.get_fuzzy_vars())
 
+    knowledge.get_fuzzy_vars()[0].get_fuzzy_sets()[0].get_function().set_param_value(0, 0.2)
+
+    assert knowledge.get_fuzzy_vars()[0].get_fuzzy_sets()[0].get_function().get_params()[0] == np.float32(0.2)
+    assert knowledge_copy.get_fuzzy_vars()[0].get_fuzzy_sets()[0].get_function().get_params()[0] == 0
 
 def test_to_xml_run():
     # Only test if it doesn't return an exception

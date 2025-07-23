@@ -13,12 +13,16 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         __class_label (int): Class label
     """
 
-    def __cinit__(self, int class_label):
+    def __cinit__(self, int class_label, do_init=True):
         """Constructor
 
         Args:
             class_label (int): Class label value
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
+        if not do_init:
+            self.ptr = NULL
+            return
         self.ptr = new ClassLabelBasicCpp(class_label)
 
     def __eq__(self, other):
@@ -44,8 +48,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         Returns:
             object: Deep copy of this object
         """
-        cdef ClassLabelBasicCpp * ptr_copy = self.get_basic_ptr().clone()
-        new_object = ClassLabelBasic.wrap(ptr_copy)
+        new_object = ClassLabelBasic.wrap(self.get_basic_ptr())
         memo[id(self)] = new_object
         return new_object
 
@@ -81,7 +84,10 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         return <ClassLabelBasicCpp*> self.ptr
 
     @staticmethod
-    cdef ClassLabelBasic wrap(ClassLabelBasicCpp * ptr):
-        cdef ClassLabelBasic new_object = ClassLabelBasic.__new__(ClassLabelBasic, 0)
-        new_object.ptr = <AbstractClassLabelCpp *> ptr
+    cdef ClassLabelBasic wrap(ClassLabelBasicCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+
+        cdef ClassLabelBasic new_object = ClassLabelBasic(0, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
         return new_object

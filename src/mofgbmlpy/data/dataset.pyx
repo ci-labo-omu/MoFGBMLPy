@@ -15,7 +15,7 @@ cdef class Dataset:
         __num_classes (int): Number of class in the dataset
         __patterns (Patterns[]): Array of patterns in the dataset
     """
-    def __init__(self, int size, int n_dim, int c_num, Pattern[:] patterns):
+    def __cinit__(self, int size, int n_dim, int c_num, Pattern[:] patterns, do_init=True):
         """ Constructor of the class Dataset
 
         Args:
@@ -23,21 +23,27 @@ cdef class Dataset:
             n_dim (int): Number of attributes (dimensions) in all the patterns of this dataset
             c_num (int): Number of class in the dataset
             patterns (Patterns[]): Array of patterns in the dataset
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
-        if size <= 0 or n_dim <= 0 or c_num <= 0:
-            raise ValueError("size, n_dim and c_num must be positive")
-        elif patterns is None:
-            raise TypeError("Patterns array can't be None")
-        if size != patterns.shape[0]:
-            raise ValueError("Size is not equal to the length of the patterns array")
-        cdef Pattern p = patterns[0]
-        if n_dim != p.get_num_dim():
-            raise ValueError("The number of dimensions is not equal to the number of dimensions of the patterns")
+        if not do_init:
+            self.ptr = NULL
+            return
 
-        self.__size = size
-        self.__num_dim = n_dim
-        self.__num_classes = c_num
-        self.__patterns = patterns
+        cdef vector[PatternCpp*] cpp_patterns_vector
+        cdef PatternCpp* pattern_ptr = NULL
+
+        if patterns is not None and patterns.shape[0] != 0:
+            cpp_patterns_vector.reserve(patterns.shape[0])
+            for i in range(patterns.shape[0]):
+                pattern_ptr = patterns[i].ptr
+                cpp_patterns_vector.push_back(pattern_ptr.clone())
+
+        self.ptr = new DatasetCpp(size, n_dim, c_num, cpp_patterns_vector)
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
     cpdef Pattern get_pattern(self, int index):
         """Get the pattern at the given index in the dataset
@@ -48,9 +54,7 @@ cdef class Dataset:
         Returns:
             Pattern: Pattern at the given index
         """
-        if index < 0 or index >= self.__size:
-            raise IndexError("Index is out of bounds")
-        return self.__patterns[index]
+        return Pattern.wrap(self.ptr.get_pattern(index))
 
     cpdef Pattern[:] get_patterns(self):
         """Get all the patterns in the dataset
@@ -58,7 +62,12 @@ cdef class Dataset:
         Returns:
             Pattern[]: The patterns in the dataset
         """
-        return self.__patterns
+        cdef vector[PatternCpp*] cpp_patterns = self.ptr.get_patterns()
+        patterns = np.empty(cpp_patterns.size(), dtype=object)
+        for i in range(len(patterns)):
+            patterns[i] = Pattern.wrap(cpp_patterns[i])
+
+        return patterns
 
     def __repr__(self):
         """Return a string representation of this object
@@ -66,12 +75,7 @@ cdef class Dataset:
         Returns:
             str: String representation
         """
-        if len(self.__patterns) == 0:
-            return "null"
-        txt = f"{self.__size}, {self.__num_dim}, {self.__num_classes}\n"
-        for pattern in self.__patterns:
-            txt += f"{pattern}\n"
-        return txt
+        return self.ptr.to_string().decode('utf-8')
 
     cpdef int get_num_dim(self):
         """Get the number of dimensions (attributes) of the patterns in this dataset
@@ -79,7 +83,7 @@ cdef class Dataset:
         Returns:
             int: Number of dimensions
         """
-        return self.__num_dim
+        return self.ptr.get_num_dim()
 
     cpdef int get_num_classes(self):
         """Get the number of classes in this dataset
@@ -87,7 +91,7 @@ cdef class Dataset:
         Returns:
             int: Number of classes
         """
-        return self.__num_classes
+        return self.ptr.get_num_classes()
 
     cpdef int get_size(self):
         """Get the number of patterns in this dataset
@@ -95,7 +99,7 @@ cdef class Dataset:
         Returns:
             int: Number of patterns
         """
-        return self.__size
+        return self.ptr.get_size()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -106,12 +110,7 @@ cdef class Dataset:
         Returns:
             object: Deep copy of this object
         """
-        patterns_copy_list = []
-        for i in range(self.__size):
-            patterns_copy_list.append(copy.deepcopy(self.__patterns[i]))
-        cdef Pattern[:] patterns_copy = np.array(patterns_copy_list, dtype=object)
-
-        cdef Dataset new_object = Dataset(self.__size, self.__num_dim, self.__num_classes, patterns_copy)
+        new_object = Dataset.wrap(self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -127,10 +126,8 @@ cdef class Dataset:
         if not isinstance(other, Dataset):
             return False
 
-        return (self.__size == other.get_size() and
-            self.__num_dim == other.get_num_dim() and
-            self.__num_classes == other.get_num_classes() and
-            np.array_equal(self.__patterns, other.get_patterns()))
+        cdef Dataset other_c = <Dataset> other
+        return self.ptr[0] == other_c.ptr[0]
 
     def __len__(self):
         """Get the number of patterns in this dataset
@@ -138,4 +135,12 @@ cdef class Dataset:
         Returns:
             int: Number of patterns
         """
-        return self.__size
+        return self.get_size()
+
+    @staticmethod
+    cdef Dataset wrap(DatasetCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+        cdef Dataset new_object = Dataset(0, 0, 0, None, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

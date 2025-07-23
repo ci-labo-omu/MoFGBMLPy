@@ -44,7 +44,8 @@ for root, dirs, files in os.walk('src'):
 
             cython_files.append(Extension(name,
                                           sources,
-                                          extra_compile_args=[openmp_arg, optimization_arg, cpp_std_arg],
+                                          # extra_compile_args=[openmp_arg, optimization_arg, cpp_std_arg],
+                                          extra_compile_args=[cpp_std_arg],
                                           language='c++',
                                           include_dirs=[numpy.get_include(), "src/mofgbmlpy"]))
 

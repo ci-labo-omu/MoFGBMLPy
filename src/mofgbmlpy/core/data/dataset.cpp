@@ -6,9 +6,7 @@ Dataset::Dataset(int size, int num_dim, int num_classes, const std::vector<Patte
     if (size <= 0 || num_dim <= 0 || num_classes <= 0) {
         throw std::invalid_argument("size, num_dim and num_classes must be positive");
     }
-    if (patterns.empty()) {
-        throw std::invalid_argument("Patterns vector can't be empty");
-    }
+
     if (size != static_cast<int>(patterns.size())) {
         throw std::invalid_argument("Size doesn't match patterns vector size");
     }
@@ -23,10 +21,7 @@ Dataset::Dataset(const Dataset& other)
 }
 
 Pattern* Dataset::get_pattern(int index) const {
-    if (index < 0 || index >= size) {
-        throw std::out_of_range("Index out of bounds");
-    }
-    return patterns[index];
+    return patterns.at(index);
 }
 
 const std::vector<Pattern*>& Dataset::get_patterns() const {
@@ -59,10 +54,17 @@ Dataset::operator std::string() const
 
 bool Dataset::operator==(const Dataset& other) const
 {
-    return size == other.size &&
-           num_dim == other.num_dim &&
-           num_classes == other.num_classes &&
-           patterns == other.patterns;
+    if (size == other.size &&
+        num_dim == other.num_dim &&
+        num_classes == other.num_classes) {
+        for (int i = 0; i < get_size(); ++i) {
+            if (!(*(patterns[i]) == *(other.patterns[i]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 Dataset* Dataset::clone() const

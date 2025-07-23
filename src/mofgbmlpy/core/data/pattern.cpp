@@ -1,13 +1,10 @@
 #include "pattern.hpp"
 #include <stdexcept>
 
-Pattern::Pattern(int id, const std::vector<double>& attributes_vector, std::shared_ptr<AbstractClassLabel> target_class)
+Pattern::Pattern(int id, const std::vector<double>& attributes_vector, AbstractClassLabel* target_class)
     : id(id), attributes_vector(attributes_vector), target_class(target_class) {
     if (id < 0) {
         throw std::invalid_argument("ID cannot be negative");
-    }
-    if (attributes_vector.empty()) {
-        throw std::invalid_argument("Attributes vector can't be empty");
     }
     if (!target_class) {
         throw std::invalid_argument("Target class can't be null");
@@ -27,13 +24,10 @@ const std::vector<double>& Pattern::get_attributes_vector() const {
 }
 
 double Pattern::get_attribute_value(int index) const {
-    if (index < 0 || index >= static_cast<int>(attributes_vector.size())) {
-        throw std::out_of_range("Index out of bounds");
-    }
-    return attributes_vector[index];
+    return attributes_vector.at(index);
 }
 
-std::shared_ptr<AbstractClassLabel> Pattern::get_target_class() const {
+AbstractClassLabel* Pattern::get_target_class() const {
     return target_class;
 }
 
@@ -41,16 +35,20 @@ int Pattern::get_num_dim() const {
     return static_cast<int>(attributes_vector.size());
 }
 
+void Pattern::set_attribute_value(int index, float new_value) {
+    attributes_vector.at(index) = new_value;
+}
+
 bool Pattern::operator==(const Pattern& other) const
 {
     return id == other.id &&
-           target_class == other.target_class &&
+           (*target_class) == (*other.target_class) &&
            attributes_vector == other.attributes_vector;
 }
 
 Pattern::operator std::string() const
 {
-    if (attributes_vector.empty() || !target_class) {
+    if (!target_class) {
         return "null";
     }
     std::string txt = "[id:" + std::to_string(id) + ", input:{";

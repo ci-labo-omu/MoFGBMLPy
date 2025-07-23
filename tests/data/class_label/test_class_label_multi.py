@@ -89,8 +89,18 @@ def test_deep_copy():
 
     v1 = label.get_class_label_value()
     v2 = label_copy.get_class_label_value()
+    
     assert np.array_equal(v1, v2)
-    assert id(v1.base) != id(v2.base)
+    assert id(v1) != id(v2)
+
+    label.set_class_label_value_at(0, -1)
+    v1_modified = label.get_class_label_value_at(0)
+    v2_after_modification = label_copy.get_class_label_value_at(0)
+
+    assert v1_modified == -1
+    assert v2_after_modification == 0
+    
+
 
 
 def test_eq_none():

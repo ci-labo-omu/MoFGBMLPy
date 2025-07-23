@@ -14,7 +14,9 @@ cdef class AbstractClassLabel:
         self.ptr = NULL
 
     def __dealloc__(self):
-        del self.ptr
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
 
     cpdef bint is_rejected(self):

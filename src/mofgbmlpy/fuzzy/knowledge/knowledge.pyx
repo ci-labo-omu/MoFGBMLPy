@@ -107,7 +107,7 @@ cdef class Knowledge:
     @cython.wraparound(False)
     @cython.cdivision(True)
     @cython.initializedcheck(False)
-    cdef inline double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_index):
+    cdef double get_membership_value(self, double attribute_value, int dim, int fuzzy_set_index):
         """Get the membership value of the given attribute value with the fuzzy set at the given dimension and given index (Can only be accessed from Cython code)
         
         Args:
@@ -164,13 +164,12 @@ cdef class Knowledge:
             object: Deep copy of this object
         """
         cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
-        cdef FuzzyVariable[:] fuzzy_vars_copy = np.empty(fuzzy_vars.shape[0], dtype=object)
         cdef int i
 
         fuzzy_vars_copy_list = []
         for i in range(fuzzy_vars.shape[0]):
             fuzzy_vars_copy_list.append(deepcopy(fuzzy_vars[i]))
-        cdef FuzzyVariable[:] patterns_copy = np.array(fuzzy_vars_copy_list, dtype=object)
+        cdef FuzzyVariable[:] fuzzy_vars_copy = np.array(fuzzy_vars_copy_list, dtype=object)
 
         new_knowledge = Knowledge(fuzzy_vars_copy)
         memo[id(self)] = new_knowledge

@@ -5,9 +5,9 @@ import cython
 
 
 cdef class AbstractSolution:
-    cdef double[:] objectives
+    cdef double[:] _objectives
     # cdef double[:] __constraints
-    cdef object attributes
+    cdef object _attributes
 
     cpdef double[:] get_objectives(self)
     # cpdef double[:] get_constraints(self)

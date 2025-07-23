@@ -18,33 +18,6 @@ from libc.math cimport INFINITY
 cdef class SingleWinnerRuleSelection(AbstractClassification):
     """Class containing a method to compute a winner rule for a given pattern using the single winner rule selection """
 
-    # def __init__(self, cache_size=0): # TODO: Check cache performance
-        # if cache_size <= 0:
-        #     self.__cache_size = 0
-        # else:
-        #     self.__cache = LRUCache(cache_size)
-        #     self.__cache_size = cache_size
-
-    # cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern):
-    #     cdef int solution_hash = hash(solution)
-    #     cdef int pattern_id = pattern.get_id()
-    #     cdef double value
-    #
-    #     # print(pattern_id, solution_hash, self.__cache.combine_keys(pattern_id, solution_hash))
-    #
-    #     if self.__cache.has(pattern_id, solution_hash):
-    #         # print("###")
-    #         return self.__cache.get(pattern_id, solution_hash)
-    #         # cached_value = self.__cache.get(pattern_id, solution_hash)
-    #         # computed_value = solution.get_fitness_value(pattern.get_attributes_vector())
-    #         # if cached_value != computed_value:
-    #         #     raise Exception(f"DIFFERENT VALUE for pattern {pattern_id} sol {solution_hash} : {cached_value} != {computed_value}")
-    #     else:
-    #         value = solution.get_fitness_value(pattern.get_attributes_vector())
-    #         self.__cache.put(pattern_id, solution_hash, value)
-    #         # print("___", self.__cache.get_size(), self.__cache.get_max_size())
-    #         return value
-
     cpdef MichiganSolution classify(self, MichiganSolution[:] michigan_solution_list, Pattern pattern):
         """Outputs the winner rule (the michigan solution) based on a single winner rule. 
         The winner is the solution with the maximum fitness for the given pattern.

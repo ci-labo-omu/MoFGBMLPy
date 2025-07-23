@@ -22,8 +22,11 @@ ClassLabelBasic::operator std::string() const
 
 bool ClassLabelBasic::operator==(const AbstractClassLabel& other) const
 {
-    return dynamic_cast<const ClassLabelBasic*>(&other) != nullptr &&
-           class_label == dynamic_cast<const ClassLabelBasic&>(other).class_label;
+    const ClassLabelBasic* other_basic = dynamic_cast<const ClassLabelBasic*>(&other);
+    if (!other_basic) {
+        return false;
+    }
+    return class_label == other_basic->class_label;
 }
 
 ClassLabelBasic* ClassLabelBasic::clone() const

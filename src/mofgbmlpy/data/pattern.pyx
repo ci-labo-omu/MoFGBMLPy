@@ -2,7 +2,15 @@ import copy
 import numpy as np
 cimport numpy as cnp
 import cython
-from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
+from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic, ClassLabelBasicCpp
+from mofgbmlpy.data.pattern cimport Pattern, PatternCpp
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
+from mofgbmlpy.data.class_label.class_label_multi cimport ClassLabelMultiCpp, ClassLabelMulti
+from libcpp.cast cimport dynamic_cast
+from libcpp.vector cimport vector
+
+ctypedef ClassLabelBasicCpp* BasicPtr
+ctypedef ClassLabelMultiCpp* MultiPtr
 
 cdef class Pattern:
     """Pattern (row) of a dataset. Contains a vector of attributes and a class label
@@ -13,24 +21,40 @@ cdef class Pattern:
         __target_class (AbstractClassLabel): Class label associated to this pattern
     """
 
-    def __init__(self, int pattern_id, double[:] attributes_vector, AbstractClassLabel target_class):
+    def __cinit__(self, int pattern_id, double[:] attributes_vector=None, AbstractClassLabel target_class=None, do_init=True):
         """Constructor
 
         Args:
             pattern_id (int): ID of the pattern
             attributes_vector (double[]): Array of the attributes. The size of this array is the number of dimensions
             target_class (AbstractClassLabel): Class label associated to this pattern
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
-        if pattern_id < 0:
-            raise ValueError('id must be positive')
-        elif attributes_vector is None:
-            raise TypeError('attribute_vector must not be None')
-        elif target_class is None:
-            raise TypeError('target_class must not be None')
+        if not do_init:
+            self.ptr = NULL
+            return
 
-        self.__id = pattern_id
-        self.__attributes_vector = attributes_vector
-        self.__target_class = target_class
+        cdef vector[double] cpp_attributes_vector
+        if attributes_vector is not None and attributes_vector.shape[0] != 0:
+            cpp_attributes_vector.reserve(attributes_vector.shape[0])
+            for i in range(attributes_vector.shape[0]):
+                cpp_attributes_vector.push_back(attributes_vector[i])
+
+        cdef AbstractClassLabelCpp * class_ptr = NULL
+        if target_class is not None:
+            if isinstance(target_class, ClassLabelBasic):
+                class_ptr = dynamic_cast[BasicPtr](target_class.get_ptr()).clone()
+            elif isinstance(target_class, ClassLabelMulti):
+                class_ptr = dynamic_cast[MultiPtr](target_class.get_ptr()).clone()
+            else:
+                raise TypeError("Unknown class label type")
+
+        self.ptr = new PatternCpp(pattern_id, cpp_attributes_vector, class_ptr)
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
     cpdef int get_id(self):
         """Get the ID
@@ -38,7 +62,7 @@ cdef class Pattern:
         Returns:
             int: ID of the pattern
         """
-        return self.__id
+        return self.ptr.get_id()
 
     cpdef double[:] get_attributes_vector(self):
         """Get the attributes vector
@@ -46,7 +70,7 @@ cdef class Pattern:
         Returns:
             double[]: Array of attributes values
         """
-        return self.__attributes_vector
+        return np.array(self.ptr.get_attributes_vector(), np.float64)
 
     cpdef double get_attribute_value(self, int index):
         """Get the attribute value at the given index
@@ -57,9 +81,7 @@ cdef class Pattern:
         Returns:
             double: Attribute value
         """
-        if index < 0 or index >= self.__attributes_vector.shape[0]:
-            Exception("Index is out of bounds")
-        return self.__attributes_vector[index]
+        return self.ptr.get_attribute_value(index)
 
     cpdef object get_target_class(self):
         """Get the target class label of this pattern
@@ -67,7 +89,17 @@ cdef class Pattern:
         Returns:
             object: Target class label. Either a int or an array of int (multi label)
         """
-        return self.__target_class
+        cdef AbstractClassLabelCpp* target_class_ptr = self.ptr.get_target_class()
+
+        cdef BasicPtr basic_ptr = dynamic_cast[BasicPtr](target_class_ptr)
+        if basic_ptr != NULL:
+            return ClassLabelBasic.wrap(basic_ptr)
+
+        cdef MultiPtr multi_ptr = dynamic_cast[MultiPtr](target_class_ptr)
+        if multi_ptr != NULL:
+            return ClassLabelMulti.wrap(multi_ptr)
+
+        raise TypeError("Unknown class label type")
 
     cpdef int get_num_dim(self):
         """Get the number of dimensions of the attribute vector
@@ -75,7 +107,7 @@ cdef class Pattern:
         Returns:
             int: Number of dimensions
         """
-        return len(self.__attributes_vector)
+        return self.ptr.get_num_dim()
 
     def __repr__(self):
         """Return a string representation of this object
@@ -83,10 +115,7 @@ cdef class Pattern:
         Returns:
             str: String representation
         """
-        if self.get_attributes_vector() is None or self.get_target_class() is None:
-            return "null"
-
-        return f"[id:{self.get_id()}, input:{{{np.asarray(self.get_attributes_vector())}}}, Class:{self.get_target_class()}]"
+        return self.ptr.to_string().decode('utf-8')
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -97,8 +126,7 @@ cdef class Pattern:
         Returns:
             object: Deep copy of this object
         """
-        cdef double[:] vector_copy = np.copy(self.__attributes_vector)
-        cdef Pattern new_object = Pattern(self.__id, vector_copy, copy.deepcopy(self.__target_class))
+        new_object = Pattern.wrap(self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -113,7 +141,16 @@ cdef class Pattern:
         """
         if not isinstance(other, Pattern):
             return False
+        cdef Pattern other_c = <Pattern> other
+        return other_c.ptr[0] == self.ptr[0]
 
-        return (self.__id == other.get_id() and
-                self.__target_class == other.get_target_class() and
-                np.array_equal(self.__attributes_vector, other.get_attributes_vector()))
+    cpdef void set_attribute_value(self, int index, float new_value):
+        self.ptr.set_attribute_value(index, new_value)
+
+    @staticmethod
+    cdef Pattern wrap(PatternCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+        cdef Pattern new_object = Pattern(0, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

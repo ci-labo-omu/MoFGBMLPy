@@ -57,7 +57,7 @@ def test_null_num_classes():
 
 
 def test_none_patterns():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         Dataset(1, 1, 1, None)
 
 
@@ -89,6 +89,13 @@ def test_deep_copy():
     ds_copy = copy.deepcopy(ds)
 
     assert ds == ds_copy
+
+    # attempt modification to check if deep copy is independent
+    old_val = ds.get_pattern(0).get_attribute_value(0)
+    new_val = -1.0
+    ds.get_pattern(0).get_attributes_vector()[0] = -1.0
+    assert ds.get_pattern(0).get_attribute_value(0) != np.float64(new_val)
+    assert ds_copy.get_pattern(0).get_attribute_value(0) == np.float64(old_val)
 
 
 def test_eq_true():

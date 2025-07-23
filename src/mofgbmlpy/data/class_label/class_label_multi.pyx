@@ -18,12 +18,17 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         __class_label (int[]): Values associated to class labels
     """
 
-    def __cinit__(self, int[:] class_label=None):
+    def __cinit__(self, int[:] class_label=None, do_init=True):
         """Constructor
 
         Args:
             class_label (int[]): Class label values
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
+        if not do_init:
+            self.ptr = NULL
+            return
+
         cdef vector[int] cpp_vector
         if class_label is None:
             self.ptr = new ClassLabelMultiCpp(cpp_vector)
@@ -65,8 +70,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             object: Deep copy of this object
         """
-        cdef ClassLabelMultiCpp * ptr_copy = self.get_multi_ptr().clone()
-        new_object = ClassLabelMulti.wrap(ptr_copy)
+        new_object = ClassLabelMulti.wrap(self.get_multi_ptr())
         memo[id(self)] = new_object
         return new_object
 
@@ -119,8 +123,13 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         return <ClassLabelMultiCpp*> self.ptr
 
     @staticmethod
-    cdef ClassLabelMulti wrap(ClassLabelMultiCpp * ptr):
-        cdef vector[int] cpp_vector
-        cdef ClassLabelMulti new_object = ClassLabelMulti.__new__(ClassLabelMulti)
-        new_object.ptr = <AbstractClassLabelCpp *> ptr
+    cdef ClassLabelMulti wrap(ClassLabelMultiCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+
+        cdef ClassLabelMulti new_object = ClassLabelMulti(do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
         return new_object
+
+    cpdef void set_class_label_value_at(self, int index, int value):
+        self.get_multi_ptr().set_class_label_value_at(index, value)

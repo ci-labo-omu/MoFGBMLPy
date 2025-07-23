@@ -35,7 +35,9 @@ from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCr
 from mofgbmlpy.main.arguments.arguments import Arguments
 
 
-def get_datasets(datasets_dir="../dataset"):
+def get_datasets():
+    root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    datasets_dir = os.path.join(root_path, "dataset")
     datasets = {}
     for folder in os.listdir(datasets_dir):
         datasets[folder] = []

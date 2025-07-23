@@ -53,3 +53,7 @@ void ClassLabelMulti::set_class_label_value(const std::vector<int>& new_value) {
     class_label = new_value;
 }
 
+void ClassLabelMulti::set_class_label_value_at(const int index, const int new_value) {
+    class_label.at(index) = new_value;
+}
+
