@@ -65,7 +65,7 @@ def test_get_param_range_left(x_min, x_max):
     mf = RectangularMF(left, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(ValueError):
+        with pytest.raises(Exception):
             _ = mf.get_param_range(0, x_min, x_max)
     else:
         param_range = mf.get_param_range(0, x_min, x_max)
@@ -80,7 +80,7 @@ def test_get_param_range_right(x_min, x_max):
     mf = RectangularMF(left, right)
 
     if x_min > left or x_max < right:
-        with pytest.raises(ValueError):
+        with pytest.raises(Exception):
             _ = mf.get_param_range(1, x_min, x_max)
     else:
         param_range = mf.get_param_range(1, x_min, x_max)

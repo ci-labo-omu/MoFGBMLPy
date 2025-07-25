@@ -13,9 +13,6 @@ cdef extern from "core/data/class_label/class_label_multi.hpp":
         void set_class_label_vector(const vector[int]& class_label)
         void set_class_label_value_at(const int index, const int new_value) except +
 
-        bint operator ==(const AbstractClassLabelCpp& other) const
-        ClassLabelMultiCpp * clone() const
-
 cdef class ClassLabelMulti(AbstractClassLabel):
     cpdef int get_length(self)
     cpdef object get_class_label_value(self)

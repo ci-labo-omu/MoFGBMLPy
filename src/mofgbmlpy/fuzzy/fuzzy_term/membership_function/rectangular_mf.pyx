@@ -6,16 +6,19 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport Abstract
 
 cdef class RectangularMF(AbstractMF):
     """Rectangular membership function"""
-    def __init__(self, left=0, right=1):
+    def __cinit__(self, float left=0, float right=1, do_init=True):
         """Constructor
 
         Args:
             left (float): X coordinate of the leftmost side of the rectangle: membership is equals to 0 before this point and 1 after it
             right (float): X coordinate of the leftmost side of the rectangle: membership is equals to 0 after this point and 1 before it
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
-        if left > right:
-            raise ValueError(f"Error in triangular membership function: left={left:.2f} should be < right={right:.2f}")
-        super().__init__(np.array([left, right], dtype=np.float32))
+        if not do_init:
+            self.ptr = NULL
+            return
+
+        self.ptr = new RectangularMFCpp(left, right)
 
     cdef float get_value(self, float x):
         """Get membership value (accessible only from Cython code)
@@ -26,7 +29,7 @@ cdef class RectangularMF(AbstractMF):
         Returns:
             float: Membership value
         """
-        return 1 if x >= self._params[0] and x <= self._params[1] else 0
+        return self.ptr.get_value(x)
 
     def __repr__(self):
         """Return a string representation of this object
@@ -34,7 +37,7 @@ cdef class RectangularMF(AbstractMF):
         Returns:
             (str) String representation
         """
-        return "<Rectangular MF>"
+        return self.ptr.to_string().decode('utf-8')
 
     cpdef cnp.ndarray[float, ndim=1] get_param_range(self, int index, float x_min=0, float x_max=1):
         """Get the range of acceptable values a given parameter as a numpy array of two values
@@ -47,15 +50,7 @@ cdef class RectangularMF(AbstractMF):
         Returns:
             float[]: Range of possible values
         """
-        if x_min > self._params[0] or x_max < self._params[1]:
-            raise ValueError(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[1]}]")
-
-        if index == 0:
-            return np.array([x_min, self._params[1]], dtype=np.float32)
-        elif index == 1:
-            return np.array([self._params[0], x_max], dtype=np.float32)
-        else:
-            raise IndexError("Invalid index for rectangular MF")
+        return np.array(self.ptr.get_param_range(index, x_min, x_max), dtype=np.float32)
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -66,7 +61,7 @@ cdef class RectangularMF(AbstractMF):
         Returns:
             object: Deep copy of this object
         """
-        new_object = RectangularMF(left=self._params[0], right=self._params[1])
+        new_object = RectangularMF.wrap(<RectangularMFCpp*> self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -79,12 +74,7 @@ cdef class RectangularMF(AbstractMF):
         Returns:
            Points coordinates that define this function shape
         """
-        return np.array([
-            [x_min, 0],
-            [self._params[0], 1],
-            [self._params[1], 1],
-            [x_max, 0],
-        ], np.float32)
+        return np.array(self.ptr.get_plot_points(x_min, x_max), dtype=np.float32)
 
     cpdef float get_support(self, float x_min=0, float x_max=0):
         """Get the support value associated to this function: area covered by this function in the space "domain x [0, 1]"
@@ -96,4 +86,13 @@ cdef class RectangularMF(AbstractMF):
         Returns:
             Support value
         """
-        return self._params[1] - self._params[0]
+        return self.ptr.get_support(x_min, x_max)
+
+    @staticmethod
+    cdef RectangularMF wrap(RectangularMFCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+
+        cdef RectangularMF new_object = RectangularMF(do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

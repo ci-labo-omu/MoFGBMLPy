@@ -51,7 +51,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
             return False
 
         cdef ClassLabelMulti other_c = <ClassLabelMulti> other
-        return other_c.get_multi_ptr()[0] == self.get_multi_ptr()[0]
+        return other_c.ptr[0] == self.ptr[0]
 
     cpdef int get_length(self):
         """Returns the length of the array of class label values
@@ -80,7 +80,7 @@ cdef class ClassLabelMulti(AbstractClassLabel):
         Returns:
             str: String representation
         """
-        return self.get_multi_ptr().to_string().decode('utf-8')
+        return self.ptr.to_string().decode('utf-8')
 
     cpdef object get_class_label_value(self):
         """Get the class label values

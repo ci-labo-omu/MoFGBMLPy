@@ -1,11 +1,9 @@
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
-from mofgbmlpy.fuzzy.fuzzy_term.membership_function.rectangular_mf import RectangularMF
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
 
 cdef class RectangularFuzzySet(FuzzySet):
     """Rectangular fuzzy set """
-    def __init__(self, left, right, id, term):
+    def __cinit__(self, float left, float right, int id, str term, bint do_init=True):
         """Constructor
 
         Args:
@@ -13,5 +11,14 @@ cdef class RectangularFuzzySet(FuzzySet):
             right (float): X coordinate of the leftmost side of the rectangle: membership is equals to 0 after this point and 1 before it
             id (int): ID of the fuzzy set
             term (str): Name of the fuzzy set (e.g. small)
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
-        super().__init__(function=RectangularMF(left, right), id=id, division_type=DivisionType.EQUAL_DIVISION, term=term)
+
+        if not do_init:
+            self.ptr = NULL
+            return
+
+        if term is None:
+            raise TypeError("Term cannot be None")
+
+        self.ptr = new RectangularFuzzySetCpp(left, right, id, term.encode("utf-8"))

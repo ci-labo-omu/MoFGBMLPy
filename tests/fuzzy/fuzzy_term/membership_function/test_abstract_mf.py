@@ -9,16 +9,6 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.rectangular_mf import Rectan
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
 
 
-def test_empty_params():
-    mf = AbstractMF(np.empty(0, dtype=np.float32))
-    assert len(mf.get_params()) == 0
-
-
-def test_none_params():
-    mf = AbstractMF(None)
-    assert len(mf.get_params()) == 0
-
-
 def test_set_param_value_none_index():
     with pytest.raises(TypeError):
         mf = AbstractMF(np.array([0.0, 1.0, 2.0], dtype=np.float32))

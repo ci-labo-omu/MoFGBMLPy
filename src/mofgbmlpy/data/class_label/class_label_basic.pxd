@@ -9,10 +9,6 @@ cdef extern from "core/data/class_label/class_label_basic.hpp":
         int get_class_label_value() const
         void set_class_label_value(int class_label)
 
-
-        bint operator ==(const AbstractClassLabelCpp& other) const
-        ClassLabelBasicCpp * clone() const
-
 cdef class ClassLabelBasic(AbstractClassLabel):
     cpdef int get_class_label_value(self)
     cpdef void set_class_label_value(self, int class_label)

@@ -3,6 +3,7 @@ import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
 
+from mofgbmlpy.fuzzy.fuzzy_term.membership_function.mf_wrapper cimport wrap_mf
 
 cdef class FuzzySet:
     """Fuzzy set
@@ -13,17 +14,24 @@ cdef class FuzzySet:
         __id (int): ID of the fuzzy set
         __division_type (int): Division type of this fuzzy set (e.g. EQUAL_DIVISION)
     """
-    def __init__(self, AbstractMF function, int id, int division_type, str term=""):
-        if function is None or id is None or division_type is None or term is None:
-            raise TypeError("function, id, division_type and term can't be none")
+    # def __cinit__(self, AbstractMF function, int id, int division_type, str term="", do_init=True):
+    #     if not do_init:
+    #         self.ptr = NULL
+    #         return
+    #
+    #     if function is None:
+    #         raise ValueError("Membership function cannot be None")
+    #
+    #     if term is None:
+    #         raise TypeError("Term cannot be None")
+    #
+    #     cdef DivisionTypeCpp cpp_div_type = <DivisionTypeCpp><int>division_type
+    #
+    #     self.ptr = new FuzzySetCpp(function.ptr.clone(), id, cpp_div_type, term.encode("utf-8"))
 
-        if id < 0 or division_type < 0 or division_type >= len(DivisionType):
-            raise ValueError("Invalid DivisionType constant value")
-
-        self.__function = function
-        self.__term = term
-        self.__id = id
-        self.__division_type = division_type  # TODO: not yet implemented
+    def __cinit(self):
+        """Constructor"""
+        self.ptr = NULL
 
     def __repr__(self):
         """Return a string representation of this object
@@ -31,7 +39,7 @@ cdef class FuzzySet:
         Returns:
             (str) String representation
         """
-        return f"Fuzzy set {self.__term}"
+        return self.ptr.to_string().decode("utf-8")
 
     cdef float get_membership_value(self, float x):
         """Get the membership value of a value for this fuzzy set
@@ -42,7 +50,7 @@ cdef class FuzzySet:
         Returns:
             float: Membership value
         """
-        return self.__function.get_value(x)
+        return self.ptr.get_membership_value(x)
 
     cpdef get_term(self):
         """Get the name associated to the fuzzy set
@@ -50,7 +58,7 @@ cdef class FuzzySet:
         Returns:
             str: Name associated to the fuzzy set
         """
-        return self.__term
+        return self.ptr.get_term().decode("utf-8")
 
     cpdef get_function_callable(self):
         """Get the membership function object's function
@@ -58,7 +66,7 @@ cdef class FuzzySet:
         Returns:
             function: Membership function
         """
-        return self.__function.get_value
+        return self.get_function().get_value
 
     cpdef int get_id(self):
         """Get th ID of Fuzzy set
@@ -66,7 +74,7 @@ cdef class FuzzySet:
         Returns:
             int: Fuzzy set ID
         """
-        return self.__id
+        return self.ptr.get_id()
 
     cpdef AbstractMF get_function(self):
         """Get the membership function object
@@ -74,7 +82,7 @@ cdef class FuzzySet:
         Returns:
             AbstractMF: Membership function object
         """
-        return self.__function
+        return wrap_mf(self.ptr.get_function())
 
     cpdef set_function(self, AbstractMF function):
         """Set the membership function object
@@ -82,9 +90,7 @@ cdef class FuzzySet:
         Args:
             function (AbstractMF): Membership function object
         """
-        if function is None:
-            raise TypeError("function can't be none")
-        self.__function = function
+        self.ptr.set_function(function.ptr.clone())
 
     cpdef get_division_type(self):
         """Get the division type of this fuzzy set
@@ -93,7 +99,7 @@ cdef class FuzzySet:
             DivisionType: Division type
 
         """
-        return self.__division_type
+        return DivisionType(self.ptr.get_division_type())
 
     def to_xml(self):
         """Get the XML representation of this object.
@@ -101,6 +107,8 @@ cdef class FuzzySet:
         Returns:
             (xml.etree.ElementTree) XML element representing this object
         """
+        cdef AbstractMF function = self.get_function()
+
         root = xml_tree.Element("fuzzyTerm")
         term_xml = xml_tree.SubElement(root, "fuzzyTermID")
         term_xml.text = str(self.get_id())
@@ -109,9 +117,9 @@ cdef class FuzzySet:
         term_xml.text = self.get_term()
 
         term_xml = xml_tree.SubElement(root, "ShapeTypeName")
-        term_xml.text = str(self.__function.__class__.__name__)
+        term_xml.text = str(function.__class__.__name__)
 
-        root.append(self.__function.to_xml())
+        root.append(function.to_xml())
 
         return root
 
@@ -127,10 +135,9 @@ cdef class FuzzySet:
         if not isinstance(other, FuzzySet):
             return False
 
-        return (self.__id == other.get_id() and
-                self.__function == other.get_function() and
-                self.__term == other.get_term()
-                and self.__division_type == other.get_division_type())
+        cdef FuzzySet other_set = <FuzzySet>other
+
+        return self.ptr[0] == other_set.ptr[0]
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -141,8 +148,7 @@ cdef class FuzzySet:
         Returns:
             object: Deep copy of this object
         """
-        cdef FuzzySet new_object = FuzzySet(copy.deepcopy(self.__function), self.__id, self.__division_type, self.__term)
-
+        new_object = FuzzySet.wrap(self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -156,4 +162,13 @@ cdef class FuzzySet:
         Returns:
             Support value
         """
-        return self.__function.get_support(x_min, x_max)
+        return self.ptr.get_support(x_min, x_max)
+
+    @staticmethod
+    cdef FuzzySet wrap(FuzzySetCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+
+        cdef FuzzySet new_object = FuzzySet(function=None, id=0, division_type=0, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

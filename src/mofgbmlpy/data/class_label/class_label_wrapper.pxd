@@ -1,0 +1,3 @@
+from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel, AbstractClassLabelCpp
+
+cdef AbstractClassLabel wrap_class_label(AbstractClassLabelCpp * wrapped_ptr)

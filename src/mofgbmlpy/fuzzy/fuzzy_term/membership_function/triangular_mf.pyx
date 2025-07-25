@@ -8,22 +8,21 @@ cimport numpy as cnp
 
 cdef class TriangularMF(AbstractMF):
     """Triangular membership function"""
-    def __init__(self, left=0, center=0.5, right=1):
+    def __cinit__(self, left=0, center=0.5, right=1, do_init=True):
         """Constructor
 
         Args:
             left (float): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 before it
             center (float): X coordinate of the vertex in the center of the triangle: membership is equals to 1 at this point
             right (float): X coordinate of the leftmost vertex of the triangle: membership is equals to 0 after it
+            do_init (bool): If True, the object is initialized, otherwise it is not
         """
-        if left is None or center is None or right is None:
-            raise TypeError("Parameters can't be None")
-        if left > center:
-            raise ValueError(f"Error in triangular membership function: left={left:.2f} should be <= center={center:.2f}")
-        elif center > right:
-            raise ValueError(f"Error in triangular membership function: center={center:.2f} should be <= right={right:.2f}")
 
-        super().__init__(np.array([left,center,right], dtype=np.float32))
+        if not do_init:
+            self.ptr = NULL
+            return
+
+        self.ptr = new TriangularMFCpp(left, center, right)
 
     cdef float get_value(self, float x):
         """Get membership value (accessible only from Cython code)
@@ -34,15 +33,7 @@ cdef class TriangularMF(AbstractMF):
         Returns:
             float: Membership value
         """
-        if x == self._params[1]:
-            # For the case where left = center or center = right
-            return 1
-        if x <= self._params[0] or x >= self._params[2]:
-            return 0
-        elif x < self._params[1]:
-            return (x - self._params[0]) / (self._params[1] - self._params[0])
-        else:
-            return (self._params[2] - x) / (self._params[2] - self._params[1])
+        return self.ptr.get_value(x)
 
 
     def __repr__(self):
@@ -51,7 +42,7 @@ cdef class TriangularMF(AbstractMF):
         Returns:
             (str) String representation
         """
-        return "<Triangular MF (%f, %f, %f)>" % (self._params[0], self._params[1], self._params[2])
+        return self.ptr.to_string().decode('utf-8')
 
     cpdef cnp.ndarray[float, ndim=1] get_param_range(self, int index, float x_min=0, float x_max=1):
         """Get the range of acceptable values a given parameter as a numpy array of two values
@@ -64,17 +55,7 @@ cdef class TriangularMF(AbstractMF):
             Returns:
                 float[]: Range of possible values
             """
-        if x_min > self._params[0] or x_max < self._params[2]:
-            raise ValueError(f"Invalid x_min or x_max. They must be in the range [{self._params[0]}, {self._params[2]}]")
-
-        if index == 0:
-            return np.array([x_min, self._params[1]], dtype=np.float32)
-        elif index == 1:
-            return np.array([self._params[0], self._params[2]], dtype=np.float32)
-        elif index == 2:
-            return np.array([self._params[1], x_max], dtype=np.float32)
-        else:
-            raise IndexError("Invalid index for rectangular MF")
+        return np.array(self.ptr.get_param_range(index, x_min, x_max), dtype=np.float32)
 
 
     def __deepcopy__(self, memo={}):
@@ -86,7 +67,7 @@ cdef class TriangularMF(AbstractMF):
         Returns:
             object: Deep copy of this object
         """
-        new_object = TriangularMF(left=self._params[0], center=self._params[1], right=self._params[2])
+        new_object = TriangularMF.wrap(<TriangularMFCpp*> self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -100,13 +81,7 @@ cdef class TriangularMF(AbstractMF):
                Points coordinates that define this function shape
            """
 
-        return np.array([
-            [x_min,0],
-            [self._params[0], 0],
-            [self._params[1], 1],
-            [self._params[2], 0],
-            [x_max, 0],
-        ], np.float32)
+        return np.array(self.ptr.get_plot_points(x_min, x_max), dtype=np.float32)
 
     cpdef float get_support(self, float x_min=0, float x_max=0):
         """Get the support value associated to this function: area covered by this function in the space "domain x [0, 1]"
@@ -118,4 +93,14 @@ cdef class TriangularMF(AbstractMF):
         Returns:
             Support value
         """
-        return 0.5 * (self._params[2] - self._params[0])  # right - left
+        return self.ptr.get_support(x_min, x_max)
+
+    @staticmethod
+    cdef TriangularMF wrap(TriangularMFCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+
+        cdef TriangularMF new_object = TriangularMF(do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+
+        return new_object

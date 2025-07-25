@@ -6,11 +6,8 @@ from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic, Class
 from mofgbmlpy.data.pattern cimport Pattern, PatternCpp
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.data.class_label.class_label_multi cimport ClassLabelMultiCpp, ClassLabelMulti
-from libcpp.cast cimport dynamic_cast
+from mofgbmlpy.data.class_label.class_label_wrapper cimport wrap_class_label
 from libcpp.vector cimport vector
-
-ctypedef ClassLabelBasicCpp* BasicPtr
-ctypedef ClassLabelMultiCpp* MultiPtr
 
 cdef class Pattern:
     """Pattern (row) of a dataset. Contains a vector of attributes and a class label
@@ -42,12 +39,7 @@ cdef class Pattern:
 
         cdef AbstractClassLabelCpp * class_ptr = NULL
         if target_class is not None:
-            if isinstance(target_class, ClassLabelBasic):
-                class_ptr = dynamic_cast[BasicPtr](target_class.get_ptr()).clone()
-            elif isinstance(target_class, ClassLabelMulti):
-                class_ptr = dynamic_cast[MultiPtr](target_class.get_ptr()).clone()
-            else:
-                raise TypeError("Unknown class label type")
+            class_ptr = target_class.get_ptr().clone()
 
         self.ptr = new PatternCpp(pattern_id, cpp_attributes_vector, class_ptr)
 
@@ -90,16 +82,7 @@ cdef class Pattern:
             object: Target class label. Either a int or an array of int (multi label)
         """
         cdef AbstractClassLabelCpp* target_class_ptr = self.ptr.get_target_class()
-
-        cdef BasicPtr basic_ptr = dynamic_cast[BasicPtr](target_class_ptr)
-        if basic_ptr != NULL:
-            return ClassLabelBasic.wrap(basic_ptr)
-
-        cdef MultiPtr multi_ptr = dynamic_cast[MultiPtr](target_class_ptr)
-        if multi_ptr != NULL:
-            return ClassLabelMulti.wrap(multi_ptr)
-
-        raise TypeError("Unknown class label type")
+        return wrap_class_label(target_class_ptr)
 
     cpdef int get_num_dim(self):
         """Get the number of dimensions of the attribute vector

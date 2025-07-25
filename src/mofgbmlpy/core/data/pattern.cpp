@@ -12,7 +12,7 @@ Pattern::Pattern(int id, const std::vector<double>& attributes_vector, AbstractC
 }
 
 Pattern::Pattern(const Pattern& other)
-    : id(other.id), attributes_vector(other.attributes_vector), target_class(other.target_class) {
+    : id(other.id), attributes_vector(other.attributes_vector), target_class(other.target_class->clone()) {
 }
 
 int Pattern::get_id() const {

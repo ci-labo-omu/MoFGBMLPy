@@ -8,11 +8,21 @@ cdef class AbstractMF:
         _params (float[]): List of parameters values
         _are_params_points_flag (bool): If true then we can move them in an interactive plot. e.g. for gaussian it's set to false
     """
-    def __init__(self, float[:] params, bint are_params_points_flag=True):
-        self._params = params
-        if self._params is None:
-            self._params = np.empty(0, dtype=np.float32)
-        self._are_params_points_flag = are_params_points_flag
+
+    def __cinit__(self):
+        """Constructor
+
+        Args:
+            params (float[]): Membership functions parameters
+            are_params_points_flag (bool): If true then we can move them in an interactive plot. e.g. for gaussian it's set to false
+            do_init (bool): If True, the object is initialized, otherwise it is not
+        """
+        self.ptr = NULL
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
     cdef float get_value(self, float x):
         """Get membership value (accessible only from Cython code)
@@ -53,12 +63,14 @@ cdef class AbstractMF:
         """
         root = xml_tree.Element("membershipFunction")
 
-        if len(self._params) != 0:
+        cdef float[:] params = self.get_params()
+
+        if len(params) != 0:
             params_set = xml_tree.SubElement(root, "parameterSet")
 
-            for i in range(len(self._params)):
+            for i in range(len(params)):
                 param = xml_tree.SubElement(params_set, "parameterSet")
-                param.text = str(self._params[i])
+                param.text = str(params)
                 param.set("id", str(i))
 
         return root
@@ -69,7 +81,7 @@ cdef class AbstractMF:
         Returns:
             float[]: Parameters
         """
-        return np.array(self._params, dtype=np.float32)
+        return np.array(self.ptr.get_params(), dtype=np.float32)
 
     cpdef cnp.ndarray[float, ndim=1] get_param_range(self, int index, float x_min=0, float x_max=1):
         """Get the range of acceptable values a given parameter as a numpy array of two values
@@ -96,8 +108,7 @@ cdef class AbstractMF:
         Returns:
             bool: True if it is valid and false otherwise
         """
-        cdef float[:] val_range = self.get_param_range(index, x_min, x_max)
-        return val_range[0] <= value and value <= val_range[1]
+        return self.ptr.is_param_value_valid(index, value, x_min, x_max)
     
     cpdef bint are_params_points(self):
         """Check if this function parameters represent points (It is true for triangular membership functions but not gaussian ones)
@@ -105,7 +116,7 @@ cdef class AbstractMF:
         Returns:
             bool: True if the parameters represent points and false otherwise
         """
-        return self._are_params_points_flag
+        return self.ptr.are_params_points()
 
     cpdef void set_param_value(self, int index, float value, float x_min=0, float x_max=1):
         """Set the value of the parameter at a give index and check beforehand if it is valid
@@ -119,10 +130,7 @@ cdef class AbstractMF:
         Raises:
             Exception: The index is out of bounds or the value is invalid for the corresponding parameter
         """
-        if self.is_param_value_valid(index, value, x_min, x_max):
-            self._params[index] = value
-        else:
-            raise ValueError("Invalid index or value")
+        self.ptr.set_param_value(index, value, x_min, x_max)
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -146,7 +154,8 @@ cdef class AbstractMF:
         """
         if not isinstance(other, self.__class__):
             return False
-        return np.array_equal(self._params, other.get_params())
+        cdef AbstractMF other_c = <AbstractMF> other
+        return self.ptr[0] == other_c.ptr[0]
 
     cpdef cnp.ndarray[float, ndim=2] get_plot_points(self, float x_min=0, float x_max=1):
         """Get the plot points coordinates

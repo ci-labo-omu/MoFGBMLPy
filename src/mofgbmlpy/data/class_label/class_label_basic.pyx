@@ -37,7 +37,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         if not isinstance(other, ClassLabelBasic):
             return False
         cdef ClassLabelBasic other_c = <ClassLabelBasic> other
-        return other_c.get_basic_ptr()[0] == self.get_basic_ptr()[0]
+        return other_c.ptr[0] == self.ptr[0]
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
