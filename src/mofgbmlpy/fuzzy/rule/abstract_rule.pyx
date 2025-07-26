@@ -39,6 +39,14 @@ cdef class AbstractRule:
         """
         return self._antecedent
 
+    cpdef void set_antecedent(self, Antecedent antecedent):
+        """Set the antecedent
+
+        Args:
+            antecedent (Antecedent): New antecedent
+        """
+        self._antecedent = antecedent
+
     cpdef AbstractConsequent get_consequent(self):
         """Get the consequent
         

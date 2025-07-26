@@ -356,6 +356,9 @@ cdef class MichiganSolution(AbstractSolution):
         """
         self._vars = new_vars
         self._are_scores_updated = False
+        if self._rule is None or self._rule.get_antecedent() is None:
+            return
+        self.get_antecedent().set_antecedent_indices(new_vars)
 
     cpdef int get_num_vars(self):
         """Get the number of variables (number of antecedent indices, i.e. the number of dimensions)

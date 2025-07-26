@@ -6,6 +6,8 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasi
 
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+
 
 class MichiganMutation(Mutation):
     """Michigan mutation operator
@@ -48,11 +50,12 @@ class MichiganMutation(Mutation):
         sol = X[0, 0]
         cdef Dataset training_set = sol.get_rule_builder().get_training_dataset()
         cdef int training_set_size = training_set.get_size()
+        cdef Antecedent antecedent = sol.get_antecedent()
 
         for i in range(len(X)):
             sol = X[i, 0]
             # for each var
-            indices = sol.get_antecedent().get_antecedent_indices()
+            indices = antecedent.get_antecedent_indices()
             for j in range(sol.get_num_vars()):
                 if self._random_gen.random() > self.__mutation_rt:
                     continue
@@ -70,10 +73,10 @@ class MichiganMutation(Mutation):
 
                     # To avoid getting the same value again we do the following
                     if new_fuzzy_set < indices[j]:
-                        indices[j] = new_fuzzy_set
+                        sol.set_var(j, new_fuzzy_set)
                     else:
-                        indices[j] = new_fuzzy_set + 1
+                        sol.set_var(j, new_fuzzy_set + 1)
                 else:
                     # Categorical attribute
-                    indices[j] = round(var_of_random_pattern)
+                    sol.set_var(j, round(var_of_random_pattern))
         return X

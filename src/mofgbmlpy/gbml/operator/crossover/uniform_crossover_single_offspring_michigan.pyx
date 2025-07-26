@@ -56,9 +56,12 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
 
             # Select one offspring randomly
             if self._random_gen.random() < 0.5:
+                child_1.set_vars(indices_1)
                 offspring[0, i, 0] = child_1
             else:
+                child_2.set_vars(indices_2)
                 offspring[0, i, 0] = child_2
+
 
             # TODO: not done in the Java version?
             # offspring[0, i, 0].reset_fitness()

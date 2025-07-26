@@ -18,6 +18,7 @@ cdef class AbstractRule:
     cdef AbstractConsequent _consequent
 
     cpdef Antecedent get_antecedent(self)
+    cpdef void set_antecedent(self, Antecedent antecedent)
     cpdef AbstractConsequent get_consequent(self)
     cpdef void set_consequent(self, AbstractConsequent consequent)
     cdef double[:] get_membership_values(self, double[:] attribute_vector)
