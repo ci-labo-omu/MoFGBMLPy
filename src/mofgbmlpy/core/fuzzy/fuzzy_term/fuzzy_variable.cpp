@@ -77,7 +77,21 @@ FuzzyVariable::operator std::string() const {
 }
 
 bool FuzzyVariable::operator==(const FuzzyVariable& other) const {
-    return name == other.name && domain == other.domain && fuzzy_sets == other.fuzzy_sets;
+    if (!(name == other.name && domain == other.domain)) {
+        return false;
+    }
+
+    if (get_length() != other.get_length()) {
+        return false;
+    }
+
+    for (int i = 0; i < get_length(); ++i) {
+        if (!(*(fuzzy_sets[i]) == *(other.fuzzy_sets[i]))) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 std::string FuzzyVariable::to_string() const {

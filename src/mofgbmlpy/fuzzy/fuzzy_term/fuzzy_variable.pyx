@@ -3,7 +3,7 @@ import copy
 
 import numpy as np
 cimport numpy as cnp
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet, FuzzySetCpp
 
 
 cdef class FuzzyVariable:
@@ -14,35 +14,45 @@ cdef class FuzzyVariable:
         __name (str): Name of the fuzzy variable (e.g. Petal length)
         __domain (float[]): Domain of the values in the variable (uses only for plotting purposes for now)
     """
-    def __init__(self, FuzzySet[:] fuzzy_sets, str name="unnamed_var", domain=None):
+    def __cinit__(self, FuzzySet[:] fuzzy_sets, str name="unnamed_var", float[:] domain=None, do_init=True):
         """Constructor
 
         Args:
             fuzzy_sets (FuzzySet[]): List of the fuzzy sets of this variable
             name (str): Name of the fuzzy variable (e.g. Petal length)
             domain (float[]): List of the fuzzy sets of this variable
+            do_init (bool): If True, the object is initialized, otherwise it is not
 
         Raises:
             Exception: None name or empty or None fuzzy sets array
         """
+        if not do_init:
+            self.ptr = NULL
+            return
+
         if name is None:
-            raise TypeError("name can't be done")
-        elif fuzzy_sets is None:
-            raise TypeError("fuzzy_sets must not be None")
-        elif len(fuzzy_sets) == 0:
-            raise ValueError("fuzzy_sets must have at least one element")
+            raise TypeError("Name cannot be None")
 
-        self.__fuzzy_sets = fuzzy_sets
-        self.__name = name
+        cdef vector[FuzzySetCpp*] cpp_fuzzy_sets
+        if fuzzy_sets is not None and fuzzy_sets.shape[0] != 0:
+            cpp_fuzzy_sets.reserve(fuzzy_sets.shape[0])
+            for i in range(fuzzy_sets.shape[0]):
+                cpp_fuzzy_sets.push_back(fuzzy_sets[i].ptr.clone())
 
-        if domain is None:
-            self.__domain = np.array([0.0, 1.0], dtype=np.float32)
+        cdef vector[float] cpp_domain
+        if domain is not None and domain.shape[0] != 0:
+            cpp_domain.reserve(domain.shape[0])
+            for i in range(domain.shape[0]):
+                cpp_domain.push_back(domain[i])
         else:
-            if len(domain) != 2:
-                raise ValueError("domain must be an array of float size 2 (min, max)")
-            elif domain[0] > domain[1]:
-                raise ValueError("domain's first value must be lesser than the second one")
-            self.__domain = domain
+            cpp_domain = {0.0, 1.0}
+
+        self.ptr = new FuzzyVariableCpp(cpp_fuzzy_sets, name.encode("utf-8"), cpp_domain)
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
     cpdef str get_name(self):
         """Get the name of the variable
@@ -50,7 +60,7 @@ cdef class FuzzyVariable:
         Returns:
             Variable's name
         """
-        return self.__name
+        return self.ptr.get_name().decode("utf-8")
 
     cdef float get_membership_value(self, int fuzzy_set_index, float x):
         """Get the membership value for the value x with the given fuzzy set (Accessible only from Cython code)
@@ -65,10 +75,7 @@ cdef class FuzzyVariable:
         Raises:
             Exception: The index is out of range
         """
-        if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
-        cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
-        return fuzzy_set.get_membership_value(x)
+        return self.ptr.get_membership_value(fuzzy_set_index, x)
 
     def get_membership_value_py(self, int fuzzy_set_index, float x):
         """Get the membership value for the value x with the given fuzzy set
@@ -88,7 +95,7 @@ cdef class FuzzyVariable:
         Returns:
             int: Number of furry sets
         """
-        return len(self.__fuzzy_sets)
+        return self.ptr.get_length()
 
     cpdef FuzzySet get_fuzzy_set(self, int fuzzy_set_index):
         """Get the fuzzy set at the given index
@@ -102,9 +109,7 @@ cdef class FuzzyVariable:
         Raises:
             Exception: The index is out of range
         """
-        if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
-        return self.__fuzzy_sets[fuzzy_set_index]
+        return FuzzySet.wrap(self.ptr.get_fuzzy_set(fuzzy_set_index))
 
     cpdef float get_support(self, int fuzzy_set_index):
         """Get the support value of a fuzzy set. This value corresponds to the area covered by the membership function in the search space (e.g. for don't care in [0,1] it's 1)
@@ -117,11 +122,7 @@ cdef class FuzzyVariable:
         Raises:
             Exception: The index is out of range
         """
-        if fuzzy_set_index >= self.__fuzzy_sets.shape[0]:
-            raise IndexError(f"{fuzzy_set_index} is out of range (>= {len(self.__fuzzy_sets)})")
-
-        cdef FuzzySet fuzzy_set = self.__fuzzy_sets[fuzzy_set_index]
-        return fuzzy_set.get_support(self.__domain[0], self.__domain[1])
+        return self.ptr.get_support(fuzzy_set_index)
 
     cpdef get_fuzzy_sets(self):
         """Get the array of fuzzy sets of this variable
@@ -129,7 +130,15 @@ cdef class FuzzyVariable:
         Returns:
             FuzzySets[]: Array of fuzzy sets
         """
-        return self.__fuzzy_sets
+        cdef vector[FuzzySetCpp*] cpp_fuzzy_sets = self.ptr.get_fuzzy_sets()
+        cdef FuzzySet[:] fuzzy_sets = np.empty(self.get_length(), dtype=object)
+        cdef FuzzySet fs
+        cdef int i
+
+        for i in range(self.get_length()):
+            fs = FuzzySet.wrap(cpp_fuzzy_sets[i])
+            fuzzy_sets[i] = fs
+        return fuzzy_sets
 
     cpdef get_support_values(self):
         """Get all the support values (one per fuzzy set) in an array
@@ -137,14 +146,7 @@ cdef class FuzzyVariable:
         Returns:
             float[]: Array of support values
         """
-        cdef float[:] support_values = np.empty(len(self.__fuzzy_sets))
-        cdef int i
-        cdef FuzzySet fuzzy_set
-
-        for i in range(len(self.__fuzzy_sets)):
-            fuzzy_set = self.__fuzzy_sets[i]
-            support_values[i] = fuzzy_set.get_support(self.__domain[0], self.__domain[1])
-        return support_values
+        return np.array(self.ptr.get_support_values(), dtype=np.float32)
 
     cpdef get_domain(self):
         """Get the domain of this variable (e.g [0,1])
@@ -152,7 +154,7 @@ cdef class FuzzyVariable:
         Returns:
             float[]: Domain of this variable (min and max values)
         """
-        return self.__domain
+        return np.array(self.ptr.get_domain(), dtype=np.float32)
 
     def get_plot(self, ax):
         """Draw the fuzzy variable fuzzy sets on the given matplotlib Axes object
@@ -164,17 +166,19 @@ cdef class FuzzyVariable:
             matplotlib.axes.Axes: The axes object where we drew
         """
         cdef int i
-        cdef FuzzySet fuzzy_set
+        cdef FuzzySetCpp* fuzzy_set
+        cdef vector[FuzzySetCpp*] cpp_fuzzy_sets = self.ptr.get_fuzzy_sets()
         cdef cnp.ndarray[float, ndim=2] points
+        cdef float[:] domain = self.get_domain()
 
         ax.set_title(self.get_name())
         for i in range(self.get_length()):
-            fuzzy_set = self.get_fuzzy_set(i)
-            points = fuzzy_set.get_function().get_plot_points(self.__domain[0], self.__domain[1])
-            ax.plot(points[:,0], points[:,1], label=fuzzy_set.get_term())
+            fuzzy_set = cpp_fuzzy_sets[i]
+            points = np.array(fuzzy_set.get_function().get_plot_points(domain[0], domain[1]), dtype=np.float32)
+            ax.plot(points[:,0], points[:,1], label=fuzzy_set.get_term().decode("utf-8"))
 
         ax.legend(loc="upper right")
-        ax.set_xlim(self.get_domain())
+        ax.set_xlim(domain)
 
         return ax
 
@@ -184,11 +188,7 @@ cdef class FuzzyVariable:
         Returns:
             (str) String representation
         """
-        txt = f"Fuzzy variable for {self.__name}:\n"
-        cdef int i
-        for i in range(len(self.__fuzzy_sets)):
-            txt += f"\t{self.__fuzzy_sets[i]}\n"
-        return txt
+        return self.ptr.to_string().decode("utf-8")
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -199,13 +199,7 @@ cdef class FuzzyVariable:
         Returns:
             object: Deep copy of this object
         """
-        fuzzy_sets_copy_list = []
-        cdef int i
-        for i in range(self.__fuzzy_sets.shape[0]):
-            fuzzy_sets_copy_list.append(copy.deepcopy(self.__fuzzy_sets[i]))
-        cdef FuzzySet[:] fuzzy_sets_copy = np.array(fuzzy_sets_copy_list, dtype=object)
-
-        cdef FuzzyVariable new_object = FuzzyVariable(fuzzy_sets_copy, self.__name, np.copy(self.__domain))
+        new_object = FuzzyVariable.wrap(self.ptr)
         memo[id(self)] = new_object
         return new_object
 
@@ -222,7 +216,6 @@ cdef class FuzzyVariable:
 
         return root
 
-
     def __eq__(self, other):
         """Check if another object is equal to this one
         
@@ -235,7 +228,13 @@ cdef class FuzzyVariable:
         if not isinstance(other, FuzzyVariable):
             return False
 
+        cdef FuzzyVariable other_c = <FuzzyVariable> other
+        return self.ptr[0] == other_c.ptr[0]
 
-        return (np.array_equal(self.__fuzzy_sets, other.get_fuzzy_sets()) and
-                np.array_equal(self.__domain, other.get_domain()) and
-                self.__name == other.get_name())
+    @staticmethod
+    cdef FuzzyVariable wrap(FuzzyVariableCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+        cdef FuzzyVariable new_object = FuzzyVariable(None, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

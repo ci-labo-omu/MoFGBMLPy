@@ -6,7 +6,7 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type cimport DivisionTypeCpp
 
 cdef extern from "core/fuzzy/fuzzy_term/fuzzy_set/fuzzy_set.hpp":
     cdef cppclass FuzzySetCpp "FuzzySet":
-        FuzzySetCpp(AbstractMFCpp* function, int id, DivisionTypeCpp division_type, std_string term);
+        FuzzySetCpp(AbstractMFCpp* function, int id, DivisionTypeCpp division_type, std_string term) except +;
         FuzzySetCpp(const FuzzySetCpp& other);
         std_string to_string() const;
 

@@ -16,16 +16,29 @@ cdef class Knowledge:
     Attributes:
         __fuzzy_vars (FuzzyVariable[]): Fuzzy variables in this knowledge
     """
-    def __init__(self, fuzzy_vars=None):
+    def __cinit__(self, FuzzyVariable[:] fuzzy_vars=None, bint do_init=True):
         """Constructor
 
         Args:
             fuzzy_vars (FuzzyVariable[]): Fuzzy variables in this knowledge
         """
-        if fuzzy_vars is None:
-            self.__fuzzy_vars = np.empty(0, dtype=object)
-        else:
-            self.__fuzzy_vars = fuzzy_vars
+        if not do_init:
+            self.ptr = NULL
+            return
+
+        cdef vector[FuzzyVariableCpp*] cpp_fuzzy_vars
+        if fuzzy_vars is not None and fuzzy_vars.shape[0] != 0:
+            cpp_fuzzy_vars.reserve(fuzzy_vars.shape[0])
+            for i in range(fuzzy_vars.shape[0]):
+                cpp_fuzzy_vars.push_back(fuzzy_vars[i].ptr.clone())
+
+        self.ptr = new KnowledgeCpp(cpp_fuzzy_vars)
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
+
 
     cpdef FuzzyVariable get_fuzzy_variable(self, int dim):
         """Get the fuzzy variable at the given index
@@ -36,7 +49,7 @@ cdef class Knowledge:
         Returns:
             FuzzyVariable: Fetched variable
         """
-        return self.__fuzzy_vars[dim]
+        return FuzzyVariable.wrap(self.ptr.get_fuzzy_variable(dim))
 
     cpdef FuzzySet get_fuzzy_set(self, int dim, int fuzzy_set_index):
         """Get the fuzzy set of the given dimension at a given index
@@ -48,12 +61,7 @@ cdef class Knowledge:
         Returns:
             FuzzySet: Fuzzy set fetched
         """
-        cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
-        if fuzzy_vars.shape[0] == 0:
-            raise UninitializedKnowledgeException()
-
-        cdef FuzzyVariable var = fuzzy_vars[dim]
-        return var.get_fuzzy_set(fuzzy_set_index)
+        return FuzzySet.wrap(self.ptr.get_fuzzy_set(dim, fuzzy_set_index))
 
     cpdef int get_num_fuzzy_sets(self, int dim):
         """Get the number of fuzzy sets in the fuzzy variable at the given dimension
@@ -64,12 +72,7 @@ cdef class Knowledge:
         Returns:
             int: Number of fuzzy sets
         """
-        cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
-        if fuzzy_vars.shape[0] == 0:
-            raise UninitializedKnowledgeException()
-
-        cdef FuzzyVariable var = fuzzy_vars[dim]
-        return var.get_length()
+        return self.ptr.get_num_fuzzy_sets(dim)
 
     cpdef void set_fuzzy_vars(self, FuzzyVariable[:] fuzzy_vars):
         """Set the list of fuzzy variables of this knowledge base
@@ -77,10 +80,12 @@ cdef class Knowledge:
         Args:
             fuzzy_vars (FuzzyVariable[]): Array of the new fuzzy variables
         """
-        if fuzzy_vars is None:
-            self.__fuzzy_vars = np.empty(0, object)
-        else:
-            self.__fuzzy_vars = fuzzy_vars
+        cdef vector[FuzzyVariableCpp*] cpp_fuzzy_vars
+        if fuzzy_vars is not None and fuzzy_vars.shape[0] != 0:
+            cpp_fuzzy_vars.reserve(fuzzy_vars.shape[0])
+            for i in range(fuzzy_vars.shape[0]):
+                cpp_fuzzy_vars.push_back(fuzzy_vars[i].ptr.clone())
+        self.ptr.set_fuzzy_vars(cpp_fuzzy_vars)
 
     cpdef FuzzyVariable[:] get_fuzzy_vars(self):
         """Get the list of all fuzzy variables
@@ -88,7 +93,15 @@ cdef class Knowledge:
         Returns:
             FuzzyVariable[]: Fuzzy variables of this knowledge base
         """
-        return self.__fuzzy_vars
+        cdef vector[FuzzyVariableCpp*] cpp_fuzzy_vars = self.ptr.get_fuzzy_vars()
+        cdef FuzzyVariable[:] fuzzy_vars = np.empty(cpp_fuzzy_vars.size(), dtype=FuzzyVariable)
+        cdef FuzzyVariable fv
+        cdef int i
+        for i in range(cpp_fuzzy_vars.size()):
+            fv = FuzzyVariable.wrap(cpp_fuzzy_vars[i])
+            fuzzy_vars[i] = fv
+
+        return fuzzy_vars
 
     cpdef double get_membership_value_py(self, double attribute_value, int dim, int fuzzy_set_index):
         """Get the membership value of the given attribute value with the fuzzy set at the given dimension and given index
@@ -101,7 +114,7 @@ cdef class Knowledge:
         Returns:
             double: Membership value
         """
-        return self.get_membership_value(attribute_value, dim, fuzzy_set_index)
+        return self.ptr.get_membership_value(attribute_value, dim, fuzzy_set_index)
 
     @cython.boundscheck(True)
     @cython.wraparound(False)
@@ -118,11 +131,7 @@ cdef class Knowledge:
         Returns:
             double: Membership value
         """
-        if self.__fuzzy_vars.shape[0] == 0:
-            raise UninitializedKnowledgeException()
-
-        cdef FuzzyVariable var = self.__fuzzy_vars[dim]
-        return var.get_membership_value(fuzzy_set_index, attribute_value)
+        return self.ptr.get_membership_value(attribute_value, dim, fuzzy_set_index)
 
     cpdef int get_num_dim(self):
         """Get the number of dimensions of this knowledge base
@@ -130,8 +139,7 @@ cdef class Knowledge:
         Returns:
             int: Number of dimensions
         """
-        cdef FuzzyVariable[:] fuzzy_sets = self.__fuzzy_vars
-        return fuzzy_sets.shape[0]
+        return self.ptr.get_num_dim()
 
     cpdef double get_support(self, int dim, int fuzzy_set_index):
         """Get the support value associated to the membership function of the fuzzy set at the given index in the variable at the given dimension: area covered by this function in the space "variable_domain x [0, 1]"
@@ -141,7 +149,7 @@ cdef class Knowledge:
         Returns:
             double: Support value
         """
-        return self.get_fuzzy_variable(dim).get_support(fuzzy_set_index)
+        return self.ptr.get_support(dim, fuzzy_set_index)
 
     def __repr__(self):
         """Return a string representation of this object
@@ -149,10 +157,7 @@ cdef class Knowledge:
         Returns:
             (str) String representation
         """
-        txt = ""
-        for i in range(self.get_num_dim()):
-            txt = f"{txt}{str(self.__fuzzy_vars[i])}\n"
-        return txt
+        return self.ptr.to_string().decode('utf-8')
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -163,18 +168,9 @@ cdef class Knowledge:
         Returns:
             object: Deep copy of this object
         """
-        cdef FuzzyVariable[:] fuzzy_vars = self.__fuzzy_vars
-        cdef int i
-
-        fuzzy_vars_copy_list = []
-        for i in range(fuzzy_vars.shape[0]):
-            fuzzy_vars_copy_list.append(deepcopy(fuzzy_vars[i]))
-        cdef FuzzyVariable[:] fuzzy_vars_copy = np.array(fuzzy_vars_copy_list, dtype=object)
-
-        new_knowledge = Knowledge(fuzzy_vars_copy)
-        memo[id(self)] = new_knowledge
-
-        return new_knowledge
+        new_object = Knowledge.wrap(self.ptr)
+        memo[id(self)] = new_object
+        return new_object
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -187,7 +183,9 @@ cdef class Knowledge:
         """
         if not isinstance(other, Knowledge):
             return False
-        return np.array_equal(self.__fuzzy_vars, other.get_fuzzy_vars())
+
+        cdef Knowledge other_c = <Knowledge> other
+        return self.ptr[0] == other_c.ptr[0]
 
     def to_xml(self):
         """Get the XML representation of this object.
@@ -210,3 +208,11 @@ cdef class Knowledge:
             ax = plt.axes()
             ax = self.get_fuzzy_variable(i).get_plot(ax)
             plt.show()
+
+    @staticmethod
+    cdef Knowledge wrap(KnowledgeCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+        cdef Knowledge new_object = Knowledge(do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

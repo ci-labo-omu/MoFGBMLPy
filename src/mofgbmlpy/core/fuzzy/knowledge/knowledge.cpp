@@ -22,7 +22,7 @@ FuzzySet* Knowledge::get_fuzzy_set(int dim, int fuzzy_set_index) const {
         throw std::runtime_error("Fuzzy variables are not initialized");
     }
     
-    return fuzzy_vars[dim]->get_fuzzy_set(fuzzy_set_index);
+    return fuzzy_vars.at(dim)->get_fuzzy_set(fuzzy_set_index);
 }
 
 int Knowledge::get_num_fuzzy_sets(int dim) const {
@@ -30,7 +30,7 @@ int Knowledge::get_num_fuzzy_sets(int dim) const {
         throw std::runtime_error("Fuzzy variables are not initialized");
     }
 
-    return fuzzy_vars[dim]->get_length();
+    return fuzzy_vars.at(dim)->get_length();
 }
 
 void Knowledge::set_fuzzy_vars(const std::vector<FuzzyVariable*>& new_fuzzy_vars) {
@@ -46,7 +46,7 @@ float Knowledge::get_membership_value(double attribute_value, int dim, int fuzzy
         throw std::runtime_error("Fuzzy variables are not initialized");
     }
     
-    return fuzzy_vars[dim]->get_membership_value(fuzzy_set_index, static_cast<float>(attribute_value));
+    return fuzzy_vars.at(dim)->get_membership_value(fuzzy_set_index, static_cast<float>(attribute_value));
 }
 
 int Knowledge::get_num_dim() const {
@@ -54,7 +54,7 @@ int Knowledge::get_num_dim() const {
 }
 
 float Knowledge::get_support(int dim, int fuzzy_set_index) const {
-    return fuzzy_vars[dim]->get_support(fuzzy_set_index);
+    return fuzzy_vars.at(dim)->get_support(fuzzy_set_index);
 }
 
 Knowledge::operator std::string() const {
@@ -70,7 +70,17 @@ std::string Knowledge::to_string() const {
 }
 
 bool Knowledge::operator==(const Knowledge& other) const {
-    return fuzzy_vars == other.fuzzy_vars;
+    if (fuzzy_vars.size() != other.fuzzy_vars.size()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < fuzzy_vars.size(); ++i) {
+        if (!(*fuzzy_vars[i] == *other.fuzzy_vars[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 Knowledge* Knowledge::clone() const {
