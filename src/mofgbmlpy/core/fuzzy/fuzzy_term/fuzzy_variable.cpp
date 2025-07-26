@@ -45,7 +45,15 @@ FuzzySet* FuzzyVariable::get_fuzzy_set(int fuzzy_set_index) const {
 }
 
 float FuzzyVariable::get_support(int fuzzy_set_index) const {
-    return get_fuzzy_set(fuzzy_set_index)->get_support();
+    if (fuzzy_set_index < 0) {
+        return 1.0f; // Categorical (#TODO: check if it should be 1 or not)
+    }
+
+    if (fuzzy_set_index >= get_length()) {
+        throw std::out_of_range("fuzzy_set_index is out of range");
+    }
+
+    return fuzzy_sets[fuzzy_set_index]->get_support();
 }
 
 std::vector<FuzzySet*> FuzzyVariable::get_fuzzy_sets() const {
