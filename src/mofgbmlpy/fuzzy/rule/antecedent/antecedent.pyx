@@ -8,8 +8,7 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable cimport FuzzyVariable
 from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 cimport cython
 cimport numpy as cnp
-from cython.parallel import prange
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet, FuzzySetCpp
 import matplotlib.pyplot as plt
 
 
@@ -20,18 +19,33 @@ cdef class Antecedent:
         __antecedent_indices (int[]): Indices of the fuzzy sets of this antecedent
         __knowledge (Knowledge): Knowledge base
     """
-    def __init__(self, int[:] antecedent_indices, Knowledge knowledge):
+    def __cinit__(self, int[:] antecedent_indices, Knowledge knowledge, bint do_init=True):
         """Constructor
 
         Args:
             antecedent_indices (int[]): Indices of the fuzzy sets of this antecedent
             knowledge (Knowledge): Knowledge base
         """
+
+        if not do_init:
+            self.ptr = NULL
+            return
+
         if antecedent_indices is None or knowledge is None:
             raise TypeError("Parameters can't be None")
 
-        self.__antecedent_indices = antecedent_indices
-        self.__knowledge = knowledge
+        cdef vector[int] cpp_antecedent_indices
+        if antecedent_indices is not None and antecedent_indices.shape[0] != 0:
+            cpp_antecedent_indices.reserve(antecedent_indices.shape[0])
+            for i in range(antecedent_indices.shape[0]):
+                cpp_antecedent_indices.push_back(antecedent_indices[i])
+
+        self.ptr = new AntecedentCpp(cpp_antecedent_indices, knowledge.ptr.clone())
+
+    def __dealloc__(self):
+        """Destructor"""
+        if self.ptr != NULL:
+            del self.ptr
 
     cpdef int get_array_size(self):
         """Get the size of the antecedent array (number of dimensions)
@@ -39,7 +53,7 @@ cdef class Antecedent:
         Returns:
             int: Antecedent array size
         """
-        return self.__antecedent_indices.shape[0]
+        return self.ptr.get_array_size()
 
     cpdef int[:] get_antecedent_indices(self):
         """Get the antecedent indices
@@ -47,7 +61,7 @@ cdef class Antecedent:
         Returns:
             int[]: Antecedent indices
         """
-        return self.__antecedent_indices
+        return np.array(self.ptr.get_antecedent_indices(), dtype=np.int32)
 
     cpdef void set_antecedent_indices(self, int[:] new_indices):
         """Set the antecedent indices
@@ -56,8 +70,15 @@ cdef class Antecedent:
             new_indices (int[]): New indices for this antecedent
         """
         if new_indices is None:
-            raise TypeError("new_indices can't be None")
-        self.__antecedent_indices = new_indices
+            raise TypeError("New antecedent indices can't be None")
+
+        cdef vector[int] cpp_antecedent_indices
+
+        if new_indices.shape[0] != 0:
+            cpp_antecedent_indices.reserve(new_indices.shape[0])
+            for i in range(new_indices.shape[0]):
+                cpp_antecedent_indices.push_back(new_indices[i])
+        self.ptr.set_antecedent_indices(cpp_antecedent_indices)
 
     cpdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values of the given attribute vector with this antecedent for each dimension
@@ -68,39 +89,14 @@ cdef class Antecedent:
         Returns:
             double[]: Membership value for each dimension
         """
-        cdef int i
-        cdef int size = self.get_array_size()
-        cdef double[:] grade = np.zeros(size, dtype=np.float64)
-        cdef int[:] antecedent_indices = self.__antecedent_indices
+        cdef vector[double] cpp_attribute_vector
+        if attribute_vector is not None and attribute_vector.shape[0] != 0:
+            cpp_attribute_vector.reserve(attribute_vector.shape[0])
+            for i in range(attribute_vector.shape[0]):
+                cpp_attribute_vector.push_back(attribute_vector[i])
 
-        if attribute_vector is None :
-            raise TypeError("antecedent_indices must not be None")
-        elif size != attribute_vector.shape[0]:
-            raise ValueError("antecedent_indices must have the same length as attribute_vector")
+        return np.array(self.ptr.get_membership_values(cpp_attribute_vector), dtype=np.float64)
 
-        if size > self.__knowledge.get_num_dim():
-            raise IndexError("The given number of dimensions is out of bounds for the current knowledge")
-
-        for i in range(size):
-            val = attribute_vector[i]
-            if antecedent_indices[i] < 0 and val < 0:
-                # categorical
-                grade[i] = 1.0 if antecedent_indices[i] == round(val) else 0.0
-            elif antecedent_indices[i] > 0 and val >= 0:
-                # numerical
-                grade[i] = self.__knowledge.get_membership_value(val, i, antecedent_indices[i])
-            elif antecedent_indices[i] == 0:
-                # don't care
-                grade[i] = 1.0
-            else:
-                raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_indices[i])
-
-        return grade
-
-    @cython.boundscheck(False)
-    @cython.wraparound(False)
-    @cython.cdivision(True)
-    @cython.initializedcheck(False)
     cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent. Can only be accesses from Cython code
 
@@ -110,46 +106,13 @@ cdef class Antecedent:
         Returns:
             double[]: Compatibility grade
         """
-        cdef int i
-        cdef int size = self.__antecedent_indices.shape[0]
-        cdef double grade_value = 1.0
-        cdef double val
-        cdef int antecedent_idx
-        cdef double membership_val
-        cdef int[:] antecedent_indices = self.__antecedent_indices
-        cdef Knowledge knowledge = self.__knowledge
+        cdef vector[double] cpp_attribute_vector
+        if attribute_vector is not None and attribute_vector.shape[0] != 0:
+            cpp_attribute_vector.reserve(attribute_vector.shape[0])
+            for i in range(attribute_vector.shape[0]):
+                cpp_attribute_vector.push_back(attribute_vector[i])
 
-        if size != attribute_vector.shape[0]:
-            raise ValueError("antecedent_indices and attribute_vector must have the same length")
-
-        if size > knowledge.get_num_dim():
-            raise IndexError("The given number of dimensions is out of bounds for the current knowledge")
-
-        for i in range(size):
-            antecedent_idx = antecedent_indices[i]
-            
-            # Skip don't care
-            if antecedent_idx != 0:
-                val = attribute_vector[i]
-                
-                if antecedent_idx < 0:
-                    # Categorical
-                    if val < 0:
-                        if antecedent_idx != <int>round(val):
-                            return 0.0
-                    else:
-                        raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_idx)
-                else:
-                    # Numerical
-                    if val >= 0:
-                        membership_val = knowledge.get_membership_value(val, i, antecedent_idx)
-                        if membership_val == 0.0:
-                            return 0.0
-                        grade_value *= membership_val
-                    else:
-                        raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_idx)
-
-        return grade_value
+        return self.ptr.get_compatible_grade_value(cpp_attribute_vector)
 
     def get_compatible_grade_value_py(self, double[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent
@@ -168,7 +131,7 @@ cdef class Antecedent:
         Returns:
             int: Number of antecedent indices that do not correspond to don't care (i.e. number of non-null indices)
         """
-        return np.count_nonzero(self.__antecedent_indices)
+        return self.ptr.get_length()
 
     def __deepcopy__(self, memo={}):
         """Return a deepcopy of this object
@@ -179,15 +142,9 @@ cdef class Antecedent:
         Returns:
             object: Deep copy of this object
         """
-        cdef int[:] antecedent_indices_copy = np.empty(self.get_array_size(), dtype=int)
-        cdef int i
-
-        for i in range(antecedent_indices_copy.shape[0]):
-            antecedent_indices_copy[i] = self.__antecedent_indices[i]
-
-        new_antecedent = Antecedent(antecedent_indices_copy, knowledge=self.__knowledge)
-        memo[id(self)] = new_antecedent
-        return new_antecedent
+        new_object = Antecedent.wrap(self.ptr)
+        memo[id(self)] = new_object
+        return new_object
 
     def __eq__(self, other):
         """Check if another object is equal to this one
@@ -201,7 +158,8 @@ cdef class Antecedent:
         if not isinstance(other, Antecedent):
             return False
 
-        return np.array_equal(self.__antecedent_indices, other.get_antecedent_indices()) and self.__knowledge == other.get_knowledge()
+        cdef Antecedent other_antecedent = <Antecedent>other
+        return self.ptr[0] == other_antecedent.ptr[0]
 
     def __repr__(self):
         """Return a string representation of this object
@@ -209,10 +167,7 @@ cdef class Antecedent:
         Returns:
             (str) String representation
         """
-        txt = "["
-        for i in range(self.__antecedent_indices.shape[0]):
-            txt += f"{self.__antecedent_indices[i]} "
-        return txt + "]"
+        return self.ptr.to_string().decode('utf-8')
 
     cpdef str get_linguistic_representation(self):
         """Get the linguistic representation of the antecedent (... IS ... AND ... IS ...)
@@ -220,20 +175,7 @@ cdef class Antecedent:
         Returns:
             str: Linguistic representation of the antecedent
         """
-        txt = ""
-        cdef int i
-        cdef FuzzyVariable var
-
-        for i in range(self.get_array_size()):
-            var = self.__knowledge.get_fuzzy_variable(i)
-
-            if self.__antecedent_indices[i] != 0:
-                txt = f" {txt} {var.get_name()} IS {var.get_fuzzy_set(self.__antecedent_indices[i]).get_term()} AND"
-
-        if txt == "":
-            txt = "[don't care]"
-
-        return txt[:-4] # Remove the last "AND "
+        return self.ptr.get_linguistic_representation().decode('utf-8')
 
     def to_xml(self):
         """Get the XML representation of this object.
@@ -245,11 +187,13 @@ cdef class Antecedent:
         # for dim_i in range(len(self.__antecedent_indices)):
         #     root.append(self.__knowledge.get_fuzzy_set(dim_i, self.__antecedent_indices[dim_i]).to_xml())
 
+        cdef int[:] cpp_antecedent_indices = self.get_antecedent_indices()
+
         fuzzy_set_list = xml_tree.SubElement(root, "fuzzySetList")
-        for dim_i in range(len(self.__antecedent_indices)):
+        for dim_i in range(len(cpp_antecedent_indices)):
             fuzzy_set_id = xml_tree.SubElement(fuzzy_set_list, "fuzzySetID")
             fuzzy_set_id.set("dimension", str(dim_i))
-            fuzzy_set_id.text = str(self.__antecedent_indices[dim_i])
+            fuzzy_set_id.text = str(cpp_antecedent_indices[dim_i])
         return root
 
     cpdef get_knowledge(self):
@@ -258,7 +202,7 @@ cdef class Antecedent:
         Returns:
             Knowledge: Knowledge base
         """
-        return self.__knowledge
+        return Knowledge.wrap(self.ptr.get_knowledge())
 
     cpdef set_knowledge(self, Knowledge new_knowledge):
         """Set the knowledge base
@@ -266,9 +210,13 @@ cdef class Antecedent:
         Args:
             new_knowledge (Knowledge): New knowledge base
         """
-        self.__knowledge = new_knowledge
+        if new_knowledge is None:
+            raise TypeError("New knowledge base can't be None")
 
-    def get_plot(self, ax, dim):
+        cdef KnowledgeCpp* new_knowledge_ptr = new_knowledge.ptr.clone()
+        self.ptr.set_knowledge(new_knowledge_ptr)
+
+    def get_plot(self, ax, int dim):
         """Draw the antecedent fuzzy sets on the given matplotlib Axes object
 
         Args:
@@ -278,12 +226,12 @@ cdef class Antecedent:
         Returns:
             matplotlib.axes.Axes: The axes object where we drew
         """
-        cdef FuzzySet fuzzy_set
+        cdef FuzzySetCpp* fuzzy_set
         cdef cnp.ndarray[double, ndim=2] points
 
-        fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
+        fuzzy_set = self.ptr.get_knowledge().get_fuzzy_set(dim, self.get_antecedent_indices()[dim])
 
-        points = fuzzy_set.get_function().get_plot_points(0, 1)
+        points = np.array(fuzzy_set.get_function().get_plot_points(0, 1))
         ax.plot(points[:,0], points[:,1])
         ax.set_title(f"x_{dim}")
         ax.set_xlim([0,1])
@@ -298,3 +246,11 @@ cdef class Antecedent:
             axes[i] = self.get_plot(axes[i], i)
 
         plt.show()
+
+    @staticmethod
+    cdef Antecedent wrap(AntecedentCpp * wrapped_ptr):
+        if wrapped_ptr == NULL:
+            raise ValueError("pointer is NULL")
+        cdef Antecedent new_object = Antecedent(None, None, do_init=False)
+        new_object.ptr = wrapped_ptr.clone()
+        return new_object

@@ -4,6 +4,8 @@
 #include "fuzzy_set.hpp"
 #include <memory>
 #include <string>
+#include "../membership_function/rectangular_mf.hpp"
+#include "division_type.hpp"
 
 class RectangularFuzzySet : public FuzzySet {
 public:

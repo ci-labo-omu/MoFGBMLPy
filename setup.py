@@ -6,6 +6,7 @@ import numpy
 import os
 import sys
 import glob
+import re
 
 if sys.platform.startswith("win"):
     openmp_arg = '/openmp'
@@ -21,15 +22,72 @@ here = pathlib.Path(__file__).parent.resolve()
 # Get the long description from the README file
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
-# Function to get all C++ source files from core directory
-def get_cpp_sources():
-    cpp_files = []
-    for pattern in ['src/mofgbmlpy/core/**/*.cpp']:
-        cpp_files.extend(glob.glob(pattern, recursive=True))
-    return cpp_files
 
-# Get all C++ source files
-cpp_sources = get_cpp_sources()
+def parse_includes_from_hpp(hpp_path):
+    includes = []
+    if not os.path.exists(hpp_path):
+        return includes
+    
+    try:
+        with open(hpp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            local_includes = re.findall(r'#include\s*"([^"]+)"', content)
+            includes.extend(local_includes)
+    except Exception as e:
+        print(f"Warning: Could not read {hpp_path}: {e}")
+    
+    return includes
+
+def find_hpp_iterative(start_hpp_path, base_dir):
+    visited = set()
+    stack = [start_hpp_path]
+    all_hpp_files = []
+
+    while stack:
+        hpp_path = stack.pop()
+
+        if hpp_path in visited:
+            continue
+        visited.add(hpp_path)
+        all_hpp_files.append(hpp_path)
+
+        includes = parse_includes_from_hpp(hpp_path)
+        current_dir = os.path.dirname(hpp_path)
+
+        for include in includes:
+            if not include.endswith('.hpp'):
+                continue
+
+            include_path = os.path.join(current_dir, include)
+            if not os.path.exists(include_path):
+                include_path = os.path.join(base_dir, include)
+            if os.path.exists(include_path) and include_path not in visited:
+                stack.append(include_path)
+
+    return all_hpp_files
+
+
+def get_cpp_sources(py_path):
+    base_dir = py_path.replace("mofgbmlpy", f"mofgbmlpy{os.sep}core")
+    cpp_path = base_dir + ".cpp"
+    hpp_path = base_dir + ".hpp"
+
+    sources = []
+
+    if not os.path.exists(cpp_path) or not os.path.exists(hpp_path):
+        return []
+
+    all_hpp_files = find_hpp_iterative(hpp_path, base_dir)
+
+    for hpp_file in all_hpp_files:
+        corresponding_cpp = hpp_file.replace('.hpp', '.cpp')
+        if os.path.exists(corresponding_cpp) and corresponding_cpp not in sources:
+            sources.append(corresponding_cpp)
+
+    print(f"Adding C++ sources for {py_path}: {sources}")
+
+    return sources
+
 
 cython_files = []
 for root, dirs, files in os.walk('src'):
@@ -40,7 +98,7 @@ for root, dirs, files in os.walk('src'):
             name = ".".join(path_without_extension.split(os.sep)[1:])
 
             # Add core C++ sources to each extension
-            sources = [path] + cpp_sources
+            sources = [path] + get_cpp_sources(path_without_extension)
 
             cython_files.append(Extension(name,
                                           sources,

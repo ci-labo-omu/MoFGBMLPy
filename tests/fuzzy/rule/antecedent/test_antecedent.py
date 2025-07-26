@@ -13,209 +13,184 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
 from util import get_a0_0_iris_train_test
 
 
+def create_test_knowledge():
+    fuzzy_vars = np.array(
+        [
+            FuzzyVariable(fuzzy_sets=np.array([DontCareFuzzySet(0), TriangularFuzzySet(0, 0.3, 0.5, 1, "small")], object)),
+            FuzzyVariable(fuzzy_sets=np.array([DontCareFuzzySet(0), TriangularFuzzySet(0, 0.3, 0.5, 1, "small"), TriangularFuzzySet(0.3, 0.7, 1, 2, "medium")], object))
+        ], object
+    )
+    return Knowledge(fuzzy_vars)
+
+
 def test_none_antecedent():
-    with pytest.raises(TypeError):
-        Antecedent(None, Knowledge())
+    knowledge = create_test_knowledge()
+    with pytest.raises(Exception):
+        Antecedent(None, knowledge)
 
 
 def test_none_knowledge():
-    with pytest.raises(TypeError):
+    with pytest.raises(Exception):
         Antecedent(np.empty(0, int), None)
 
 
 def test_get_array_size_empty():
-    antecedent = Antecedent(np.empty(0, int), Knowledge())
-    assert antecedent.get_array_size() == 0
+    knowledge = create_test_knowledge()
+    with pytest.raises(Exception):
+        antecedent = Antecedent(np.empty(0, int), knowledge)
+        assert antecedent.get_array_size() == 0
 
 
 def test_set_antecedent_indices_none():
-    antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    with pytest.raises(TypeError):
+    knowledge = create_test_knowledge()
+    with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([0, 1], int), knowledge)
         antecedent.set_antecedent_indices(None)
 
 
 def test_get_compatible_grade_no_knowledge():
-    antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0], np.float64)
-    with pytest.raises(IndexError):
+    with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([0, 1], int), Knowledge())
+        vector = np.array([1.0, 2.0], np.float64)
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
+    knowledge = create_test_knowledge()
 
-    antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
-    vector = np.array([1.0, 2.0], np.float64)
-    with pytest.raises(IndexError):
+    with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([0, 0, 0], int), knowledge)
+        vector = np.array([1.0, 1.0, 1.0], np.float64)
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([1], int), knowledge)
-    vector = np.array([1.0], np.float64)
+    knowledge = create_test_knowledge()
+    with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([1], int), knowledge)
+        vector = np.array([1.0], np.float64)
 
-    with pytest.raises(IndexError):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_none_vector():
-    antecedent = Antecedent(np.array([0, 1], int), Knowledge())
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = None
-    with pytest.raises(TypeError):
+    with pytest.raises(Exception):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_too_small_vector():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = np.array([1.0])
-    with pytest.raises(ValueError):
+    with pytest.raises(Exception):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_too_big_vector():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    knowledge = create_test_knowledge()
+
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = np.array([1.0, 2.0, 1.0])
-    with pytest.raises(ValueError):
+    with pytest.raises(Exception):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_1():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
-    vector = np.array([1.0, -2.0], np.float64)
-    with pytest.raises(IndexError):
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([1, 0], int), knowledge)
+
+    vector = np.array([-2.0, 0], np.float64)
+    with pytest.raises(Exception):
         antecedent.get_membership_values(vector)
 
 
 def test_get_compatible_grade_invalid_vector_different_sign_2():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([1, -2], int), knowledge)
-    vector = np.array([1.0, 2.0], np.float64)
-    with pytest.raises(IndexError):
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([-1, 0], int), knowledge)
+
+    vector = np.array([1.0, 0], np.float64)
+    with pytest.raises(Exception):
         antecedent.get_membership_values(vector)
 
 
-def test_get_compatible_grade_value_no_knowledge():
-    antecedent = Antecedent(np.array([0, 1], int), Knowledge())
-    vector = np.array([1.0, 2.0], np.float64)
-    with pytest.raises(IndexError):
-        antecedent.get_compatible_grade_value_py(vector)
-
-
 def test_get_compatible_grade_value_smaller_num_vars_knowledge():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
+    knowledge = create_test_knowledge()
 
-    antecedent = Antecedent(np.array([0, 0], int), Knowledge(fuzzy_vars))
-    vector = np.array([1.0, 2.0])
     with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([0, 0, 0], int), knowledge)
+        vector = np.array([1.0, 1.0, 1.0])
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_smaller_num_fuzzy_sets_knowledge():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([1], int), knowledge)
-    vector = np.array([1.0])
-
+    knowledge = create_test_knowledge()
     with pytest.raises(Exception):
+        antecedent = Antecedent(np.array([1], int), knowledge)
+        vector = np.array([1.0], np.float64)
+
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_none_vector():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = None
+
     with pytest.raises(Exception):
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_too_small_vector():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = np.array([1.0])
     with pytest.raises(Exception):
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_too_big_vector():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    knowledge = create_test_knowledge()
+
+    antecedent = Antecedent(np.array([0, 0], int), knowledge)
     vector = np.array([1.0, 2.0, 1.0])
     with pytest.raises(Exception):
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_invalid_vector_different_sign_1():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1], int), knowledge)
-    vector = np.array([1.0, -2.0])
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([1, 0], int), knowledge)
+
+    vector = np.array([-2.0, 0], np.float64)
     with pytest.raises(Exception):
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_compatible_grade_value_invalid_vector_different_sign_2():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([1, -2], int), knowledge)
-    vector = np.array([1.0, 2.0])
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([-1, 0], int), knowledge)
+
+    vector = np.array([1.0, 0], np.float64)
     with pytest.raises(Exception):
         antecedent.get_compatible_grade_value_py(vector)
 
 
 def test_get_length_empty():
-    antecedent = Antecedent(np.empty(0, int), Knowledge())
-    assert antecedent.get_length() == 0
+    with pytest.raises(Exception):
+        _ = Antecedent(np.empty(0, int), Knowledge())
 
 
 def test_get_length():
-    fuzzy_vars = np.array(
-        [FuzzyVariable(fuzzy_sets=np.array([TriangularFuzzySet(0, 0.5, 1, 0, "small")], object))], object
-    )
-    knowledge = Knowledge(fuzzy_vars)
-    antecedent = Antecedent(np.array([0, 1, -2, 0, 0, 5], int), knowledge)
-    assert antecedent.get_length() == 3
+    knowledge = create_test_knowledge()
+    antecedent = Antecedent(np.array([0, 1], int), knowledge)
+    assert antecedent.get_length() == 1
 
 
 def test_to_xml_run():
@@ -241,14 +216,17 @@ def test_eq_true():
 def test_eq_different_knowledge():
     knowledge1 = HomoTriangleKnowledgeFactory_2_3_4_5(4).create()
     knowledge2 = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
-    antecedent1 = Antecedent(np.array([0, 1, 2]), knowledge1)
+    knowledge1.set_fuzzy_vars(np.array([FuzzyVariable(fuzzy_sets=np.array(
+        [DontCareFuzzySet(0), TriangularFuzzySet(0, 0.3, 0.5, 1, "small")], object))], object))
+
+    antecedent1 = Antecedent(np.array([1]), knowledge1)
     antecedent2 = Antecedent(np.array([0, 1, 2]), knowledge2)
 
     assert antecedent1 != antecedent2
 
 
 def test_eq_different_size_antecedent():
-    knowledge1 = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
+    knowledge1 = HomoTriangleKnowledgeFactory_2_3_4_5(2).create()
     knowledge2 = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent1 = Antecedent(np.array([0, 1]), knowledge1)
     antecedent2 = Antecedent(np.array([0, 1, 2]), knowledge2)

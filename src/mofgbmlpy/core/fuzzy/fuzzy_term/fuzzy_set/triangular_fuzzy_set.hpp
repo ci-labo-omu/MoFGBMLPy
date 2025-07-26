@@ -3,6 +3,8 @@
 
 #include "fuzzy_set.hpp"
 #include <string>
+#include "../membership_function/triangular_mf.hpp"
+#include "division_type.hpp"
 
 class TriangularFuzzySet : public FuzzySet {
 public:
