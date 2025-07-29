@@ -286,8 +286,8 @@ class CounterFactualExplainerGradient:
                     print("INFO: Early stopping: consequent changed")
                 break
 
-            # if no improvement in loss, stop training
-            if epoch > 0 and losses[-2] - losses[-1] < 1e-6:
+            # if no improvement in loss, stop training after 10 epochs
+            if epoch > 0 and abs(losses[-2] - losses[-1]) < 1e-6:
                 steps_without_improvement += 1
                 if steps_without_improvement >= 10:
                     if verbose:
@@ -397,7 +397,7 @@ class CounterFactualExplainerGradient:
         #
         # return new_classifier
 
-def main_benchmark(dataset, non_dominated_solutions, out_path):
+def main_benchmark(dataset, non_dominated_solutions, learner, out_path):
     class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
 
     times = []
@@ -423,7 +423,7 @@ def main_benchmark(dataset, non_dominated_solutions, out_path):
                         learner,
                         confidence_loss_weight=0.9,
                         learning_rate=0.5,
-                        max_num_epochs=300,
+                        max_num_epochs=100,
                     )
                     conf, iou = explainer.train(verbose=False)
                     # cf_rule = explainer.get_counterfactual()
@@ -460,8 +460,8 @@ def main_benchmark(dataset, non_dominated_solutions, out_path):
             f.write(f"Min confidence: {np.min(confs):.2f}\n")
             f.write(f"Max confidence: {np.max(confs):.2f}\n")
 
-def main_plot_single(dataset, non_dominated_solutions):
-    sol1 = non_dominated_solutions[13]
+def main_plot_single(dataset, non_dominated_solutions, learner):
+    sol1 = non_dominated_solutions[0]
     rule = sol1[0].get_var(0).get_rule()
     print(f"Rule to explain: {rule}")
 
@@ -472,7 +472,7 @@ def main_plot_single(dataset, non_dominated_solutions):
 
     explainer = CounterFactualExplainerGradient(
         rule,
-        ClassLabelBasic(1),
+        ClassLabelBasic(0),
         dataset,
         learner,
         confidence_loss_weight=0.9,
@@ -490,14 +490,7 @@ def main_plot_single(dataset, non_dominated_solutions):
     end = time.time()
     print(f"Execution time: {end - start:.2f} seconds")
 
-
-if __name__ == "__main__":
-    # data_name = "iris"
-    data_name = "pima"
-    # data_name = "bupa"
-
-    result_path = f"..\\..\\..\\cf_results\\cf_gradient\\{data_name}"
-
+def get_config(data_name):
     args = [
         "--data-name",
         f"{data_name}",
@@ -526,5 +519,13 @@ if __name__ == "__main__":
 
     dataset = learner.get_training_set()
 
-    # main_benchmark(dataset, non_dominated_solutions, out_path=result_path)
-    main_plot_single(dataset, non_dominated_solutions)
+    return dataset, non_dominated_solutions, learner
+
+if __name__ == "__main__":
+    dataset, non_dominated_solutions, learner = get_config("pima")
+    main_plot_single(dataset, non_dominated_solutions, learner)
+
+    # for data_name in ["bupa"]: #["iris", "pima", "bupa"]:
+    #     result_path = f"..\\..\\..\\cf_results\\cf_gradient\\{data_name}"
+    #     dataset, non_dominated_solutions, learner = get_config(data_name)
+    #     main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)

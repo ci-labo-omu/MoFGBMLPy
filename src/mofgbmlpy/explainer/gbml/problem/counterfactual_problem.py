@@ -29,7 +29,7 @@ class CounterfactualProblem(Problem):
 
         self._initial_mfs_y = self.compute_membership_values(self._initial_fuzzy_sets, 0, 1)
 
-        super().__init__(n_var=n_vars, n_obj=2, xl=0, xu=1)  # , n_eq_constr=1)
+        super().__init__(n_var=n_vars, n_obj=2, xl=0, xu=1, n_eq_constr=1)
 
     def get_initial_mfs_y(self):
         return self._initial_mfs_y
@@ -136,13 +136,13 @@ class CounterfactualProblem(Problem):
 
     def _evaluate(self, X, out, *args, **kwargs):
         out["F"] = np.empty((len(X), 2))
-        # out["H"] = np.empty((len(X),))
+        out["H"] = np.empty((len(X),))
 
         for i, ind in enumerate(X):
             conf_loss, change_loss, output_class_is_target = self.objectives(ind)
             out["F"][i][0] = conf_loss
             out["F"][i][1] = change_loss
-            # out["H"][i] = 0 if output_class_is_target else 1  # constraint
+            out["H"][i] = 0 if output_class_is_target else 1  # constraint
 
     def get_objective_names(self):
         return ["1 - target class confidence", "1 - IoU"]

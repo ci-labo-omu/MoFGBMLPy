@@ -226,10 +226,10 @@ if __name__ == "__main__":
 
     rule = non_dominated_solutions[0][0].get_var(0).get_rule()
 
-    target_class = ClassLabelBasic(1)
+    target_class = ClassLabelBasic(0)
     learner = LearningBasic(runner.get_train_set())
     explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
-    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
+    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=True)
 
 
     # plot the results
@@ -243,11 +243,6 @@ if __name__ == "__main__":
 
     # get rules associated to non_dominated solutions
     print("Rules of non-dominated solutions:")
-    for rule in rules:
-        print(rule)
-
-    print()
-    print("Target rules:")
     for rule in rules:
         print(rule)
 
