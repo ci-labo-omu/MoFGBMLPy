@@ -1,5 +1,9 @@
+import time
 from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.core.population import Population
 from pymoo.optimize import minimize
+from tqdm import tqdm
+
 from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
 from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling import FuzzySetsSampling
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_mutation import FuzzySetsMutation
@@ -19,7 +23,8 @@ from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEl
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
-
+import pandas as pd
+#TODO: change individual type to Rule instead of FuzzySet
 
 class CounterFactualExplainerMetaheuristics:
     def __init__(self, fuzzy_rule, target_class, learner):
@@ -65,12 +70,37 @@ class CounterFactualExplainerMetaheuristics:
                 # finally record the current visualization to the video
                 rec.record()
 
-    def train(self, n_gen=100):
-        # self._problem.get_fuzzy_rule().plot_antecedent()
-        # print(f"END antecedent: {self._problem.get_fuzzy_rule().get_antecedent()}")
-        # print(f"END consequent: {self._problem.get_fuzzy_rule().get_consequent()}")
+    @staticmethod
+    def remove_non_target_class_solutions(solutions, rules, target_class):
+        """Remove solutions that do not belong to the target class.
 
-        pop_size = 100
+        Args:
+            solutions (Population): List of solutions to filter.
+            target_class (ClassLabelBasic): The target class to keep.
+
+        Returns:
+            list: Filtered list of solutions that belong to the target class.
+        """
+        filtered_solutions_X = []
+        filtered_solutions_F = []
+        filtered_rules = []
+
+        for i in range(len(solutions)):
+            solution = solutions[i]
+            if rules[i].get_class_label() == target_class and not rules[i].get_class_label().is_rejected():
+                filtered_solutions_X.append(solution.X)
+                filtered_solutions_F.append(solution.F)
+                filtered_rules.append(rules[i])
+
+        filtered_solutions_X = np.array(filtered_solutions_X, dtype=object)
+        filtered_solutions_F = np.array(filtered_solutions_F, dtype=float)
+        filtered_rules = np.array(filtered_rules, dtype=object)
+
+        return Population.new(X=filtered_solutions_X, F=filtered_solutions_F), filtered_rules
+
+    def train(self, n_gen=100, pop_size=60, verbose=True):
+        # self._problem.get_fuzzy_rule().plot_antecedent()
+
         termination = get_termination("n_gen", n_gen)
 
         algorithm = NSGA2(
@@ -79,105 +109,38 @@ class CounterFactualExplainerMetaheuristics:
             crossover=self._crossover,
             mutation=self._mutation,  # should consider bounds and conditions of membership functions params
             eliminate_duplicates=self._eliminate_duplicates,
-            save_history=True,
+            save_history=False,  # True,
             survival=self._survival,
         )
 
-        res = minimize(self._problem, algorithm, seed=41, verbose=True, termination=termination)
+        res = minimize(self._problem, algorithm, seed=41, verbose=verbose, termination=termination)
+        non_dominated_solutions = res.opt
 
-        # plot the results
-        plot = Scatter(title="NSGA-II")
-        plot.add(res.F)
-        plot.axis_labels = self._problem.get_objective_names()
-        _ = plot.show()
+        rules = [self._problem.build_rule(solution) for solution in non_dominated_solutions.get("X")]
+        non_dominated_solutions, rules = self.remove_non_target_class_solutions(non_dominated_solutions, rules, target_class)
 
-        # self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
-
-        non_dominated_solutions = res.opt.get("X")
-
-        # print("Non-dominated solutions:", res.opt.get("F"))
-
-        # get rules associated to non_dominated solutions
-        rules = [self._problem.build_rule(solution) for solution in non_dominated_solutions]
-        # print("Rules of non-dominated solutions:")
-        # for rule in rules:
-        #     print(rule)
-
-        # Only keep rules with the target class
-        target_rules = [rule for rule in rules if rule.get_class_label() == self._problem.get_target_class()]
-
-        print()
-        print("Target rules:")
-        for rule in target_rules:
-            print(rule)
-
-        self._problem.get_fuzzy_rule().plot_antecedent()
-        if len(target_rules) != 0:
-            for i in range(len(target_rules)):
-                target_rules[i].plot_antecedent()
-                #         print(target_rules[i].get_knowledge())
-                #         print(target_rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
-
-                antecedent_indices = target_rules[i].get_antecedent().get_antecedent_indices()
-                fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
-                for j, idx in enumerate(antecedent_indices):
-                    fuzzy_sets[j] = target_rules[i].get_knowledge().get_fuzzy_set(j, idx)
-                current_mf_values = self._problem.compute_membership_values(fuzzy_sets, 0, 1)
-
-                iou = self._problem.compute_iou(
-                    self._problem.get_initial_mfs_y(), current_mf_values, step=1 / current_mf_values.shape[1]
-                )
-                print(f"IoU rule {i}: {np.mean(iou):.3f}")
-
-        # # rule with highest confidence
-        # rule = max(rules, key=lambda r: self._problem._learner.calc_confidence_py(
-        # r.get_antecedent(),
-        # self._problem._train_set
-        # )[1])
-        # print("Rule with highest confidence:", rule)
-        #
-        # # print confidence of rule with highest confidence
-        # confidences = self._problem._learner.calc_confidence_py(rule.get_antecedent(), self._problem._train_set)
-        # print([c for c in confidences])
-        # # for p in self._problem._learner.get_training_set().get_patterns():
-        # p = self._problem._learner.get_training_set().get_patterns()[8]
-        # print(p)
-        #
-        # # print compatibility grade with current pattern
-        # fitness_val = rule.get_fitness_value(p.get_attributes_vector())
-        # print(f"Fitness value: {fitness_val:.3f}")
-        #
-        # compatibility_grade = rule.get_antecedent().get_compatible_grade_value_py(p.get_attributes_vector())
-        # print(f"Compatibility grade: {compatibility_grade:.3f}")
-        #
-        # antecedent_indices = rule.get_antecedent().get_antecedent_indices()
-        # for i, idx in enumerate(antecedent_indices):
-        #     mf_val = rule.get_knowledge().get_membership_value_py(p.get_attributes_vector()[i], i, idx)
-        #     print(f"Membership function value: {mf_val:.3f}")
-        #
-        # print(rule.get_knowledge().get_fuzzy_set(1, antecedent_indices[1]).get_function().get_params())
-        #
-        # for p in self._problem._train_set.get_patterns():
-        #     # if fitness > 0 then print
-        #     if rule.get_fitness_value(p.get_attributes_vector()) > 0:
-        #         print(p)
-        #         print(rule.get_antecedent().get_compatible_grade_value_py(p.get_attributes_vector()))
-
-        return res
+        return non_dominated_solutions, rules
 
 
 if __name__ == "__main__":
+    # data_name = "iris"
+    data_name = "pima"
+    # data_name = "bupa"
+
+    result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
+
+
     args = [
         "--data-name",
-        "appendicitis",
+        f"{data_name}",
         "--algorithm-id",
         "0",
         "--experiment-id",
         "0",
         "--train-file",
-        "..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
         "--test-file",
-        "..\\..\\..\\dataset\\appendicitis\\a0_0_appendicitis-10tra.dat",
+        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
         "--terminate-evaluation",
         "1000",
         "--no-output-files",
@@ -189,22 +152,122 @@ if __name__ == "__main__":
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
     runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
     res = runner.run(args)
+    learner = LearningBasic(runner.get_train_set())
 
     non_dominated_solutions = res.X
     objectives_non_dominated_solutions = res.F
 
-    sol1 = non_dominated_solutions[0]
-    rule = sol1[0].get_var(0).get_rule()
+    times = []
+    num_sols = []
+    ious = []
+    conf = []
+    num_failures = 0
+    num_runs = 0
 
-    learner = LearningBasic(runner.get_train_set())
+    dataset = learner.get_training_set()
+    class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
+
+    # for p_sol in tqdm(non_dominated_solutions):
+    #     for var in p_sol[0].get_vars():
+    #         rule = var.get_rule()
+    #
+    #         for target_class in class_labels:
+    #             if target_class.get_class_label_value() == rule.get_class_label().get_class_label_value():
+    #                 continue
+    #             start = time.time()
+    #
+    #             try:
+    #                 explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
+    #                 non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
+    #             except Exception as e:
+    #                 non_dominated_solutions = np.array([], dtype=object)
+    #                 rules = np.array([], dtype=object)
+    #                 start = None
+    #
+    #             end = time.time()
+    #
+    #             if start is not None and len(non_dominated_solutions) > 0:
+    #                 times.append(end - start)
+    #                 num_sols.append(len(non_dominated_solutions))
+    #                 ious.append(
+    #                     (np.min(1-non_dominated_solutions.get("F")[:,1]), np.max(1-non_dominated_solutions.get("F")[:,1]))
+    #                 )
+    #                 conf.append(
+    #                     (np.min(1-non_dominated_solutions.get("F")[:,0]), np.max(1-non_dominated_solutions.get("F")[:,0]))
+    #                 )
+    #             else:
+    #                 num_failures += 1
+    #             num_runs += 1
+    #
+    # df = pd.DataFrame({
+    #     "time": times,
+    #     "num_sols": num_sols,
+    #     "iou_min": [x[0] for x in ious],
+    #     "iou_max": [x[1] for x in ious],
+    #     "conf_min": [x[0] for x in conf],
+    #     "conf_max": [x[1] for x in conf],
+    # })
+    #
+    # os.makedirs(result_path, exist_ok=False)
+    # df.to_csv(f"{result_path}\\results.csv", index=False)
+    #
+    # with open(f"{result_path}\\results_summary.txt", "w") as f:
+    #     f.write(f"Number of runs: {num_runs}\n")
+    #     f.write(f"Number of failures: {num_failures}\n")
+    #
+    #     if len(times) != 0:
+    #         f.write(f"Median time: {np.median(times):.2f} seconds\n")
+    #         f.write(f"Median number of solutions: {np.median(num_sols):.2f}\n")
+    #         f.write(f"Min IOU: {np.min([x[0] for x in ious]):.2f}\n")
+    #         f.write(f"Max IOU: {np.max([x[1] for x in ious]):.2f}\n")
+    #         f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
+    #         f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
+
+
+    rule = non_dominated_solutions[0][0].get_var(0).get_rule()
+
     target_class = ClassLabelBasic(1)
-
-    import time
-
-    start = time.time()
-
+    learner = LearningBasic(runner.get_train_set())
     explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
-    explainer.train()
+    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
 
-    end = time.time()
-    print(f"Execution time: {end - start:.2f} seconds")
+
+    # plot the results
+    plot = Scatter(title="NSGA-II")
+    plot.add(non_dominated_solutions.get("F"))
+    plot.axis_labels = explainer._problem.get_objective_names()
+    _ = plot.show()
+
+    # self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
+    print("Non-dominated solutions:", res.opt.get("F"))
+
+    # get rules associated to non_dominated solutions
+    print("Rules of non-dominated solutions:")
+    for rule in rules:
+        print(rule)
+
+    print()
+    print("Target rules:")
+    for rule in rules:
+        print(rule)
+
+    explainer._problem.get_fuzzy_rule().plot_antecedent()
+    if len(rules) != 0:
+        for i in range(len(rules)):
+            rules[i].plot_antecedent()
+            #         print(rules[i].get_knowledge())
+            #         print(rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
+
+            antecedent_indices = rules[i].get_antecedent().get_antecedent_indices()
+            fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
+            for j, idx in enumerate(antecedent_indices):
+                fuzzy_sets[j] = rules[i].get_knowledge().get_fuzzy_set(j, idx)
+            current_mf_values = explainer._problem.compute_membership_values(fuzzy_sets, 0, 1)
+
+            iou = explainer._problem.compute_iou(
+                explainer._problem.get_initial_mfs_y(), current_mf_values, step=1 / current_mf_values.shape[1]
+            )
+
+            confidences = explainer._problem._learner.calc_confidence_py(rules[i].get_antecedent(), explainer._problem._train_set)
+
+            print(f"Rule {i}: {np.mean(iou):.3f} and Confidence: {confidences[target_class.get_class_label_value()]:.3f}")
