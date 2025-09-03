@@ -24,6 +24,7 @@ from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurv
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 import pandas as pd
+from mofgbmlpy.explainer.util import get_config
 #TODO: change individual type to Rule instead of FuzzySet
 
 class CounterFactualExplainerMetaheuristics:
@@ -123,36 +124,7 @@ class CounterFactualExplainerMetaheuristics:
         return non_dominated_solutions, rules
 
 
-def get_config(data_name):
-    args = [
-        "--data-name",
-        f"{data_name}",
-        "--algorithm-id",
-        "0",
-        "--experiment-id",
-        "0",
-        "--train-file",
-        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
-        "--test-file",
-        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
-        "--terminate-evaluation",
-        "1000",
-        "--no-output-files",
-        "--objectives",
-        "error-rate",
-        "num-rules",
-    ]
 
-    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
-    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
-    res = runner.run(args)
-    learner = LearningBasic(runner.get_train_set())
-
-    non_dominated_solutions = res.X
-
-    dataset = learner.get_training_set()
-
-    return dataset, non_dominated_solutions, learner
 
 def main_benchmark(dataset, non_dominated_solutions, learner, out_path, mutation_fs_type_prob=0.5):
     times = []
@@ -283,9 +255,9 @@ if __name__ == "__main__":
     # dataset, non_dominated_solutions, learner = get_config("pima")
     # main_plot_single(dataset, non_dominated_solutions, learner)
 
-    # for data_name in ["iris", "pima", "bupa"]:
-    #     result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
-    #     dataset, non_dominated_solutions, learner = get_config(data_name)
-    #     main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
+    for data_name in ["iris", "pima", "bupa"]:
+        result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
+        dataset, non_dominated_solutions, learner = get_config(data_name)
+        main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
 
-    mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)
+    # mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)
