@@ -522,10 +522,10 @@ def get_config(data_name):
     return dataset, non_dominated_solutions, learner
 
 if __name__ == "__main__":
-    dataset, non_dominated_solutions, learner = get_config("pima")
-    main_plot_single(dataset, non_dominated_solutions, learner)
+    # dataset, non_dominated_solutions, learner = get_config("pima")
+    # main_plot_single(dataset, non_dominated_solutions, learner)
 
-    # for data_name in ["bupa"]: #["iris", "pima", "bupa"]:
-    #     result_path = f"..\\..\\..\\cf_results\\cf_gradient\\{data_name}"
-    #     dataset, non_dominated_solutions, learner = get_config(data_name)
-    #     main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
+    for data_name in ["sonar", "spectfheart", "tae", "wisconsin", "iris"]: #["iris", "pima", "bupa"]:
+        result_path = f"..\\..\\..\\cf_results\\cf_gradient\\{data_name}"
+        dataset, non_dominated_solutions, learner = get_config(data_name)
+        main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)

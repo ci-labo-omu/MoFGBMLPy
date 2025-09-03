@@ -27,13 +27,14 @@ import pandas as pd
 #TODO: change individual type to Rule instead of FuzzySet
 
 class CounterFactualExplainerMetaheuristics:
-    def __init__(self, fuzzy_rule, target_class, learner):
+    def __init__(self, fuzzy_rule, target_class, learner, mutation_fs_type_prob):
         initial_knowledge = fuzzy_rule.get_antecedent().get_knowledge()
         initial_class = fuzzy_rule.get_class_label()
 
         self._problem = CounterfactualProblem(initial_knowledge, fuzzy_rule, initial_class, target_class, learner)
+        self._target_class = target_class
         self._sampling = FuzzySetsSampling()
-        self._mutation = FuzzySetsMutation(0.7, 0.6, prob_change_type=0.5)
+        self._mutation = FuzzySetsMutation(0.7, 0.6, prob_change_type=mutation_fs_type_prob)
         self._crossover = FuzzySetsCrossover(0.7, 0.5)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
         self._survival = FuzzySetsSurvival(self._eliminate_duplicates)
@@ -117,19 +118,12 @@ class CounterFactualExplainerMetaheuristics:
         non_dominated_solutions = res.opt
 
         rules = [self._problem.build_rule(solution) for solution in non_dominated_solutions.get("X")]
-        non_dominated_solutions, rules = self.remove_non_target_class_solutions(non_dominated_solutions, rules, target_class)
+        non_dominated_solutions, rules = self.remove_non_target_class_solutions(non_dominated_solutions, rules, self._target_class)
 
         return non_dominated_solutions, rules
 
 
-if __name__ == "__main__":
-    # data_name = "iris"
-    data_name = "pima"
-    # data_name = "bupa"
-
-    result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
-
-
+def get_config(data_name):
     args = [
         "--data-name",
         f"{data_name}",
@@ -155,8 +149,12 @@ if __name__ == "__main__":
     learner = LearningBasic(runner.get_train_set())
 
     non_dominated_solutions = res.X
-    objectives_non_dominated_solutions = res.F
 
+    dataset = learner.get_training_set()
+
+    return dataset, non_dominated_solutions, learner
+
+def main_benchmark(dataset, non_dominated_solutions, learner, out_path, mutation_fs_type_prob=0.5):
     times = []
     num_sols = []
     ious = []
@@ -164,73 +162,78 @@ if __name__ == "__main__":
     num_failures = 0
     num_runs = 0
 
-    dataset = learner.get_training_set()
     class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
 
-    # for p_sol in tqdm(non_dominated_solutions):
-    #     for var in p_sol[0].get_vars():
-    #         rule = var.get_rule()
-    #
-    #         for target_class in class_labels:
-    #             if target_class.get_class_label_value() == rule.get_class_label().get_class_label_value():
-    #                 continue
-    #             start = time.time()
-    #
-    #             try:
-    #                 explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
-    #                 non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
-    #             except Exception as e:
-    #                 non_dominated_solutions = np.array([], dtype=object)
-    #                 rules = np.array([], dtype=object)
-    #                 start = None
-    #
-    #             end = time.time()
-    #
-    #             if start is not None and len(non_dominated_solutions) > 0:
-    #                 times.append(end - start)
-    #                 num_sols.append(len(non_dominated_solutions))
-    #                 ious.append(
-    #                     (np.min(1-non_dominated_solutions.get("F")[:,1]), np.max(1-non_dominated_solutions.get("F")[:,1]))
-    #                 )
-    #                 conf.append(
-    #                     (np.min(1-non_dominated_solutions.get("F")[:,0]), np.max(1-non_dominated_solutions.get("F")[:,0]))
-    #                 )
-    #             else:
-    #                 num_failures += 1
-    #             num_runs += 1
-    #
-    # df = pd.DataFrame({
-    #     "time": times,
-    #     "num_sols": num_sols,
-    #     "iou_min": [x[0] for x in ious],
-    #     "iou_max": [x[1] for x in ious],
-    #     "conf_min": [x[0] for x in conf],
-    #     "conf_max": [x[1] for x in conf],
-    # })
-    #
-    # os.makedirs(result_path, exist_ok=False)
-    # df.to_csv(f"{result_path}\\results.csv", index=False)
-    #
-    # with open(f"{result_path}\\results_summary.txt", "w") as f:
-    #     f.write(f"Number of runs: {num_runs}\n")
-    #     f.write(f"Number of failures: {num_failures}\n")
-    #
-    #     if len(times) != 0:
-    #         f.write(f"Median time: {np.median(times):.2f} seconds\n")
-    #         f.write(f"Median number of solutions: {np.median(num_sols):.2f}\n")
-    #         f.write(f"Min IOU: {np.min([x[0] for x in ious]):.2f}\n")
-    #         f.write(f"Max IOU: {np.max([x[1] for x in ious]):.2f}\n")
-    #         f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
-    #         f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
+    for p_sol in tqdm(non_dominated_solutions):
+        for var in p_sol[0].get_vars():
+            rule = var.get_rule()
+
+            for target_class in class_labels:
+                if target_class.get_class_label_value() == rule.get_class_label().get_class_label_value():
+                    continue
+                start = time.time()
+
+                try:
+                    explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner, mutation_fs_type_prob=mutation_fs_type_prob)
+                    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
+                except Exception as e:
+                    non_dominated_solutions = np.array([], dtype=object)
+                    rules = np.array([], dtype=object)
+                    start = None
+
+                end = time.time()
+
+                if start is not None and len(non_dominated_solutions) > 0:
+                    times.append(end - start)
+                    num_sols.append(len(non_dominated_solutions))
+                    ious.append(
+                        (np.min(1-non_dominated_solutions.get("F")[:,1]), np.max(1-non_dominated_solutions.get("F")[:,1]))
+                    )
+                    conf.append(
+                        (np.min(1-non_dominated_solutions.get("F")[:,0]), np.max(1-non_dominated_solutions.get("F")[:,0]))
+                    )
 
 
+                    # # plot the results
+                    # plot = Scatter(title="NSGA-II")
+                    # plot.add(non_dominated_solutions.get("F"))
+                    # plot.axis_labels = explainer._problem.get_objective_names()
+                    # _ = plot.show()
+
+                else:
+                    num_failures += 1
+                num_runs += 1
+
+    df = pd.DataFrame({
+        "time": times,
+        "num_sols": num_sols,
+        "iou_min": [x[0] for x in ious],
+        "iou_max": [x[1] for x in ious],
+        "conf_min": [x[0] for x in conf],
+        "conf_max": [x[1] for x in conf],
+    })
+
+    os.makedirs(out_path, exist_ok=False)
+    df.to_csv(f"{out_path}\\results.csv", index=False)
+
+    with open(f"{out_path}\\results_summary.txt", "w") as f:
+        f.write(f"Number of runs: {num_runs}\n")
+        f.write(f"Number of failures: {num_failures}\n")
+
+        if len(times) != 0:
+            f.write(f"Median time: {np.median(times):.2f} seconds\n")
+            f.write(f"Median number of solutions: {np.median(num_sols):.2f}\n")
+            f.write(f"Min IOU: {np.min([x[0] for x in ious]):.2f}\n")
+            f.write(f"Max IOU: {np.max([x[1] for x in ious]):.2f}\n")
+            f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
+            f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
+
+def main_plot_single(dataset, non_dominated_solutions, learner):
     rule = non_dominated_solutions[0][0].get_var(0).get_rule()
 
     target_class = ClassLabelBasic(0)
-    learner = LearningBasic(runner.get_train_set())
     explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
     non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=True)
-
 
     # plot the results
     plot = Scatter(title="NSGA-II")
@@ -239,7 +242,6 @@ if __name__ == "__main__":
     _ = plot.show()
 
     # self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
-    print("Non-dominated solutions:", res.opt.get("F"))
 
     # get rules associated to non_dominated solutions
     print("Rules of non-dominated solutions:")
@@ -263,6 +265,27 @@ if __name__ == "__main__":
                 explainer._problem.get_initial_mfs_y(), current_mf_values, step=1 / current_mf_values.shape[1]
             )
 
-            confidences = explainer._problem._learner.calc_confidence_py(rules[i].get_antecedent(), explainer._problem._train_set)
+            confidences = explainer._problem._learner.calc_confidence_py(rules[i].get_antecedent(), dataset)
 
             print(f"Rule {i}: {np.mean(iou):.3f} and Confidence: {confidences[target_class.get_class_label_value()]:.3f}")
+
+
+def mutation_param_search(data_name, out_path, num_experiments=11):
+    param_vals = np.linspace(0, 1, num_experiments)
+    dataset, non_dominated_solutions, learner = get_config(data_name)
+
+    for param_val in param_vals:
+        current_path = os.path.join(out_path, f"mut_{param_val:.2f}")
+        main_benchmark(dataset, non_dominated_solutions, learner, out_path=current_path, mutation_fs_type_prob=param_val)
+
+
+if __name__ == "__main__":
+    # dataset, non_dominated_solutions, learner = get_config("pima")
+    # main_plot_single(dataset, non_dominated_solutions, learner)
+
+    # for data_name in ["iris", "pima", "bupa"]:
+    #     result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
+    #     dataset, non_dominated_solutions, learner = get_config(data_name)
+    #     main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
+
+    mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)
