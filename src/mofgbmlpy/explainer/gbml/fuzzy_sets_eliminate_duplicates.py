@@ -44,13 +44,32 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
 
         return distance
 
+    def is_duplicate_in_other_pop(self, rule, other):
+        rule_fs = CounterfactualProblem.get_fuzzy_sets_from_rule(rule)
+        rule_params = np.empty(len(rule_fs), dtype=object)
+        for k in range(len(rule_fs)):
+            rule_params[k] = rule_fs[k].get_function().get_params()
+        for j in range(len(other)):
+            other_fuzzy_sets = CounterfactualProblem.get_fuzzy_sets_from_rule(other[j].X[0].get_rule())
+            params_other = np.empty(len(other_fuzzy_sets), dtype=object)
+            for k in range(len(other_fuzzy_sets)):
+                params_other[k] = other_fuzzy_sets[k].get_function().get_params()
+
+            if self.distance_mfs_params(params_other, rule_params) < self.epsilon:
+                return True
+
     def _do(self, pop, other, is_duplicate):
         distance = self.calc_dist(pop)
         n = len(distance)
         is_duplicate = np.zeros(n, dtype=bool)
 
         for i in range(n):
+            # distance between current solutions
             if np.any(distance[i, :i] < self.epsilon):
                 is_duplicate[i] = True
+
+            # distance to previous population
+            if other is not None:
+                is_duplicate[i] = self.is_duplicate_in_other_pop(pop[i].X[0].get_rule(), other)
 
         return is_duplicate

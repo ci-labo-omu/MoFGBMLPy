@@ -25,7 +25,6 @@ from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 import pandas as pd
 from mofgbmlpy.explainer.util import get_config
-#TODO: change individual type to Rule instead of FuzzySet
 
 class CounterFactualExplainerMetaheuristics:
     def __init__(self, classifier, changed_rule_index, target_class, mutation_fs_type_prob):
@@ -84,6 +83,9 @@ class CounterFactualExplainerMetaheuristics:
         filtered_solutions_X = []
         filtered_solutions_F = []
 
+        if solutions is None:
+            return None
+
         for i in range(len(solutions)):
             solution = solutions[i]
             rule = solution.X[0]
@@ -114,6 +116,9 @@ class CounterFactualExplainerMetaheuristics:
         res = minimize(self._problem, algorithm, seed=41, verbose=verbose, termination=termination)
 
         non_dominated_solutions = res.opt
+
+        if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
+            return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float)), np.array([], dtype=object)
 
         non_dominated_solutions = self.remove_non_target_class_solutions(non_dominated_solutions, self.get_target_class())
         rules = non_dominated_solutions.get("X").flatten()
@@ -146,7 +151,6 @@ def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_
                     # if len(non_dominated_solutions) == 0:
                     #     raise ValueError("No solutions found")
                 except Exception as e:
-                    raise e
                     non_dominated_solutions = np.array([], dtype=object)
                     rules = np.array([], dtype=object)
                     start = None
@@ -198,13 +202,17 @@ def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_
             f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
             f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
 
-def main_plot_single(dataset, non_dominated_solutions, mutation_fs_type_prob=0.5):
+def main_plot_single(non_dominated_solutions, mutation_fs_type_prob=0.5):
     classifier = non_dominated_solutions[0][0]
     changed_rule_index = 0
 
     target_class = ClassLabelBasic(0)
     explainer = CounterFactualExplainerMetaheuristics(classifier, changed_rule_index, target_class, mutation_fs_type_prob)
     non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=True)
+
+    if len(non_dominated_solutions) == 0:
+        print("No solutions found")
+        return
 
     # plot the results
     plot = Scatter(title="NSGA-II")
@@ -215,30 +223,15 @@ def main_plot_single(dataset, non_dominated_solutions, mutation_fs_type_prob=0.5
     # self._save_generations_video_pymoo(res.history, ".", "counterfactual_evolution")
 
     # get rules associated to non_dominated solutions
+    print("Factual rule:")
+    factual_rule = classifier.get_var(changed_rule_index)
+    print(factual_rule)
+    factual_rule.get_rule().plot_antecedent()
+
     print("Rules of non-dominated solutions:")
     for rule in rules:
         print(rule)
-
-    explainer._problem.get_fuzzy_rule().plot_antecedent()
-    if len(rules) != 0:
-        for i in range(len(rules)):
-            rules[i].plot_antecedent()
-            #         print(rules[i].get_knowledge())
-            #         print(rules[i].get_knowledge().get_fuzzy_set(6, 1).get_function().get_params())
-
-            antecedent_indices = rules[i].get_antecedent().get_antecedent_indices()
-            fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
-            for j, idx in enumerate(antecedent_indices):
-                fuzzy_sets[j] = rules[i].get_knowledge().get_fuzzy_set(j, idx)
-            current_mf_values = explainer._problem.compute_membership_values(fuzzy_sets, 0, 1)
-
-            iou = explainer._problem.compute_iou(
-                explainer._problem.get_initial_mfs_y(), current_mf_values, step=1 / current_mf_values.shape[1]
-            )
-
-            confidences = explainer._problem._learner.calc_confidence_py(rules[i].get_antecedent(), dataset)
-
-            print(f"Rule {i}: {np.mean(iou):.3f} and Confidence: {confidences[target_class.get_class_label_value()]:.3f}")
+        rule.get_rule().plot_antecedent()
 
 
 def mutation_param_search(data_name, out_path, num_experiments=11):
@@ -251,12 +244,12 @@ def mutation_param_search(data_name, out_path, num_experiments=11):
 
 
 if __name__ == "__main__":
-    # dataset, non_dominated_solutions = get_config("pima")
-    # main_plot_single(dataset, non_dominated_solutions)
+    _, non_dominated_solutions = get_config("pima")
+    main_plot_single(non_dominated_solutions)
 
-    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima","sonar", "spectfheart", "tae", "wisconsin"]:
-        result_path = f"..\\..\\..\\cf_results_v2\\cf_metaheuristics\\{data_name}"
-        dataset, non_dominated_solutions = get_config(data_name)
-        main_benchmark(dataset, non_dominated_solutions, out_path=result_path)
+    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima","sonar", "spectfheart", "tae", "wisconsin"]:
+    #     result_path = f"..\\..\\..\\cf_results_v2\\cf_metaheuristics\\{data_name}"
+    #     dataset, non_dominated_solutions = get_config(data_name)
+    #     main_benchmark(dataset, non_dominated_solutions, out_path=result_path)
 
     # mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)

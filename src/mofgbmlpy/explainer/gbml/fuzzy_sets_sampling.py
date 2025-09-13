@@ -31,6 +31,7 @@ class FuzzySetsSampling(Sampling):
         initial_population = np.zeros((n_samples, 1), dtype=object)
         initial_rule = problem.get_factual_rule()
         initial_rule.set_deep_copy_knowledge(True)  # since knowledge is not shared between individuals here
+        initial_rule.resize_objectives(problem.n_obj)
 
         initial_population[0] = [copy.deepcopy(initial_rule)]
 

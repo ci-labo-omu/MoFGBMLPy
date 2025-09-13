@@ -1,4 +1,5 @@
 """Pymoo problem class for the task offloading problem."""
+import copy
 
 import numpy as np
 from pymoo.core.problem import Problem
@@ -11,6 +12,8 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuz
 
 class CounterfactualProblem(Problem):
     def __init__(self, classifier, changed_rule_index, target_class):
+        self._classifier_copy = copy.deepcopy(classifier)
+        self._changed_rule_index = changed_rule_index
         self._factual_michigan_solution = classifier.get_var(changed_rule_index)
         self._initial_class = self._factual_michigan_solution.get_class_label().get_class_label_value()
         self._target_class = target_class
@@ -20,7 +23,14 @@ class CounterfactualProblem(Problem):
 
         self._initial_mfs_y = self.compute_membership_values(self._factual_michigan_solution, 0, 1)
 
-        super().__init__(n_var=1, n_obj=2, n_eq_constr=1)
+        self._objectives_map = {
+            "confidence_loss": self.conf_loss,
+            "change_loss": self.change_loss,
+            "num_changed_features": self.num_changed_features_loss,
+            # "train_error_rate": self.train_error_rate
+        }
+
+        super().__init__(n_var=1, n_obj=len(self._objectives_map), n_eq_constr=1)
 
     def get_initial_mfs_y(self):
         return self._initial_mfs_y
@@ -119,29 +129,48 @@ class CounterfactualProblem(Problem):
 
         return change_loss
 
+    def num_changed_features_loss(self, current_michigan_solution):
+        num_changed_features = 0
+        current_rule = current_michigan_solution.get_rule()
+        num_dims = current_rule.get_antecedent_array_size()
+        factual_rule = self._factual_michigan_solution.get_rule()
+
+        for i in range(num_dims):
+            fs1 = factual_rule.get_fuzzy_set_object(i)
+            fs2 = current_rule.get_fuzzy_set_object(i)
+
+            if fs1 != fs2:
+                num_changed_features += 1
+
+        return num_changed_features/num_dims
+
+    def train_error_rate(self, current_rule):
+        if current_rule.get_rule().is_rejected_class_label():
+            return 1.0
+        self._classifier_copy.set_var(self._changed_rule_index, current_rule)
+        return self._classifier_copy.calc_error_rate(self._train_set)
+
     def is_output_class_target(self, current_rule):
         return current_rule.get_class_label() == self._target_class
 
-    def objectives(self, current_rule):
-        confidence_loss = self.conf_loss(current_rule)
-        change_loss = self.change_loss(current_rule)
+    def get_objectives(self, current_rule):
+        objectives = np.empty(self.n_obj)
+        for i, func in enumerate(self._objectives_map.values()):
+            objectives[i] = func(current_rule)
 
-        # print(f"conf loss: {confidence_loss}, change_loss: {change_loss}")
-        return confidence_loss, change_loss
+        return objectives
 
     def _evaluate(self, X, out, *args, **kwargs):
-        out["F"] = np.empty((len(X), 2))
+        out["F"] = np.empty((len(X), self.n_obj))
         out["H"] = np.empty((len(X),))
 
         for i, ind in enumerate(X):
             ind[0].learning()
             rule = ind[0]
-            out["F"][i][0] = self.conf_loss(rule)
-            out["F"][i][1] = self.change_loss(rule)
-            rule.set_objective(0, out["F"][i][0])
-            rule.set_objective(1, out["F"][i][1])
-            out["H"][i] = 0 if self.is_output_class_target(rule) else 1  # constraint
+            for j in range(self.n_obj):
+                out["F"][i] = self.get_objectives(rule)
+                rule.set_objective(j, out["F"][i][j])
+            out["H"][i] = 0 if self.is_output_class_target(rule) else 1  # constraint, note that rejected class labels are also removed here
 
-    @staticmethod
-    def get_objective_names():
-        return ["1 - target class confidence", "1 - IoU"]
+    def get_objective_names(self):
+        return list(self._objectives_map.keys())

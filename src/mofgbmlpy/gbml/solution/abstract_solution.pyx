@@ -157,3 +157,11 @@ cdef class AbstractSolution:
     cpdef void clear_attributes(self):
         """Clear the attributes"""
         self._attributes = {}
+
+    cpdef void resize_objectives(self, int new_size):
+        """Resize the objectives array
+        
+        Args:
+            new_size (int): New size of the objectives array
+        """
+        self._objectives = np.empty(new_size, dtype=np.float32)

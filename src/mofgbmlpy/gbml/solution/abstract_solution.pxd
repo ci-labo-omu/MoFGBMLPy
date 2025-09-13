@@ -24,3 +24,4 @@ cdef class AbstractSolution:
     cpdef int get_num_constraints(self)
     cpdef object get_attributes(self)
     cpdef void clear_attributes(self)
+    cpdef void resize_objectives(self, int new_size)
