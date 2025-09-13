@@ -18,13 +18,16 @@ class PymooDeepcopyCrossover(Operator):
     def __init__(self,
                  n_parents,
                  n_offsprings,
-                 random_gen,
+                 random_gen=None,
                  prob=0.9,
                  **kwargs):
         super().__init__(**kwargs)
         self.n_parents = n_parents
         self.n_offsprings = n_offsprings
         self.prob = Real(prob, bounds=(0.5, 1.0), strict=(0.0, 1.0))
+
+        if random_gen is None:
+            random_gen = np.random.Generator(np.random.MT19937(seed=2011))
         self._random_gen = random_gen
 
     def do(self, problem, pop, parents=None, **kwargs):

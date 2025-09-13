@@ -1,6 +1,8 @@
 from pymoo.core.duplicate import DuplicateElimination
 import numpy as np
 
+from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
+
 
 class FuzzySetsEliminateDuplicates(DuplicateElimination):
     def __init__(self, problem, epsilon=1e-16, **kwargs) -> None:
@@ -28,11 +30,11 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
 
         distance = np.empty((len(X), len(X)))
 
-        params_x = np.empty((len(X), len(X[0])), dtype=object)
+        params_x = np.empty((len(X), X[0][0].get_rule().get_antecedent_array_size()), dtype=object)
         for i in range(len(X)):
-            ind = X[i]
-            for j in range(len(ind)):
-                params_x[i][j] = ind[j].get_function().get_params()
+            fuzzy_sets = CounterfactualProblem.get_fuzzy_sets_from_rule(X[i][0].get_rule())
+            for j in range(len(fuzzy_sets)):
+                params_x[i][j] = fuzzy_sets[j].get_function().get_params()
 
         for i in range(len(X)):
             for j in range(i, (len(X))):

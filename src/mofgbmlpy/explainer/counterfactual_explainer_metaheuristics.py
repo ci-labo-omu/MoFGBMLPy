@@ -28,17 +28,17 @@ from mofgbmlpy.explainer.util import get_config
 #TODO: change individual type to Rule instead of FuzzySet
 
 class CounterFactualExplainerMetaheuristics:
-    def __init__(self, fuzzy_rule, target_class, learner, mutation_fs_type_prob):
-        initial_knowledge = fuzzy_rule.get_antecedent().get_knowledge()
-        initial_class = fuzzy_rule.get_class_label()
+    def __init__(self, classifier, changed_rule_index, target_class, mutation_fs_type_prob):
+        self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class)
 
-        self._problem = CounterfactualProblem(initial_knowledge, fuzzy_rule, initial_class, target_class, learner)
-        self._target_class = target_class
         self._sampling = FuzzySetsSampling()
         self._mutation = FuzzySetsMutation(0.7, 0.6, prob_change_type=mutation_fs_type_prob)
         self._crossover = FuzzySetsCrossover(0.7, 0.5)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
         self._survival = FuzzySetsSurvival(self._eliminate_duplicates)
+
+    def get_target_class(self):
+        return self._problem.get_target_class()
 
     @staticmethod
     def _save_generations_video_pymoo(history, out_path, file_name_without_extension):
@@ -53,7 +53,6 @@ class CounterFactualExplainerMetaheuristics:
         out_file_path = os.path.join(out_path, file_name_without_extension + ".mp4")
 
         with Recorder(Video(out_file_path)) as rec:
-            # for each algorithm object in the history
             for entry in history:
                 sc = Scatter(title=("Gen %s" % entry.n_gen))
 
@@ -69,11 +68,10 @@ class CounterFactualExplainerMetaheuristics:
 
                 sc.do()
 
-                # finally record the current visualization to the video
                 rec.record()
 
     @staticmethod
-    def remove_non_target_class_solutions(solutions, rules, target_class):
+    def remove_non_target_class_solutions(solutions, target_class):
         """Remove solutions that do not belong to the target class.
 
         Args:
@@ -85,20 +83,18 @@ class CounterFactualExplainerMetaheuristics:
         """
         filtered_solutions_X = []
         filtered_solutions_F = []
-        filtered_rules = []
 
         for i in range(len(solutions)):
             solution = solutions[i]
-            if rules[i].get_class_label() == target_class and not rules[i].get_class_label().is_rejected():
+            rule = solution.X[0]
+            if rule.get_class_label() == target_class and not rule.get_class_label().is_rejected():
                 filtered_solutions_X.append(solution.X)
                 filtered_solutions_F.append(solution.F)
-                filtered_rules.append(rules[i])
 
         filtered_solutions_X = np.array(filtered_solutions_X, dtype=object)
         filtered_solutions_F = np.array(filtered_solutions_F, dtype=float)
-        filtered_rules = np.array(filtered_rules, dtype=object)
 
-        return Population.new(X=filtered_solutions_X, F=filtered_solutions_F), filtered_rules
+        return Population.new(X=filtered_solutions_X, F=filtered_solutions_F)
 
     def train(self, n_gen=100, pop_size=60, verbose=True):
         # self._problem.get_fuzzy_rule().plot_antecedent()
@@ -116,17 +112,16 @@ class CounterFactualExplainerMetaheuristics:
         )
 
         res = minimize(self._problem, algorithm, seed=41, verbose=verbose, termination=termination)
+
         non_dominated_solutions = res.opt
 
-        rules = [self._problem.build_rule(solution) for solution in non_dominated_solutions.get("X")]
-        non_dominated_solutions, rules = self.remove_non_target_class_solutions(non_dominated_solutions, rules, self._target_class)
+        non_dominated_solutions = self.remove_non_target_class_solutions(non_dominated_solutions, self.get_target_class())
+        rules = non_dominated_solutions.get("X").flatten()
 
         return non_dominated_solutions, rules
 
 
-
-
-def main_benchmark(dataset, non_dominated_solutions, learner, out_path, mutation_fs_type_prob=0.5):
+def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_prob=0.5):
     times = []
     num_sols = []
     ious = []
@@ -137,18 +132,21 @@ def main_benchmark(dataset, non_dominated_solutions, learner, out_path, mutation
     class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
 
     for p_sol in tqdm(non_dominated_solutions):
-        for var in p_sol[0].get_vars():
-            rule = var.get_rule()
-
+        num_rules = p_sol[0].get_num_vars()
+        for i_var in range(num_rules):
+            class_label = p_sol[0].get_var(i_var).get_class_label()
             for target_class in class_labels:
-                if target_class.get_class_label_value() == rule.get_class_label().get_class_label_value():
+                if target_class == class_label:
                     continue
                 start = time.time()
 
                 try:
-                    explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner, mutation_fs_type_prob=mutation_fs_type_prob)
+                    explainer = CounterFactualExplainerMetaheuristics(p_sol[0], i_var, target_class, mutation_fs_type_prob=mutation_fs_type_prob)
                     non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
+                    # if len(non_dominated_solutions) == 0:
+                    #     raise ValueError("No solutions found")
                 except Exception as e:
+                    raise e
                     non_dominated_solutions = np.array([], dtype=object)
                     rules = np.array([], dtype=object)
                     start = None
@@ -200,11 +198,12 @@ def main_benchmark(dataset, non_dominated_solutions, learner, out_path, mutation
             f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
             f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
 
-def main_plot_single(dataset, non_dominated_solutions, learner):
-    rule = non_dominated_solutions[0][0].get_var(0).get_rule()
+def main_plot_single(dataset, non_dominated_solutions, mutation_fs_type_prob=0.5):
+    classifier = non_dominated_solutions[0][0]
+    changed_rule_index = 0
 
     target_class = ClassLabelBasic(0)
-    explainer = CounterFactualExplainerMetaheuristics(rule, target_class, learner)
+    explainer = CounterFactualExplainerMetaheuristics(classifier, changed_rule_index, target_class, mutation_fs_type_prob)
     non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=True)
 
     # plot the results
@@ -244,20 +243,20 @@ def main_plot_single(dataset, non_dominated_solutions, learner):
 
 def mutation_param_search(data_name, out_path, num_experiments=11):
     param_vals = np.linspace(0, 1, num_experiments)
-    dataset, non_dominated_solutions, learner = get_config(data_name)
+    dataset, non_dominated_solutions = get_config(data_name)
 
     for param_val in param_vals:
         current_path = os.path.join(out_path, f"mut_{param_val:.2f}")
-        main_benchmark(dataset, non_dominated_solutions, learner, out_path=current_path, mutation_fs_type_prob=param_val)
+        main_benchmark(dataset, non_dominated_solutions, out_path=current_path, mutation_fs_type_prob=param_val)
 
 
 if __name__ == "__main__":
-    # dataset, non_dominated_solutions, learner = get_config("pima")
-    # main_plot_single(dataset, non_dominated_solutions, learner)
+    # dataset, non_dominated_solutions = get_config("pima")
+    # main_plot_single(dataset, non_dominated_solutions)
 
-    for data_name in ["iris", "pima", "bupa"]:
-        result_path = f"..\\..\\..\\cf_results\\cf_metaheuristics\\{data_name}"
-        dataset, non_dominated_solutions, learner = get_config(data_name)
-        main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
+    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima","sonar", "spectfheart", "tae", "wisconsin"]:
+        result_path = f"..\\..\\..\\cf_results_v2\\cf_metaheuristics\\{data_name}"
+        dataset, non_dominated_solutions = get_config(data_name)
+        main_benchmark(dataset, non_dominated_solutions, out_path=result_path)
 
     # mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)

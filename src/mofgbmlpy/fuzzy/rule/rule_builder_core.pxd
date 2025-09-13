@@ -17,4 +17,5 @@ cdef class RuleBuilderCore:
     cdef Antecedent create_antecedent_from_indices(self, int[:] antecedent_indices)
     cdef AbstractConsequent create_consequent(self, Antecedent antecedent, Dataset dataset=?)
     cpdef Knowledge get_knowledge(self)
+    cpdef void set_knowledge(self, Knowledge knowledge)
     cpdef Dataset get_training_dataset(self)

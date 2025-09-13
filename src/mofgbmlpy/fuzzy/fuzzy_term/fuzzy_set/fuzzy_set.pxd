@@ -2,10 +2,10 @@ from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport Abstract
 
 
 cdef class FuzzySet:
-    cdef AbstractMF __function
-    cdef str __term
-    cdef int __id
-    cdef int __division_type
+    cdef AbstractMF _function
+    cdef str _term
+    cdef int _id
+    cdef int _division_type
 
     cdef float get_membership_value(self, float x)
     cpdef get_term(self)

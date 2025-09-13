@@ -26,7 +26,7 @@ cdef class MichiganSolution(AbstractSolution):
         __fitness (int): Fitness value (computed in the error rate calculation). of times this solution was selected for classification and that the classification was right, for one round (on a whole dataset)
         _random_gen (numpy.random.Generator): Random generator
     """
-    def __init__(self, random_gen, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True):
+    def __init__(self, random_gen, num_objectives, num_constraints, rule_builder, pattern=None, do_init_vars=True, deep_copy_knowledge=False):
         """Constructor
 
         Args:
@@ -36,12 +36,14 @@ cdef class MichiganSolution(AbstractSolution):
             rule_builder (RuleBuilderCore): Rule builder
             pattern (Pattern): Pattern used to generate rules
             do_init_vars (bool): If true then the rule is generated now, otherwise it's delayed and set_vars must be used with learning
+            deep_copy_knowledge (bool): If true, the knowledge base is deep-copied when the solution is copied
         """
         self._rule_builder = rule_builder
         self.__num_wins = 0
         self.__fitness = 0
         self._random_gen = random_gen
         self._are_scores_updated = False
+        self._deep_copy_knowledge = deep_copy_knowledge
 
         super().__init__(num_objectives, num_constraints)
 
@@ -70,6 +72,9 @@ cdef class MichiganSolution(AbstractSolution):
 
     def set_scores_update_status(self, new_status: bool):
         self._are_scores_updated = new_status
+
+    def set_deep_copy_knowledge(self, new_value: bool):
+        self._deep_copy_knowledge = new_value
 
     cdef void create_rule(self, Pattern pattern=None):
         """Create the rule of this solution
@@ -269,7 +274,8 @@ cdef class MichiganSolution(AbstractSolution):
                                         self.get_num_objectives(),
                                         self.get_num_constraints(),
                                         copy.deepcopy(self._rule_builder),
-                                        do_init_vars=False)
+                                        do_init_vars=False,
+                                        deep_copy_knowledge=self._deep_copy_knowledge)
 
         cdef int[:] vars_copy = np.empty(self.get_num_vars(), dtype=int)
         cdef float[:] objectives_copy = np.empty(self.get_num_objectives(), np.float32)
@@ -288,6 +294,9 @@ cdef class MichiganSolution(AbstractSolution):
         new_solution._rule.get_antecedent().set_antecedent_indices(vars_copy)
         new_solution._objectives = objectives_copy
         new_solution._are_scores_updated = self._are_scores_updated
+
+        if self._deep_copy_knowledge:
+            new_solution.set_knowledge(copy.deepcopy(self._rule.get_knowledge()))
 
         memo[id(self)] = new_solution
 
@@ -404,13 +413,14 @@ cdef class MichiganSolution(AbstractSolution):
         return root
 
 
-    cpdef void set_antecedent_knowledge(self, Knowledge new_knowledge):
-        """Set the antecedent knowledge base
+    cpdef void set_knowledge(self, Knowledge new_knowledge):
+        """Set the antecedent and rule builder knowledge base
         
         Args:
             new_knowledge (Knowledge): New knowledge base
         """
         self.get_antecedent().set_knowledge(new_knowledge)
+        self._rule_builder.set_knowledge(new_knowledge)
         self._are_scores_updated = False
 
     def get_confidence(self):

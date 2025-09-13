@@ -175,6 +175,7 @@ py_version_results
 Profile.pstats
 !src/mofgbmlpy/utility/lru_cache.cpp
 cf_results
+cf_results_v2
 
 # DOCS
 docs/_build

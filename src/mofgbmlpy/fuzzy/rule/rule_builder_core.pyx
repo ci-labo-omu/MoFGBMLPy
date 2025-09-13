@@ -81,6 +81,14 @@ cdef class RuleBuilderCore:
         """
         return self._knowledge
 
+    cpdef void set_knowledge(self, Knowledge knowledge):
+        """Set the knowledge
+        
+        Args:
+            knowledge (Knowledge): New knowledge base
+        """
+        self._knowledge = knowledge
+
     cpdef Dataset get_training_dataset(self):
         """Get the training set
         

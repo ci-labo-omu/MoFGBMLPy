@@ -23,6 +23,7 @@ cdef class MichiganSolution(AbstractSolution):
     cdef int __fitness
     cdef object _random_gen
     cdef bint _are_scores_updated
+    cdef bint _deep_copy_knowledge
 
     cdef void create_rule(self, Pattern pattern=?)
     cpdef void learning(self, Dataset dataset=?)
@@ -49,4 +50,4 @@ cdef class MichiganSolution(AbstractSolution):
     cpdef void set_var(self, int index, int value)
     cpdef void set_vars(self, int[:] new_vars)
     cpdef int get_num_vars(self)
-    cpdef void set_antecedent_knowledge(self, Knowledge knowledge)
+    cpdef void set_knowledge(self, Knowledge knowledge)

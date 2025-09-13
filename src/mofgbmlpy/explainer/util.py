@@ -55,4 +55,4 @@ def get_config(data_name):
     dataset = learner.get_training_set()
 
 
-    return dataset, non_dominated_solutions, learner
+    return dataset, non_dominated_solutions
