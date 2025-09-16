@@ -23,36 +23,3 @@ def remove_duplicates(sols):
             filtered_sols.append(sol)
     return np.array(filtered_sols, dtype=object)
 
-
-def get_config(data_name):
-    args = [
-        "--data-name",
-        f"{data_name}",
-        "--algorithm-id",
-        "0",
-        "--experiment-id",
-        "0",
-        "--train-file",
-        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
-        "--test-file",
-        f"..\\..\\..\\dataset\\{data_name}\\a0_0_{data_name}-10tra.dat",
-        "--terminate-evaluation",
-        "1000",
-        "--no-output-files",
-        "--objectives",
-        "error-rate",
-        "num-rules",
-    ]
-
-    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
-    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
-    res = runner.run(args)
-    learner = LearningBasic(runner.get_train_set())
-
-    non_dominated_solutions = res.X
-    non_dominated_solutions = remove_duplicates(non_dominated_solutions)
-
-    dataset = learner.get_training_set()
-
-
-    return dataset, non_dominated_solutions

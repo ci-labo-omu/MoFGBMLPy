@@ -6,12 +6,12 @@ def clean():
     extensions = ['.pyd', 'html']
 
     try:
-        shutil.rmtree("build")
+        shutil.rmtree("../build")
         print(f"Deleted build folder")
     except OSError as e:
         print(f"Error deleting build folder: {e}")
 
-    for dir_path, _, filenames in os.walk("src"):
+    for dir_path, _, filenames in os.walk("../src"):
         for filename in filenames:
             if any(filename.endswith(ext) for ext in extensions):
                 file_path = os.path.join(dir_path, filename)

@@ -24,17 +24,17 @@ from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurv
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 import pandas as pd
-from mofgbmlpy.explainer.util import get_config
+
 
 class CounterFactualExplainerMetaheuristics:
-    def __init__(self, classifier, changed_rule_index, target_class, mutation_fs_type_prob):
+    def __init__(self, classifier, changed_rule_index, target_class, mutation_fs_type_prob=0.5, sampling_noise_str=0.1, mutation_prob=0.7, mutated_param_prob=0.6, crossover_prob=0.7, crossover_p1_selected_prob=0.5):
         self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class)
 
-        self._sampling = FuzzySetsSampling()
-        self._mutation = FuzzySetsMutation(0.7, 0.6, prob_change_type=mutation_fs_type_prob)
-        self._crossover = FuzzySetsCrossover(0.7, 0.5)
+        self._sampling = FuzzySetsSampling(sampling_noise_str)
+        self._mutation = FuzzySetsMutation(mutation_prob, mutated_param_prob, mutation_fs_type_prob)
+        self._crossover = FuzzySetsCrossover(crossover_prob, crossover_p1_selected_prob)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
-        self._survival = FuzzySetsSurvival(self._eliminate_duplicates)
+        self._survival = FuzzySetsSurvival()  # (self._eliminate_duplicates)
 
     def get_target_class(self):
         return self._problem.get_target_class()
@@ -108,7 +108,7 @@ class CounterFactualExplainerMetaheuristics:
             sampling=self._sampling,
             crossover=self._crossover,
             mutation=self._mutation,  # should consider bounds and conditions of membership functions params
-            eliminate_duplicates=self._eliminate_duplicates,
+            eliminate_duplicates=False,  # self._eliminate_duplicates,
             save_history=False,  # True,
             survival=self._survival,
         )
@@ -116,6 +116,8 @@ class CounterFactualExplainerMetaheuristics:
         res = minimize(self._problem, algorithm, seed=41, verbose=verbose, termination=termination)
 
         non_dominated_solutions = res.opt
+
+        non_dominated_solutions = self._eliminate_duplicates.do(non_dominated_solutions)
 
         if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
             return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float)), np.array([], dtype=object)
@@ -126,17 +128,16 @@ class CounterFactualExplainerMetaheuristics:
         return non_dominated_solutions, rules
 
 
-def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_prob=0.5):
+def main_benchmark(dataset, classifiers, out_path, **kwargs):
     times = []
     num_sols = []
-    ious = []
-    conf = []
+    objectives = []
     num_failures = 0
     num_runs = 0
 
     class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
 
-    for p_sol in tqdm(non_dominated_solutions):
+    for p_sol in tqdm(classifiers):
         num_rules = p_sol[0].get_num_vars()
         for i_var in range(num_rules):
             class_label = p_sol[0].get_var(i_var).get_class_label()
@@ -146,7 +147,7 @@ def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_
                 start = time.time()
 
                 try:
-                    explainer = CounterFactualExplainerMetaheuristics(p_sol[0], i_var, target_class, mutation_fs_type_prob=mutation_fs_type_prob)
+                    explainer = CounterFactualExplainerMetaheuristics(p_sol[0], i_var, target_class, **kwargs)
                     non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
                     # if len(non_dominated_solutions) == 0:
                     #     raise ValueError("No solutions found")
@@ -160,32 +161,25 @@ def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_
                 if start is not None and len(non_dominated_solutions) > 0:
                     times.append(end - start)
                     num_sols.append(len(non_dominated_solutions))
-                    ious.append(
-                        (np.min(1-non_dominated_solutions.get("F")[:,1]), np.max(1-non_dominated_solutions.get("F")[:,1]))
-                    )
-                    conf.append(
-                        (np.min(1-non_dominated_solutions.get("F")[:,0]), np.max(1-non_dominated_solutions.get("F")[:,0]))
-                    )
-
-
-                    # # plot the results
-                    # plot = Scatter(title="NSGA-II")
-                    # plot.add(non_dominated_solutions.get("F"))
-                    # plot.axis_labels = explainer._problem.get_objective_names()
-                    # _ = plot.show()
-
+                    current_objectives = []
+                    for i_obj in range(non_dominated_solutions.get("F").shape[1]):
+                        current_objectives.append((np.min(1-non_dominated_solutions.get("F")[:,i_obj]), np.max(1-non_dominated_solutions.get("F")[:,i_obj])))
+                    objectives.append(current_objectives)
                 else:
                     num_failures += 1
                 num_runs += 1
 
-    df = pd.DataFrame({
+    dataframe_data = {
         "time": times,
         "num_sols": num_sols,
-        "iou_min": [x[0] for x in ious],
-        "iou_max": [x[1] for x in ious],
-        "conf_min": [x[0] for x in conf],
-        "conf_max": [x[1] for x in conf],
-    })
+    }
+
+    obj_names = CounterfactualProblem(classifiers[0][0], 0, ClassLabelBasic(0)).get_objective_names()
+    for i, obj_name in enumerate(obj_names):
+        dataframe_data[f"{obj_name}_min"] = [obj[i][0] for obj in objectives]
+        dataframe_data[f"{obj_name}_max"] = [obj[i][1] for obj in objectives]
+
+    df = pd.DataFrame(dataframe_data)
 
     os.makedirs(out_path, exist_ok=False)
     df.to_csv(f"{out_path}\\results.csv", index=False)
@@ -195,16 +189,18 @@ def main_benchmark(dataset, non_dominated_solutions, out_path, mutation_fs_type_
         f.write(f"Number of failures: {num_failures}\n")
 
         if len(times) != 0:
-            f.write(f"Median time: {np.median(times):.2f} seconds\n")
-            f.write(f"Median number of solutions: {np.median(num_sols):.2f}\n")
-            f.write(f"Min IOU: {np.min([x[0] for x in ious]):.2f}\n")
-            f.write(f"Max IOU: {np.max([x[1] for x in ious]):.2f}\n")
-            f.write(f"Min confidence: {np.min([x[0] for x in conf]):.2f}\n")
-            f.write(f"Max confidence: {np.max([x[1] for x in conf]):.2f}\n")
+            f.write(f"Median time: {np.median(times):.3f} seconds\n")
+            f.write(f"Median number of solutions: {np.median(num_sols):.3f}\n")
 
-def main_plot_single(non_dominated_solutions, mutation_fs_type_prob=0.5):
-    classifier = non_dominated_solutions[0][0]
+            for i, obj_name in enumerate(obj_names):
+                f.write(f"Min {obj_name}: {np.min([obj[i][0] for obj in objectives]):.3f}\n")
+                f.write(f"Max {obj_name}: {np.max([obj[i][1] for obj in objectives]):.3f}\n")
+
+def main_plot_single(classifiers, mutation_fs_type_prob=0.5):
+    classifier = classifiers[0][0]
     changed_rule_index = 0
+
+    print(classifier)
 
     target_class = ClassLabelBasic(0)
     explainer = CounterFactualExplainerMetaheuristics(classifier, changed_rule_index, target_class, mutation_fs_type_prob)
@@ -229,27 +225,20 @@ def main_plot_single(non_dominated_solutions, mutation_fs_type_prob=0.5):
     factual_rule.get_rule().plot_antecedent()
 
     print("Rules of non-dominated solutions:")
-    for rule in rules:
+    for i in range(len(rules)):
+        rule = rules[i]
         print(rule)
-        rule.get_rule().plot_antecedent()
+        if i<10:
+            rule.get_rule().plot_antecedent()
+
+    if len(rules) > 10:
+        print("Some rule plots were not displayed because there are too many rules")
 
 
-def mutation_param_search(data_name, out_path, num_experiments=11):
-    param_vals = np.linspace(0, 1, num_experiments)
-    dataset, non_dominated_solutions = get_config(data_name)
+def param_search(dataset, classifiers, out_path, param_name, num_experiments=11, min_val=0.0, max_val=1.0):
+    param_vals = np.linspace(min_val, max_val, num_experiments)
 
     for param_val in param_vals:
-        current_path = os.path.join(out_path, f"mut_{param_val:.2f}")
-        main_benchmark(dataset, non_dominated_solutions, out_path=current_path, mutation_fs_type_prob=param_val)
-
-
-if __name__ == "__main__":
-    _, non_dominated_solutions = get_config("pima")
-    main_plot_single(non_dominated_solutions)
-
-    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima","sonar", "spectfheart", "tae", "wisconsin"]:
-    #     result_path = f"..\\..\\..\\cf_results_v2\\cf_metaheuristics\\{data_name}"
-    #     dataset, non_dominated_solutions = get_config(data_name)
-    #     main_benchmark(dataset, non_dominated_solutions, out_path=result_path)
-
-    # mutation_param_search("iris", out_path="..\\..\\..\\cf_results\\cf_metaheuristics_mutation_param_search\\iris", num_experiments=11)
+        current_path = os.path.join(out_path, f"{param_name}_{param_val:.2f}")
+        kwargs = {param_name: param_val}
+        main_benchmark(dataset, classifiers, out_path=current_path, **kwargs)

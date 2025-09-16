@@ -17,7 +17,7 @@ class CounterfactualProblem(Problem):
         self._factual_michigan_solution = classifier.get_var(changed_rule_index)
         self._initial_class = self._factual_michigan_solution.get_class_label().get_class_label_value()
         self._target_class = target_class
-        self._area_computation_num_samples = 100  # The higher it is, the more precise it gets, but it's also slower
+        self._area_computation_num_samples = 50  # The higher it is, the more precise it gets, but it's also slower
         self._learner = self._factual_michigan_solution.get_rule_builder().get_consequent_factory()
         self._train_set = self._learner.get_training_set()
 
@@ -26,7 +26,7 @@ class CounterfactualProblem(Problem):
         self._objectives_map = {
             "confidence_loss": self.conf_loss,
             "change_loss": self.change_loss,
-            "num_changed_features": self.num_changed_features_loss,
+            # "num_changed_features": self.num_changed_features_loss,
             # "train_error_rate": self.train_error_rate
         }
 
@@ -101,19 +101,12 @@ class CounterfactualProblem(Problem):
 
     def conf_loss(self, current_rule):
         # Confidence loss
-        # We want to minimize the confidence difference between the initial class
-        # and the target class and we want to maximize the confidence of the target class
-
-        # TODO: to be optimized, because for now all confidences are computed (add a function to compute only one confidence in the learner)
 
         antecedent = current_rule.get_antecedent()
         confidences = self._learner.calc_confidence_py(antecedent, self._train_set)
 
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
 
-        # max_conf = np.max(confidences)
-
-        # confidence_loss = 1/(1 + np.exp(-(max_conf-confidence_target_class**2-confidence_target_class)))
         confidence_loss = 1 - confidence_target_class
 
         return confidence_loss

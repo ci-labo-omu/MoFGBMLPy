@@ -411,9 +411,9 @@ cdef class PittsburghSolution(AbstractSolution):
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef Pattern p
 
-        for sol in self._vars:
-           sol.reset_num_wins()
-           sol.reset_fitness()
+        # for sol in self._vars:
+        #    sol.reset_num_wins()
+        #    sol.reset_fitness()
 
         for i in range(dataset.get_size()):
            p = patterns[i]

@@ -12,24 +12,9 @@ class FuzzySetsSampling(Sampling):
         self._noise_str = noise_str
         super().__init__()
 
-    # def _do(self, problem, n_samples, **kwargs):
-    #     initial_population = np.zeros((n_samples, problem.n_var), dtype=object)
-    #
-    #     for i in range(n_samples-1):
-    #         for j in range(problem.n_var):
-    #             # Triangular fuzzy set
-    #
-    #             left = np.random.uniform(0, 1)
-    #             center = np.random.uniform(left, 1)
-    #             right = np.random.uniform(center, 1)
-    #
-    #             initial_population[i, j] = TriangularFuzzySet(left, center, right, j, "new_term")
-    #     initial_population[-1] = np.array([copy.deepcopy(fs) for fs in problem.get_initial_fuzzy_sets()])
-    #     return initial_population
-
     def _do(self, problem, n_samples, **kwargs):
         initial_population = np.zeros((n_samples, 1), dtype=object)
-        initial_rule = problem.get_factual_rule()
+        initial_rule = copy.deepcopy(problem.get_factual_rule())
         initial_rule.set_deep_copy_knowledge(True)  # since knowledge is not shared between individuals here
         initial_rule.resize_objectives(problem.n_obj)
 

@@ -11,7 +11,7 @@ from pymoo.operators.survival.rank_and_crowding.metrics import get_crowding_func
 
 
 class FuzzySetsSurvival(Survival):
-    def __init__(self, eliminate_duplicates, nds=None, crowding_func="cd"):
+    def __init__(self, eliminate_duplicates=None, nds=None, crowding_func="cd"):
         self._eliminate_duplicates = eliminate_duplicates
         crowding_func_ = get_crowding_function(crowding_func)
 
@@ -60,6 +60,7 @@ class FuzzySetsSurvival(Survival):
             survivors.extend(front[indices_I])
 
         survivors = pop[survivors]
-        survivors = self._eliminate_duplicates.do(survivors)
+        if self._eliminate_duplicates is not None:
+            survivors = self._eliminate_duplicates.do(survivors)
 
         return survivors
