@@ -11,7 +11,8 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuz
 
 
 class CounterfactualProblem(Problem):
-    def __init__(self, classifier, changed_rule_index, target_class):
+    def __init__(self, classifier, changed_rule_index, target_class, test_set, objectives=["confidence_loss", "change_loss"]):
+        self._classifier_copy_mutable = copy.deepcopy(classifier)
         self._classifier_copy = copy.deepcopy(classifier)
         self._changed_rule_index = changed_rule_index
         self._factual_michigan_solution = classifier.get_var(changed_rule_index)
@@ -20,15 +21,21 @@ class CounterfactualProblem(Problem):
         self._area_computation_num_samples = 50  # The higher it is, the more precise it gets, but it's also slower
         self._learner = self._factual_michigan_solution.get_rule_builder().get_consequent_factory()
         self._train_set = self._learner.get_training_set()
+        self._test_set = test_set
 
         self._initial_mfs_y = self.compute_membership_values(self._factual_michigan_solution, 0, 1)
 
         self._objectives_map = {
             "confidence_loss": self.conf_loss,
             "change_loss": self.change_loss,
-            # "num_changed_features": self.num_changed_features_loss,
-            # "train_error_rate": self.train_error_rate
+            "num_changed_features": self.num_changed_features_loss,
+            "train_error_rate": self.error_rate
         }
+
+        self._objectives_map = {k: v for k, v in self._objectives_map.items() if k in objectives}
+
+        if len(self._objectives_map) == 0:
+            raise ValueError("At least one objective must be selected")
 
         super().__init__(n_var=1, n_obj=len(self._objectives_map), n_eq_constr=1)
 
@@ -137,11 +144,32 @@ class CounterfactualProblem(Problem):
 
         return num_changed_features/num_dims
 
-    def train_error_rate(self, current_rule):
+    def _create_new_classifier(self, sol, replace=True):
+        new_classifier = self._classifier_copy_mutable if replace else copy.deepcopy(self._classifier_copy)
+
+        if replace:
+            new_classifier.set_var(self._changed_rule_index, sol)
+        else:
+            old_vars = new_classifier.get_vars()
+            new_vars = np.empty(len(old_vars) + 1, dtype=object)
+            for i in range(len(old_vars)):
+                new_vars[i] = old_vars[i]
+            new_vars[-1] = sol
+            new_classifier.set_vars(new_vars)
+        return new_classifier
+
+    def error_rate(self, current_rule=None, use_test_set=False, replace=True, initial_classifier=False):
+        dataset = self._test_set if use_test_set else self._train_set
+
+        if initial_classifier:
+            return self._classifier_copy.calc_error_rate(self._train_set)
+
         if current_rule.get_rule().is_rejected_class_label():
             return 1.0
-        self._classifier_copy.set_var(self._changed_rule_index, current_rule)
-        return self._classifier_copy.calc_error_rate(self._train_set)
+
+        new_classifier = self._create_new_classifier(current_rule, replace=replace)
+
+        return new_classifier.calc_error_rate(dataset)
 
     def is_output_class_target(self, current_rule):
         return current_rule.get_class_label() == self._target_class
@@ -167,3 +195,22 @@ class CounterfactualProblem(Problem):
 
     def get_objective_names(self):
         return list(self._objectives_map.keys())
+
+    def num_wins_and_successes(self, sol=None, replace=False, initial_classifier=False):
+        # success is defined as fitness in the code of MoFGBML
+
+        if initial_classifier:
+            new_classifier = self._classifier_copy
+        else:
+            new_classifier = self._create_new_classifier(sol, replace=replace)
+            new_classifier.update_winners_and_errors(self._train_set)
+
+        cl_vars = new_classifier.get_vars()
+        num_wins = np.empty(len(cl_vars), dtype=int)
+        fitness_vals = np.empty(len(cl_vars), dtype=int)
+
+        for i, rule in enumerate(cl_vars):
+            num_wins[i] = rule.get_num_wins()
+            fitness_vals[i] = rule.get_fitness()
+
+        return num_wins, fitness_vals

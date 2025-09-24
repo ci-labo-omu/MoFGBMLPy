@@ -1,3 +1,4 @@
+import random
 import time
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.core.population import Population
@@ -27,14 +28,14 @@ import pandas as pd
 
 
 class CounterFactualExplainerMetaheuristics:
-    def __init__(self, classifier, changed_rule_index, target_class, mutation_fs_type_prob=0.5, sampling_noise_str=0.1, mutation_prob=0.7, mutated_param_prob=0.6, crossover_prob=0.7, crossover_p1_selected_prob=0.5):
-        self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class)
+    def __init__(self, classifier, changed_rule_index, target_class, test_set, mutation_fs_type_prob=0.5, sampling_noise_str=0.1, mutation_prob=0.7, mutated_param_prob=0.6, crossover_prob=0.7, crossover_p1_selected_prob=0.5, sampling_fs_type_prob=0.0, use_search_space_crowding=False, objectives=["confidence_loss", "change_loss"]):
+        self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class, test_set=test_set, objectives=objectives)
 
-        self._sampling = FuzzySetsSampling(sampling_noise_str)
+        self._sampling = FuzzySetsSampling(sampling_noise_str, sampling_fs_type_prob)
         self._mutation = FuzzySetsMutation(mutation_prob, mutated_param_prob, mutation_fs_type_prob)
         self._crossover = FuzzySetsCrossover(crossover_prob, crossover_p1_selected_prob)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
-        self._survival = FuzzySetsSurvival()  # (self._eliminate_duplicates)
+        self._survival = FuzzySetsSurvival(use_search_space_crowding=use_search_space_crowding)
 
     def get_target_class(self):
         return self._problem.get_target_class()
@@ -117,25 +118,95 @@ class CounterFactualExplainerMetaheuristics:
 
         non_dominated_solutions = res.opt
 
+        if non_dominated_solutions is None:
+            return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float)), np.array([], dtype=object)
+
         non_dominated_solutions = self._eliminate_duplicates.do(non_dominated_solutions)
 
-        if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
+        if len(non_dominated_solutions) == 0:
             return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float)), np.array([], dtype=object)
 
         non_dominated_solutions = self.remove_non_target_class_solutions(non_dominated_solutions, self.get_target_class())
-        rules = non_dominated_solutions.get("X").flatten()
 
-        return non_dominated_solutions, rules
+        return non_dominated_solutions
+
+    def compute_diversity(self, pop):
+        # for now we simply use the average distance between all pairs of solutions
+        if pop is None or len(pop) == 0:
+            return 0.0
+        num_sols = len(pop)
+        distance = self._eliminate_duplicates.calc_dist(pop)
+        if num_sols <= 1:
+            return 0.0
+
+        sum_dist = distance.sum() / 2
+        return sum_dist / (num_sols * (num_sols - 1) // 2)
+
+    @staticmethod
+    def __append_metric(results, metric_name, value, extend=False):
+        if metric_name not in results:
+            results[metric_name] = []
+        if extend:
+            results[metric_name].extend(value)
+        else:
+            results[metric_name].append(value)
+        return results
+
+    def all_metrics_eval(self, solutions):
+        results = {}
+        initial_train_error_rate = self._problem.error_rate(use_test_set=False, initial_classifier=True)
+        initial_test_error_rate = self._problem.error_rate(use_test_set=True, initial_classifier=True)
+        initial_num_wins, initial_num_successes = self._problem.num_wins_and_successes(initial_classifier=True)
+
+        for sol in solutions:
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "confidence_loss", self._problem.conf_loss(sol))
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "change_loss", self._problem.change_loss(sol))
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_changed_features", self._problem.num_changed_features_loss(sol))
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "train_error_rate", self._problem.error_rate(sol, use_test_set=False))
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "test_error_rate", self._problem.error_rate(sol, use_test_set=True))
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "train_error_rate_variation_replace", self._problem.error_rate(sol, replace=True, use_test_set=False) - initial_train_error_rate)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "train_error_rate_variation_append", self._problem.error_rate(sol, replace=False, use_test_set=False) - initial_train_error_rate)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "test_error_rate_variation_replace", self._problem.error_rate(sol, replace=True, use_test_set=True) - initial_test_error_rate)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "test_error_rate_variation_append", self._problem.error_rate(sol, replace=False, use_test_set=True) - initial_test_error_rate)
+
+            num_wins, num_successes = self._problem.num_wins_and_successes(sol, replace=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_wins_replace", num_wins, extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_successes_replace", num_successes, extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_wins_variation_replace", num_wins - initial_num_wins, extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_successes_variation_replace", num_successes - initial_num_successes, extend=True)
+
+            num_wins, num_successes = self._problem.num_wins_and_successes(sol, replace=False)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_wins_append", num_wins, extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_successes_append", num_successes, extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_wins_variation_append", num_wins - np.append(initial_num_wins, 0), extend=True)
+            results = CounterFactualExplainerMetaheuristics.__append_metric(results, "num_successes_variation_append", num_successes - np.append(initial_num_successes, 0), extend=True)
+
+        return results
 
 
-def main_benchmark(dataset, classifiers, out_path, **kwargs):
-    times = []
-    num_sols = []
-    objectives = []
+def get_stats(metric_vals):
+    return {
+        "min": np.min(metric_vals),
+        "max": np.max(metric_vals),
+        "mean": np.mean(metric_vals),
+        "std": np.std(metric_vals),
+    }
+
+
+def main_benchmark(num_classes, classifiers, out_path, seed=2017, test_dataset=None, **kwargs):
+    if os.path.exists(out_path):
+        print(f"Output path {out_path} already exists (skipped).")
+        return
+
+    np.random.seed(seed)
+    random.seed(seed)
+
+    metrics_values = {"time_in_seconds": [], "num_sols": [], "diversity": []}
+    metrics_stats = {}
     num_failures = 0
     num_runs = 0
 
-    class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
+    class_labels = [ClassLabelBasic(c) for c in range(num_classes)]
 
     for p_sol in tqdm(classifiers):
         num_rules = p_sol[0].get_num_vars()
@@ -147,37 +218,44 @@ def main_benchmark(dataset, classifiers, out_path, **kwargs):
                 start = time.time()
 
                 try:
-                    explainer = CounterFactualExplainerMetaheuristics(p_sol[0], i_var, target_class, **kwargs)
-                    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=False)
-                    # if len(non_dominated_solutions) == 0:
-                    #     raise ValueError("No solutions found")
+                    explainer = CounterFactualExplainerMetaheuristics(p_sol[0], i_var, target_class, test_dataset, **kwargs)
+                    solutions = explainer.train(n_gen=60, pop_size=60, verbose=False)
+
+                    end = time.time()
+
+                    metrics_values["time_in_seconds"].append(end - start)
+                    metrics_values["num_sols"].append(len(solutions))
+                    metrics_values["diversity"].append(explainer.compute_diversity(solutions))
+
+                    current_metrics_vals = explainer.all_metrics_eval(solutions.get("X").flatten())
+
+                    for (name, vals) in current_metrics_vals.items():
+                        if name not in metrics_values:
+                            metrics_values[name] = []
+                            metrics_stats[name] = {}
+                        metrics_values[name].extend(vals)
+
+                        current_stats = get_stats(vals)
+                        for (stat_name, val) in current_stats.items():
+                            if stat_name not in metrics_stats[name]:
+                                metrics_stats[name][stat_name] = []
+                            metrics_stats[name][stat_name].append(val)
+
                 except Exception as e:
-                    non_dominated_solutions = np.array([], dtype=object)
-                    rules = np.array([], dtype=object)
-                    start = None
-
-                end = time.time()
-
-                if start is not None and len(non_dominated_solutions) > 0:
-                    times.append(end - start)
-                    num_sols.append(len(non_dominated_solutions))
-                    current_objectives = []
-                    for i_obj in range(non_dominated_solutions.get("F").shape[1]):
-                        current_objectives.append((np.min(1-non_dominated_solutions.get("F")[:,i_obj]), np.max(1-non_dominated_solutions.get("F")[:,i_obj])))
-                    objectives.append(current_objectives)
-                else:
+                    # print(f"Failure: {e}")
+                    raise e
                     num_failures += 1
                 num_runs += 1
 
     dataframe_data = {
-        "time": times,
-        "num_sols": num_sols,
+        "time": metrics_values["time_in_seconds"],
+        "num_sols": metrics_values["num_sols"],
+        "diversity": metrics_values["diversity"],
     }
 
-    obj_names = CounterfactualProblem(classifiers[0][0], 0, ClassLabelBasic(0)).get_objective_names()
-    for i, obj_name in enumerate(obj_names):
-        dataframe_data[f"{obj_name}_min"] = [obj[i][0] for obj in objectives]
-        dataframe_data[f"{obj_name}_max"] = [obj[i][1] for obj in objectives]
+    for (metric_name, stats_dict) in metrics_stats.items():
+        for stat_name, val in stats_dict.items():
+            dataframe_data[f"{metric_name}_{stat_name}"] = val
 
     df = pd.DataFrame(dataframe_data)
 
@@ -188,23 +266,26 @@ def main_benchmark(dataset, classifiers, out_path, **kwargs):
         f.write(f"Number of runs: {num_runs}\n")
         f.write(f"Number of failures: {num_failures}\n")
 
-        if len(times) != 0:
-            f.write(f"Median time: {np.median(times):.3f} seconds\n")
-            f.write(f"Median number of solutions: {np.median(num_sols):.3f}\n")
+        if num_runs - num_failures > 0:
+            for (metric_name, vals) in metrics_values.items():
+                stats = get_stats(vals)
+                for stat_name, val in stats.items():
+                    f.write(f"{metric_name}_{stat_name}: {val:.3f}\n")
+                f.write("\n")
 
-            for i, obj_name in enumerate(obj_names):
-                f.write(f"Min {obj_name}: {np.min([obj[i][0] for obj in objectives]):.3f}\n")
-                f.write(f"Max {obj_name}: {np.max([obj[i][1] for obj in objectives]):.3f}\n")
 
-def main_plot_single(classifiers, mutation_fs_type_prob=0.5):
+def main_plot_single(classifiers, test_dataset=None, **kwargs):
     classifier = classifiers[0][0]
     changed_rule_index = 0
 
     print(classifier)
 
     target_class = ClassLabelBasic(0)
-    explainer = CounterFactualExplainerMetaheuristics(classifier, changed_rule_index, target_class, mutation_fs_type_prob)
-    non_dominated_solutions, rules = explainer.train(n_gen=60, pop_size=60, verbose=True)
+    if classifier.get_var(changed_rule_index).get_class_label() == target_class:
+        target_class = ClassLabelBasic(1)
+    explainer = CounterFactualExplainerMetaheuristics(classifier, changed_rule_index, target_class, test_set=test_dataset, **kwargs)
+    non_dominated_solutions = explainer.train(n_gen=60, pop_size=60, verbose=True)
+    rules = non_dominated_solutions.get("X").flatten()
 
     if len(non_dominated_solutions) == 0:
         print("No solutions found")
@@ -235,10 +316,15 @@ def main_plot_single(classifiers, mutation_fs_type_prob=0.5):
         print("Some rule plots were not displayed because there are too many rules")
 
 
-def param_search(dataset, classifiers, out_path, param_name, num_experiments=11, min_val=0.0, max_val=1.0):
+def param_search(num_classes, classifiers, out_path, param_name, num_experiments=11, min_val=0.0, max_val=1.0, test_dataset=None):
     param_vals = np.linspace(min_val, max_val, num_experiments)
 
     for param_val in param_vals:
         current_path = os.path.join(out_path, f"{param_name}_{param_val:.2f}")
         kwargs = {param_name: param_val}
-        main_benchmark(dataset, classifiers, out_path=current_path, **kwargs)
+        try:
+            main_benchmark(num_classes, classifiers, out_path=current_path, test_dataset=test_dataset, **kwargs)
+        except Exception as e:
+            # raise e
+            print(f"Error processing {param_name}={param_val:.2f}: {e}")
+

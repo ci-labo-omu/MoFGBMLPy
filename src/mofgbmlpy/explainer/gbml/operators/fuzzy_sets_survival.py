@@ -9,20 +9,25 @@ from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival
 from pymoo.operators.survival.rank_and_crowding.metrics import get_crowding_function
 
+from mofgbmlpy.explainer.gbml.crowding_function_x import CrowdingFunctionX
+
 
 class FuzzySetsSurvival(Survival):
-    def __init__(self, eliminate_duplicates=None, nds=None, crowding_func="cd"):
-        self._eliminate_duplicates = eliminate_duplicates
-        crowding_func_ = get_crowding_function(crowding_func)
-
+    def __init__(self, eliminate_duplicates=None, nds=None, use_search_space_crowding=False):
         super().__init__(filter_infeasible=True)
+
+        self._eliminate_duplicates = eliminate_duplicates
+        self.use_search_space_crowding = use_search_space_crowding
         self.nds = nds if nds is not None else NonDominatedSorting()
-        self.crowding_func = crowding_func_
+        self.crowding_func = get_crowding_function("cd")
+        if self.use_search_space_crowding:
+            self.crowding_func_x = CrowdingFunctionX()
 
     def _do(self, problem, pop, *args, n_survive=None, **kwargs):
-
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
+        if self.use_search_space_crowding:
+            X = pop.get("X")
 
         # the final indices of surviving individuals
         survivors = []
@@ -42,6 +47,8 @@ class FuzzySetsSurvival(Survival):
 
                 # re-calculate the crowding distance of the front
                 crowding_of_front = self.crowding_func.do(F[front, :], n_remove=n_remove)
+                if self.use_search_space_crowding:
+                    crowding_of_front += self.crowding_func_x.do(X[front, :], n_remove=n_remove)
 
                 indices_I = randomized_argsort(crowding_of_front, order="descending", method="numpy")
                 indices_I = indices_I[:-n_remove]
@@ -50,6 +57,8 @@ class FuzzySetsSurvival(Survival):
             else:
                 # calculate the crowding distance of the front
                 crowding_of_front = self.crowding_func.do(F[front, :], n_remove=0)
+                if self.use_search_space_crowding:
+                    crowding_of_front += self.crowding_func_x.do(X[front, :], n_remove=0)
 
             # save rank and crowding in the individual class
             for j, i in enumerate(front):
