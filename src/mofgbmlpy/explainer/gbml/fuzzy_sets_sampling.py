@@ -8,9 +8,10 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuz
 
 
 class FuzzySetsSampling(Sampling):
-    def __init__(self, noise_str=0.1, change_fs_type_prob=0.0):
+    def __init__(self, noise_str=0.1, change_fs_type_prob=0.0, change_fs_params_prob=1.0):
         self._noise_str = noise_str
         self._change_fs_type_prob = change_fs_type_prob
+        self._change_fs_params_prob = change_fs_params_prob
         super().__init__()
 
     def _do(self, problem, n_samples, **kwargs):
@@ -37,18 +38,21 @@ class FuzzySetsSampling(Sampling):
                     if np.random.rand() < self._change_fs_type_prob:
                         fuzzy_sets[j] = DontCareFuzzySet(0)
                         continue
-                    # Triangular fuzzy set
+
                     old_params = initial_params[j]
 
-                    # add noise
-                    left = old_params[0] + np.random.normal(0, self._noise_str)
-                    center = old_params[1] + np.random.normal(0, self._noise_str)
-                    right = old_params[2] + np.random.normal(0, self._noise_str)
+                    if np.random.rand() < self._change_fs_params_prob:
+                        # add noise
+                        left = old_params[0] + np.random.normal(0, self._noise_str)
+                        center = old_params[1] + np.random.normal(0, self._noise_str)
+                        right = old_params[2] + np.random.normal(0, self._noise_str)
 
-                    # fix
-                    left = max(0, min(left, 1))
-                    center = max(left, min(center, 1))
-                    right = max(center, min(right, 1))
+                        # fix
+                        left = max(0, min(left, 1))
+                        center = max(left, min(center, 1))
+                        right = max(center, min(right, 1))
+                    else:
+                        left, center, right = old_params
 
                     fuzzy_sets[j] = TriangularFuzzySet(left, center, right, 1, "new_term")
                     new_antecedent_indices[j] = 1

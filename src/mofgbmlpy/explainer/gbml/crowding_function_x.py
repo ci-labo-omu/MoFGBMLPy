@@ -9,12 +9,8 @@ class CrowdingFunctionX:
         n_points, _ = X.shape
         distances = FuzzySetsEliminateDuplicates.calc_dist(X)
 
-        cd = np.zeros(n_points)
-
-        if n_points <= 2:
-            return np.full(n_points, np.inf)
-
         # Get the two nearest neighbors for each point
+        cd = np.zeros(n_points)
         for i in range(n_points):
             i_min_1 = None
             i_min_2 = None

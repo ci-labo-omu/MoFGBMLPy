@@ -29,7 +29,7 @@ class CounterfactualProblem(Problem):
             "confidence_loss": self.conf_loss,
             "change_loss": self.change_loss,
             "num_changed_features": self.num_changed_features_loss,
-            "train_error_rate": self.error_rate
+            "train_error_rate": self.error_rate,
         }
 
         self._objectives_map = {k: v for k, v in self._objectives_map.items() if k in objectives}
@@ -132,17 +132,16 @@ class CounterfactualProblem(Problem):
     def num_changed_features_loss(self, current_michigan_solution):
         num_changed_features = 0
         current_rule = current_michigan_solution.get_rule()
-        num_dims = current_rule.get_antecedent_array_size()
         factual_rule = self._factual_michigan_solution.get_rule()
 
-        for i in range(num_dims):
+        for i in range(current_rule.get_antecedent_array_size()):
             fs1 = factual_rule.get_fuzzy_set_object(i)
             fs2 = current_rule.get_fuzzy_set_object(i)
 
             if fs1 != fs2:
                 num_changed_features += 1
 
-        return num_changed_features/num_dims
+        return num_changed_features
 
     def _create_new_classifier(self, sol, replace=True):
         new_classifier = self._classifier_copy_mutable if replace else copy.deepcopy(self._classifier_copy)

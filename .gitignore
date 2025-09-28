@@ -175,10 +175,10 @@ py_version_results
 Profile.pstats
 !src/mofgbmlpy/utility/lru_cache.cpp
 old_cf_results
-atemp_cf_results
-cf_results_v2
 cf_results
+old_cf_results
 scripts/plot_helper.py
+scripts/plot_helper_params.py
 
 # DOCS
 docs/_build
