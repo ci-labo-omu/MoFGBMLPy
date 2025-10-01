@@ -11,15 +11,17 @@ from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import Counterfactu
 
 
 class FuzzySetsMutation(Mutation):
-    def __init__(self, prob=1.0, prob_mutated_param=0.2, prob_change_type=0.1):
+    def __init__(self, prob=1.0, prob_mutated_param=0.2, prob_change_type=0.1, prob_revert_to_initial=0.0):
         super().__init__(prob=prob)
         self._prob_mutated_param = prob_mutated_param
         self._prob_change_type = prob_change_type
+        self._prob_revert_to_initial = prob_revert_to_initial
 
     def _do(self, problem, X, **kwargs):
         new_x = copy.deepcopy(X)
 
-        # new_type_idx = None
+        if self._prob_revert_to_initial > 0:
+            initial_fuzzy_sets = problem.get_initial_fuzzy_sets()
 
         for i in range(len(new_x)):
             rule = new_x[i][0]
@@ -27,8 +29,16 @@ class FuzzySetsMutation(Mutation):
             new_antecedent_indices = np.copy(rule.get_rule().get_antecedent().get_antecedent_indices())
 
             for j in range(len(fuzzy_sets)):
+                if np.random.rand() < self._prob_revert_to_initial:
+                    fuzzy_sets[j] = copy.deepcopy(initial_fuzzy_sets[j])
+                    if isinstance(fuzzy_sets[j], TriangularFuzzySet):
+                        new_antecedent_indices[j] = 1
+                    elif isinstance(fuzzy_sets[j], DontCareFuzzySet):
+                        new_antecedent_indices[j] = 0
+
+                    continue
+
                 if np.random.rand() < self._prob_change_type:
-                    # new_type_idx = i
                     if isinstance(fuzzy_sets[j].get_function(), TriangularMF):
                         # To DC
                         fuzzy_sets[j] = DontCareFuzzySet(0)
@@ -60,8 +70,4 @@ class FuzzySetsMutation(Mutation):
             new_x[i][0].set_knowledge(CounterfactualProblem.build_knowledge(fuzzy_sets))
             new_x[i][0].set_vars(new_antecedent_indices)
             new_x[i][0].get_rule().get_antecedent().set_antecedent_indices(new_antecedent_indices)
-
-        # if new_type_idx is not None:
-        #     problem.build_antecedent(new_x[new_type_idx]).plot_antecedent()
-
         return new_x

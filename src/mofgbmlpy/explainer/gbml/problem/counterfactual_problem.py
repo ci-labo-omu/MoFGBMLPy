@@ -39,11 +39,11 @@ class CounterfactualProblem(Problem):
 
         super().__init__(n_var=1, n_obj=len(self._objectives_map), n_eq_constr=1)
 
-    def get_initial_mfs_y(self):
-        return self._initial_mfs_y
-
     def get_factual_rule(self):
         return self._factual_michigan_solution
+
+    def get_initial_num_rules(self):
+        return self._classifier_copy.get_num_vars()
 
     def get_target_class(self):
         return self._target_class
@@ -52,6 +52,9 @@ class CounterfactualProblem(Problem):
     def get_fuzzy_sets_from_rule(rule):
         fs_list = [rule.get_fuzzy_set_object(dim) for dim in range(rule.get_antecedent_array_size())]
         return np.array(fs_list, dtype=object)
+
+    def get_initial_fuzzy_sets(self):
+        return CounterfactualProblem.get_fuzzy_sets_from_rule(self._factual_michigan_solution.get_rule())
 
     def compute_membership_values(self, rule, min_val=0, max_val=1):
         fuzzy_sets = CounterfactualProblem.get_fuzzy_sets_from_rule(rule.get_rule())
@@ -138,7 +141,7 @@ class CounterfactualProblem(Problem):
             fs1 = factual_rule.get_fuzzy_set_object(i)
             fs2 = current_rule.get_fuzzy_set_object(i)
 
-            if fs1 != fs2:
+            if CounterfactualProblem.are_fuzzy_set_different(fs1, fs2):
                 num_changed_features += 1
 
         return num_changed_features
@@ -213,3 +216,25 @@ class CounterfactualProblem(Problem):
             fitness_vals[i] = rule.get_fitness()
 
         return num_wins, fitness_vals
+
+    @staticmethod
+    def are_fuzzy_set_different(fs1, fs2, threshold=1e-8):
+        params_1 = fs1.get_function().get_params()
+        params_2 = fs2.get_function().get_params()
+
+        if params_1 is None:
+            params_1 = []
+        if params_2 is None:
+            params_2 = []
+
+        if len(params_1) != len(params_2):
+            return True
+
+        for i in range(len(params_1)):
+            if abs(params_1[i] - params_2[i]) > threshold:
+                return True
+
+        return False
+
+    def get_changed_rule_index(self):
+        return self._changed_rule_index

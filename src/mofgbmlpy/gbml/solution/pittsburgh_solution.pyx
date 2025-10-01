@@ -415,7 +415,7 @@ cdef class PittsburghSolution(AbstractSolution):
         #    sol.reset_num_wins()
         #    sol.reset_fitness()
 
-        for i in range(dataset.get_size()):
+        for i in range(dataset_size):
            p = patterns[i]
            winner_solution = self.classify(p)
            if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
