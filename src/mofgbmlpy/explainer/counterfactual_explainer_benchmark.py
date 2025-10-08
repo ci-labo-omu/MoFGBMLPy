@@ -1,0 +1,274 @@
+import random
+import time
+from abc import ABC, abstractmethod
+
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.core.population import Population
+from pymoo.optimize import minimize
+from tqdm import tqdm
+
+from mofgbmlpy.explainer.counterfactual_explainer_gradient import CounterFactualExplainerGradient
+from mofgbmlpy.explainer.gbml.crowding_function_x import CrowdingFunctionX
+from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
+from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling import FuzzySetsSampling
+from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_mutation import FuzzySetsMutation
+from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_crossover import FuzzySetsCrossover
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
+    HomoTriangleKnowledgeFactory_2_3_4_5,
+)
+from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
+from pymoo.termination import get_termination
+from pymoo.visualization.scatter import Scatter
+from pyrecorder.recorder import Recorder
+from pyrecorder.writers.video import Video
+import os
+import numpy as np
+from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEliminateDuplicates
+from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
+from mofgbmlpy.main.abstract_main import AbstractMain
+from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
+import pandas as pd
+
+
+class CounterFactualExplainerBenchmark:
+    @staticmethod
+    def compute_diversity(pop):
+        if pop is None or len(pop) <= 1:
+            return 0.0
+
+        distances = CrowdingFunctionX.calc_crowding_distance(pop.get("X"))
+        return np.mean(distances)
+
+    @staticmethod
+    def __append_metric(results, metric_name, value, extend=False):
+        if metric_name not in results:
+            results[metric_name] = []
+        if extend:
+            results[metric_name].extend(value)
+        else:
+            results[metric_name].append(value)
+        return results
+
+    @staticmethod
+    def all_metrics_eval(explainer, solutions):
+        results = {}
+        problem = explainer.get_problem()
+        initial_train_error_rate = problem.error_rate(use_test_set=False, initial_classifier=True)
+        initial_test_error_rate = problem.error_rate(use_test_set=True, initial_classifier=True)
+        initial_num_wins_list, initial_num_successes_list = problem.num_wins_and_successes(initial_classifier=True)
+        rule_index = problem.get_changed_rule_index()
+        initial_num_wins = initial_num_wins_list[rule_index]
+        initial_num_successes = initial_num_successes_list[rule_index]
+        initial_num_wins_freq = initial_num_wins / np.sum(initial_num_wins_list)
+        initial_num_successes_freq = initial_num_successes / np.sum(initial_num_successes_list)
+
+
+        for sol in solutions:
+            results = CounterFactualExplainerBenchmark.__append_metric(results, "confidence_loss", problem.conf_loss(sol))
+            results = CounterFactualExplainerBenchmark.__append_metric(results, "change_loss", problem.change_loss(sol))
+            results = CounterFactualExplainerBenchmark.__append_metric(results, "num_changed_features", problem.num_changed_features_loss(sol))
+
+            for replace in [True, False]:
+                for use_test in [True, False]:
+                    metric_name = f"{'test' if use_test else 'train'}_error_rate_{'replace' if replace else 'append'}"
+                    error_rate_val = problem.error_rate(sol, replace=replace, use_test_set=use_test)
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, metric_name, error_rate_val)
+                    init_val = initial_test_error_rate if use_test else initial_train_error_rate
+                    var_value = error_rate_val - init_val
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, f"{metric_name}_initial_variation", var_value)
+
+            for (repl, txt) in [(False, "append"), (True, "replace")]:
+                num_wins_list, num_successes_list = problem.num_wins_and_successes(sol, replace=replace)
+                idx = rule_index if repl else len(num_wins_list) - 1
+                for freq in [False, True]:
+                    val_num_wins, val_num_successes = num_wins_list[idx], num_successes_list[idx]
+
+                    if freq:
+                        val_num_wins /= np.sum(num_wins_list) if np.sum(num_wins_list) > 0 else 0
+                        val_num_successes /= np.sum(num_successes_list) if np.sum(num_successes_list) > 0 else 0
+                        val_initial_num_wins, val_initial_num_successes = initial_num_wins_freq, initial_num_successes_freq
+                        txt += "_freq"
+                    else:
+                        val_initial_num_wins, val_initial_num_successes = initial_num_wins, initial_num_successes
+
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, f"num_wins_{txt}", val_num_wins)
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, f"num_successes_{txt}", val_num_successes)
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, f"num_wins_initial_variation_{txt}", val_num_wins - val_initial_num_wins)
+                    results = CounterFactualExplainerBenchmark.__append_metric(results, f"num_successes_initial_variation_{txt}", val_num_successes - val_initial_num_successes)
+
+        return results
+
+
+    @staticmethod
+    def get_stats(metric_vals):
+        return {
+            "min": np.min(metric_vals),
+            "max": np.max(metric_vals),
+            "mean": np.mean(metric_vals),
+            "std": np.std(metric_vals),
+            "median": np.median(metric_vals),
+            "q1": np.percentile(metric_vals, 25),
+            "q3": np.percentile(metric_vals, 75),
+        }
+
+    @staticmethod
+    def main_benchmark(explainer_class, num_classes, classifiers, out_path, seed=2017, test_dataset=None, data_name="", test_name="", **kwargs):
+        if os.path.exists(out_path):
+            print(f"Output path {out_path} already exists (skipped).")
+            return
+
+        if "objectives" in kwargs and explainer_class == CounterFactualExplainerGradient:
+            del kwargs["objectives"]
+
+        np.random.seed(seed)
+        random.seed(seed)
+
+        metrics_values = {"time_in_seconds": [], "num_sols": [], "diversity": []}
+        metrics_stats = {}
+        num_failures = 0
+        num_runs = 0
+
+        class_labels = [ClassLabelBasic(c) for c in range(num_classes)]
+
+        desc = f"Running test {test_name}"
+        if data_name != "":
+            desc += f" on {data_name}"
+
+        for p_sol in tqdm(classifiers, desc=desc):
+            num_rules = p_sol[0].get_num_vars()
+            for i_var in range(num_rules):
+                class_label = p_sol[0].get_var(i_var).get_class_label()
+                for target_class in class_labels:
+                    if target_class == class_label:
+                        continue
+                    start = time.time()
+
+                    explainer = explainer_class(p_sol[0], i_var, target_class, test_dataset, **kwargs)
+                    solutions = explainer.train(verbose=False)
+
+                    if solutions is None or len(solutions) == 0:
+                        num_failures += 1
+                        num_runs += 1
+                        continue
+
+
+                    end = time.time()
+
+                    # print("new", solutions[0])
+                    # print("old", p_sol[0].get_var(i_var))
+
+                    current_metrics_vals = CounterFactualExplainerBenchmark.all_metrics_eval(explainer, solutions.get("X").flatten())
+
+                    metrics_values["time_in_seconds"].append(end - start)
+                    metrics_values["num_sols"].append(len(solutions))
+                    metrics_values["diversity"].append(CounterFactualExplainerBenchmark.compute_diversity(solutions))
+
+                    for (name, vals) in current_metrics_vals.items():
+                        if name not in metrics_values:
+                            metrics_values[name] = []
+                            metrics_stats[name] = {}
+                        metrics_values[name].extend(vals)
+
+                        current_stats = CounterFactualExplainerBenchmark.get_stats(vals)
+                        for (stat_name, val) in current_stats.items():
+                            if stat_name not in metrics_stats[name]:
+                                metrics_stats[name][stat_name] = []
+                            metrics_stats[name][stat_name].append(val)
+
+                    num_runs += 1
+
+        dataframe_data = {
+            "time": metrics_values["time_in_seconds"],
+            "num_sols": metrics_values["num_sols"],
+            "diversity": metrics_values["diversity"],
+        }
+
+        for (metric_name, stats_dict) in metrics_stats.items():
+            for stat_name, val in stats_dict.items():
+                dataframe_data[f"{metric_name}_{stat_name}"] = val
+
+        df = pd.DataFrame(dataframe_data)
+
+        os.makedirs(out_path, exist_ok=False)
+        df.to_csv(f"{out_path}\\results.csv", index=False)
+
+        with open(f"{out_path}\\results_summary.txt", "w") as f:
+            f.write(f"Number of runs: {num_runs}\n")
+            f.write(f"Number of failures: {num_failures}\n")
+
+            if num_runs - num_failures > 0:
+                for (metric_name, vals) in metrics_values.items():
+                    stats = CounterFactualExplainerBenchmark.get_stats(vals)
+                    for stat_name, val in stats.items():
+                        f.write(f"{metric_name}_{stat_name}: {val:.3f}\n")
+                    f.write("\n")
+
+    @staticmethod
+    def main_plot_single(explainer_class, classifiers, sol_index=0, test_dataset=None, **kwargs):
+        classifier = classifiers[sol_index][0]
+        changed_rule_index = 0
+
+        print(classifier)
+
+        target_class = ClassLabelBasic(0)
+        if classifier.get_var(changed_rule_index).get_class_label() == target_class:
+            target_class = ClassLabelBasic(1)
+
+        if "objectives" in kwargs and explainer_class == CounterFactualExplainerGradient:
+            del kwargs["objectives"]
+
+        explainer = explainer_class(classifier, changed_rule_index, target_class, test_set=test_dataset, **kwargs)
+        non_dominated_solutions = explainer.train(verbose=True)
+        rules = non_dominated_solutions.get("X").flatten()
+
+        if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
+            print("No solutions found")
+            return
+
+        # plot the results
+        plot = Scatter(title="NSGA-II")
+        plot.add(non_dominated_solutions.get("F"))
+        plot.axis_labels = explainer.get_problem().get_objective_names()
+        _ = plot.show()
+
+        # get rules associated to non_dominated solutions
+        print("Factual rule:")
+        factual_rule = classifier.get_var(changed_rule_index)
+        print(factual_rule)
+        factual_rule.get_rule().plot_antecedent()
+
+        print("Rules of non-dominated solutions:")
+        for i in range(len(rules)):
+            rule = rules[i]
+            print(rule)
+            if i<10:
+                rule.get_rule().plot_antecedent()
+
+        if len(rules) > 10:
+            print("Some rule plots were not displayed because there are too many rules")
+
+    @staticmethod
+    def param_search(explainer_class, num_classes, classifiers, out_path, param_name, num_experiments=11, min_val=0.0, max_val=1.0,
+                     test_dataset=None, data_name="", is_int=False, vals=None, **kwargs):
+        if vals is not None:
+            param_vals = np.array(vals, dtype=int if is_int else float)
+        else:
+            if is_int:
+                param_vals = np.linspace(min_val, max_val, num_experiments, dtype=int)
+            else:
+                param_vals = np.linspace(min_val, max_val, num_experiments)
+
+        for param_val in param_vals:
+            current_path = os.path.join(out_path, f"{param_name}_{param_val:.2f}")
+            new_kwargs = kwargs.copy()
+            new_kwargs[param_name] = param_val
+            # try:
+            if os.path.exists(current_path):
+                print(f"Path {current_path} already exists (skipped).")
+                continue
+            test_name = f"Param search {param_name}={param_val:.2f}"
+            CounterFactualExplainerBenchmark.main_benchmark(explainer_class, num_classes, classifiers, out_path=current_path, test_dataset=test_dataset,
+                           data_name=data_name, test_name=test_name, **new_kwargs)
+            # except Exception as e:
+            #     print(f"Error processing {param_name}={param_val:.2f}: {e}")

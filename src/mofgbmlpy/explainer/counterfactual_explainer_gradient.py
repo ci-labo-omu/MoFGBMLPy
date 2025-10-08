@@ -10,38 +10,42 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
     HomoTriangleKnowledgeFactory_2_3_4_5,
 )
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
+from pymoo.core.population import Population
 from tqdm import tqdm
 
+from mofgbmlpy.data.input import Input
+from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
+from mofgbmlpy.explainer.util import remove_duplicates
+from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
-from mofgbmlpy.explainer.util import get_config
 
 
 class CounterFactualExplainerGradient:
     def __init__(
         self,
-        fuzzy_rule,
-        target_class,
-        train_set,
-        learner,
-        confidence_loss_weight=0.5,
+        classifier, changed_rule_index, target_class, test_set,
+        confidence_loss_weight=0.9,
         area_computation_num_samples=100,
-        learning_rate=0.05,
-        max_num_epochs=30,
+        learning_rate=0.9,
+        max_num_epochs=500,
     ):
-        self._fuzzy_rule = copy.deepcopy(fuzzy_rule)
-        self._initial_class = fuzzy_rule.get_class_label()
+        self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class, test_set=test_set)
+
+        self._classifier_copy = copy.deepcopy(classifier)
+        michigan_sol = classifier.get_var(changed_rule_index)
+        self._factual_rule = copy.deepcopy(michigan_sol.get_rule())
+        self._initial_class = self._factual_rule.get_class_label()
         self._target_class = target_class
-        self._train_set = train_set
-        self._initial_knowledge = copy.deepcopy(fuzzy_rule.get_knowledge())
-        self._new_knowledge = copy.deepcopy(fuzzy_rule.get_knowledge())
-        self._learner = learner
+        self._learner = michigan_sol.get_rule_builder().get_consequent_factory()
+        self._train_set = self._learner.get_training_set()
+        self._initial_knowledge = self._factual_rule.get_knowledge()
         self._confidence_loss_weight = confidence_loss_weight
         self._area_computation_num_samples = area_computation_num_samples
         self._learning_rate = learning_rate
         self._max_num_epochs = max_num_epochs
 
-        antecedent = self._fuzzy_rule.get_antecedent()
+        antecedent = self._factual_rule.get_antecedent()
         antecedent_indices = antecedent.get_antecedent_indices()
 
         fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
@@ -49,6 +53,9 @@ class CounterFactualExplainerGradient:
             fuzzy_sets[i] = self._initial_knowledge.get_fuzzy_set(i, idx)
 
         self._initial_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
+
+    def get_problem(self):
+        return self._problem
 
     def compute_membership_values(self, fuzzy_sets, min_val=0, max_val=1):
         mfs = [fs.get_function() for fs in fuzzy_sets]
@@ -60,7 +67,8 @@ class CounterFactualExplainerGradient:
 
         return mf_values
 
-    def compute_membership_area_data(self, mf_1_y, mf_2_y, step):
+    @staticmethod
+    def compute_membership_area_data(mf_1_y, mf_2_y, step):
         union_value = np.zeros(mf_1_y.shape[0])
         intersection_value = np.zeros(mf_1_y.shape[0])
         mf_2_smallest_length = np.zeros(mf_1_y.shape[0])
@@ -86,10 +94,10 @@ class CounterFactualExplainerGradient:
 
         return intersection_value, union_value, mf_2_smallest_length, mf_2_highest_length
 
-    def loss_functions(self, intersection_values, union_values):
+    def loss_functions(self, intersection_values, union_values, cf_rule):
         # Confidence loss
         # TODO: to be optimized, because for now all confidence are computed
-        confidences = self._learner.calc_confidence_py(self._fuzzy_rule.get_antecedent(), self._train_set)
+        confidences = self._learner.calc_confidence_py(cf_rule.get_antecedent(), self._train_set)
         confidence_target_class = confidences[self._target_class.get_class_label_value()]
         confidence_loss = 1 - confidence_target_class
 
@@ -158,7 +166,7 @@ class CounterFactualExplainerGradient:
         gradient = np.zeros((fs_mf_values.shape[1], 3), dtype=object)  # shape (num_fs, num_params)
 
         # dL_conf/d_membership_aq
-        patterns_idx_initial_class, patterns_idx_target_class = self._filter_data_class(
+        patterns_idx_initial_class, patterns_idx_target_class = CounterFactualExplainerGradient._filter_data_class(
             self._train_set, self._initial_class, self._target_class
         )
 
@@ -209,8 +217,8 @@ class CounterFactualExplainerGradient:
 
                 # d membership aqi / d mf params
                 for k in range(len(mf_params[i])):
-                    # TODO: put it into the mf function class directly (here temporarily for testing)
-                    derivative2 = self.get_param_derivative(k, mf_params[i], x[i])
+                    # TODO: put it into the mf function class directly maybe if needed
+                    derivative2 = CounterFactualExplainerGradient.get_param_derivative(k, mf_params[i], x[i])
                     combined_loss_derivative = (
                         self._confidence_loss_weight * confidence_loss_derivative
                         + (1 - self._confidence_loss_weight) * loss_change_derivative
@@ -231,28 +239,32 @@ class CounterFactualExplainerGradient:
     def train(self, verbose=True):
         # TODO: decouple fuzzy sets between vars (copy them in knowledge base and antecedent)
 
-        antecedent = self._fuzzy_rule.get_antecedent()
+        new_cf_rule = copy.deepcopy(self._factual_rule)
+        new_knowledge = copy.deepcopy(self._initial_knowledge)
+
+        antecedent = self._factual_rule.get_antecedent()
         antecedent_indices = antecedent.get_antecedent_indices()
 
         fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
         for i, idx in enumerate(antecedent_indices):
-            fuzzy_sets[i] = self._new_knowledge.get_fuzzy_set(i, idx)
+            fuzzy_sets[i] = new_knowledge.get_fuzzy_set(i, idx)
 
         mf = [fs.get_function() for fs in fuzzy_sets]
         mf_params = [func.get_params() for func in mf]
 
         # if verbose:
-        #     self._fuzzy_rule.plot_antecedent()
+        #     new_cf_rule.plot_antecedent()
 
         losses = []
         steps_without_improvement = 0
+        best_loss = float("inf")
 
         p_bar = tqdm(range(self._max_num_epochs), desc="Training...", disable=not verbose, unit=" epoch")
         for epoch in p_bar:
             # forward
             fs_mf_values = np.array(
                 [
-                    self._fuzzy_rule.get_antecedent().get_membership_values(pattern.get_attributes_vector())
+                    new_cf_rule.get_antecedent().get_membership_values(pattern.get_attributes_vector())
                     for pattern in self._train_set.get_patterns()
                 ]
             )
@@ -265,11 +277,11 @@ class CounterFactualExplainerGradient:
             step = 1 / current_mf_values.shape[1]
 
             intersection_value, union_value, mf_current_smallest_length, mf_current_highest_length = (
-                self.compute_membership_area_data(self._initial_mf_values, current_mf_values, step)
+                CounterFactualExplainerGradient.compute_membership_area_data(self._initial_mf_values, current_mf_values, step)
             )
 
             # loss
-            conf_loss, change_loss = self.loss_functions(intersection_value, union_value)
+            conf_loss, change_loss = self.loss_functions(intersection_value, union_value, new_cf_rule)
             loss = self._confidence_loss_weight * conf_loss + (1 - self._confidence_loss_weight) * change_loss
 
             losses.append(loss)
@@ -282,13 +294,13 @@ class CounterFactualExplainerGradient:
                 )
 
             # check if class is target
-            if self._fuzzy_rule.get_class_label() == self._target_class and not self._fuzzy_rule.get_class_label().is_rejected():
+            if new_cf_rule.get_class_label() == self._target_class and not new_cf_rule.get_class_label().is_rejected():
                 if verbose:
                     print("INFO: Early stopping: consequent changed")
                 break
 
             # if no improvement in loss, stop training after 10 epochs
-            if epoch > 0 and abs(losses[-2] - losses[-1]) < 1e-6:
+            elif abs(best_loss - losses[-1]) < 1e-6:
                 steps_without_improvement += 1
                 if steps_without_improvement >= 10:
                     if verbose:
@@ -296,6 +308,7 @@ class CounterFactualExplainerGradient:
                     break
             else:
                 steps_without_improvement = 0
+                best_loss = losses[-1]
 
             # TODO: find a way to use batches ?
             # backward
@@ -328,27 +341,19 @@ class CounterFactualExplainerGradient:
 
                 # fix a <= b <= c
 
-                for p_i, param in enumerate(new_params):
-                    prev_val = new_params[p_i - 1] if p_i > 0 else 0
-                    next_val = new_params[p_i + 1] if p_i < len(new_params) - 1 else 1
-
-                    # repair
-                    if new_params[p_i] < prev_val:
-                        new_params[p_i] = prev_val
-                    elif new_params[p_i] > next_val:
-                        new_params[p_i] = next_val
-
-                # print(f"New Params: {new_params}")
+                new_params[0] = max(0, min(new_params[0], 1))
+                new_params[1] = max(new_params[0], min(new_params[1], 1))
+                new_params[2] = max(new_params[1], min(new_params[2], 1))
 
                 fs.set_function(TriangularMF(new_params[0], new_params[1], new_params[2]))
 
                 mf_params[fs_i] = new_params
-            self._fuzzy_rule.get_antecedent().set_knowledge(self._new_knowledge)
+            new_cf_rule.get_antecedent().set_knowledge(new_knowledge)
 
-            self._fuzzy_rule.set_consequent(self._learner.learning(self._fuzzy_rule.get_antecedent(), self._train_set))
+            new_cf_rule.set_consequent(self._learner.learning(new_cf_rule.get_antecedent(), self._train_set))
 
         # if verbose:
-            # self._fuzzy_rule.plot_antecedent()
+            # new_cf_rule.plot_antecedent()
 
         losses = np.array(losses)
 
@@ -360,143 +365,30 @@ class CounterFactualExplainerGradient:
             plt.grid()
             plt.show()
 
-        antecedent_indices = self._fuzzy_rule.get_antecedent().get_antecedent_indices()
+        antecedent_indices = new_cf_rule.get_antecedent().get_antecedent_indices()
         fuzzy_sets = np.empty(len(antecedent_indices), dtype=object)
         for i, idx in enumerate(antecedent_indices):
-            fuzzy_sets[i] = self._new_knowledge.get_fuzzy_set(i, idx)
+            fuzzy_sets[i] = new_knowledge.get_fuzzy_set(i, idx)
         current_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
 
-        intersection_value, union_value, _, _ = self.compute_membership_area_data(
+        intersection_value, union_value, _, _ = CounterFactualExplainerGradient.compute_membership_area_data(
             self._initial_mf_values, current_mf_values, step=1 / current_mf_values.shape[1]
         )
 
-        conf = self._learner.calc_confidence_py(self._fuzzy_rule.get_antecedent(), self._train_set)[self._target_class.get_class_label_value()]
-        iou = np.mean(intersection_value / union_value) if len(union_value) > 0 and len(intersection_value) > 0 else 0
+        if new_cf_rule.get_class_label().is_rejected() or new_cf_rule.get_class_label() != self._target_class:
+            if verbose:
+                print(f"Failure: Counterfactual rule class {new_cf_rule.get_class_label()} does not match target class {self._target_class} or is rejected.")
+            return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float))
 
-        if self._fuzzy_rule.get_class_label().is_rejected() or self._fuzzy_rule.get_class_label() != self._target_class:
-            raise ValueError(
-                f"Counterfactual rule class {self._fuzzy_rule.get_class_label()} does not match target class {self._target_class} or is rejected."
-            )
+        michigan_solution = self._create_solution_object(new_cf_rule, new_knowledge)
+        new_pop = Population.new(X=[[michigan_solution]])
+        self._problem.evaluate(new_pop.get("X"))
 
-        return conf, iou
+        return new_pop
 
-    def get_counterfactual(self):
-        # print(self._new_knowledge)
+    def _create_solution_object(self, new_cf_rule, new_knowledge):
+        michigan_sol = copy.deepcopy(self._classifier_copy.get_var(self._problem.get_changed_rule_index()))
+        michigan_sol.set_vars(new_cf_rule.get_antecedent().get_antecedent_indices())
+        michigan_sol.set_knowledge(new_knowledge)
 
-        # self._fuzzy_rule.get_consequent()
-        # print(self._fuzzy_rule)
-
-        return self._fuzzy_rule
-
-        #
-        # new_knowledge, new_classifier = ...
-        #
-        # knowledge_copy = copy.deepcopy(fuzzy_classifier.get_var(0).get_rule().get_knowledge())
-        #
-        # for var in solution_copy.get_vars():
-        #     var.get_rule().get_antecedent().set_knowledge(new_knowledge)
-        #
-        # return new_classifier
-
-def main_benchmark(dataset, non_dominated_solutions, learner, out_path):
-    class_labels = [ClassLabelBasic(c) for c in range(dataset.get_num_classes())]
-
-    times = []
-    ious = []
-    confs = []
-    num_failures = 0
-    num_runs = 0
-
-    for p_sol in tqdm(non_dominated_solutions):
-        for var in p_sol[0].get_vars():
-            rule = var.get_rule()
-
-            for target_class in class_labels:
-                if target_class.get_class_label_value() == rule.get_class_label().get_class_label_value():
-                    continue
-                start = time.time()
-
-                try:
-                    explainer = CounterFactualExplainerGradient(
-                        rule,
-                        target_class,
-                        dataset,
-                        learner,
-                        confidence_loss_weight=0.9,
-                        learning_rate=0.5,
-                        max_num_epochs=100,
-                    )
-                    conf, iou = explainer.train(verbose=False)
-                    # cf_rule = explainer.get_counterfactual()
-
-                    end = time.time()
-
-                    times.append(end - start)
-                    ious.append(iou)
-                    confs.append(conf)
-
-                except Exception as e:
-                    num_failures += 1
-
-                num_runs += 1
-
-    df = pd.DataFrame({
-        "time": times,
-        "iou": ious,
-        "conf": confs,
-    })
-
-    os.makedirs(out_path, exist_ok=False)
-
-    df.to_csv(f"{out_path}\\results.csv", index=False)
-
-    with open(f"{out_path}\\results_summary.txt", "w") as f:
-        f.write(f"Number of runs: {num_runs}\n")
-        f.write(f"Number of failures: {num_failures}\n")
-
-        if len(times) != 0:
-            f.write(f"Median time: {np.median(times):.2f} seconds\n")
-            f.write(f"Min IOU: {np.min(ious):.2f}\n")
-            f.write(f"Max IOU: {np.max(ious):.2f}\n")
-            f.write(f"Min confidence: {np.min(confs):.2f}\n")
-            f.write(f"Max confidence: {np.max(confs):.2f}\n")
-
-def main_plot_single(dataset, non_dominated_solutions, learner):
-    sol1 = non_dominated_solutions[0]
-    rule = sol1[0].get_var(0).get_rule()
-    print(f"Rule to explain: {rule}")
-
-    # plot fuzzy sets
-    rule.plot_antecedent()
-
-    start = time.time()
-
-    explainer = CounterFactualExplainerGradient(
-        rule,
-        ClassLabelBasic(0),
-        dataset,
-        learner,
-        confidence_loss_weight=0.9,
-        learning_rate=0.5,
-        max_num_epochs=300,
-    )
-    conf, iou = explainer.train()
-    cf_rule = explainer.get_counterfactual()
-    print(f"CF rule: {cf_rule} (confidence: {conf:.2f}, IOU: {iou:.2f})")
-
-    # plot fuzzy sets
-    cf_rule.plot_antecedent()
-
-
-    end = time.time()
-    print(f"Execution time: {end - start:.2f} seconds")
-
-
-if __name__ == "__main__":
-    # dataset, non_dominated_solutions, learner = get_config("pima")
-    # main_plot_single(dataset, non_dominated_solutions, learner)
-
-    for data_name in ["sonar", "spectfheart", "tae", "wisconsin", "iris"]: #["iris", "pima", "bupa"]:
-        result_path = f"..\\..\\..\\cf_results\\cf_gradient\\{data_name}"
-        dataset, non_dominated_solutions, learner = get_config(data_name)
-        main_benchmark(dataset, non_dominated_solutions, learner, out_path=result_path)
+        return michigan_sol

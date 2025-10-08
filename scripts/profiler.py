@@ -3,8 +3,7 @@ import os
 import sys
 from datetime import datetime
 
-from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics import main_plot_single
-from scripts.cf_explanation_tests import get_config
+from scripts.cf_explanation_tests_metaheuristics import get_config
 
 new_path = f"{os.getcwd()}{os.sep}src"
 if new_path not in sys.path:
@@ -12,8 +11,8 @@ if new_path not in sys.path:
 
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import HomoTriangleKnowledgeFactory_2_3_4_5
-
-
+from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics import CounterFactualExplainerMetaheuristics as CFEMetaheuristics
+from mofgbmlpy.explainer.counterfactual_explainer_benchmark import CounterFactualExplainerBenchmark as CFEBenchmark
 def generate_plot(profiler_results_folder):
     os.system(
         "gprof2dot -f pstats Profile.pstats -o Profile.dot -n 0.3 --color-nodes-by-selftime --node-label=self-time-percentage --node-label=total-time --node-label=total-time-percentage")
@@ -45,9 +44,9 @@ def run_profiler(mofgbml_class_name):
 
 
 def run_profiler_cf_explainer():
-    _, non_dominated_solutions = get_config("pima")
+    _, _, _, non_dominated_solutions = get_config("bupa")
 
-    cProfile.runctx(f"main_plot_single(non_dominated_solutions)", globals(), locals(),
+    cProfile.runctx(f"CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions)", globals(), locals(),
                     "Profile.pstats")
 
     profiler_results_folder = "../profiler_results/cf_profiler_results"
