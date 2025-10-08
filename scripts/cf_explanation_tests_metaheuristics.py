@@ -73,6 +73,8 @@ if __name__ == "__main__":
 
     test_configs = {
         "num_features_no_change_loss": {"objectives": ["confidence_loss", "num_changed_features"]},
+        "num_features_no_change_loss_less_edits": {"objectives": ["confidence_loss", "num_changed_features"], "mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
+        "less_edits": {"objectives": ["confidence_loss", "num_changed_features"], "mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
         "num_features": {"objectives": ["confidence_loss", "change_loss", "num_changed_features"]},
         "classic": {},
         "X_crowding": {"use_search_space_crowding": True},
@@ -81,25 +83,25 @@ if __name__ == "__main__":
     }
     test_names = list(test_configs.keys())
 
-    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
-    #     all_tests_already_exist = True
-    #     for test_name in test_names:
-    #         test_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
-    #         if not os.path.exists(test_path):
-    #             all_tests_already_exist = False
-    #             break
-    #     if all_tests_already_exist:
-    #         print(f"All tests on {data_name} have already been run, skipping...")
-    #         continue
-    #
-    #     num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
-    #
-    #     for test_name, config in test_configs.items():
-    #         result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
-    #         CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name=test_name, **config)
+    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
+        all_tests_already_exist = True
+        for test_name in test_names:
+            test_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
+            if not os.path.exists(test_path):
+                all_tests_already_exist = False
+                break
+        if all_tests_already_exist:
+            print(f"All tests on {data_name} have already been run, skipping...")
+            continue
 
-    #
-    # for data_name in ["bupa", "iris", "pima"]:
-    #     num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=2)
-    #     result_path = f"..\\cf_results\\cf_metaheuristics\\classic_min_num_rules_2\\{data_name}"
-    #     CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name="classic_min_num_rules_2")
+        num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
+
+        for test_name, config in test_configs.items():
+            result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
+            CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name=test_name, **config)
+
+
+    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
+        num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=2)
+        result_path = f"..\\cf_results\\cf_metaheuristics\\classic_min_num_rules_2\\{data_name}"
+        CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name="classic_min_num_rules_2")

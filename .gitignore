@@ -176,10 +176,7 @@ Profile.pstats
 !src/mofgbmlpy/utility/lru_cache.cpp
 old_cf_results
 cf_results
-old_cf_results
-scripts/plot_helper.py
-scripts/plot_helper_params.py
-scripts/plots_param_search
+
 # DOCS
 docs/_build
 docs/source
