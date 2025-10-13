@@ -27,8 +27,8 @@ class CounterFactualExplainerGradient:
         classifier, changed_rule_index, target_class, test_set,
         confidence_loss_weight=0.9,
         area_computation_num_samples=100,
-        learning_rate=0.9,
-        max_num_epochs=500,
+        learning_rate=4.0,
+        max_num_epochs=100,
     ):
         self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class, test_set=test_set)
 

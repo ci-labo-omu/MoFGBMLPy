@@ -8,3 +8,5 @@ pyrecorder
 gprof2dot
 jproperties
 tqdm
+setuptools
+pandas
