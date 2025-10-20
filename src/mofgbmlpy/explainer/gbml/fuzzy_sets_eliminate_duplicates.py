@@ -28,9 +28,8 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
 
     @staticmethod
     def distance_mfs_params(params_1, params_2):
-        # (max distance is the number of fuzzy sets)
         if len(params_1) != len(params_2):
-            return max(len(params_1), len(params_2))
+            return 1
 
         distance = 0
         for fs_i in range(len(params_1)):
@@ -42,7 +41,7 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
                     dist_fs += abs(params_1[fs_i][i] - params_2[fs_i][i])
                 distance += dist_fs/len(params_1[fs_i])
 
-        return distance
+        return distance/len(params_1)
 
     @staticmethod
     def extract_params(pop):

@@ -177,6 +177,9 @@ Profile.pstats
 old_cf_results
 cf_results
 
+scripts/latex_helper.py
+scripts/dataset_gen.py
+
 # DOCS
 docs/_build
 docs/source

@@ -59,6 +59,14 @@ if __name__ == "__main__":
     # _, _, _, non_dominated_solutions = get_config("pima")
     # CFEBenchmark.main_plot_single(CFEGradient, non_dominated_solutions, sol_index=5)
 
+
+    for data_name in ["contraceptive", "appendicitis", "bal", "bupa", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
+        num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=2)
+
+        result_path = f"..\\cf_results\\cf_gradient\\min_num_rules_2\\{data_name}"
+        CFEBenchmark.main_benchmark(CFEGradient, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name="min_num_rules_2")
+
+
     for min_num_rules in [1]: #[1, 2]:
         for data_name in ["appendicitis", "bupa", "iris", "pima"]:
             num_classes, train_dataset, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=min_num_rules)

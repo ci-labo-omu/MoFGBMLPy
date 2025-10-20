@@ -19,13 +19,15 @@ def read_summary_file(path):
                 metrics[key] = val
     return metrics
 
-def collect_data(base_path, filter_test_names=None, filter_datasets=None):
+def collect_data(base_path, exclude_test_names=None, filter_test_names=None, filter_datasets=None):
     records = []
 
     for test_id, test_name in enumerate(os.listdir(base_path)):
         if test_name == "param_search":
             continue
         if filter_test_names is not None and test_name not in filter_test_names:
+            continue
+        if exclude_test_names is not None and test_name in exclude_test_names:
             continue
         data_path = os.path.join(base_path, test_name)
         for data_name in os.listdir(data_path):
@@ -105,6 +107,22 @@ def get_boxes_data(df, metric_name, group_by_key):
 def get_y_lims(df, metric_name):
     if metric_name == "success_rate" or ("error_rate" in metric_name and "variation" not in metric_name):
         return -0.05, 1.05
+    if "error_rate" in metric_name and "variation" in metric_name:
+        # return -0.6, 0.6
+        return -1.05, 1.05
+
+    # # TODO: specific, to be deleted later
+    # if ("num_wins" in metric_name or "num_successes" in metric_name) and "freq" not in metric_name:
+    #     if "variation" not in metric_name:
+    #         if df["dataset"].values[0] == "bupa":
+    #             return 0, 350
+    #         elif df["dataset"].values[0] == "iris":
+    #             return 0, 140
+    #     else:
+    #         if df["dataset"].values[0] == "bupa":
+    #             return -350, 350
+    #         elif df["dataset"].values[0] == "iris":
+    #             return -140, 50
 
     if f"{metric_name}_min" in df.columns:
         min_y_val = df[f"{metric_name}_min"].min()
@@ -214,7 +232,7 @@ def plot_metrics(df, out_path, method_name, aggregate_datasets=False):
                 else:
                     ax.text(0.5, 0.5, 'No Data', horizontalalignment='center', verticalalignment='center', fontsize=12)
 
-        fig.suptitle(f"{metric_name} ({method_name})", fontsize=16)
+        fig.suptitle(f"{metric_name}\n({method_name})", fontsize=16)
         fig.tight_layout(rect=[0, 0, 1, 0.95]) # (left, bottom, right, top), 0.95 to have a small margin on top for title
 
         plot_file_path = os.path.join(out_path, f"{metric_name}.png")
@@ -286,7 +304,7 @@ def gen_plot_aggregate(df, metric_name, out_path, method_name, box_plot=True):
     ax.set_ylabel(metric_name)
     ax.set_ylim(y_low, y_up)
 
-    fig.suptitle(f"{metric_name} ({method_name})", fontsize=16)
+    fig.suptitle(f"{metric_name}\n({method_name})", fontsize=16)
     fig.tight_layout(
         rect=[0, 0, 1, 0.95])  # (left, bottom, right, top), 0.95 to have a small margin on top for title
 
@@ -357,7 +375,7 @@ def plot_success_rate_lineplots(df, out_path, method_name, aggregate_datasets=Fa
             ax.set_xticklabels(df_row["test_name"], rotation=45, ha="right")
 
 
-    fig.suptitle(f"Success Rates ({method_name})", fontsize=16)
+    fig.suptitle(f"Success Rates\n({method_name})", fontsize=16)
     fig.tight_layout(rect=[0, 0, 1, 0.95])  # (left, bottom, right, top), 0.95 to have a small margin on top for title
 
     plot_file_path = os.path.join(out_path, "success_rates.png")
@@ -365,7 +383,7 @@ def plot_success_rate_lineplots(df, out_path, method_name, aggregate_datasets=Fa
     plt.close()
 
 
-def main(filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=False):
+def main(exclude_test_names=None, filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=False):
     if not (plot_gradient or plot_metaheuristics) or not (plot_params or plot_general):
         print("Nothing to plot. Exiting.")
         return
@@ -413,7 +431,7 @@ def main(filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_
 
         print(f"Creating plots in {out_path} using data from {data_path}...")
 
-        df = collect_data(data_path, filter_test_names, filter_datasets)
+        df = collect_data(data_path, exclude_test_names, filter_test_names, filter_datasets)
 
         if do_plot_metrics:
             plot_metrics(df, out_path, method, aggregate_datasets)
@@ -423,5 +441,10 @@ def main(filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_
 
 if __name__ == "__main__":
     # main(plot_gradient=True, plot_metaheuristics=False, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)
-    # main(filter_test_names=["classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)
-    main(filter_datasets=["bupa", "iris", "pima"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main(filter_test_names=["classic"], plot_gradient=True, plot_metaheuristics=False, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)
+    main(filter_test_names=["classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)
+    # main(filter_datasets=["bupa", "iris", "pima"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main(filter_test_names=["classic", "no_fs_type_change"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main(exclude_test_names=["min_num_rules_2"], filter_datasets=["bupa", "iris"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main(filter_test_names=["classic", "min_num_rules_2"], filter_datasets=["bupa", "iris"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+
