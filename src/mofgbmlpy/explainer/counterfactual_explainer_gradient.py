@@ -362,6 +362,7 @@ class CounterFactualExplainerGradient:
             plt.title("Training Loss")
             plt.xlabel("Epoch")
             plt.ylabel("Loss")
+            plt.ylim(0, 1)
             plt.grid()
             plt.show()
 
@@ -382,7 +383,8 @@ class CounterFactualExplainerGradient:
 
         michigan_solution = self._create_solution_object(new_cf_rule, new_knowledge)
         new_pop = Population.new(X=[[michigan_solution]])
-        self._problem.evaluate(new_pop.get("X"))
+        pop_F = self._problem.evaluate(new_pop.get("X"), return_values_of=["F"])
+        new_pop.set("F", pop_F)
 
         return new_pop
 

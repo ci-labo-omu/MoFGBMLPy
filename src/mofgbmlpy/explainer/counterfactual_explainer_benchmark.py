@@ -127,7 +127,6 @@ class CounterFactualExplainerBenchmark:
         metrics_values = {"time_in_seconds": [], "num_sols": [], "diversity": []}
         metrics_stats = {}
         num_failures = 0
-        num_runs = 0
 
         class_labels = [ClassLabelBasic(c) for c in range(num_classes)]
 
@@ -135,48 +134,50 @@ class CounterFactualExplainerBenchmark:
         if data_name != "":
             desc += f" on {data_name}"
 
-        for p_sol in tqdm(classifiers, desc=desc):
-            num_rules = p_sol[0].get_num_vars()
-            for i_var in range(num_rules):
-                class_label = p_sol[0].get_var(i_var).get_class_label()
-                for target_class in class_labels:
-                    if target_class == class_label:
-                        continue
-                    start = time.time()
+        num_runs = CounterFactualExplainerBenchmark.get_num_iters(classifiers, num_classes)
 
-                    explainer = explainer_class(p_sol[0], i_var, target_class, test_dataset, **kwargs)
-                    solutions = explainer.train(verbose=False)
+        with tqdm(total=num_runs, desc=desc) as pbar:
+            for p_sol in classifiers:
+                num_rules = p_sol[0].get_num_vars()
+                for i_var in range(num_rules):
+                    class_label = p_sol[0].get_var(i_var).get_class_label()
+                    for target_class in class_labels:
+                        if target_class == class_label:
+                            continue
+                        pbar.update(1)
+                        start = time.time()
 
-                    if solutions is None or len(solutions) == 0:
-                        num_failures += 1
-                        num_runs += 1
-                        continue
+                        explainer = explainer_class(p_sol[0], i_var, target_class, test_dataset, **kwargs)
+                        solutions = explainer.train(verbose=False)
+
+                        if solutions is None or len(solutions) == 0:
+                            num_failures += 1
+                            continue
 
 
-                    end = time.time()
+                        end = time.time()
 
-                    # print("new", solutions[0])
-                    # print("old", p_sol[0].get_var(i_var))
+                        # print("new", solutions[0])
+                        # print("old", p_sol[0].get_var(i_var))
 
-                    current_metrics_vals = CounterFactualExplainerBenchmark.all_metrics_eval(explainer, solutions.get("X").flatten())
+                        current_metrics_vals = CounterFactualExplainerBenchmark.all_metrics_eval(explainer, solutions.get("X").flatten())
 
-                    metrics_values["time_in_seconds"].append(end - start)
-                    metrics_values["num_sols"].append(len(solutions))
-                    metrics_values["diversity"].append(CounterFactualExplainerBenchmark.compute_diversity(solutions))
+                        metrics_values["time_in_seconds"].append(end - start)
+                        metrics_values["num_sols"].append(len(solutions))
+                        metrics_values["diversity"].append(CounterFactualExplainerBenchmark.compute_diversity(solutions))
 
-                    for (name, vals) in current_metrics_vals.items():
-                        if name not in metrics_values:
-                            metrics_values[name] = []
-                            metrics_stats[name] = {}
-                        metrics_values[name].extend(vals)
+                        for (name, vals) in current_metrics_vals.items():
+                            if name not in metrics_values:
+                                metrics_values[name] = []
+                                metrics_stats[name] = {}
+                            metrics_values[name].extend(vals)
 
-                        current_stats = CounterFactualExplainerBenchmark.get_stats(vals)
-                        for (stat_name, val) in current_stats.items():
-                            if stat_name not in metrics_stats[name]:
-                                metrics_stats[name][stat_name] = []
-                            metrics_stats[name][stat_name].append(val)
+                            current_stats = CounterFactualExplainerBenchmark.get_stats(vals)
+                            for (stat_name, val) in current_stats.items():
+                                if stat_name not in metrics_stats[name]:
+                                    metrics_stats[name][stat_name] = []
+                                metrics_stats[name][stat_name].append(val)
 
-                    num_runs += 1
 
         dataframe_data = {
             "time": metrics_values["time_in_seconds"],
@@ -272,3 +273,13 @@ class CounterFactualExplainerBenchmark:
                            data_name=data_name, test_name=test_name, **new_kwargs)
             # except Exception as e:
             #     print(f"Error processing {param_name}={param_val:.2f}: {e}")
+
+    @staticmethod
+    def get_num_iters(classifiers, num_classes):
+        num_rules = 0
+        num_classes_checks = num_classes - 1
+
+        for p_sol in classifiers:
+            num_rules += p_sol[0].get_num_vars()
+
+        return num_rules * num_classes_checks

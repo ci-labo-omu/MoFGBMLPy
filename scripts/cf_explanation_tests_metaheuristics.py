@@ -83,14 +83,14 @@ if __name__ == "__main__":
         # "num_features_no_change_loss_less_edits": {"objectives": ["confidence_loss", "num_changed_features"], "mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
         # "less_edits": {"mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
         # "num_features": {"objectives": ["confidence_loss", "change_loss", "num_changed_features"]},
-        "classic": {},
-        # "X_crowding": {"use_search_space_crowding": True},
+        # "classic": {},
+        "X_crowding": {"use_search_space_crowding": True},
         # "error_rate": {"objectives": ["confidence_loss", "change_loss", "train_error_rate"]},
         # "no_fs_type_change": {"mutation_fs_type_prob": 0.0, "sampling_fs_type_prob": 0.0}
     }
     test_names = list(test_configs.keys())
 
-    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "movement_libras", "magic"]:
+    for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
     # for data_name in ["bupa", "iris", "pima"]:
         all_tests_already_exist = True
         for test_name in test_names:
