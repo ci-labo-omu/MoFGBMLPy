@@ -19,7 +19,7 @@ def read_summary_file(path):
                 metrics[key] = val
     return metrics
 
-def collect_data(base_path, exclude_test_names=None, filter_test_names=None, filter_datasets=None, filter_params=None, exclude_datasets=None):
+def collect_data(base_path, exclude_test_names=None, filter_test_names=None, filter_datasets=None, filter_params=None, param_values_range=None, exclude_datasets=None):
     records = []
 
     for test_id, test_name in enumerate(os.listdir(base_path)):
@@ -57,6 +57,9 @@ def collect_data(base_path, exclude_test_names=None, filter_test_names=None, fil
 
                     try:
                         param_value = float(run.split("_")[-1])
+                        if param_values_range is not None:
+                            if not (param_values_range[0] <= param_value <= param_values_range[1]):
+                                continue
                     except ValueError:
                         continue
 
@@ -81,18 +84,21 @@ def collect_data(base_path, exclude_test_names=None, filter_test_names=None, fil
                 }
                 record.update(metrics)
                 records.append(record)
+    pd_object = pd.DataFrame(records)
 
     if filter_params is not None:
-        for record in records:
-            keys_to_remove = []
-            for key in record.keys():
-                if key not in ["test_name", "dataset", "param_value"]:
-                    if not any(fp in key for fp in filter_params):
-                        keys_to_remove.append(key)
-            for key in keys_to_remove:
-                del record[key]
+        if "param_value" not in pd_object.columns:
+            columns_to_keep = ["test_name", "dataset", "Number of runs", "Number of failures"]
+            for col in pd_object.columns:
+                if col not in columns_to_keep:
+                    if any(fp in col for fp in filter_params):
+                        columns_to_keep.append(col)
 
-    return pd.DataFrame(records)
+            pd_object = pd_object[columns_to_keep]
+        else:
+            pd_object = pd_object[pd_object["test_name"].isin(filter_params)]
+
+    return pd_object
 
 
 def get_boxes_data(df, metric_name, group_by_key):
@@ -123,19 +129,6 @@ def get_y_lims(df, metric_name):
     if "error_rate" in metric_name and "variation" in metric_name:
         # return -0.6, 0.6
         return -1.05, 1.05
-
-    # # TODO: specific, to be deleted later
-    # if ("num_wins" in metric_name or "num_successes" in metric_name) and "freq" not in metric_name:
-    #     if "variation" not in metric_name:
-    #         if df["dataset"].values[0] == "bupa":
-    #             return 0, 350
-    #         elif df["dataset"].values[0] == "iris":
-    #             return 0, 140
-    #     else:
-    #         if df["dataset"].values[0] == "bupa":
-    #             return -350, 350
-    #         elif df["dataset"].values[0] == "iris":
-    #             return -140, 50
 
     if f"{metric_name}_min" in df.columns:
         min_y_val = df[f"{metric_name}_min"].min()
@@ -208,6 +201,8 @@ def plot_metrics(df, out_path, method_name, aggregate_datasets=False):
 
         if num_rows == 1:
             axes = [axes]
+        if col_keys is not None and num_cols == 1:
+            axes = [[ax] for ax in axes]
 
         for i, dataset in enumerate(row_keys):
             df_plot_row = df[df["dataset"] == dataset]
@@ -215,8 +210,6 @@ def plot_metrics(df, out_path, method_name, aggregate_datasets=False):
             y_low, y_up = get_y_lims(df_plot_row, metric_name)
 
             if col_keys is not None:
-                if num_cols == 1:
-                    axes = [axes]
                 for j, param in enumerate(col_keys):
                     ax = axes[i][j]
                     df_plot_item = df_plot_row[df_plot_row["test_name"] == param]
@@ -249,9 +242,9 @@ def plot_metrics(df, out_path, method_name, aggregate_datasets=False):
                 if len(boxes) > 0:
                     ax.bxp(boxes, showfliers=False)
                     ax.set_xticklabels([b["label"] for b in boxes], rotation=45, ha="right", fontsize=14)
-                    ax.set_title(f"{dataset}")  # ({num_runs} runs)")
-                    # ax.set_ylabel(metric_name, fontsize=14)
-                    ax.set_ylabel("Metric value", fontsize=14)
+                    ax.set_title(f"{dataset.capitalize()}", fontsize=14)  # ({num_runs} runs)")
+                    ax.set_ylabel(get_metric_title(metric_name), fontsize=14)
+                    # ax.set_ylabel("Metric value", fontsize=14)
                     ax.set_ylim(y_low, y_up)
                     ax.grid(True)
                 else:
@@ -271,6 +264,11 @@ def get_bar_width(df, x_key):
 
     if df[x_key].dtype == float or df[x_key].dtype == int:
         width = (df[x_key].max() - df[x_key].min()) / (len(df) * 2)
+
+        # sorted_x = sorted(df[x_key])
+        # min_step = min(sorted_x[i+1] - sorted_x[i] for i in range(len(sorted_x)-1))
+        # width = min_step * 0.8
+
     return width
 
 def create_subplot(df, x_key, dataset_name, ax, do_set_y_label=True):
@@ -337,11 +335,13 @@ def gen_plot_aggregate(df, metric_name, out_path, method_name, box_plot=True):
         ax.set_xlabel("Dataset", fontsize=14)
         ax.set_xticks(range(len(df["dataset"])))
         ax.set_xticklabels(x, rotation=45, ha="right", fontsize=14)
-    # ax.set_ylabel(metric_name, fontsize=14)
-    ax.set_ylabel("Metric value", fontsize=14)
-    ax.set_ylim(y_low, y_up)
 
     metric_name_title = get_metric_title(metric_name)
+
+    ax.set_ylabel(metric_name_title, fontsize=14)
+    # ax.set_ylabel("Metric value", fontsize=14)
+    ax.set_ylim(y_low, y_up)
+
 
     fig.suptitle(f"{metric_name_title}\n({method_name})", fontsize=16)
     fig.tight_layout(
@@ -390,13 +390,13 @@ def plot_success_rate_lineplots(df, out_path, method_name, aggregate_datasets=Fa
 
     if num_rows == 1:
         axes = [axes]
+    if col_keys is not None and num_cols == 1:
+        axes = [[ax] for ax in axes]
 
     for i, dataset in enumerate(row_keys):
         df_row = df[df["dataset"] == dataset]
 
         if col_keys is not None:
-            if num_cols == 1:
-                axes = [axes]
             for j, param in enumerate(col_keys):
                 df_plot_item = df_row[df_row["test_name"] == param]
 
@@ -424,7 +424,7 @@ def plot_success_rate_lineplots(df, out_path, method_name, aggregate_datasets=Fa
     plt.close()
 
 
-def main(filter_params=None, exclude_test_names=None, exclude_datasets=None, filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=False):
+def main(filter_params=None, param_values_range=None, exclude_test_names=None, exclude_datasets=None, filter_test_names=None, filter_datasets=None, plot_gradient=True, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=False):
     if not (plot_gradient or plot_metaheuristics) or not (plot_params or plot_general):
         print("Nothing to plot. Exiting.")
         return
@@ -472,7 +472,7 @@ def main(filter_params=None, exclude_test_names=None, exclude_datasets=None, fil
 
         print(f"Creating plots in {out_path} using data from {data_path}...")
 
-        df = collect_data(data_path, exclude_test_names, filter_test_names, filter_datasets, filter_params, exclude_datasets)
+        df = collect_data(data_path, exclude_test_names, filter_test_names, filter_datasets, filter_params, param_values_range, exclude_datasets)
 
         if do_plot_metrics:
             plot_metrics(df, out_path, method, aggregate_datasets)
@@ -482,7 +482,7 @@ def main(filter_params=None, exclude_test_names=None, exclude_datasets=None, fil
 
 if __name__ == "__main__":
 
-    main(filter_test_names=["classic"], exclude_datasets=["magic", "movement_libras"], plot_gradient=True, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=True)
+    # main(filter_test_names=["classic"], exclude_datasets=["magic", "movement_libras"], plot_gradient=True, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=True)
 
     # main(filter_test_names=["classic"], filter_params=["time_in_seconds"], exclude_datasets=["magic", "movement_libras"], plot_gradient=True, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=False, aggregate_datasets=True)
 
@@ -494,3 +494,7 @@ if __name__ == "__main__":
     # main(filter_params=["train_error_rate_append", "train_error_rate_append_initial_variation"], exclude_datasets=["magic", "movement_libras"], filter_test_names=["classic"], plot_gradient=True, plot_metaheuristics=False, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=False, aggregate_datasets=True)
 
     # main(filter_test_names=["classic"], filter_datasets=["iris", "magic", "movement_libras"], plot_gradient=True, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)
+
+    # main(filter_datasets=["iris", "bupa", "pima"], filter_params=["mutation_prob"], param_values_range=(0.1, 1), plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+
+    main(filter_params=["train_error_rate_append_initial_variation"], filter_test_names=["classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=False, aggregate_datasets=True)

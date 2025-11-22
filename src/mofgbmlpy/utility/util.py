@@ -1,3 +1,8 @@
+import copy
+
+import numpy as np
+
+
 def dash_case_to_class_name(txt):
     """Convert a text in dash case format to a class name format. e.g. an-example becomes AnExample
 

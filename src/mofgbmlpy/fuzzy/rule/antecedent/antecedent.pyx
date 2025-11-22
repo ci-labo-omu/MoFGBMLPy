@@ -277,10 +277,13 @@ cdef class Antecedent:
 
         return ax
 
-    def plot_antecedent(self):
+    def plot_antecedent(self, title=None):
         fig, axes = plt.subplots(1, self.get_array_size(), figsize=(25, 3))
 
         for i in range(self.get_array_size()):
             axes[i] = self.get_plot(axes[i], i)
+
+        if title is not None:
+            fig.suptitle(title)
 
         plt.show()

@@ -1,4 +1,5 @@
 """Pymoo problem class for the task offloading problem."""
+
 import copy
 
 import numpy as np
@@ -9,9 +10,12 @@ from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
 from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
 
+from mofgbmlpy.explainer.util import append_rule_classifier
 
 class CounterfactualProblem(Problem):
-    def __init__(self, classifier, changed_rule_index, target_class, test_set, objectives=["confidence_loss", "change_loss"]):
+    def __init__(
+        self, classifier, changed_rule_index, target_class, test_set, objectives=["confidence_loss", "change_loss"]
+    ):
         self._classifier_copy_mutable = copy.deepcopy(classifier)
         self._classifier_copy = copy.deepcopy(classifier)
         self._changed_rule_index = changed_rule_index
@@ -152,12 +156,7 @@ class CounterfactualProblem(Problem):
         if replace:
             new_classifier.set_var(self._changed_rule_index, sol)
         else:
-            old_vars = new_classifier.get_vars()
-            new_vars = np.empty(len(old_vars) + 1, dtype=object)
-            for i in range(len(old_vars)):
-                new_vars[i] = old_vars[i]
-            new_vars[-1] = sol
-            new_classifier.set_vars(new_vars)
+            new_classifier = append_rule_classifier(new_classifier, sol, train_set=self._train_set, deepcopy=False)
         return new_classifier
 
     def error_rate(self, current_rule=None, use_test_set=False, replace=True, initial_classifier=False):
@@ -193,7 +192,9 @@ class CounterfactualProblem(Problem):
             for j in range(self.n_obj):
                 out["F"][i] = self.get_objectives(rule)
                 rule.set_objective(j, out["F"][i][j])
-            out["H"][i] = 0 if self.is_output_class_target(rule) else 1  # constraint, note that rejected class labels are also removed here
+            out["H"][i] = (
+                0 if self.is_output_class_target(rule) else 1
+            )  # constraint, note that rejected class labels are also removed here
 
     def get_objective_names(self):
         return list(self._objectives_map.keys())
@@ -238,3 +239,6 @@ class CounterfactualProblem(Problem):
 
     def get_changed_rule_index(self):
         return self._changed_rule_index
+
+    def get_train_set(self):
+        return self._train_set

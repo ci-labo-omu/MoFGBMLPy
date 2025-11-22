@@ -24,7 +24,10 @@ from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 class CounterFactualExplainerGradient:
     def __init__(
         self,
-        classifier, changed_rule_index, target_class, test_set,
+        classifier,
+        changed_rule_index,
+        target_class,
+        test_set,
         confidence_loss_weight=0.9,
         area_computation_num_samples=100,
         learning_rate=4.0,
@@ -277,7 +280,9 @@ class CounterFactualExplainerGradient:
             step = 1 / current_mf_values.shape[1]
 
             intersection_value, union_value, mf_current_smallest_length, mf_current_highest_length = (
-                CounterFactualExplainerGradient.compute_membership_area_data(self._initial_mf_values, current_mf_values, step)
+                CounterFactualExplainerGradient.compute_membership_area_data(
+                    self._initial_mf_values, current_mf_values, step
+                )
             )
 
             # loss
@@ -353,7 +358,7 @@ class CounterFactualExplainerGradient:
             new_cf_rule.set_consequent(self._learner.learning(new_cf_rule.get_antecedent(), self._train_set))
 
         # if verbose:
-            # new_cf_rule.plot_antecedent()
+        # new_cf_rule.plot_antecedent()
 
         losses = np.array(losses)
 
@@ -378,7 +383,9 @@ class CounterFactualExplainerGradient:
 
         if new_cf_rule.get_class_label().is_rejected() or new_cf_rule.get_class_label() != self._target_class:
             if verbose:
-                print(f"Failure: Counterfactual rule class {new_cf_rule.get_class_label()} does not match target class {self._target_class} or is rejected.")
+                print(
+                    f"Failure: Counterfactual rule class {new_cf_rule.get_class_label()} does not match target class {self._target_class} or is rejected."
+                )
             return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float))
 
         michigan_solution = self._create_solution_object(new_cf_rule, new_knowledge)

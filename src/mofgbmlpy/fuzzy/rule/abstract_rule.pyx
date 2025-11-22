@@ -202,5 +202,5 @@ cdef class AbstractRule:
         """
         return self.get_knowledge().get_fuzzy_variable(dim_index).get_name()
 
-    def plot_antecedent(self):
-        self.get_antecedent().plot_antecedent()
+    def plot_antecedent(self, title=None):
+        self.get_antecedent().plot_antecedent(title)

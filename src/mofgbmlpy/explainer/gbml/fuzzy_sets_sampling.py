@@ -74,7 +74,9 @@ class FuzzySetsSampling(Sampling):
         for j in range(fuzzy_sets.shape[0]):
             fuzzy_sets[j] = copy.deepcopy(initial_fuzzy_sets[j])
 
-        new_antecedent_indices = np.array([1 if fs is not None and not isinstance(fs, DontCareFuzzySet) else 0 for fs in fuzzy_sets])
+        new_antecedent_indices = np.array(
+            [1 if fs is not None and not isinstance(fs, DontCareFuzzySet) else 0 for fs in fuzzy_sets]
+        )
         initial_population[0][0].set_knowledge(CounterfactualProblem.build_knowledge(fuzzy_sets))
         initial_population[0][0].set_vars(new_antecedent_indices)
         initial_population[0][0].get_rule().get_antecedent().set_antecedent_indices(new_antecedent_indices)

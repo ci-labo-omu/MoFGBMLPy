@@ -137,3 +137,23 @@ cdef class Dataset:
             int: Number of patterns
         """
         return self.__size
+
+    def get_scikit_xy(self):
+        """Get the features and labels of this dataset in scikit-learn format
+
+        Returns:
+            tuple: Tuple containing the features matrix X and the labels vector Y
+        """
+        cdef int i, j
+        cdef cnp.ndarray[cnp.float64_t, ndim=2] X = np.empty((self.__size, self.__num_dim), dtype=np.float64)
+        cdef cnp.ndarray[cnp.int_t, ndim=1] Y = np.empty(self.__size, dtype=np.int32)
+        cdef Pattern p
+
+        for i in range(self.__size):
+            p = self.__patterns[i]
+            Y[i] = p.get_target_class().get_class_label_value()
+            X[i] = p.get_attributes_vector()
+            # for j in range(self.__num_dim):
+            #     X[i, j] = p.get_attribute_value(j)
+
+        return X, Y

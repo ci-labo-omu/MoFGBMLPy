@@ -56,8 +56,8 @@ def get_config(data_name, min_num_rules=None, num_evals=5000):
     return num_classes, train_set, test_set, non_dominated_solutions
 
 if __name__ == "__main__":
-    _, _, _, non_dominated_solutions = get_config("pima")
-    CFEBenchmark.main_plot_single(CFEGradient, non_dominated_solutions, sol_index=2)
+    _, _, test_dataset, non_dominated_solutions = get_config("pima")
+    CFEBenchmark.main_plot_single(CFEGradient, non_dominated_solutions, sol_index=2, test_dataset=test_dataset)
 
     #
     # for data_name in ["contraceptive", "appendicitis", "bal", "bupa", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:

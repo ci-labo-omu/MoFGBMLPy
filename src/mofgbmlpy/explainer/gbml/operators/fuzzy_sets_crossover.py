@@ -25,7 +25,6 @@ class FuzzySetsCrossover(PymooDeepcopyCrossover):
             p2 = X[1, i, :]
             offsprings[0, i, 0] = copy.deepcopy(p1[0])
 
-
             p1_fuzzy_sets = CounterfactualProblem.get_fuzzy_sets_from_rule(p1[0].get_rule())
             p2_fuzzy_sets = CounterfactualProblem.get_fuzzy_sets_from_rule(p2[0].get_rule())
             num_dims = p1[0].get_rule().get_antecedent_array_size()
@@ -47,7 +46,6 @@ class FuzzySetsCrossover(PymooDeepcopyCrossover):
             offsprings[0, i, 0].set_vars(child_antecedent_indices)
             offsprings[0, i, 0].get_rule().get_antecedent().set_antecedent_indices(child_antecedent_indices)
 
-
             p1_knowledge = p1[0].get_rule().get_knowledge()
             p2_knowledge = p2[0].get_rule().get_knowledge()
             child_knowledge = offsprings[0, i, 0].get_rule().get_knowledge()
@@ -68,6 +66,5 @@ class FuzzySetsCrossover(PymooDeepcopyCrossover):
                         for p2_fs in p2_fvar.get_fuzzy_sets():
                             if id(child_fs) == id(p2_fs):
                                 raise ValueError("Fuzzy set object not copied properly in crossover.")
-
 
         return offsprings

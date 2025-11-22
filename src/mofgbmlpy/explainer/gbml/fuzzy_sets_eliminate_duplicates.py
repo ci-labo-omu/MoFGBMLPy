@@ -39,9 +39,9 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
                 dist_fs = 0
                 for i in range(len(params_1[fs_i])):
                     dist_fs += abs(params_1[fs_i][i] - params_2[fs_i][i])
-                distance += dist_fs/len(params_1[fs_i])
+                distance += dist_fs / len(params_1[fs_i])
 
-        return distance/len(params_1)
+        return distance / len(params_1)
 
     @staticmethod
     def extract_params(pop):
@@ -69,8 +69,9 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
                 if i == j:
                     distance[i][j] = 0
                     continue
-                distance[i][j] = FuzzySetsEliminateDuplicates.distance_mfs_params_count_differences(params_x[i],
-                                                                                                    params_x[j])
+                distance[i][j] = FuzzySetsEliminateDuplicates.distance_mfs_params_count_differences(
+                    params_x[i], params_x[j]
+                )
                 distance[j][i] = distance[i][j]
 
         return distance
@@ -101,7 +102,10 @@ class FuzzySetsEliminateDuplicates(DuplicateElimination):
             for k in range(len(other_fuzzy_sets)):
                 params_other[k] = other_fuzzy_sets[k].get_function().get_params()
 
-            if FuzzySetsEliminateDuplicates.distance_mfs_params_count_differences(params_other, rule_params) < self.epsilon:
+            if (
+                FuzzySetsEliminateDuplicates.distance_mfs_params_count_differences(params_other, rule_params)
+                < self.epsilon
+            ):
                 return True
 
     def _do(self, pop, other, is_duplicate):

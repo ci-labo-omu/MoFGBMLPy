@@ -29,11 +29,34 @@ import pandas as pd
 
 
 class CounterFactualExplainerMetaheuristics:
-    def __init__(self, classifier, changed_rule_index, target_class, test_set, mutation_fs_type_prob=0.5, sampling_noise_str=0.1, mutation_prob=0.7, mutated_param_prob=0.6, mutation_revert_to_initial_prob=0.0, crossover_prob=0.7, crossover_p1_selected_prob=0.5, sampling_fs_type_prob=0.0, sampling_change_fs_params_prob=1.0, use_search_space_crowding=False, objectives=["confidence_loss", "change_loss"], n_gen=60, pop_size=60):
-        self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class, test_set=test_set, objectives=objectives)
+    def __init__(
+        self,
+        classifier,
+        changed_rule_index,
+        target_class,
+        test_set,
+        mutation_fs_type_prob=0.5,
+        sampling_noise_str=0.1,
+        mutation_prob=0.7,
+        mutated_param_prob=0.6,
+        mutation_revert_to_initial_prob=0.0,
+        crossover_prob=0.7,
+        crossover_p1_selected_prob=0.5,
+        sampling_fs_type_prob=0.0,
+        sampling_change_fs_params_prob=1.0,
+        use_search_space_crowding=False,
+        objectives=["confidence_loss", "change_loss"],
+        n_gen=60,
+        pop_size=60,
+    ):
+        self._problem = CounterfactualProblem(
+            classifier, changed_rule_index, target_class, test_set=test_set, objectives=objectives
+        )
 
         self._sampling = FuzzySetsSampling(sampling_noise_str, sampling_fs_type_prob, sampling_change_fs_params_prob)
-        self._mutation = FuzzySetsMutation(mutation_prob, mutated_param_prob, mutation_fs_type_prob, mutation_revert_to_initial_prob)
+        self._mutation = FuzzySetsMutation(
+            mutation_prob, mutated_param_prob, mutation_fs_type_prob, mutation_revert_to_initial_prob
+        )
         self._crossover = FuzzySetsCrossover(crossover_prob, crossover_p1_selected_prob)
         self._eliminate_duplicates = FuzzySetsEliminateDuplicates(self._problem)
         self._survival = FuzzySetsSurvival(use_search_space_crowding=use_search_space_crowding)
@@ -129,7 +152,9 @@ class CounterFactualExplainerMetaheuristics:
         if len(non_dominated_solutions) == 0:
             return non_dominated_solutions
 
-        non_dominated_solutions = self.remove_non_target_class_solutions(non_dominated_solutions, self.get_target_class())
+        non_dominated_solutions = self.remove_non_target_class_solutions(
+            non_dominated_solutions, self.get_target_class()
+        )
 
         return non_dominated_solutions
 
