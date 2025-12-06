@@ -12,7 +12,13 @@ from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 
+from mofgbmlpy.fuzzy.rule.rule_multi import RuleMulti
 
+from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
+
+from mofgbmlpy.fuzzy.rule.consequent.consequent_multi import ConsequentMulti
+
+from mofgbmlpy.fuzzy.rule.consequent.consequent_basic import ConsequentBasic
 
 cdef class AbstractRule:
     """Abstract fuzzy rule class
@@ -179,6 +185,29 @@ cdef class AbstractRule:
         root.append(self._consequent.to_xml())
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element, knowledge):
+        """Initialize this object from an XML element
+
+        Args:
+            xml_element (xml.etree.ElementTree.Element): XML element
+            Knowledge: Knowledge base
+
+        Returns:
+            AbstractRule: Rule initialized from the XML element
+        """
+
+        antecedent_element = xml_element.find("antecedent")
+        consequent_element = xml_element.find("consequent")
+
+        antecedent = Antecedent.from_xml(antecedent_element, knowledge)
+        if "," in consequent_element.find("classLabel").text:
+            consequent = ConsequentMulti.from_xml(consequent_element)
+            return RuleMulti(antecedent, consequent)
+        else:
+            consequent = ConsequentBasic.from_xml(consequent_element)
+            return RuleBasic(antecedent, consequent)
 
     cpdef Knowledge get_knowledge(self):
         """Get the knowledge base

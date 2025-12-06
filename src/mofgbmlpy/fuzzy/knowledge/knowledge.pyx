@@ -202,6 +202,22 @@ cdef class Knowledge:
 
         return root
 
+    @staticmethod
+    def from_xml(xml_element):
+        """Load the data of this object from an XML element
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element representing this object
+        """
+        imported_fuzzy_sets = xml_element.findall("fuzzySets")
+        cdef FuzzyVariable[:] fuzzy_vars = np.empty(len(imported_fuzzy_sets), dtype=object)
+
+        for i in range(len(imported_fuzzy_sets)):
+            dim_idx = int(imported_fuzzy_sets[i].get("dimension"))
+            fuzzy_vars[dim_idx] = FuzzyVariable.from_xml(imported_fuzzy_sets[i])
+
+        cdef Knowledge new_knowledge = Knowledge(fuzzy_vars)
+        return new_knowledge
 
     def plot_fuzzy_variables(self):
         """Plot all the fuzzy variables of this knowledge base (one plot per variable)"""

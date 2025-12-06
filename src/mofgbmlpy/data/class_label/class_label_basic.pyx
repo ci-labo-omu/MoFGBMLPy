@@ -82,3 +82,7 @@ cdef class ClassLabelBasic(AbstractClassLabel):
         root.text = str(self)
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element):
+        return ClassLabelBasic(int(xml_element.text))

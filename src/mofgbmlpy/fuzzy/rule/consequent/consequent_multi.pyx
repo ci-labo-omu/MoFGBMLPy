@@ -76,3 +76,7 @@ cdef class ConsequentMulti(AbstractConsequent):
             return False
 
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
+
+    @staticmethod
+    def from_xml(xml_element):
+        raise NotImplementedError("from_xml is not implemented for ConsequentMulti")

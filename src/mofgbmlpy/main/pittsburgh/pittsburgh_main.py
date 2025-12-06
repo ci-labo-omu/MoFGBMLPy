@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import numpy as np
 from matplotlib import pyplot as plt
 from pymoo.core.callback import Callback
@@ -10,6 +11,17 @@ from mofgbmlpy.gbml.operator.repair.pittsburgh_repair import PittsburghRepair
 from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
+
+from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
+from pymoo.core.population import Population
+from mofgbmlpy.data.input import Input
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
+
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+
+from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+
+from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
@@ -217,6 +229,69 @@ class PittsburghMain(AbstractMain):
             sol.set_attribute("num_rules", sol.get_num_vars())
 
             sol_id += 1
+
+    @staticmethod
+    def import_xml_classifiers(file_path):
+        """Import classifiers from an XML file
+
+        Args:
+            file_path (str): Path of the XML file
+
+        Returns:
+            PittsburghSolution[]: List of Pittsburgh solutions
+            Knowledge: Knowledge base
+            Arguments: MoFGBML arguments
+        """
+        tree = xml_tree.parse(file_path)
+        root = tree.getroot()
+
+        consts_xml = root.find("consts")
+        consts_xml.remove(consts_xml.find("IS_MICHIGAN_STYLE"))
+
+        args = PittsburghStyleArguments.from_xml(consts_xml)
+        knowledge = None
+        classifiers = []
+
+        knowledge_xml = root.find("knowledgeBase")
+        if knowledge_xml is not None:
+            knowledge = Knowledge.from_xml(knowledge_xml)
+
+        training_data_set, _ = Input.get_train_test_files(args)
+        is_dc_probability = args.get("IS_PROBABILITY_DONT_CARE")
+        dc_rate = args.get("DONT_CARE_RT")
+        antecedent_number_do_not_dont_care = args.get("ANTECEDENT_NUMBER_DO_NOT_DONT_CARE")
+        num_objectives = len(args.get("OBJECTIVES"))
+        num_constraints = 0
+        num_vars = args.get("INITIATION_RULE_NUM")
+
+        population_xml = root.find("population")
+
+        random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+        antecedent_factory = HeuristicAntecedentFactory(training_data_set, knowledge, is_dc_probability, dc_rate,
+                                                        antecedent_number_do_not_dont_care, random_gen)
+        consequent_factory = LearningBasic(training_data_set)
+
+        objectives = PittsburghMain._get_objectives_static(args, training_data_set, True)
+        classification = SingleWinnerRuleSelection()
+
+        rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
+        michigan_solution_builder = MichiganSolutionBuilder(
+            random_gen, 2, 0, rule_builder
+        )
+
+        problem = PittsburghProblem(num_vars, objectives, num_constraints, training_data_set, michigan_solution_builder, classification)
+
+        if population_xml is not None:
+            for classifier_xml in population_xml.findall("pittsburghSolution"):
+                classifier = PittsburghSolution.from_xml(classifier_xml, random_gen, knowledge, num_objectives, num_constraints, rule_builder, classification, michigan_solution_builder)
+
+                classifiers.append([classifier])
+
+        classifiers = Population.new(X=np.array(classifiers))
+
+        problem.evaluate(classifiers.get("X"))
+
+        return classifiers, knowledge, args
 
 
 if __name__ == "__main__":

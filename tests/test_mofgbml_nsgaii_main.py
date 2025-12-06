@@ -241,3 +241,71 @@ def test_java_distribution_iris():
         df_rules,
         f"Comparison on Iris Using NSGAII with a population size of {pop_size} with {num_evals} evals on {num_iters} iterations",
     )
+
+
+def test_from_xml():
+    num_evals = 8
+    pop_size = 5
+
+    tests_root = Path(__file__).parent
+    data_path = os.path.join(tests_root.parent, "dataset")
+
+    args = [
+        "--data-name",
+        "iris",
+        "--algorithm-id",
+        "xml_test",
+        "--experiment-id",
+        "1",
+        "--train-file",
+        f"{data_path}/iris/a0_0_iris-10tra.dat",
+        "--test-file",
+        f"{data_path}/iris/a0_0_iris-10tst.dat",
+        "--terminate-evaluation",
+        f"{num_evals}",
+        "--objectives",
+        "error-rate",
+        "num-rules",
+        "--population-size",
+        f"{pop_size}",
+        f"--offspring-population-size",
+        f"{pop_size}",
+        "--algorithm",
+        "nsga2",
+        "--pretty-xml"
+    ]
+
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+
+    res = runner.run(args)
+    # args = runner.get_args()
+    saved_population = res.opt.get("X")[:, 0]
+
+    results_path = f"{tests_root}{os.sep}results{os.sep}xml_test{os.sep}iris{os.sep}1{os.sep}results.xml"
+    imported_population, knowledge, _ = PittsburghMain.import_xml_classifiers(results_path)
+    imported_population = imported_population.get("X")[:, 0]
+
+    assert len(saved_population) == len(imported_population)
+    for i in range(len(saved_population)):
+        saved_sol = saved_population[i]
+        imported_sol = imported_population[i]
+
+        assert saved_sol.get_error_rate() == imported_sol.get_error_rate()
+        assert saved_sol.get_num_vars() == imported_sol.get_num_vars()
+
+        saved_obj = saved_sol.get_objectives()
+        imported_obj = imported_sol.get_objectives()
+
+        assert len(saved_obj) == len(imported_obj)
+        for k in range(len(saved_obj)):
+            assert saved_obj[k] == imported_obj[k]
+
+        for j in range(saved_sol.get_num_vars()):
+            saved_michigan = saved_sol.get_vars()[j]
+            imported_michigan = imported_sol.get_vars()[j]
+
+            assert saved_michigan.get_rule().get_length() == imported_michigan.get_rule().get_length()
+            assert saved_michigan.get_num_wins() == imported_michigan.get_num_wins()
+            assert saved_michigan.get_fitness() == imported_michigan.get_fitness()
+            assert saved_michigan.get_rule_weight_py().get_value() == imported_michigan.get_rule_weight_py().get_value()

@@ -25,7 +25,11 @@ from mofgbmlpy.fuzzy.rule.consequent.learning.learning_multi import LearningMult
 from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
 from mofgbmlpy.fuzzy.rule.rule_builder_multi import RuleBuilderMulti
 
+from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.operator.survival.rank_and_crowding_deterministic import RankAndCrowdingDeterministic
+from mofgbmlpy.gbml.solution.pittsburgh_solution import PittsburghSolution
+
+from mofgbmlpy.gbml.problem.pittsburgh_problem import PittsburghProblem
 from mofgbmlpy.main.arguments.pittsburgh_style_arguments import PittsburghStyleArguments
 from mofgbmlpy.utility.util import dash_case_to_snake_case, dash_case_to_class_name
 from mofgbmlpy.main.arguments.arguments import Arguments
@@ -250,17 +254,21 @@ class AbstractMain(ABC):
             raise ValueError("Termination criterion not given or not recognized")
 
     def _get_objectives(self, is_pittsburgh_style):
+        return AbstractMain._get_objectives_static(self._mofgbml_args, self._train, is_pittsburgh_style)
+
+    @staticmethod
+    def _get_objectives_static(mofgbml_args, train, is_pittsburgh_style):
         objectives = []
         module_base = f"mofgbmlpy.gbml.objectives.{'pittsburgh' if is_pittsburgh_style else 'michigan'}."
 
-        for obj_key in self._mofgbml_args.get("OBJECTIVES"):
+        for obj_key in mofgbml_args.get("OBJECTIVES"):
             class_name = dash_case_to_class_name(obj_key)
             module_name = module_base + dash_case_to_snake_case(obj_key)
             imported_module = import_module(module_name)
             objective_class = getattr(imported_module, class_name)
 
             if obj_key == "error-rate":
-                objectives.append(objective_class(self._train))
+                objectives.append(objective_class(train))
             else:
                 objectives.append(objective_class())
         return objectives

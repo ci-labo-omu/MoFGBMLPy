@@ -14,6 +14,9 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport Abs
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
 
+from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
+
+from mofgbmlpy.fuzzy.rule.rule_builder_basic cimport RuleBuilderBasic
 
 cdef class MichiganSolution(AbstractSolution):
     """Michigan solution
@@ -403,6 +406,23 @@ cdef class MichiganSolution(AbstractSolution):
 
         return root
 
+    @staticmethod
+    def from_xml(xml_element, random_gen, num_objectives, num_constraints, rule_builder, knowledge):
+        """Create a MichiganSolution object from its XML representation
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element of the soluton
+            random_gen (numpy.random.Generator): Random generator
+            num_objectives (int): Number of objectives
+            num_constraints (int): Number of constraints
+            rule_builder (RuleBuilderCore): Rule builder
+            knowledge (Knowledge): Knowledge base
+
+        Returns:
+            MichiganSolution: Created object
+        """
+        rule = AbstractRule.from_xml(xml_element.find("rule"), knowledge)
+        return MichiganSolution.from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder)
 
     cpdef void set_antecedent_knowledge(self, Knowledge new_knowledge):
         """Set the antecedent knowledge base
@@ -419,3 +439,27 @@ cdef class MichiganSolution(AbstractSolution):
         antecedent = rule.get_antecedent()
 
         return learner.calc_confidence_py(antecedent)
+
+    @staticmethod
+    def from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder):
+        """Create a MichiganSolution object from a rule
+
+        Args:
+            rule (AbstractRule): Rule
+            random_gen (numpy.random.Generator): Random generator
+            num_objectives (int): Number of objectives
+            rule_builder (RuleBuilderCore): Rule builder
+
+        Returns:
+            MichiganSolution: Created object
+        """
+        cdef MichiganSolution solution = MichiganSolution(random_gen,
+                                                          num_objectives,
+                                                          num_constraints,
+                                                          rule_builder,
+                                                          do_init_vars=False)
+
+        solution.set_vars(rule.get_antecedent().get_antecedent_indices())
+        solution.learning()
+
+        return solution

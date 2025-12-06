@@ -18,6 +18,14 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionBuilder
+
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
+
+from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.gbml.solution.pittsburgh_scikit_classifier import PittsburghScikitClassifier
 
 cdef class PittsburghSolution(AbstractSolution):
@@ -277,6 +285,21 @@ cdef class PittsburghSolution(AbstractSolution):
             attribute.text = str(value)
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element, random_gen, knowledge, num_objectives, num_constraints, rule_builder, classification, michigan_solution_builder):
+        imported_rules = xml_element.findall("michiganSolution")
+        cdef MichiganSolution[:] new_vars = np.empty(len(imported_rules), dtype=object)
+        cdef MichiganSolution var
+
+        for i in range(len(imported_rules)):
+            var = MichiganSolution.from_xml(imported_rules[i], random_gen, 2, 0, rule_builder, knowledge)
+            new_vars[i] = var
+
+        num_vars = len(new_vars)
+        new_sol = PittsburghSolution(num_vars, num_objectives, num_constraints, classification, michigan_solution_builder)
+        new_sol.set_vars(new_vars)
+        return new_sol
 
     cpdef bint are_rules_valid(self):
         """Check if the rules are valid (at least one rule inside this solution and no rejected rule)

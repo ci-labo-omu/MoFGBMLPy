@@ -57,7 +57,7 @@ cdef class AbstractMF:
             params_set = xml_tree.SubElement(root, "parameterSet")
 
             for i in range(len(self._params)):
-                param = xml_tree.SubElement(params_set, "parameterSet")
+                param = xml_tree.SubElement(params_set, "parameter")
                 param.text = str(self._params[i])
                 param.set("id", str(i))
 

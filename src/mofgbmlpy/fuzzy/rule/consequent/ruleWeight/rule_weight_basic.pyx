@@ -79,3 +79,16 @@ cdef class RuleWeightBasic(AbstractRuleWeight):
         root.text = str(self)
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element):
+        """Initialize this object from an XML element
+
+        Args:
+            xml_element (xml.etree.ElementTree.Element): XML element
+
+        Returns:
+            RuleWeightBasic: Rule weight object
+        """
+        rule_weight_value = float(xml_element.text)
+        return RuleWeightBasic(rule_weight_value)

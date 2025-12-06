@@ -2,7 +2,8 @@ import copy
 import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
-
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
 
 cdef class FuzzySet:
     """Fuzzy set
@@ -114,6 +115,35 @@ cdef class FuzzySet:
         root.append(self.__function.to_xml())
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element):
+        """Create a FuzzySet object from its XML representation
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element representing the fuzzy set
+
+        Returns:
+            FuzzySet: FuzzySet object created from the XML element
+        """
+        cdef int fuzzy_set_id = int(xml_element.find("fuzzyTermID").text)
+        cdef str fuzzy_set_term = xml_element.find("fuzzyTermName").text
+        cdef str shape_type_name = xml_element.find("ShapeTypeName").text
+        cdef str fs_type_name = shape_type_name.replace(r'MF', 'FuzzySet')
+
+        new_params = []
+        if fs_type_name != "DontCareFuzzySet":
+            imported_params = xml_element.find("membershipFunction").find("parameterSet").findall("parameter")
+
+            for param in imported_params:
+                new_params.append(float(param.text))
+            new_params += [fuzzy_set_id, fuzzy_set_term]
+        else:
+            new_params.append(fuzzy_set_id)
+
+        cdef FuzzySet new_fuzzy_set = globals()[fs_type_name](*new_params)
+
+        return new_fuzzy_set
 
     def __eq__(self, other):
         """Check if another object is equal to this one

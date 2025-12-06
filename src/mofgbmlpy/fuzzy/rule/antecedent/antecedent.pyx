@@ -252,6 +252,19 @@ cdef class Antecedent:
             fuzzy_set_id.text = str(self.__antecedent_indices[dim_i])
         return root
 
+    @staticmethod
+    def from_xml(xml_element, knowledge):
+        imported_fuzzy_set_list = xml_element.find("fuzzySetList").findall("fuzzySetID")
+
+        cdef int[:] antecedent_indices = np.zeros(len(imported_fuzzy_set_list), dtype=int)
+
+        for i in range(len(imported_fuzzy_set_list)):
+            dim_index = int(imported_fuzzy_set_list[i].get("dimension"))
+            fuzzy_set_index = int(imported_fuzzy_set_list[i].text)
+            antecedent_indices[dim_index] = fuzzy_set_index
+
+        return Antecedent(antecedent_indices, knowledge)
+
     cpdef get_knowledge(self):
         """Get the knowledge base
         
