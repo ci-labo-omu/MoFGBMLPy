@@ -112,13 +112,20 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
 
         return Dataset(size, n_dim, c_num, patterns)
 
-    def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100):
+    def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100, var_names=None, class_labels=None):
         X = X.astype(np.float32)
         if X.shape[1] > 2 and (fixed_vals is None or len(fixed_vals) != X.shape[1]):
             raise NotImplementedError("Decision boundary plot is only implemented for 2D datasets.")
 
-        class_colors = ["red", "green", "blue", "gray"]
-        class_labels = ["Class 0", "Class 1", "Class 2", "Unclassified"]
+        num_classes = len(np.unique(y))
+
+        if var_names is None:
+            var_names = [f"x_{i}" for i in range(X.shape[1])]
+
+        class_colors = ["red", "green", "blue"][:num_classes] + ["gray"]
+        if class_labels is None or len(class_labels) != num_classes:
+            class_labels = [f"Class {i}" for i in range(num_classes)]
+        class_labels = class_labels + ["Unclassified"]
 
         feature_1, feature_2 = np.meshgrid(
             np.linspace(0, 1, num=num_points_per_dim), np.linspace(0, 1, num=num_points_per_dim)
@@ -136,12 +143,12 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
             grid_full = grid
         else:
             var_indices = []
-            title += " (fixed:"
+            title += "\n(fixed:"
             for i in range(len(fixed_vals)):
                 if fixed_vals[i] is None:
                     var_indices.append(i)
                 else:
-                    title += f" x_{i},"
+                    title += f" {var_names[i]},"
             title = title[:-1] + ")"
 
             for i in range(X.shape[1]):
@@ -162,11 +169,11 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         display.plot(ax=ax, cmap=cmap, alpha=0.1)
 
         if fixed_vals is None:
-            plt.xlabel("x_0")
-            plt.ylabel("x_1")
+            plt.xlabel(var_names[0])
+            plt.ylabel(var_names[1])
         else:
-            plt.xlabel(f"x_{var_indices[0]}")
-            plt.ylabel(f"x_{var_indices[1]}")
+            plt.xlabel(var_names[var_indices[0]])
+            plt.ylabel(var_names[var_indices[1]])
 
         # y_pred = self.predict(X)
         y, cmap = self._get_db_plot_values(y, class_colors)
@@ -199,11 +206,14 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         plt.tight_layout()
         plt.show()
 
-    def plot_conf_matrix(self, X, y, title="Confusion Matrix", ignore_unclassified=True):
+    def plot_conf_matrix(self, X, y, title="Confusion Matrix", ignore_unclassified=True, class_labels=None):
         X = X.astype(np.float32)
         y_pred = self.predict(X)
         num_unclassified = np.count_nonzero(y_pred == -1)
         title += f" (Unclassified: {num_unclassified})"
+
+        if class_labels is None:
+            class_labels = [f"{i}" for i in range(len(np.unique(y)))]
 
         if ignore_unclassified:
             mask = y_pred != -1
@@ -212,10 +222,12 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
             labels = np.unique(y)
         else:
             labels = np.unique(np.concatenate([y, y_pred]))
+            class_labels = class_labels + ["Unclassified"]
 
         cm = confusion_matrix(y, y_pred, labels=labels)
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_labels)
         disp.plot(cmap=plt.cm.viridis)
+        plt.setp(plt.gca().get_yticklabels(), rotation=90, ha='center', va='center')
         plt.title(title)
         plt.show()
 

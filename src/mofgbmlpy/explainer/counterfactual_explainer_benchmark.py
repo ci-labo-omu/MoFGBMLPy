@@ -261,7 +261,7 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def main_plot_single(
-        explainer_class, classifiers, cl_idx=0, r_idx=0, c_target=0, sol_idx=None, test_dataset=None, **kwargs
+        explainer_class, classifiers, cl_idx=0, r_idx=0, c_target=0, sol_idx=None, plot=True, test_dataset=None, var_names=None, class_labels=None, **kwargs
     ):
         classifier = classifiers[cl_idx][0]
 
@@ -275,11 +275,6 @@ class CounterFactualExplainerBenchmark:
         explainer = explainer_class(classifier, r_idx, target_class, test_set=test_dataset, **kwargs)
         non_dominated_solutions = explainer.train(verbose=True)
 
-        # problem = explainer.get_problem()
-        # initial_error_rate = problem.error_rate(initial_classifier=True)
-        # for i, sol in enumerate(non_dominated_solutions):
-        #     train_err_var = problem.error_rate(sol.X[0], replace=False) - initial_error_rate
-        #     print(f"Solution {i} Train error rate variation: {train_err_var:.4f}")
 
         if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
             print("No solutions found")
@@ -290,28 +285,40 @@ class CounterFactualExplainerBenchmark:
             non_dominated_solutions = Population.new(X=np.array([sol.X]), F=np.array([sol.F]))
 
         rules = non_dominated_solutions.get("X").flatten()
+        #
+        # problem = explainer.get_problem()
+        # initial_error_rate = problem.error_rate(initial_classifier=True)
+        # not_worse_indices = []
+        # for i, sol in enumerate(non_dominated_solutions):
+        #     train_err_var = problem.error_rate(sol.X[0], replace=False) - initial_error_rate
+        #     print(f"Solution {i} Train error rate variation: {train_err_var:.4f}")
+        #     if train_err_var <= 0:
+        #         not_worse_indices.append(i)
+        # remove not in not_worse_indices
+        # rules = [rules[i] for i in not_worse_indices]
 
         # plot the results
-        plot = Scatter(title="NSGA-II")
-        plot.add(non_dominated_solutions.get("F"))
-        plot.axis_labels = explainer.get_problem().get_objective_names()
-        _ = plot.show()
+        if plot:
+            plot = Scatter(title="NSGA-II")
+            plot.add(non_dominated_solutions.get("F"))
+            plot.axis_labels = explainer.get_problem().get_objective_names()
+            _ = plot.show()
 
-        # get rules associated to non_dominated solutions
         print("Factual rule:")
         factual_rule = classifier.get_var(r_idx)
         print(factual_rule)
-        factual_rule.get_rule().plot_antecedent("Factual rule")
+        if plot:
+            factual_rule.get_rule().plot_antecedent("Factual rule", var_names)
 
         print("Rules of non-dominated solutions:")
 
         for i in range(len(rules)):
             rule = rules[i]
             print(rule)
-            if i < 10:
-                rule.get_rule().plot_antecedent(f"CF Rule {i+1}")
+            if i < 10 and plot:
+                rule.get_rule().plot_antecedent(f"CF Rule {i+1}", var_names)
 
-        if len(rules) > 10:
+        if plot and len(rules) > 10:
             print("Some rule plots were not displayed because there are too many rules")
 
         # current_metrics_vals = CounterFactualExplainerBenchmark.all_metrics_eval(
@@ -322,13 +329,14 @@ class CounterFactualExplainerBenchmark:
         #     stats = CounterFactualExplainerBenchmark.get_stats(vals)
         #     print(f"{name}: {stats}")
 
-        train_set = explainer.get_problem().get_train_set()
-        CounterFactualExplainerBenchmark.compare_classifiers(classifier, rules, train_set)
+        if plot and len(rules) < 3:
+            train_set = explainer.get_problem().get_train_set()
+            CounterFactualExplainerBenchmark.compare_classifiers(classifier, rules, train_set, var_names, class_labels)
 
         return rules
 
     @staticmethod
-    def compare_classifiers(initial_classifier, cf_rules, train_set):
+    def compare_classifiers(initial_classifier, cf_rules, train_set, var_names=None, class_labels=None):
         X, y = train_set.get_scikit_xy()
 
         # Compare the two classifiers
@@ -338,11 +346,11 @@ class CounterFactualExplainerBenchmark:
 
         # Decision boundary plot
         initial_classifier_sk.plot_decision_boundaries(
-            X, y, title="Initial Classifier Decision Boundaries", fixed_vals=[0.5, 0.5, None, None]
+            X, y, title="Initial Classifier Decision Boundaries", fixed_vals=[0.5, None, None, 0.5], var_names=var_names, class_labels=class_labels
         )
 
         # Confusion matrix plot
-        initial_classifier_sk.plot_conf_matrix(X, y, title="Initial Classifier Confusion Matrix")
+        initial_classifier_sk.plot_conf_matrix(X, y, title="Initial Classifier Confusion Matrix", class_labels=class_labels)
 
         for cf_rule in cf_rules:
             new_cl = append_rule_classifier(initial_classifier, cf_rule, train_set=train_set)
@@ -351,11 +359,11 @@ class CounterFactualExplainerBenchmark:
 
             # Decision boundary plot
             new_cl.plot_decision_boundaries(
-                X, y, title="New Classifier Decision Boundaries", fixed_vals=[0.5, 0.5, None, None]
+                X, y, title="New Classifier Decision Boundaries", fixed_vals=[0.5, None, None, 0.5], var_names=var_names, class_labels=class_labels
             )
 
             # Confusion matrix plot
-            new_cl.plot_conf_matrix(X, y, title="New Classifier Confusion Matrix")
+            new_cl.plot_conf_matrix(X, y, title="New Classifier Confusion Matrix", class_labels=class_labels)
 
     @staticmethod
     def param_search(

@@ -277,7 +277,7 @@ cdef class Antecedent:
 
         return ax
 
-    def plot_antecedent(self, title=None):
+    def plot_antecedent(self, title=None, var_names=None):
         fig, axes = plt.subplots(1, self.get_array_size(), figsize=(25, 3))
 
         for i in range(self.get_array_size()):
@@ -285,5 +285,9 @@ cdef class Antecedent:
 
         if title is not None:
             fig.suptitle(title)
+
+        if var_names is not None:
+            for i in range(self.get_array_size()):
+                axes[i].set_title(var_names[i])
 
         plt.show()

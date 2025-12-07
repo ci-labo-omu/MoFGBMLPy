@@ -34,6 +34,7 @@ class CounterfactualProblem(Problem):
             "change_loss": self.change_loss,
             "num_changed_features": self.num_changed_features_loss,
             "train_error_rate": self.error_rate,
+            "rule_length": lambda rule: rule.get_length(),
         }
 
         self._objectives_map = {k: v for k, v in self._objectives_map.items() if k in objectives}

@@ -3,11 +3,16 @@ import os
 
 import numpy as np
 
+from mofgbmlpy.data.dataset import Dataset
+
+from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
 
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+
+from mofgbmlpy.data.pattern import Pattern
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 from mofgbmlpy.explainer.util import remove_duplicates
@@ -119,13 +124,40 @@ if __name__ == "__main__":
 
 
     # Example run on a simple dataset
-    _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris")
-    cl_idx = 29  # consequent class is 2
-    cf_rule = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=0, sol_idx=3)[0]
+    # _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris")
+    # cl_idx = 29  # consequent class is 2
+    # cf_rule = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=0, sol_idx=3)[0]
+    #
+    # initial_classifier = non_dominated_solutions[cl_idx][0]
+    #
+    # new_cl = append_rule_classifier(initial_classifier, cf_rule, train_set=train_dataset)
+    #
+    # non_dominated_solutions = np.array([[new_cl]])
+    # CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=0, r_idx=0, c_target=1, sol_idx=2)
 
+    # Example run on a simple dataset, here we have 1 CF rule per rule
+    _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris_merged_1_2", min_num_rules=2)
+
+    # for i in range(len(non_dominated_solutions)):
+    #     cl = non_dominated_solutions[i][0]
+    #     if len(cl.get_vars()) == 2 and cl.get_total_rule_length() == 2:
+    #         print(i, cl.get_total_rule_length())
+    #
+    #         for var in cl.get_vars():
+    #             print(var.get_rule())
+    #         print("====================")
+
+    cl_idx = 47  # different attributes used, only 1 per rule, 2 rules
     initial_classifier = non_dominated_solutions[cl_idx][0]
 
-    new_cl = append_rule_classifier(initial_classifier, cf_rule, train_set=train_dataset)
+    # for var in initial_classifier.get_vars():
+    #     print(var.get_rule())
 
+    var_names = ["Sepal Length", "Sepal Width", "Petal Length", "Petal Width"]
+    class_labels = ["Setosa", "Versicolor or Virginica"]
+    cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=6, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"])[0]
+
+    new_cl = append_rule_classifier(initial_classifier, cf_rule_1, train_set=train_dataset)
     non_dominated_solutions = np.array([[new_cl]])
-    CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=0, r_idx=0, c_target=1, sol_idx=2)
+
+    cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=3, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"])[0]
