@@ -268,8 +268,10 @@ cdef class PittsburghSolution(AbstractSolution):
             (xml.etree.ElementTree) XML element representing this object
         """
         root = xml_tree.Element("pittsburghSolution")
-        for sol in self._vars:
-            root.append(sol.to_xml())
+        for i in range(len(self._vars)):
+            sol_xml = self._vars[i].to_xml()
+            sol_xml.set("id", str(i))
+            root.append(sol_xml)
 
         objectives = xml_tree.SubElement(root, "objectives")
         for i in range(self.get_num_objectives()):
@@ -294,11 +296,19 @@ cdef class PittsburghSolution(AbstractSolution):
 
         for i in range(len(imported_rules)):
             var = MichiganSolution.from_xml(imported_rules[i], random_gen, 2, 0, rule_builder, knowledge)
-            new_vars[i] = var
+            idx = int(imported_rules[i].get("id"))
+            new_vars[idx] = var
 
         num_vars = len(new_vars)
         new_sol = PittsburghSolution(num_vars, num_objectives, num_constraints, classification, michigan_solution_builder)
         new_sol.set_vars(new_vars)
+
+        attributes_xml = xml_element.find("attributes")
+        if attributes_xml is not None:
+            for attributes_xml in attributes_xml.findall("attribute"):
+                attr_id = attributes_xml.get("attributeID")
+                attr_value = attributes_xml.text
+                new_sol.set_attribute(attr_id, attr_value)
         return new_sol
 
     cpdef bint are_rules_valid(self):

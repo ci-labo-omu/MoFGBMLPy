@@ -186,14 +186,6 @@ class Arguments:
             key = Arguments.key_to_arg(item[0])
             value = str(item[1].data)
             
-            # Translate Java version args format to this version format
-            if key == "antecedent-len":
-                key = "antecedent-number-do-not-dont-care"
-            elif key == "max-rule-num":
-                key = "max-num-rules"
-            elif key == "min-rule-num":
-                key = "min-num-rules"
-
             if value == "true":
                 args = args + ["--"+key]
             elif value == "false":

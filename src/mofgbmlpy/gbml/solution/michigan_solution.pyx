@@ -254,7 +254,8 @@ cdef class MichiganSolution(AbstractSolution):
 
         txt = f"{txt}], Attributes: {{Number of classifier patterns: {self.__fitness}, Number of wins: {self.__num_wins}, "
         for key, val in self._attributes.items():
-            txt = f"{txt}{key}: {val}, "
+            if key != "Number of classifier patterns" and key != "Number of wins":
+                txt = f"{txt}{key}: {val}, "
         txt = f"{txt}}}"
         return txt
 
@@ -397,7 +398,14 @@ cdef class MichiganSolution(AbstractSolution):
             (xml.etree.ElementTree) XML element representing this object
         """
         root = xml_tree.Element("michiganSolution")
-        root.append(self._rule.to_xml())
+        rule_xml = self._rule.to_xml()
+        fuzzy_set_list_xml = rule_xml.find("antecedent").find("fuzzySetList")
+        rule_xml.remove(rule_xml.find("antecedent"))
+        rule_xml.append(xml_tree.Element("antecedent"))
+
+        root.append(rule_xml)
+        root.append(fuzzy_set_list_xml)
+
         attributes = xml_tree.SubElement(root, "attributes")
         for key, value in self.get_attributes().items():
             attribute = xml_tree.SubElement(attributes, "attribute")
@@ -421,8 +429,25 @@ cdef class MichiganSolution(AbstractSolution):
         Returns:
             MichiganSolution: Created object
         """
-        rule = AbstractRule.from_xml(xml_element.find("rule"), knowledge)
-        return MichiganSolution.from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder)
+
+        rule_xml = xml_element.find("rule")
+        antecedent_xml = rule_xml.find("antecedent")
+        antecedent_xml.append(xml_element.find("fuzzySetList"))
+
+        rule = AbstractRule.from_xml(rule_xml, knowledge)
+        new_sol = MichiganSolution.from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder)
+
+        attributes_xml = xml_element.find("attributes")
+        if attributes_xml is not None:
+            for attributes_xml in attributes_xml.findall("attribute"):
+                attr_id = attributes_xml.get("attributeID")
+                if attr_id == "NumberOfClassifierPatterns":
+                    attr_id = "Number of classifier patterns"
+                if attr_id == "NumberOfWinner":
+                    attr_id = "Number of wins"
+                attr_value = attributes_xml.text
+                new_sol.set_attribute(attr_id, attr_value)
+        return new_sol
 
     cpdef void set_antecedent_knowledge(self, Knowledge new_knowledge):
         """Set the antecedent knowledge base

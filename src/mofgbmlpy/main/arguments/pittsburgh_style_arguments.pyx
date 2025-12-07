@@ -29,11 +29,12 @@ class PittsburghStyleArguments(Arguments):
             (PittsburghStyleArguments): Loaded Arguments object
         """
 
-        algo_name = xml_element.find("ALGORITHM").text
+        algo_xml = xml_element.find("ALGORITHM")
+        algo_name = algo_xml.text if algo_xml is not None else "nsga2"
         args = PittsburghStyleArguments(algo_name)
 
-        try:
-            for child in xml_element:
+        for child in xml_element:
+            try:
                 val_type = args.get_type(child.tag)
 
                 if val_type is not None:
@@ -46,11 +47,8 @@ class PittsburghStyleArguments(Arguments):
                         list_items = [item.strip()[1:-1] for item in list_str.split(",")]
                         args.set(child.tag, list_items)
                     else:
-                        # e.g. if float use float(); if ClassA use ClassA()
                         val_type = eval(val_type)
                         args.set(child.tag, val_type(child.text))
-
-        except Exception as e:
-            print(f"Error loading Arguments from XML: {child}")
-            raise e
+            except Exception:
+                print(f"Couldn't load argument: {child.tag} from XML")
         return args

@@ -118,7 +118,13 @@ class Input:
             or not arguments.has_key("TEST_FILE")
             or not arguments.has_key("IS_MULTI_LABEL")
         ):
-            raise ValueError("Invalid arguments")
+            if arguments is None:
+                return "Arguments is None"
+            msg ="Invalid arguments, missing: "
+            for key in ["TRAIN_FILE", "TEST_FILE", "IS_MULTI_LABEL"]:
+                if not arguments.has_key(key):
+                    msg += key + " "
+            raise ValueError(msg)
 
         train_file_name = arguments.get("TRAIN_FILE")
         test_file_name = arguments.get("TEST_FILE")

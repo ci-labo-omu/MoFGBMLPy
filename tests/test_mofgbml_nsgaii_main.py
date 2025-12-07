@@ -1,3 +1,4 @@
+import xml.etree.cElementTree as xml_tree
 import os
 import time
 from pathlib import Path
@@ -286,6 +287,8 @@ def test_from_xml():
     imported_population, knowledge, _ = PittsburghMain.import_xml_classifiers(results_path)
     imported_population = imported_population.get("X")[:, 0]
 
+    # knowledge.plot_fuzzy_variables()
+
     assert len(saved_population) == len(imported_population)
     for i in range(len(saved_population)):
         saved_sol = saved_population[i]
@@ -309,3 +312,20 @@ def test_from_xml():
             assert saved_michigan.get_num_wins() == imported_michigan.get_num_wins()
             assert saved_michigan.get_fitness() == imported_michigan.get_fitness()
             assert saved_michigan.get_rule_weight_py().get_value() == imported_michigan.get_rule_weight_py().get_value()
+
+
+def test_from_java_xml():
+    tests_root = Path(__file__).parent
+    data_path = os.path.join(tests_root.parent, "dataset")
+    train_path = f"{data_path}{os.sep}iris{os.sep}a0_0_iris-10tra.dat"
+    test_path = f"{data_path}{os.sep}iris{os.sep}a0_0_iris-10tst.dat"
+
+    results_path = f"{tests_root}{os.sep}test_data{os.sep}java_results.xml"
+    imported_population, imported_knowledge, _ = PittsburghMain.import_xml_classifiers(results_path, train_path, test_path, objectives=["error-rate", "num-rules"])
+    imported_population = imported_population.get("X")[:, 0]
+
+    xml_tree.dump(imported_knowledge.to_xml())
+    # imported_knowledge.plot_fuzzy_variables()
+
+    print(imported_population)
+

@@ -429,10 +429,17 @@ class AbstractMain(ABC):
         Returns:
             xml.etree.cElementTree.ElementTree: XML element
         """
-        root = xml_tree.Element("results")
+        root = xml_tree.Element("results_XML.xml")
+
         root.append(self._mofgbml_args.to_xml())
-        root.append(knowledge.to_xml())
-        population = xml_tree.SubElement(root, "population")
+
+        generations = xml_tree.SubElement(root, "generations")
+        # if self._termination.has_key("n_gen"):
+        #     generations.set("evaluation", str(self._termination.n_eval))
+        # else:
+        #     generations.set("generation", str(self._termination.n_gen))
+        generations.append(knowledge.to_xml())
+        population = xml_tree.SubElement(generations, "population")
         for ind in pop:
             population.append(ind.X[0].to_xml())
 

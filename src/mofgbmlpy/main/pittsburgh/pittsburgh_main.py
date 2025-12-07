@@ -47,8 +47,8 @@ class PittsburghMain(AbstractMain):
         self._sampling = HybridGBMLSampling(self._learner)
 
         pittsburgh_crossover = PittsburghCrossover(
-            self._mofgbml_args.get("MIN_NUM_RULES"),
-            self._mofgbml_args.get("MAX_NUM_RULES"),
+            self._mofgbml_args.get("MIN_RULE_NUM"),
+            self._mofgbml_args.get("MAX_RULE_NUM"),
             self._random_gen,
             self._mofgbml_args.get("PITTSBURGH_CROSS_RT"),
         )
@@ -62,7 +62,7 @@ class PittsburghMain(AbstractMain):
                     self._mofgbml_args.get("RULE_CHANGE_RT"),
                     self._train,
                     self._knowledge,
-                    self._mofgbml_args.get("MAX_NUM_RULES"),
+                    self._mofgbml_args.get("MAX_RULE_NUM"),
                     self._random_gen,
                     self._mofgbml_args.get("MICHIGAN_CROSS_RT"),
                 ),
@@ -231,11 +231,15 @@ class PittsburghMain(AbstractMain):
             sol_id += 1
 
     @staticmethod
-    def import_xml_classifiers(file_path):
+    def import_xml_classifiers(file_path, train_file_path=None, test_file_path=None, is_multi_label=False, objectives=None):
         """Import classifiers from an XML file
 
         Args:
             file_path (str): Path of the XML file
+            train_file_path (str): Path of the training data file
+            test_file_path (str): Path of the test data file
+            is_multi_label (bool): If true then the dataset is multi-label
+            objectives (Objective[]): Objectives used in the problem
 
         Returns:
             PittsburghSolution[]: List of Pittsburgh solutions
@@ -246,15 +250,31 @@ class PittsburghMain(AbstractMain):
         root = tree.getroot()
 
         consts_xml = root.find("consts")
-        consts_xml.remove(consts_xml.find("IS_MICHIGAN_STYLE"))
 
         args = PittsburghStyleArguments.from_xml(consts_xml)
         knowledge = None
         classifiers = []
 
-        knowledge_xml = root.find("knowledgeBase")
+        generation_xml = root.findall("generations")[-1]
+
+        knowledge_xml = generation_xml.find("knowledgeBase")
         if knowledge_xml is not None:
             knowledge = Knowledge.from_xml(knowledge_xml)
+
+        if not args.has_key("TRAIN_FILE"):
+            if train_file_path is None:
+                raise ValueError("Train file path must be provided")
+            args.set("TRAIN_FILE", train_file_path)
+        if not args.has_key("TEST_FILE"):
+            if test_file_path is None:
+                test_file_path = train_file_path
+            args.set("TEST_FILE", test_file_path)
+        if not args.has_key("IS_MULTI_LABEL"):
+            args.set("IS_MULTI_LABEL", is_multi_label)
+        if not args.has_key("OBJECTIVES"):
+            if objectives is None:
+                raise ValueError("Objectives must be provided")
+            args.set("OBJECTIVES", objectives)
 
         training_data_set, _ = Input.get_train_test_files(args)
         is_dc_probability = args.get("IS_PROBABILITY_DONT_CARE")
@@ -264,7 +284,7 @@ class PittsburghMain(AbstractMain):
         num_constraints = 0
         num_vars = args.get("INITIATION_RULE_NUM")
 
-        population_xml = root.find("population")
+        population_xml = generation_xml.find("population")
 
         random_gen = np.random.Generator(np.random.MT19937(seed=2022))
         antecedent_factory = HeuristicAntecedentFactory(training_data_set, knowledge, is_dc_probability, dc_rate,
