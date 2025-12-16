@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 cimport numpy as cnp
+from matplotlib import pyplot as plt
 
 from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.data.dataset cimport Dataset
@@ -18,6 +19,8 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionBuilder
+
+from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
 from mofgbmlpy.gbml.solution.pittsburgh_scikit_classifier import PittsburghScikitClassifier
 
 cdef class PittsburghSolution(AbstractSolution):
@@ -459,3 +462,60 @@ cdef class PittsburghSolution(AbstractSolution):
             PittsburghScikitClassifier: New Scikit-learn classifier
         """
         return PittsburghScikitClassifier(self)
+
+    def plot_rules(self, var_names=None, rules_names=None, dims=None):
+        """Plot the rules of this classifier
+
+        Args:
+            var_names (list): Names of the variables (Michigan solutions) to use in the plot
+            rules_names (list): Names of the rules to use in the plot
+            dims (list): Dimensions to plot. If None then all dimensions are plotted
+        """
+        cdef int num_vars = self.get_num_vars()
+        cdef int i
+        cdef MichiganSolution var
+        cdef Antecedent antecedent
+
+        antecedent = self.get_var(0).get_antecedent()
+
+        if dims is None:
+            dims = list(range(antecedent.get_array_size()))
+        else:
+            prev_dim = None
+            for dim in dims:
+                if dim < 0 or dim >= antecedent.get_array_size():
+                    raise ValueError(f"Dimension {dim} is out of range")
+                if prev_dim is not None and dim <= prev_dim:
+                    raise ValueError("Dimensions must be in ascending order and unique")
+                prev_dim = dim
+
+        num_dims = len(dims)
+
+        if rules_names is None:
+            rules_names = []
+            for i in range(num_vars):
+                rules_names.append(f"Rule {i}")
+
+        fig, axes = plt.subplots(num_vars, num_dims, figsize=(4*num_dims, 3*num_vars))
+        fig.subplots_adjust(hspace=1.0, wspace=0.35)
+
+        for i in range(num_vars):
+            var = self.get_var(i)
+            antecedent = var.get_antecedent()
+            axes[i, :] = antecedent.get_plot(axes[i, :], var_names, dims, line_width=5)
+
+            row_bbox = axes[i, 0].get_position()
+            y_center = 0.5 * (row_bbox.y0 + row_bbox.y1)
+
+            y = axes[i, 0].get_position().y1 + 0.01*num_dims
+
+            fig.text(
+                0.5, y,
+                rules_names[i],
+                ha="center",
+                va="bottom",
+                fontsize=20,
+                fontweight="bold"
+            )
+
+        plt.show()

@@ -146,7 +146,7 @@ cdef class Dataset:
         """
         cdef int i, j
         cdef cnp.ndarray[cnp.float64_t, ndim=2] X = np.empty((self.__size, self.__num_dim), dtype=np.float64)
-        cdef cnp.ndarray[cnp.int_t, ndim=1] Y = np.empty(self.__size, dtype=np.int32)
+        cdef cnp.ndarray[cnp.int32_t, ndim=1] Y = np.empty(self.__size, dtype=np.int32)
         cdef Pattern p
 
         for i in range(self.__size):

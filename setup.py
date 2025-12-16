@@ -86,7 +86,7 @@ setup(
         'numpy<2.0.0',
         'matplotlib<3.9',
         'scikit-learn',
-        'gbml',
+        'pymoo',
         'pytest',
         'Cython',
         'pyrecorder',

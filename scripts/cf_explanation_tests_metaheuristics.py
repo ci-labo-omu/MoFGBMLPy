@@ -20,7 +20,7 @@ from mofgbmlpy.explainer.counterfactual_explainer_benchmark import CounterFactua
 from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics import CounterFactualExplainerMetaheuristics as CFEMetaheuristics
 from mofgbmlpy.explainer.util import append_rule_classifier
 
-def get_config(data_name, min_num_rules=None, num_evals=5000):
+def get_config(data_name, min_num_rules=None, num_evals=5000, verbose=True, interpretability_obj="num-rules"):
     args = [
         "--data-name",
         f"{data_name}",
@@ -35,10 +35,17 @@ def get_config(data_name, min_num_rules=None, num_evals=5000):
         "--terminate-evaluation",
         str(num_evals),
         "--no-output-files",
-        "--objectives",
-        "error-rate",
-        "num-rules",
     ]
+
+    if interpretability_obj == "num-rules":
+        args.extend(["--objectives", "error-rate", "num-rules"])
+    elif interpretability_obj == "total-rule-length":
+        args.extend(["--objectives", "error-rate", "total-rule-length"])
+    else:
+        raise ValueError(f"Unknown interpretability objective: {interpretability_obj}")
+
+    if verbose:
+        args.append("--verbose")
 
     if min_num_rules is not None:
         args.extend(["--min-num-rules", str(min_num_rules)])
@@ -136,7 +143,7 @@ if __name__ == "__main__":
     # CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=0, r_idx=0, c_target=1, sol_idx=2)
 
     # Example run on a simple dataset, here we have 1 CF rule per rule
-    _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris_merged_1_2", min_num_rules=2)
+    # _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris_merged_1_2", min_num_rules=2)
 
     # for i in range(len(non_dominated_solutions)):
     #     cl = non_dominated_solutions[i][0]
@@ -146,18 +153,64 @@ if __name__ == "__main__":
     #         for var in cl.get_vars():
     #             print(var.get_rule())
     #         print("====================")
+    #
+    # cl_idx = 47  # different attributes used, only 1 per rule, 2 rules
+    # initial_classifier = non_dominated_solutions[cl_idx][0]
 
-    cl_idx = 47  # different attributes used, only 1 per rule, 2 rules
+    # for var in initial_classifier.get_vars():
+    #     print(var.get_rule())
+    #
+    # var_names = ["Sepal Length", "Sepal Width", "Petal Length", "Petal Width"]
+    # class_labels = ["Setosa", "Versicolor or Virginica"]
+    # cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=6, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"], decision_boundaries_fixed_vals=[0.5, None, None, 0.5])[0]
+    #
+    # new_cl = append_rule_classifier(initial_classifier, cf_rule_1, train_set=train_dataset)
+    # non_dominated_solutions = np.array([[new_cl]])
+    #
+    # cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=3, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"], decision_boundaries_fixed_vals=[0.5, None, None, 0.5])[0]
+
+    # Example on Pima
+    _, train_dataset, test_dataset, non_dominated_solutions = get_config("pima", min_num_rules=2, verbose=True, interpretability_obj="total-rule-length")
+
+    # for i in range(len(non_dominated_solutions)):
+    #     cl = non_dominated_solutions[i][0]
+    #     if len(cl.get_vars()) == 2:
+    #         print(i, cl.get_total_rule_length(), cl.get_error_rate())
+    #
+    #         for var in cl.get_vars():
+    #             print(var.get_rule())
+    #         print("====================")
+
+    cl_idx = 5
     initial_classifier = non_dominated_solutions[cl_idx][0]
+    decision_boundaries_fixed_vals = [0.18, None, 0.59, 0.23, 0.03, 0.48, 0.13, None]
+
+    # for i in range(train_dataset.get_num_dim()):
+    #     feature_values = [p.get_attribute_value(i) for p in train_dataset.get_patterns()]
+    #     median_value = np.median(feature_values)
+    #     print(f"Feature {i} median value: {median_value}")
 
     # for var in initial_classifier.get_vars():
     #     print(var.get_rule())
 
-    var_names = ["Sepal Length", "Sepal Width", "Petal Length", "Petal Width"]
-    class_labels = ["Setosa", "Versicolor or Virginica"]
-    cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=6, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"])[0]
+    var_names = ["Preg", "Plas", "Pres", "Skin", "Insu", "Mass", "Pedi", "Age"]
+    class_labels = ["Tested negative", "Tested positive"]
+    cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=15, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
 
     new_cl = append_rule_classifier(initial_classifier, cf_rule_1, train_set=train_dataset)
     non_dominated_solutions = np.array([[new_cl]])
 
-    cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=3, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"])[0]
+    cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=39, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
+    new_cl = append_rule_classifier(new_cl, cf_rule_2, train_set=train_dataset)
+
+    rules_names = ["Factual Rule 1", "Factual Rule 2", "CF Rule 1", "CF Rule 2"]
+
+    new_cl.update_winners_and_errors(train_dataset)
+    new_cl.plot_rules(var_names, rules_names, dims=[1, 7])
+    print(f"Initial classifier error rate: {initial_classifier.get_error_rate()}")
+    print(f"New classifier error rate: {new_cl.get_error_rate()}")
+    for var in new_cl.get_vars():
+        print(var.get_rule())
+
+
+

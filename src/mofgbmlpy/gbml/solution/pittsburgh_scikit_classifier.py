@@ -115,7 +115,7 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
     def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100, var_names=None, class_labels=None):
         X = X.astype(np.float32)
         if X.shape[1] > 2 and (fixed_vals is None or len(fixed_vals) != X.shape[1]):
-            raise NotImplementedError("Decision boundary plot is only implemented for 2D datasets.")
+            raise NotImplementedError("Decision boundary plot is only implemented for 2D datasets. For higher dimensions, please provide fixed_vals with fixed values for all but two dimensions.")
 
         num_classes = len(np.unique(y))
 

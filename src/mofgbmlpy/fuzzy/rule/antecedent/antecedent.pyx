@@ -254,12 +254,13 @@ cdef class Antecedent:
         """
         self.__knowledge = new_knowledge
 
-    def get_plot(self, ax, dim):
-        """Draw the antecedent fuzzy sets on the given matplotlib Axes object
+    def get_plot_single_fs(self, ax, dim, line_width=2):
+        """Draw the antecedent fuzzy set at given dim on the given matplotlib Axes object
 
         Args:
             ax (matplotlib.axes.Axes): Axes object
             dim (int): Dimension to plot
+            line_width (int): Line width for the plot line
 
         Returns:
             matplotlib.axes.Axes: The axes object where we drew
@@ -270,24 +271,44 @@ cdef class Antecedent:
         fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
 
         points = fuzzy_set.get_function().get_plot_points(0, 1)
-        ax.plot(points[:,0], points[:,1])
+        ax.plot(points[:,0], points[:,1], linewidth=line_width)
         ax.set_title(f"x_{dim}")
         ax.set_xlim([0,1])
         ax.set_ylim([0,1.1])
 
         return ax
 
+    def get_plot(self, axes, var_names=None, dims=None, line_width=2):
+        """Draw the antecedent fuzzy sets on the given matplotlib Axes array
+
+        Args:
+            axes (matplotlib.axes.Axes[]): Axes array
+            var_names (str[]): Names of the variables for each dimension
+            dims (int[]): Dimensions to plot (if None, all dimensions are plotted)
+            line_width (int): Line width for the plot lines
+
+        Returns:
+            matplotlib.axes.Axes[]: The axes array where we drew
+        """
+        if dims is None:
+            dims = list(range(self.get_array_size()))
+        if len(axes) != len(dims):
+            raise ValueError("The given axes array has not the correct size")
+
+        for i in range(len(dims)):
+            idx = dims[i]
+            axes[i] = self.get_plot_single_fs(axes[i], idx, line_width)
+            if var_names is not None:
+                axes[i].set_title(var_names[idx], fontsize=15)
+
+        return axes
+
     def plot_antecedent(self, title=None, var_names=None):
         fig, axes = plt.subplots(1, self.get_array_size(), figsize=(25, 3))
 
-        for i in range(self.get_array_size()):
-            axes[i] = self.get_plot(axes[i], i)
+        axes = self.get_plot(axes, var_names)
 
         if title is not None:
             fig.suptitle(title)
-
-        if var_names is not None:
-            for i in range(self.get_array_size()):
-                axes[i].set_title(var_names[i])
 
         plt.show()

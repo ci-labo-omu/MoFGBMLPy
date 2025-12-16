@@ -261,7 +261,7 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def main_plot_single(
-        explainer_class, classifiers, cl_idx=0, r_idx=0, c_target=0, sol_idx=None, plot=True, test_dataset=None, var_names=None, class_labels=None, **kwargs
+        explainer_class, classifiers, cl_idx=0, r_idx=0, c_target=0, sol_idx=None, plot=True, test_dataset=None, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None, **kwargs
     ):
         classifier = classifiers[cl_idx][0]
 
@@ -285,7 +285,7 @@ class CounterFactualExplainerBenchmark:
             non_dominated_solutions = Population.new(X=np.array([sol.X]), F=np.array([sol.F]))
 
         rules = non_dominated_solutions.get("X").flatten()
-        #
+
         # problem = explainer.get_problem()
         # initial_error_rate = problem.error_rate(initial_classifier=True)
         # not_worse_indices = []
@@ -294,8 +294,12 @@ class CounterFactualExplainerBenchmark:
         #     print(f"Solution {i} Train error rate variation: {train_err_var:.4f}")
         #     if train_err_var <= 0:
         #         not_worse_indices.append(i)
-        # remove not in not_worse_indices
-        # rules = [rules[i] for i in not_worse_indices]
+        # # remove not in not_worse_indices
+        #
+        # print(not_worse_indices)
+        #
+        # if len(not_worse_indices) != 0:
+        #     rules = [rules[i] for i in not_worse_indices]
 
         # plot the results
         if plot:
@@ -331,12 +335,12 @@ class CounterFactualExplainerBenchmark:
 
         if plot and len(rules) < 3:
             train_set = explainer.get_problem().get_train_set()
-            CounterFactualExplainerBenchmark.compare_classifiers(classifier, rules, train_set, var_names, class_labels)
+            CounterFactualExplainerBenchmark.compare_classifiers(classifier, rules, train_set, var_names, class_labels, decision_boundaries_fixed_vals)
 
         return rules
 
     @staticmethod
-    def compare_classifiers(initial_classifier, cf_rules, train_set, var_names=None, class_labels=None):
+    def compare_classifiers(initial_classifier, cf_rules, train_set, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None):
         X, y = train_set.get_scikit_xy()
 
         # Compare the two classifiers
@@ -346,7 +350,7 @@ class CounterFactualExplainerBenchmark:
 
         # Decision boundary plot
         initial_classifier_sk.plot_decision_boundaries(
-            X, y, title="Initial Classifier Decision Boundaries", fixed_vals=[0.5, None, None, 0.5], var_names=var_names, class_labels=class_labels
+            X, y, title="Initial Classifier Decision Boundaries", fixed_vals=decision_boundaries_fixed_vals, var_names=var_names, class_labels=class_labels
         )
 
         # Confusion matrix plot
@@ -359,7 +363,7 @@ class CounterFactualExplainerBenchmark:
 
             # Decision boundary plot
             new_cl.plot_decision_boundaries(
-                X, y, title="New Classifier Decision Boundaries", fixed_vals=[0.5, None, None, 0.5], var_names=var_names, class_labels=class_labels
+                X, y, title="New Classifier Decision Boundaries", fixed_vals=decision_boundaries_fixed_vals, var_names=var_names, class_labels=class_labels
             )
 
             # Confusion matrix plot

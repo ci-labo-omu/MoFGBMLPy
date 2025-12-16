@@ -40,6 +40,7 @@ If you don't need to edit the source code of this library you can just use :
 3. Activate this environment: `source .venv/bin/activate` (or `".venv/Scripts/activate.bat"` on Windows)
 4. Install the dependencies: `python -m pip install -r requirements.txt`
 5. `python setup.py build_ext --inplace`
+6. `pip install -e .`
 
 
 ### Note
