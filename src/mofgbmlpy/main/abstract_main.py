@@ -349,7 +349,7 @@ class AbstractMain(ABC):
         ):
             pretty_xml = True
 
-        results_xml = self.get_results_xml(self._knowledge, res.pop)
+        results_xml = self.get_results_xml(res.pop)
         Output.save_data(
             results_xml,
             str(os.path.join(self._mofgbml_args.get("EXPERIMENT_ID_DIR"), "results.xml")),
@@ -408,24 +408,34 @@ class AbstractMain(ABC):
         """
         raise AbstractMethodException()
 
-    def get_results_xml(self, knowledge, pop):
+    def get_results_xml(self, pop, knowledge=None):
         """Get the results as an XML object
 
         Args:
-            knowledge (Knowledge): Knowledge base
             pop (Population): Population of solutions
+            knowledge (Knowledge): Knowledge base
 
         Returns:
             xml.etree.cElementTree.ElementTree: XML element
         """
         root = xml_tree.Element("results")
         root.append(self._mofgbml_args.to_xml())
+        if knowledge is None:
+            knowledge = self._knowledge
         root.append(knowledge.to_xml())
         population = xml_tree.SubElement(root, "population")
         for ind in pop:
             population.append(ind.X[0].to_xml())
 
         return xml_tree.ElementTree(root)
+
+    def get_results_csv(self, pop):
+        csv_data = ""
+
+        for ind in pop:
+            csv_data += ind.X[0].to_csv() + "\n\n"
+
+        return csv_data
 
     @staticmethod
     def save_video(history, filename):

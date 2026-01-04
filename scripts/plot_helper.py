@@ -497,6 +497,7 @@ if __name__ == "__main__":
 
     # main(filter_datasets=["iris", "bupa", "pima"], filter_params=["mutation_prob"], param_values_range=(0.1, 1), plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
     # main(filter_datasets=["iris", "bupa", "pima"], filter_params=["mutation_prob"], param_values_range=(0.01, 0.1), plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
-    main(filter_datasets=["iris", "bupa", "pima"], filter_params=["mutation_prob"], param_values_range=(0, 0.01), plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main(filter_datasets=["iris", "bupa", "pima"], filter_params=["mutation_prob"], param_values_range=(0, 0.01), plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    main(filter_datasets=["iris", "bupa", "pima"], plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=False, do_plot_metrics=False, do_plot_success_rates=True, aggregate_datasets=False)
 
     # main(filter_params=["train_error_rate_append_initial_variation"], filter_test_names=["classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=False, aggregate_datasets=True)

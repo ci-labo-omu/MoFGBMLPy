@@ -178,6 +178,7 @@ old_cf_results
 cf_results
 
 scripts/latex_helper.py
+scripts/latex_helper_params_tests.py
 scripts/dataset_gen.py
 
 # DOCS

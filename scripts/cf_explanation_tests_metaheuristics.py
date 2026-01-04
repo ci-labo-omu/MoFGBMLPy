@@ -6,6 +6,8 @@ import numpy as np
 from mofgbmlpy.data.dataset import Dataset
 
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
+from pymoo.core.population import Population
+
 from mofgbmlpy.data.input import Input
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import \
     HomoTriangleKnowledgeFactory_2_3_4_5
@@ -13,6 +15,8 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
 
 from mofgbmlpy.data.pattern import Pattern
+
+from mofgbmlpy.data.output import Output
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 from mofgbmlpy.explainer.util import remove_duplicates
@@ -68,14 +72,34 @@ def get_config(data_name, min_num_rules=None, num_evals=5000, verbose=True, inte
 
     num_classes = train_set.get_num_classes()
 
-    return num_classes, train_set, test_set, non_dominated_solutions
+    return num_classes, train_set, test_set, non_dominated_solutions, runner
+
 
 if __name__ == "__main__":
-    # _, _, test_dataset, non_dominated_solutions = get_config("iris")
+    # for data_name in ["bupa", "pima"]:
+    #     out_path = f"..\\cf_results\\saved_solutions\\{data_name}"
+    #     os.makedirs(out_path, exist_ok=True)
+    #     _, _, test_dataset, non_dominated_solutions, runner = get_config(data_name)
+    #
+    #     results_data = runner.solutions_list_to_dict_array(non_dominated_solutions.flatten())
+    #     Output.save_data(results_data, str(os.path.join(out_path, "results.csv")))
+    #
+    #     non_dominated_solutions = Population.new(X=non_dominated_solutions)
+    #     results_csv = runner.get_results_csv(non_dominated_solutions)
+    #
+    #     out_file = str(os.path.join(out_path, "results.csv"))
+    #
+    #     with open(out_file, "w") as f:
+    #         f.write(results_csv)
+    #
+    #
+    # raise Exception("STOP")
+
+    # _, _, test_dataset, non_dominated_solutions, _ = get_config("iris")
     # CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=29, r_idx=0, c_target=0, sol_idx=3)
 
     # for data_name in ["bupa", "iris", "pima"]:
-    #     num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=2)
+    #     num_classes, _, test_dataset, non_dominated_solutions, _ = get_config(data_name, min_num_rules=2)
     #     test_name = "min_num_rules_2"
     #
     #     result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
@@ -84,7 +108,7 @@ if __name__ == "__main__":
     #
     # for min_num_rules in [1, 2]:
     #     for data_name in ["bupa", "iris", "pima"]:
-    #         num_classes, train_dataset, test_dataset, non_dominated_solutions = get_config(data_name, min_num_rules=min_num_rules)
+    #         num_classes, train_dataset, test_dataset, non_dominated_solutions, _ = get_config(data_name, min_num_rules=min_num_rules)
 
             # result_path = f"..\\cf_results\\cf_metaheuristics\\param_search\\min_num_rules_{min_num_rules}\\mutation_prob\\{data_name}"
             # CFEBenchmark.param_search(CFEMetaheuristics, num_classes, non_dominated_solutions, result_path, "mutation_prob", test_dataset=test_dataset, data_name=data_name, min_val=0.01, max_val=0.09, num_experiments=9)
@@ -123,7 +147,7 @@ if __name__ == "__main__":
     #         print(f"All tests on {data_name} have already been run, skipping...")
     #         continue
     #
-    #     num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
+    #     num_classes, _, test_dataset, non_dominated_solutions, _ = get_config(data_name)
     #
     #     for test_name, config in test_configs.items():
     #         result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
@@ -131,7 +155,7 @@ if __name__ == "__main__":
 
 
     # Example run on a simple dataset
-    # _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris")
+    # _, train_dataset, test_dataset, non_dominated_solutions, _ = get_config("iris")
     # cl_idx = 29  # consequent class is 2
     # cf_rule = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=0, sol_idx=3)[0]
     #
@@ -143,7 +167,7 @@ if __name__ == "__main__":
     # CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=0, r_idx=0, c_target=1, sol_idx=2)
 
     # Example run on a simple dataset, here we have 1 CF rule per rule
-    # _, train_dataset, test_dataset, non_dominated_solutions = get_config("iris_merged_1_2", min_num_rules=2)
+    # _, train_dataset, test_dataset, non_dominated_solutions, _ = get_config("iris_merged_1_2", min_num_rules=2)
 
     # for i in range(len(non_dominated_solutions)):
     #     cl = non_dominated_solutions[i][0]
@@ -170,7 +194,7 @@ if __name__ == "__main__":
     # cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=3, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"], decision_boundaries_fixed_vals=[0.5, None, None, 0.5])[0]
 
     # Example on Pima
-    _, train_dataset, test_dataset, non_dominated_solutions = get_config("pima", min_num_rules=2, verbose=True, interpretability_obj="total-rule-length")
+    _, train_dataset, test_dataset, non_dominated_solutions, _ = get_config("pima", min_num_rules=2, verbose=True, interpretability_obj="total-rule-length")
 
     # for i in range(len(non_dominated_solutions)):
     #     cl = non_dominated_solutions[i][0]

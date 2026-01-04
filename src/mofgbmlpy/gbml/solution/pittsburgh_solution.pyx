@@ -281,6 +281,20 @@ cdef class PittsburghSolution(AbstractSolution):
 
         return root
 
+    def to_csv(self):
+        csv_str = "PittsburghSolution_Basic,"
+        for i in range(self.get_num_objectives()):
+            csv_str += f"Objectives[{i}]=,{self.get_objective(i):.4f}..,"
+        csv_str += "\n"
+        for var in self._vars:
+            csv_str += f"\t->{var.to_csv()}\n"
+        attributes = self.get_attributes()
+        csv_str += ",attributes={,"
+        for key, value in attributes.items():
+            csv_str += f"{key},{value},"
+        csv_str += "}"
+        return csv_str
+
     cpdef bint are_rules_valid(self):
         """Check if the rules are valid (at least one rule inside this solution and no rejected rule)
         

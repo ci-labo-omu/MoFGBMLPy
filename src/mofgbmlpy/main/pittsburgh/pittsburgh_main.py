@@ -62,7 +62,7 @@ class PittsburghMain(AbstractMain):
         else:
             raise ValueError("Unknown crossover type")
 
-        num_objectives_michigan = 2
+        num_objectives_michigan = 1
         num_constraints_michigan = 0
 
         num_vars_pittsburgh = self._mofgbml_args.get("INITIATION_RULE_NUM")

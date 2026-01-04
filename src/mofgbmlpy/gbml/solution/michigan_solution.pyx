@@ -412,6 +412,22 @@ cdef class MichiganSolution(AbstractSolution):
 
         return root
 
+    def to_csv(self):
+        # e.g. MichiganSolution_Basic,variables=,  0,   0,   0,   2,RuleWeight=,0.1770..,ClassLabel=, 2,Objectives[0]=,0.0000..,attributes={,NumberOfClassifierPatterns,12,NumberOfWinner,12,}
+        csv_str = "MichiganSolution_Basic,variables=,"
+        if self.get_num_vars()>0:
+            csv_str += f" {str(self._vars[0]):>2}," # to respect the java version format
+        for i in range(1,self.get_num_vars()):
+            csv_str += f" {str(self._vars[i]):>3},"
+
+        csv_str += f"RuleWeight=,{self.get_rule_weight_py().get_value():.4f}..,"
+        csv_str += f"ClassLabel=, {self.get_class_label().get_class_label_value()},"
+
+        for i in range(self.get_num_objectives()):
+            csv_str += f"Objectives[{i}]=,{self._objectives[i]:.4f}..,"
+
+        csv_str += f"attributes={{,NumberOfClassifierPatterns,{self.__fitness},NumberOfWinner,{self.__num_wins},}}"
+        return csv_str
 
     cpdef void set_knowledge(self, Knowledge new_knowledge):
         """Set the antecedent and rule builder knowledge base
