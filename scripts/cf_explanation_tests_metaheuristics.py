@@ -76,24 +76,28 @@ def get_config(data_name, min_num_rules=None, num_evals=5000, verbose=True, inte
 
 
 if __name__ == "__main__":
-    # for data_name in ["bupa", "pima"]:
-    #     out_path = f"..\\cf_results\\saved_solutions\\{data_name}"
-    #     os.makedirs(out_path, exist_ok=True)
-    #     _, _, test_dataset, non_dominated_solutions, runner = get_config(data_name)
-    #
-    #     results_data = runner.solutions_list_to_dict_array(non_dominated_solutions.flatten())
-    #     Output.save_data(results_data, str(os.path.join(out_path, "results.csv")))
-    #
-    #     non_dominated_solutions = Population.new(X=non_dominated_solutions)
-    #     results_csv = runner.get_results_csv(non_dominated_solutions)
-    #
-    #     out_file = str(os.path.join(out_path, "results.csv"))
-    #
-    #     with open(out_file, "w") as f:
-    #         f.write(results_csv)
-    #
-    #
-    # raise Exception("STOP")
+    for data_name in ["bupa", "pima"]:
+        out_path = f"..\\cf_results\\saved_solutions\\{data_name}"
+        os.makedirs(out_path, exist_ok=True)
+        _, _, test_dataset, non_dominated_solutions, runner = get_config(data_name, num_evals=10000)
+
+        results_data = runner.solutions_list_to_dict_array(non_dominated_solutions.flatten())
+        Output.save_data(results_data, str(os.path.join(out_path, "results.csv")))
+
+        non_dominated_solutions = Population.new(X=non_dominated_solutions)
+        results_csv = runner.get_results_csv(non_dominated_solutions)
+        results_xml = runner.get_results_xml(non_dominated_solutions)
+
+        out_file = str(os.path.join(out_path, "results.csv"))
+
+        with open(out_file, "w") as f:
+            f.write(results_csv)
+
+        out_file = str(os.path.join(out_path, "results.xml"))
+        Output.save_data(results_xml, out_file, pretty_xml=True)
+
+
+    raise Exception("STOP")
 
     # _, _, test_dataset, non_dominated_solutions, _ = get_config("iris")
     # CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, test_dataset=test_dataset, cl_idx=29, r_idx=0, c_target=0, sol_idx=3)

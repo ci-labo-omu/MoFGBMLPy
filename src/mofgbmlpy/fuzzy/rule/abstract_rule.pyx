@@ -12,7 +12,13 @@ from mofgbmlpy.data.class_label.abstract_class_label cimport AbstractClassLabel
 from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport AbstractRuleWeight
 
+from mofgbmlpy.fuzzy.rule.rule_multi import RuleMulti
 
+from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
+
+from mofgbmlpy.fuzzy.rule.consequent.consequent_multi import ConsequentMulti
+
+from mofgbmlpy.fuzzy.rule.consequent.consequent_basic import ConsequentBasic
 
 cdef class AbstractRule:
     """Abstract fuzzy rule class
@@ -55,25 +61,25 @@ cdef class AbstractRule:
         """
         self._consequent = consequent
 
-    cdef float[:] get_membership_values(self, float[:] attribute_vector):
+    cdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values array for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (float[]): Input vector whose membership values are computed
+            attribute_vector (double[]): Input vector whose membership values are computed
 
         Returns:
-            float[]: Membership values
+            double[]: Membership values
         """
         return self._antecedent.get_membership_values(attribute_vector)
 
-    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatible grade value for the antecedent with the given attribute vector
         
         Args:
-            attribute_vector (float[]): Input vector whose compatible grade value is computed
+            attribute_vector (double[]): Input vector whose compatible grade value is computed
 
         Returns:
-            float: Compatible grade value
+            double: Compatible grade value
         """
         return self._antecedent.get_compatible_grade_value(attribute_vector)
 
@@ -96,7 +102,15 @@ cdef class AbstractRule:
 
     cdef AbstractRuleWeight get_rule_weight(self):
         """Get the rule weight object. Can only be accessed from Cython
-        
+
+        Returns:
+            AbstractRuleWeight: Rule weight object
+        """
+        return self._consequent.get_rule_weight()
+
+    def get_rule_weight_py(self):
+        """Get the rule weight object.
+
         Returns:
             AbstractRuleWeight: Rule weight object
         """
@@ -118,14 +132,14 @@ cdef class AbstractRule:
         """
         return self.get_antecedent().get_array_size()
 
-    cpdef float get_fitness_value(self, float[:] attribute_vector):
+    cpdef double get_fitness_value(self, double[:] attribute_vector):
         """Get the fitness value of the rule for the given input vector
         
         Args:
-            attribute_vector (float[]): Input vector 
+            attribute_vector (double[]): Input vector 
 
         Returns:
-            float: Fitness value
+            double: Fitness value
         """
         Exception("AbstractRule is abstract")
 
@@ -171,6 +185,29 @@ cdef class AbstractRule:
         root.append(self._consequent.to_xml())
 
         return root
+
+    @staticmethod
+    def from_xml(xml_element, knowledge):
+        """Initialize this object from an XML element
+
+        Args:
+            xml_element (xml.etree.ElementTree.Element): XML element
+            Knowledge: Knowledge base
+
+        Returns:
+            AbstractRule: Rule initialized from the XML element
+        """
+
+        antecedent_element = xml_element.find("antecedent")
+        consequent_element = xml_element.find("consequent")
+
+        antecedent = Antecedent.from_xml(antecedent_element, knowledge)
+        if "," in consequent_element.find("classLabel").text:
+            consequent = ConsequentMulti.from_xml(consequent_element)
+            return RuleMulti(antecedent, consequent)
+        else:
+            consequent = ConsequentBasic.from_xml(consequent_element)
+            return RuleBasic(antecedent, consequent)
 
     cpdef Knowledge get_knowledge(self):
         """Get the knowledge base

@@ -15,11 +15,11 @@ cdef class HomoTriangleKnowledgeFactory_2_3_4_5(HomoTriangleKnowledgeFactory):
         elif num_dims <= 0:
             raise ValueError("num_dims must be positive")
 
-        num_divisions = np.zeros((num_dims, 4), dtype=np.int_)
+        num_divisions = np.zeros((num_dims, 4), dtype=np.int32)
         fuzzy_set_names = np.zeros((num_dims, 4), dtype=list)
 
         for i in range(num_dims):
-            num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int_)
+            num_divisions[i] = np.array([2, 3, 4, 5], dtype=np.int32)
             fuzzy_set_names[i] = np.array([
                 ["low_2", "high_2"],
                 ["low_3", "medium_3", "high_3"],

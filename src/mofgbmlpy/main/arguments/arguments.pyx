@@ -25,6 +25,13 @@ class Arguments:
         self._parser = argparse.ArgumentParser()
         self.__config_root = os.path.dirname(os.path.abspath(__file__)) + "/config"
         self.load_config_file("base_arguments")
+        self._constructed_args = [
+            "ALGORITHM_ID_DIR",
+            "EXPERIMENT_ID_DIR",
+            "DATA_SIZE",
+            "ATTRIBUTE_NUMBER",
+            "CLASS_LABEL_NUMBER"
+        ]
 
     def add_args_dict_to_parser(self, args_dict):
         """Load arguments dictionary in the parser
@@ -179,14 +186,6 @@ class Arguments:
             key = Arguments.key_to_arg(item[0])
             value = str(item[1].data)
             
-            # Translate Java version args format to this version format
-            if key == "antecedent-len":
-                key = "antecedent-number-do-not-dont-care"
-            elif key == "max-rule-num":
-                key = "max-num-rules"
-            elif key == "min-rule-num":
-                key = "min-num-rules"
-
             if value == "true":
                 args = args + ["--"+key]
             elif value == "false":
@@ -302,8 +301,9 @@ class Arguments:
         """
         root = xml_tree.Element("consts")
         for key, value in self.__values.items():
-            term_xml = xml_tree.SubElement(root, key)
-            term_xml.text = str(value)
+            if value is not None and not self.is_arg_constructed(key):
+                term_xml = xml_tree.SubElement(root, key)
+                term_xml.text = str(value)
 
         return root
 
@@ -326,3 +326,41 @@ class Arguments:
                 return None
         else:
             raise Exception(f"Argument {arg} not found in the args definitions")
+
+    def get_type(self, arg):
+        """Get the argument type of a given argument
+
+        Args:
+            arg (str): Argument name
+
+        Returns:
+            str: Argument type
+        """
+
+        arg = Arguments.key_to_arg(arg)
+
+        if arg in self.__args_definition:
+            if "type" in self.__args_definition[arg]:
+                return self.__args_definition[arg]["type"]
+            else:
+                return None
+        else:
+            for group in self.__args_definition["exclusive-groups"]:
+                if arg in group:
+                    if "type" in group[arg]:
+                        return group[arg]["type"]
+                    else:
+                        return None
+            raise Exception(f"Argument {arg} not found in the args definitions")
+
+    def is_arg_constructed(self, key):
+        """Check if an argument is constructed (i.e. not given by the user, but computed from other arguments)
+
+        Args:
+            key (str): Argument name
+
+        Returns:
+            bool: True if the argument is constructed and false otherwise
+        """
+
+        return key in self._constructed_args

@@ -80,7 +80,7 @@ cdef class FuzzyVariable:
         Returns:
             float: Membership value
         """
-        self.get_membership_value(fuzzy_set_index, x)
+        return self.get_membership_value(fuzzy_set_index, x)
 
     cpdef int get_length(self):
         """Get the length of the fuzzy sets array (number of fuzzy sets for this variable including don't care)
@@ -222,6 +222,23 @@ cdef class FuzzyVariable:
 
         return root
 
+    @staticmethod
+    def from_xml(xml_element):
+        """Create a FuzzyVariable object from its XML representation
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element representing the fuzzy variable
+
+        Returns:
+            FuzzyVariable: FuzzyVariable object created from the XML element
+        """
+        imported_fuzzy_sets = xml_element.findall("fuzzyTerm")
+        cdef FuzzySet[:] fuzzy_sets = np.empty(len(imported_fuzzy_sets), dtype=object)
+
+        for i in range(len(imported_fuzzy_sets)):
+            fuzzy_sets[i] = FuzzySet.from_xml(imported_fuzzy_sets[i])
+
+        return FuzzyVariable(fuzzy_sets)
 
     def __eq__(self, other):
         """Check if another object is equal to this one

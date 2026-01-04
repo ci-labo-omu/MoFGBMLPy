@@ -105,16 +105,24 @@ class PittsburghProblem(Problem):
         """
         self.__michigan_solution_builder.get_rule_builder()
 
+    def get_knowledge(self):
+        """Get the knowledge used by the Michigan solution builder
+
+        Returns:
+            Knowledge: Knowledge used by the Michigan solution builder
+        """
+        return self.__michigan_solution_builder.get_rule_builder().get_knowledge()
+
     def _evaluate(self, X, out, *args, **kwargs):
         """Evaluate the solutions in the population
 
         Args:
             X (Population): Population evaluated
-            out (float[,]): Objective function values for each solution
+            out (double[,]): Objective function values for each solution
             *args (tuple): Other arguments for Pymoo
             **kwargs (dict): Other arguments for Pymoo
         """
-        cdef cnp.ndarray[float, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float32)
+        cdef cnp.ndarray[double, ndim=2] eval_values = np.empty((len(X), self.get_num_objectives()), dtype=np.float64)
         cdef int i
 
         # Update eval values
@@ -141,12 +149,13 @@ class PittsburghProblem(Problem):
             # Update eval values
             sol.update_winners_and_errors(self.__training_ds)
 
-            k = 0
+            indices_to_remove = []
             for j in range(sol.get_num_vars()):
-                if sol.get_var(k).get_num_wins() < 1:
-                    sol.remove_var(k)
-                else:
-                    k += 1
+                if sol.get_var(j).get_num_wins() < 1:
+                    indices_to_remove.append(j)
+
+            if len(indices_to_remove) != 0:
+                sol.remove_vars(np.array(indices_to_remove, dtype=np.int32))
 
             if sol.get_num_vars() == 0:
                 raise EmptyPittsburghSolution()

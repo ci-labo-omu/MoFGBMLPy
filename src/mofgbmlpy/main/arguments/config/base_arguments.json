@@ -71,13 +71,13 @@
         "type": "int",
         "required": false
     },
-    "max-num-rules": {
+    "max-rule-num": {
         "default": 60,
         "help": "Maximum number of rules in Pittsburgh solutions",
         "type": "int",
         "required": false
     },
-    "min-num-rules": {
+    "min-rule-num": {
         "default": 1,
         "help": "Minimum number of rules in Pittsburgh solutions",
         "type": "int",

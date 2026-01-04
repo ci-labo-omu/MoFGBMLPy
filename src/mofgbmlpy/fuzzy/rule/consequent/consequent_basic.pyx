@@ -75,3 +75,13 @@ cdef class ConsequentBasic(AbstractConsequent):
             return False
 
         return self._class_label == other.get_class_label() and self._rule_weight == other.get_rule_weight()
+
+    @staticmethod
+    def from_xml(xml_element):
+        class_label_element = xml_element.find("classLabel")
+        rule_weight_element = xml_element.find("ruleWeight")
+
+        class_label = ClassLabelBasic.from_xml(class_label_element)
+        rule_weight = RuleWeightBasic.from_xml(rule_weight_element)
+
+        return ConsequentBasic(class_label, rule_weight)

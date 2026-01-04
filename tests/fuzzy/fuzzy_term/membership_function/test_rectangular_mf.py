@@ -24,12 +24,12 @@ def test_invalid_left_right():
 @pytest.mark.parametrize(
     "x",
     np.concatenate(
-        [np.array([-0.5, 1.1], dtype=np.float32), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float32)]
+        [np.array([-0.5, 1.1], dtype=np.float64), np.random.uniform(low=-1, high=2, size=(10,)).astype(np.float64)]
     ),
 )
 def test_get_value_different_params(x):
-    left = np.float32(-0.5)
-    right = np.float32(1.1)
+    left = np.float64(-0.5)
+    right = np.float64(1.1)
     mf = RectangularMF(left, right)
     precision = 1e-6
     print(x, x > right)
@@ -42,7 +42,7 @@ def test_get_value_different_params(x):
 
 @pytest.mark.parametrize(
     "x",
-    np.concatenate([np.array([0], dtype=np.float32), np.random.uniform(low=-1, high=1, size=(5,)).astype(np.float32)]),
+    np.concatenate([np.array([0], dtype=np.float64), np.random.uniform(low=-1, high=1, size=(5,)).astype(np.float64)]),
 )
 def test_get_value_all_equal(x):
     # print dtype of x

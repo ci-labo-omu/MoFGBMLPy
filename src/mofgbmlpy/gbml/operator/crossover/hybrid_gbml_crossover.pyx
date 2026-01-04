@@ -9,7 +9,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
 
     Attributes:
         _random_gen (numpy.random.Generator): Random generator
-        __michigan_crossover_probability (float): Probability that a Michigan crossover occurs instead of a Pittsburgh one
+        __michigan_crossover_probability (double): Probability that a Michigan crossover occurs instead of a Pittsburgh one
         __michigan_crossover (MichiganCrossover): Probability that a Michigan crossover occurs after it has been decided that the crossover type would be the Michigan one
         __pittsburgh_crossover (PittsburghCrossover): Pittsburgh crossover used here depending on the Michigan crossover probability
     """
@@ -18,10 +18,10 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
 
         Args:
             random_gen (numpy.random.Generator): Random generator
-            michigan_crossover_probability (float): Probability that a Michigan crossover occurs instead of a Pittsburgh one
+            michigan_crossover_probability (double): Probability that a Michigan crossover occurs instead of a Pittsburgh one
             michigan_crossover (MichiganCrossover): Probability that a Michigan crossover occurs after it has been decided that the crossover type would be the Michigan one
             pittsburgh_crossover (PittsburghCrossover): Pittsburgh crossover used here depending on the Michigan crossover probability
-            prob (float): Probability that a crossover occurs
+            prob (double): Probability that a crossover occurs
         """
         super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob)
         self._random_gen = random_gen
@@ -38,7 +38,7 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         _, n_matings, n_var = X.shape
 
@@ -61,16 +61,16 @@ class HybridGBMLCrossover(PymooDeepcopyCrossover):
                     at_least_one_pittsburgh_crossover = True
 
         if at_least_one_pittsburgh_crossover:
-            Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, np.invert(michigan_crossover_mask)], **kwargs)
+            Y_pittsburgh = self.__pittsburgh_crossover.execute(problem, X[:, ~michigan_crossover_mask], **kwargs)
 
         if at_least_one_michigan_crossover:
-            Y_michigan = self.__michigan_crossover.execute(problem, X[0, michigan_crossover_mask], **kwargs)
+            Y_michigan = self.__michigan_crossover.execute(problem, np.expand_dims(X[0, michigan_crossover_mask], axis=0), **kwargs)
 
         if at_least_one_michigan_crossover and at_least_one_pittsburgh_crossover:
             return np.concatenate((Y_michigan, Y_pittsburgh), axis=1)
-        elif not at_least_one_michigan_crossover:
-            return Y_pittsburgh
-        elif not at_least_one_pittsburgh_crossover:
+        elif at_least_one_michigan_crossover:
             return Y_michigan
+        elif at_least_one_pittsburgh_crossover:
+            return Y_pittsburgh
         else:
             raise ValueError("No offspring created during hybrid crossover. It might be because n_matings is null")

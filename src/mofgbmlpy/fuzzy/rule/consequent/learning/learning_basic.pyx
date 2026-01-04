@@ -4,6 +4,7 @@ cimport numpy as cnp
 
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_basic cimport ConsequentBasic
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
 from mofgbmlpy.data.class_label.class_label_basic cimport ClassLabelBasic
@@ -22,31 +23,31 @@ cdef class LearningBasic(AbstractLearning):
         """
         super().__init__(training_dataset)
 
-    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, float reject_threshold=0):
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
 
         Args:
             antecedent (Antecedent): Antecedent whose consequent part is learnt
             dataset (Dataset): Training dataset
-            reject_threshold (float): Threshold for the rule weight under which the rule is considered rejected
+            reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
 
         Returns:
             AbstractConsequent: Created consequent
         """
-        cdef float[:] confidence = self.calc_confidence(antecedent, dataset)
+        cdef double[:] confidence = self.calc_confidence(antecedent, dataset)
         cdef ClassLabelBasic class_label = self.calc_class_label(confidence)
         cdef RuleWeightBasic rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return ConsequentBasic(class_label, rule_weight)
 
-    cdef float[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
+    cdef double[:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
         """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code
-        
+
         Args:
             antecedent (Antecedent): Antecedent whose confidence is computed 
             dataset (Dataset): Training dataset
 
         Returns:
-            float[]: Confidence
+            double[]: Confidence
         """
         if dataset is None:
             dataset = self._train_ds
@@ -54,40 +55,30 @@ cdef class LearningBasic(AbstractLearning):
             raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
-        cdef float[:] confidence = np.zeros(num_classes, dtype=np.float32)
-        cdef cnp.ndarray[float, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes, dtype=np.float32)
-        cdef float[:] compatible_grades = np.zeros(dataset.get_size(), dtype=np.float32)
+        cdef int dataset_size = dataset.get_size()
+        cdef double[:] confidence = np.zeros(num_classes, dtype=np.float64)
+        cdef cnp.ndarray[double, ndim=1] sum_compatible_grade_for_each_class = np.zeros(num_classes, dtype=np.float64)
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef int i
-        cdef Pattern p
-
-        # for i in prange(dataset.get_size(), nogil=True):
-        for i in range(dataset.get_size()):
-            p = patterns[i]
-            compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())
-
-        cdef float all_sum = 0
-        cdef int c
-        cdef float part_sum = 0
+        cdef double all_sum = 0
+        cdef double compatible_grade
         cdef int class_label
+        cdef Pattern pattern
 
-        for c in range(num_classes):
-            part_sum = 0
-            # TODO: Add multithreading
-            for i in range(dataset.get_size()):
-                pattern = patterns[i]
-                if pattern.get_target_class().get_class_label_value() == c:
-                    part_sum += compatible_grades[i]
-
-            sum_compatible_grade_for_each_class[c] = part_sum
-            all_sum += part_sum
+        for i in range(dataset_size):
+            pattern = patterns[i]
+            compatible_grade = antecedent.get_compatible_grade_value(pattern.get_attributes_vector())
+            class_label = pattern.get_target_class().get_class_label_value()
+            sum_compatible_grade_for_each_class[class_label] += compatible_grade
+            all_sum += compatible_grade
 
         if all_sum != 0:
-            confidence = sum_compatible_grade_for_each_class/all_sum
+            for i in range(num_classes):
+                confidence[i] = sum_compatible_grade_for_each_class[i] / all_sum
 
         return confidence
 
-    cpdef float[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
+    cpdef double[:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
         """Compute the confidences of each class for the given antecedent and dataset
         
         Args:
@@ -95,21 +86,21 @@ cdef class LearningBasic(AbstractLearning):
             dataset (Dataset): Training dataset
 
         Returns:
-            float[]: Confidence
+            double[]: Confidence
         """
         return self.calc_confidence(antecedent, dataset)
 
 
-    cpdef ClassLabelBasic calc_class_label(self, float[:] confidence):
+    cpdef ClassLabelBasic calc_class_label(self, double[:] confidence):
         """Compute the conclusion class label using the confidence
         
         Args:
-            confidence (float[]): confidences of each class for the given antecedent and dataset
+            confidence (double[]): confidences of each class for the given antecedent and dataset
 
         Returns:
             ClassLabelBasic: Class label of the class with the highest confidence. If there are multiple ones or if there is none then a rejected class label is returned
         """
-        cdef float max_val = -INFINITY
+        cdef double max_val = -INFINITY
         cdef int consequent_class = -1
         cdef int i
 
@@ -130,13 +121,13 @@ cdef class LearningBasic(AbstractLearning):
             class_label = ClassLabelBasic(consequent_class)
         return class_label
 
-    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, float[:] confidence, float reject_threshold):
+    cpdef RuleWeightBasic calc_rule_weight(self, ClassLabelBasic class_label, double[:] confidence, double reject_threshold):
         """Compute the rule weight
         
         Args:
             class_label (ClassLabelBasic): Class label whose rule weight is computed
-            confidence (float[]): confidences of each class for the given antecedent and dataset
-            reject_threshold (float): Threshold for the rule weight value under which the rule is considered rejected
+            confidence (double[]): confidences of each class for the given antecedent and dataset
+            reject_threshold (double): Threshold for the rule weight value under which the rule is considered rejected
 
         Returns:
             RuleWeightBasic: Rule weight
@@ -154,11 +145,11 @@ cdef class LearningBasic(AbstractLearning):
         if label_value < 0 or label_value >= len(confidence):
             raise IndexError("Label value is out of bounds for the confidence array")
 
+        # cdef double sum_confidence = np.sum(confidence, dtype=np.float64)
+        # cdef double rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
         # TODO Re-check the effect of this modification on the results and recheck it's validity
-        # cdef float sum_confidence = np.sum(confidence)
-        # cdef float rule_weight_val = confidence[label_value] - (sum_confidence - confidence[label_value])
-        cdef float rule_weight_val = (confidence[label_value] * 2) - 1
-
+        # It seems in the java version that the sum is 1, but here (due to imprecision probably) it can be slightly different
+        cdef double rule_weight_val = (confidence[label_value] * 2) - 1
 
         if rule_weight_val <= reject_threshold:
             class_label.set_rejected()

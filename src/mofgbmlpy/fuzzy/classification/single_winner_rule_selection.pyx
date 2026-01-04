@@ -26,10 +26,10 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         #     self.__cache = LRUCache(cache_size)
         #     self.__cache_size = cache_size
 
-    # cdef float get_fitness_value(self, MichiganSolution solution, Pattern pattern):
+    # cdef double get_fitness_value(self, MichiganSolution solution, Pattern pattern):
     #     cdef int solution_hash = hash(solution)
     #     cdef int pattern_id = pattern.get_id()
-    #     cdef float value
+    #     cdef double value
     #
     #     # print(pattern_id, solution_hash, self.__cache.combine_keys(pattern_id, solution_hash))
     #
@@ -60,9 +60,9 @@ cdef class SingleWinnerRuleSelection(AbstractClassification):
         Returns:
             Winner rule or None if it can't be determined (negative fitness or 2 winners with different conclusion classes)
         """
-        cdef float max = -INFINITY
+        cdef double max = -INFINITY
         cdef MichiganSolution winner
-        cdef float value
+        cdef double value
         cdef MichiganSolution solution
         cdef bint can_classify = False
 

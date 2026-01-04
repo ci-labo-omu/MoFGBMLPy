@@ -30,17 +30,17 @@ cdef class RuleBasic(AbstractRule):
         memo[id(self)] = new_rule
         return new_rule
 
-    cpdef float get_fitness_value(self, float[:] attribute_vector):
+    cpdef double get_fitness_value(self, double[:] attribute_vector):
         """Get the fitness value of the rule for the given input vector
 
         Args:
-            attribute_vector (float[]): Input vector 
+            attribute_vector (double[]): Input vector 
 
         Returns:
-            float: Fitness value
+            double: Fitness value
         """
-        cdef float membership
-        cdef float cf
+        cdef double membership
+        cdef double cf
         membership = self.get_antecedent().get_compatible_grade_value(attribute_vector)
         cf = self.get_rule_weight().get_value()
         return membership * cf

@@ -12,7 +12,7 @@ class MichiganMutation(Mutation):
 
     Attributes:
         __knowledge (Knowledge): Knowledge base
-        __mutation_rt (float): Mutation rate
+        __mutation_rt (double): Mutation rate
         _random_gen (numpy.random.Generator): Random generator
     """
 
@@ -21,7 +21,7 @@ class MichiganMutation(Mutation):
 
         Args:
             knowledge (Knowledge): Knowledge base
-            mutation_rt (float): Mutation rate
+            mutation_rt (double): Mutation rate
             random_gen (numpy.random.Generator)
         """
         super().__init__()
@@ -63,6 +63,9 @@ class MichiganMutation(Mutation):
 
                 if var_of_random_pattern >= 0:
                     num_fuzzy_sets = self.__knowledge.get_num_fuzzy_sets(j)
+                    if num_fuzzy_sets <= 1:
+                        break
+
                     new_fuzzy_set = self._random_gen.integers(0, num_fuzzy_sets - 1) # -1 and not -2 (Java ver.) because the upper bound is exclusive
 
                     # To avoid getting the same value again we do the following

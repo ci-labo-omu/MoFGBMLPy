@@ -2,7 +2,9 @@ import copy
 import xml.etree.cElementTree as xml_tree
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.abstract_mf cimport AbstractMF
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.division_type import DivisionType
-
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
+from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.rectangular_fuzzy_set import RectangularFuzzySet
 
 cdef class FuzzySet:
     """Fuzzy set
@@ -115,6 +117,41 @@ cdef class FuzzySet:
 
         return root
 
+    @staticmethod
+    def from_xml(xml_element):
+        """Create a FuzzySet object from its XML representation
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element representing the fuzzy set
+
+        Returns:
+            FuzzySet: FuzzySet object created from the XML element
+        """
+        cdef int fuzzy_set_id = int(xml_element.find("fuzzyTermID").text)
+        cdef str fuzzy_set_term = xml_element.find("fuzzyTermName").text
+        cdef str shape_type_name = xml_element.find("ShapeTypeName").text
+        cdef str fs_type_name = shape_type_name.replace(r'MF', 'FuzzySet').replace(r'Shape', 'FuzzySet')
+        fs_type_name = fs_type_name[0].upper() + fs_type_name[1:]
+
+        param_set = xml_element.find("parameterSet")
+        new_params = []
+        if param_set is not None:
+            imported_params = xml_element.find("parameterSet").findall("parameter")
+            for param in imported_params:
+                new_params.append(float(param.text))
+
+            if fs_type_name == "RectangularFuzzySet" and new_params[0] == 0.0 and new_params[1] == 1.0:
+                # In the Java version DC is saved as rectangular
+                fs_type_name = "DontCareFuzzySet"
+            else:
+                new_params += [fuzzy_set_id, fuzzy_set_term]
+        if fs_type_name == "DontCareFuzzySet":
+            new_params = [fuzzy_set_id]
+
+        cdef FuzzySet new_fuzzy_set = globals()[fs_type_name](*new_params)
+
+        return new_fuzzy_set
+
     def __eq__(self, other):
         """Check if another object is equal to this one
         
@@ -141,7 +178,12 @@ cdef class FuzzySet:
         Returns:
             object: Deep copy of this object
         """
-        raise NotImplementedError("This method should be implemented in subclasses")
+        new_object = FuzzySet(copy.deepcopy(self._function, memo),
+                                self._id,
+                                self._division_type,
+                                self._term)
+        memo[id(self)] = new_object
+        return new_object
 
 
     cpdef float get_support(self, float x_min=0, float x_max=0):

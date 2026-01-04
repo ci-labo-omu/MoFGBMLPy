@@ -9,7 +9,6 @@ from mofgbmlpy.fuzzy.knowledge.knowledge cimport Knowledge
 cimport cython
 cimport numpy as cnp
 from cython.parallel import prange
-from libc.math cimport round
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.fuzzy_set cimport FuzzySet
 import matplotlib.pyplot as plt
 
@@ -60,18 +59,18 @@ cdef class Antecedent:
             raise TypeError("new_indices can't be None")
         self.__antecedent_indices = new_indices
 
-    cpdef float[:] get_membership_values(self, float[:] attribute_vector):
+    cpdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values of the given attribute vector with this antecedent for each dimension
         
         Args:
-            attribute_vector (float[]): Attribute vector whose membership values are computed 
+            attribute_vector (double[]): Attribute vector whose membership values are computed 
 
         Returns:
-            float[]: Membership value for each dimension
+            double[]: Membership value for each dimension
         """
         cdef int i
         cdef int size = self.get_array_size()
-        cdef float[:] grade = np.zeros(size, dtype=np.float32)
+        cdef double[:] grade = np.zeros(size, dtype=np.float64)
         cdef int[:] antecedent_indices = self.__antecedent_indices
 
         if attribute_vector is None :
@@ -98,53 +97,68 @@ cdef class Antecedent:
 
         return grade
 
-    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    @cython.cdivision(True)
+    @cython.initializedcheck(False)
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent. Can only be accesses from Cython code
 
         Args:
-            attribute_vector (float[]): Attribute vector whose compatibility is computed 
+            attribute_vector (double[]): Attribute vector whose compatibility is computed 
 
         Returns:
-            float[]: Compatibility grade
+            double[]: Compatibility grade
         """
         cdef int i
-        cdef int size = self.get_array_size()
-        cdef float grade_value = 1
-        cdef float val
+        cdef int size = self.__antecedent_indices.shape[0]
+        cdef double grade_value = 1.0
+        cdef double val
+        cdef int antecedent_idx
+        cdef double membership_val
         cdef int[:] antecedent_indices = self.__antecedent_indices
+        cdef Knowledge knowledge = self.__knowledge
 
         if size != attribute_vector.shape[0]:
-            # with cython.gil:
             raise ValueError("antecedent_indices and attribute_vector must have the same length")
 
-        if size > self.__knowledge.get_num_dim():
+        if size > knowledge.get_num_dim():
             raise IndexError("The given number of dimensions is out of bounds for the current knowledge")
 
         for i in range(size):
-        # for i in prange(size, nogil=True):
-            val = attribute_vector[i]
-            if antecedent_indices[i] < 0 and val < 0:
-                # categorical
-                if antecedent_indices[i] != round(val):
-                    grade_value = 0.0
-            elif antecedent_indices[i] > 0 and val >= 0:
-                # numerical
-                grade_value *= self.__knowledge.get_membership_value(val, i, antecedent_indices[i])
-            elif antecedent_indices[i] == 0:
-                continue
-            else:
-                raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_indices[i])
+            antecedent_idx = antecedent_indices[i]
+            
+            # Skip don't care
+            if antecedent_idx != 0:
+                val = attribute_vector[i]
+                
+                if antecedent_idx < 0:
+                    # Categorical
+                    if val < 0:
+                        if antecedent_idx != <int>round(val):
+                            return 0.0
+                    else:
+                        raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_idx)
+                else:
+                    # Numerical
+                    if val >= 0:
+                        membership_val = knowledge.get_membership_value(val, i, antecedent_idx)
+                        if membership_val == 0.0:
+                            return 0.0
+                        grade_value *= membership_val
+                    else:
+                        raise IncompatibleAntecedentIndexWithInput(i, val, antecedent_idx)
 
         return grade_value
 
-    def get_compatible_grade_value_py(self, float[:] attribute_vector):
+    def get_compatible_grade_value_py(self, double[:] attribute_vector):
         """Get the compatibility grade of the given attribute vector with this antecedent
 
         Args:
-            attribute_vector (float[]): Attribute vector whose compatibility is computed
+            attribute_vector (double[]): Attribute vector whose compatibility is computed
 
         Returns:
-            float[]: Compatibility grade
+            double[]: Compatibility grade
         """
         return self.get_compatible_grade_value(attribute_vector)
 
@@ -238,6 +252,19 @@ cdef class Antecedent:
             fuzzy_set_id.text = str(self.__antecedent_indices[dim_i])
         return root
 
+    @staticmethod
+    def from_xml(xml_element, knowledge):
+        imported_fuzzy_set_list = xml_element.find("fuzzySetList").findall("fuzzySetID")
+
+        cdef int[:] antecedent_indices = np.zeros(len(imported_fuzzy_set_list), dtype=int)
+
+        for i in range(len(imported_fuzzy_set_list)):
+            dim_index = int(imported_fuzzy_set_list[i].get("dimension"))
+            fuzzy_set_index = int(imported_fuzzy_set_list[i].text)
+            antecedent_indices[dim_index] = fuzzy_set_index
+
+        return Antecedent(antecedent_indices, knowledge)
+
     cpdef get_knowledge(self):
         """Get the knowledge base
         
@@ -266,7 +293,7 @@ cdef class Antecedent:
             matplotlib.axes.Axes: The axes object where we drew
         """
         cdef FuzzySet fuzzy_set
-        cdef cnp.ndarray[float, ndim=2] points
+        cdef cnp.ndarray[double, ndim=2] points
 
         fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
 

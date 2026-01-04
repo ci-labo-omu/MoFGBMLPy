@@ -53,10 +53,10 @@ def test_calc_confidence_custom_dataset():
         3,
         np.array(
             [
-                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 0]))),
-                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelMulti(np.array([0, 1, 0]))),
-                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 1]))),
-                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 0]))),
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 0]))),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float64), ClassLabelMulti(np.array([0, 1, 0]))),
+                Pattern(2, np.array([1.0, 0.5, 0.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 1]))),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 0]))),
             ]
         ),
     )
@@ -79,10 +79,10 @@ def test_calc_confidence_all_zero():
         3,
         np.array(
             [
-                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 0]))),
-                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelMulti(np.array([0, 1, 0]))),
-                Pattern(2, np.array([0.0, 0.5, 0.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 1]))),
-                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 0]))),
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 0]))),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float64), ClassLabelMulti(np.array([0, 1, 0]))),
+                Pattern(2, np.array([0.0, 0.5, 0.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 1]))),
+                Pattern(3, np.array([0.5, 1.0, 0.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 0]))),
             ]
         ),
     )
@@ -103,14 +103,14 @@ def test_calc_class_label_none_confidence():
 
 
 def test_calc_class_label_same_highest():
-    confidence = np.array([[0.5, 0.5], [0.1, 0.9]], np.float32)
+    confidence = np.array([[0.5, 0.5], [0.1, 0.9]], np.float64)
     learner = LearningMulti(train)
     label = learner.calc_class_label(confidence)
     assert label.is_rejected()
 
 
 def test_calc_class_label_different_highest():
-    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float32)
+    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float64)
     learner = LearningMulti(train)
     label = learner.calc_class_label(confidence)
     assert not label.is_rejected()
@@ -120,7 +120,7 @@ def test_calc_class_label_different_highest():
 
 
 def test_calc_rule_weight_none_class_label():
-    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float32)
+    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float64)
     reject_threshold = 0
     learner = LearningMulti(train)
 
@@ -143,12 +143,12 @@ def test_calc_rule_weight_empty_confidence():
     learner = LearningMulti(train)
 
     with pytest.raises(Exception):
-        learner.calc_rule_weight(class_label, np.empty(0, dtype=np.float32), reject_threshold)
+        learner.calc_rule_weight(class_label, np.empty(0, dtype=np.float64), reject_threshold)
 
 
 def test_calc_rule_weight_none_reject_threshold():
     class_label = ClassLabelMulti(np.array([0, 1]))
-    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float32)
+    confidence = np.array([[0.6, 0.4], [0.1, 0.9]], np.float64)
     learner = LearningMulti(train)
 
     with pytest.raises(TypeError):
@@ -166,8 +166,8 @@ def test_eq_different():
         3,
         np.array(
             [
-                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float32), ClassLabelMulti(np.array([1, 0, 0]))),
-                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float32), ClassLabelMulti(np.array([0, 1, 0]))),
+                Pattern(0, np.array([0.5, 0.0, 1.0, 0.0], np.float64), ClassLabelMulti(np.array([1, 0, 0]))),
+                Pattern(1, np.array([0.0, 0.5, 0.0, 1.0], np.float64), ClassLabelMulti(np.array([0, 1, 0]))),
             ]
         ),
     )

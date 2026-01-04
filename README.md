@@ -72,8 +72,8 @@ usage: ipykernel_launcher.py [-h] [--cache-size CACHE_SIZE] --experiment-id
                              [--antecedent-number-do-not-dont-care ANTECEDENT_NUMBER_DO_NOT_DONT_CARE]
                              [--dont-care-rt DONT_CARE_RT]
                              [--initiation-rule-num INITIATION_RULE_NUM]
-                             [--max-num-rules MAX_NUM_RULES]
-                             [--min-num-rules MIN_NUM_RULES]
+                             [--max-rule-num MAX_NUM_RULES]
+                             [--min-rule-num MIN_NUM_RULES]
                              [--antecedent-factory ANTECEDENT_FACTORY]
                              [--crossover-type CROSSOVER_TYPE]
                              [--hybrid-cross-rt HYBRID_CROSS_RT]
@@ -127,9 +127,9 @@ options:
   --initiation-rule-num INITIATION_RULE_NUM
                         Number of rules in Pittsburgh solutions in the initial
                         population
-  --max-num-rules MAX_NUM_RULES
+  --max-rule-num MAX_NUM_RULES
                         Maximum number of rules in Pittsburgh solutions
-  --min-num-rules MIN_NUM_RULES
+  --min-rule-num MIN_NUM_RULES
                         Minimum number of rules in Pittsburgh solutions
   --antecedent-factory ANTECEDENT_FACTORY
                         Antecedent factory used for fuzzy rule generation. If

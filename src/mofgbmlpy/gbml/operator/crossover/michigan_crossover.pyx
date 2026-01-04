@@ -1,5 +1,6 @@
 import copy
 
+from functools import cmp_to_key
 import numpy as np
 from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeepcopyCrossover
 from pymoo.core.crossover import Crossover
@@ -16,8 +17,8 @@ class MichiganCrossover(PymooDeepcopyCrossover):
     """Apply the Michigan crossover on the Michigan solutions of one Pittsburgh solution
 
     Attributes:
-        __crossover_rate (float): Probability that a crossover occurs
-        __rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+        __crossover_rate (double): Probability that a crossover occurs
+        __rule_change_rate (double): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
         __training_set (Dataset): Training dataset
         __knowledge (Knowledge): Knowledge base
         __max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
@@ -28,14 +29,15 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         """Constructor
 
         Args:
-            rule_change_rate (float): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
+            rule_change_rate (double): Ratio of rules that will be changed in the parent (the Pittsburgh solution)
             training_set (Dataset): Training dataset
             knowledge (Knowledge): Knowledge base
             max_num_rules (int): Max number of rules that the Pittsburgh solution can contain
             random_gen (numpy.random.Generator): Random generator
-            prob (float): Probability that a crossover occurs
+            prob (double): Probability that a crossover occurs
         """
-        super().__init__(n_parents=1, n_offsprings=1, random_gen=random_gen, prob=prob, **kwargs)
+        # TODO prob=prob would be more maybe consistent, but it is not used in the Java version
+        super().__init__(n_parents=1, n_offsprings=1, random_gen=random_gen, prob=1.0, **kwargs)
         self.__crossover_rate = prob
         self.__rule_change_rate = rule_change_rate
         self.__training_set = training_set
@@ -43,7 +45,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
         self.__max_num_rules = max_num_rules
         self._random_gen = random_gen
 
-    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, mating_pool_size, n_parents, num_ga):
+    def ga_rules_gen(self, crossover, mutation, selection, pop, problem, num_offspring, n_parents):
         """Generate rules using a genetic algorithm
 
         Args:
@@ -52,17 +54,16 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             selection (Selection): Selection operator object (select the mating pool in a population)
             pop (Population): Population
             problem (Problem): Optimization problem definition
-            mating_pool_size (int): Maximum size of the mating pool
+            num_offspring (int): Number of offspring (rules) to be generated
             n_parents (int): Number of parents used to generate the rules
-            num_ga (int): Number of rules that need to be generated
 
         Returns:
             list: Generated rules
         """
-        mating_pop = selection.do(problem, pop, mating_pool_size, n_parents, to_pop=False)
+        mating_pop = selection.do(problem, pop, num_offspring, n_parents, to_pop=False)
         generated_solutions = []
 
-        for i in range(0, mating_pool_size, 2):
+        for i in range(num_offspring):
             parents = mating_pop[i]
             p1_obj = pop[parents[0]].X[0]
             p2_obj = pop[parents[1]].X[0]
@@ -73,16 +74,62 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             for j in range(len(offspring)):
                 offspring[j].X[0].learning()
 
+            is_offspring_invalid = False
+            for j in range(len(offspring)):
                 if offspring[j].X[0].get_rule().is_rejected_class_label():
-                    generated_solutions.append(copy.deepcopy(p1_obj))
-                    if len(generated_solutions) == num_ga:
-                        return generated_solutions
-                    generated_solutions.append(copy.deepcopy(p2_obj))
-                else:
-                    generated_solutions.append(offspring[j].X[0])
-                if len(generated_solutions) == num_ga:
-                    return generated_solutions
+                    is_offspring_invalid = True
+                    break
 
+            if is_offspring_invalid:
+                generated_solutions.append(copy.deepcopy(p1_obj))
+                if len(generated_solutions) == num_offspring:
+                    # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
+                    continue
+                generated_solutions.append(copy.deepcopy(p2_obj))
+            else:
+                for j in range(len(offspring)):
+                    generated_solutions.append(offspring[j].X[0])
+                    if len(generated_solutions) == num_offspring:
+                        # return generated_solutions # TODO: recheck the Java version, since it seems the Java code does not always return num_ga
+                        break
+
+        return generated_solutions
+
+    @staticmethod
+    def radix_sort_michigan(x, y):
+        """Radix sort Michigan solutions based on their antecedent indices
+
+        Args:
+            x (MichiganSolution): First Michigan solution
+            y (MichiganSolution): Second Michigan solution
+
+        Returns:
+            int: Comparison result
+        """
+        for i in range(x.get_num_vars()):
+            x_var = x.get_var(i)
+            y_var = y.get_var(i)
+
+            if x_var < y_var:
+                return -1
+            elif x_var > y_var:
+                return 1
+        return 0
+
+    def heuristic_rules_gen(self, parent, num_heuristic):
+        generated_solutions = np.empty(num_heuristic, dtype=object)
+        error_patterns = parent.get_errored_patterns()
+        lack_size = num_heuristic - len(error_patterns)
+
+        if lack_size > 0:
+            new_patterns = self._random_gen.choice(self.__training_set.get_patterns(), lack_size)
+            error_patterns = np.concatenate((error_patterns, new_patterns))
+        selected_error_patterns_indices = self._random_gen.choice(np.arange(len(error_patterns)),
+                                                                  num_heuristic,
+                                                                  replace=False)
+
+        for j in range(num_heuristic):
+            generated_solutions[j] = parent.get_michigan_solution_builder().create(pattern=error_patterns[selected_error_patterns_indices[j]])[0]
         return generated_solutions
 
     def _do(self, problem, X, **kwargs):
@@ -90,22 +137,22 @@ class MichiganCrossover(PymooDeepcopyCrossover):
 
         Args:
             problem (Problem): Optimization problem (e.g. PittsburghProblem)
-            X (object[,]): Population. The shape is (n_matings, n_var),
+            X (object[,]): Population. The shape is (1, n_matings, n_var),
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         # Note: X contains Pittsburgh solutions
-        n_matings, n_var = X.shape
+        _, n_matings, n_var = X.shape
         Y = np.zeros((1, n_matings, 1), dtype=object)
 
-        num_dim = X[0, 0].get_var(0).get_num_vars()
+        num_dim = X[0, 0, 0].get_var(0).get_num_vars()
 
         for i in range(n_matings):
             generated_solutions = []
 
-            parent = X[i, 0]
+            parent = X[0, i, 0]
 
             # 1. Calculate number of all of generating rules
 
@@ -122,17 +169,7 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             # 3. Heuristic Rule Generation
 
             if num_heuristic > 0:
-                error_patterns = parent.get_errored_patterns()
-                lack_size = num_heuristic - len(error_patterns)
-
-                if lack_size > 0:
-                    new_patterns = self._random_gen.choice(self.__training_set.get_patterns(), lack_size)
-                    error_patterns = np.concatenate((error_patterns, new_patterns))
-                selected_error_patterns = self._random_gen.choice(error_patterns, num_heuristic, replace=False)
-
-                for j in range(num_heuristic):
-                    generated_solutions.append(
-                        parent.get_michigan_solution_builder().create(pattern=selected_error_patterns[j])[0])
+                generated_solutions = self.heuristic_rules_gen(parent, num_heuristic)
 
             # 4. Rule Generation by Genetic Algorithm - Michigan-style GA
             num_ga = num_generating_rules - num_heuristic
@@ -145,15 +182,15 @@ class MichiganCrossover(PymooDeepcopyCrossover):
 
                 crossover = UniformCrossoverSingleOffspringMichigan(self._random_gen, self.__crossover_rate)
 
-                mutation_rt = 1/self.__training_set.get_num_dim()
+                mutation_rt = 1 / self.__training_set.get_num_dim()
                 mutation = MichiganMutation(self.__knowledge, mutation_rt, self._random_gen)
 
                 if parent.get_num_vars() == 1:
+                    # no crossover
                     tournament_size = 1
                 else:
                     tournament_size = 2
-                mating_pool_size = num_ga * crossover.n_parents // crossover.n_offsprings
-                selection = NaryTournamentSelectionOnFitness(tournament_size)
+                selection = NaryTournamentSelectionOnFitness(self._random_gen, tournament_size)
 
                 michigan_solutions_array = np.empty((parent.get_num_vars(), 1), dtype=object)
                 parent_vars = parent.get_vars()
@@ -166,18 +203,27 @@ class MichiganCrossover(PymooDeepcopyCrossover):
                                                             selection,
                                                             michigan_population,
                                                             michigan_problem,
-                                                            mating_pool_size,
-                                                            2,
-                                                            num_ga)
+                                                            num_ga,
+                                                            2)
 
                 generated_solutions = np.concatenate((generated_solutions, ga_generated_solutions))
 
             # 5. Replacement: Single objective maximization replacement based on the fitness value
+            parent_copy = copy.deepcopy(parent)
+            generated_solutions = RuleStyleSurvival.replace(parent_copy.get_vars(), generated_solutions, self.__max_num_rules)
 
-            generated_solutions = RuleStyleSurvival.replace(parent.get_vars(), generated_solutions, self.__max_num_rules)
+
+            # Hypothesis: This radix sort might be needed when we compare Michigan solutions between two parents
+            # (e.g. in Hybrid crossover), since rules order is not considered when we check if they are the same or not
+            # (if we have the same rules in another orders it would be considered different)
+            generated_solutions = np.array(sorted(
+                generated_solutions,
+                key=cmp_to_key(lambda x, y: MichiganCrossover.radix_sort_michigan(x, y))
+            ))
 
             offspring = copy.deepcopy(parent)
             offspring.clear_vars()
+            offspring.clear_attributes()
             offspring.set_vars(generated_solutions)
 
             Y[0, i, 0] = offspring
@@ -192,6 +238,6 @@ class MichiganCrossover(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, 1)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, 1)
         """
         return self._do(problem, X, **kwargs)

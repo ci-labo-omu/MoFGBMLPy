@@ -3,10 +3,13 @@ import numpy as np
 cimport numpy as cnp
 
 from mofgbmlpy.data.class_label.abstract_class_label import AbstractClassLabel
+from mofgbmlpy.data.class_label.class_label_multi cimport ClassLabelMulti
 from mofgbmlpy.data.dataset cimport Dataset
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+from mofgbmlpy.fuzzy.rule.consequent.abstract_consequent cimport AbstractConsequent
 from mofgbmlpy.fuzzy.rule.consequent.consequent_multi cimport ConsequentMulti
 from mofgbmlpy.fuzzy.rule.consequent.learning.abstract_learning cimport AbstractLearning
+from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.rule_weight_multi cimport RuleWeightMulti
 from mofgbmlpy.data.pattern cimport Pattern
 from libc.math cimport INFINITY
 
@@ -20,23 +23,23 @@ cdef class LearningMulti(AbstractLearning):
         """
         super().__init__(training_dataset)
 
-    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, float reject_threshold=0):
+    cpdef AbstractConsequent learning(self, Antecedent antecedent, Dataset dataset=None, double reject_threshold=0):
         """Learn a consequent from the antecedent and dataset
 
         Args:
             antecedent (Antecedent): Antecedent whose consequent part is learnt
             dataset (Dataset): Training dataset
-            reject_threshold (float): Threshold for the rule weight under which the rule is considered rejected
+            reject_threshold (double): Threshold for the rule weight under which the rule is considered rejected
 
         Returns:
             AbstractConsequent: Created consequent
         """
-        cdef float[:,:] confidence = self.calc_confidence(antecedent)
+        cdef double[:,:] confidence = self.calc_confidence(antecedent)
         cdef ClassLabelMulti class_label = self.calc_class_label(confidence)
         cdef RuleWeightMulti rule_weight = self.calc_rule_weight(class_label, confidence, reject_threshold)
         return ConsequentMulti(class_label, rule_weight)
 
-    cdef float[:,:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
+    cdef double[:,:] calc_confidence(self, Antecedent antecedent, Dataset dataset=None):
         """Compute the confidences of each class for the given antecedent and dataset. Can only be accessed from Cython code
 
         Args:
@@ -44,7 +47,7 @@ cdef class LearningMulti(AbstractLearning):
             dataset (Dataset): Training dataset
 
         Returns:
-            float[,]: Confidence. e.g. confidence[0, 0] is the confidence that the class 0 is not i the multi class label, and confidence[0, 1] is the confidence that it is 
+            double[,]: Confidence. e.g. confidence[0, 0] is the confidence that the class 0 is not i the multi class label, and confidence[0, 1] is the confidence that it is 
         """
         if dataset is None:
             dataset = self._train_ds
@@ -52,8 +55,8 @@ cdef class LearningMulti(AbstractLearning):
             raise TypeError('Antecedent cannot be None')
 
         cdef int num_classes = dataset.get_num_classes()
-        cdef float[:,:] confidence = np.zeros((num_classes, 2), dtype=np.float32)
-        cdef float[:] compatible_grades = np.zeros(dataset.get_size(), dtype=np.float32)
+        cdef double[:,:] confidence = np.zeros((num_classes, 2), dtype=np.float64)
+        cdef double[:] compatible_grades = np.zeros(dataset.get_size(), dtype=np.float64)
         cdef Pattern[:] patterns = dataset.get_patterns()
         cdef int i
         cdef Pattern p
@@ -63,7 +66,7 @@ cdef class LearningMulti(AbstractLearning):
             p = patterns[i]
             compatible_grades[i] = antecedent.get_compatible_grade_value(p.get_attributes_vector())
 
-        cdef float all_sum
+        cdef double all_sum
         cdef int c
         cdef int class_label
         cdef int class_label_val
@@ -85,19 +88,19 @@ cdef class LearningMulti(AbstractLearning):
 
         return confidence
 
-    cpdef float[:,:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
+    cpdef double[:,:] calc_confidence_py(self, Antecedent antecedent, Dataset dataset=None):
         return self.calc_confidence(antecedent, dataset)
 
-    cpdef ClassLabelMulti calc_class_label(self, float[:,:] confidence):
+    cpdef ClassLabelMulti calc_class_label(self, double[:,:] confidence):
         """Compute the conclusion class label using the confidence
         
         Args:
-            confidence (float[,]): confidences of each class for the given antecedent and dataset
+            confidence (double[,]): confidences of each class for the given antecedent and dataset
 
         Returns:
             ClassLabelMulti: Label object containing a list of 0 and 1. 1 if the class is present and 0 otherwise . If the confidence that it is present and the confidence that is not are equal then the rule is rejected
         """
-        cdef float max_val = -INFINITY
+        cdef double max_val = -INFINITY
         cdef int[:] consequent_classes = np.full((confidence.shape[0]), fill_value=-1, dtype=np.int32)
         cdef int c
 
@@ -116,13 +119,13 @@ cdef class LearningMulti(AbstractLearning):
 
         return ClassLabelMulti(consequent_classes)
 
-    cpdef RuleWeightMulti calc_rule_weight(self, ClassLabelMulti class_label, float[:,:] confidence, float reject_threshold):
+    cpdef RuleWeightMulti calc_rule_weight(self, ClassLabelMulti class_label, double[:,:] confidence, double reject_threshold):
         """Compute the rule weight
 
         Args:
             class_label (ClassLabelMulti): Class label whose rule weight is computed
-            confidence (float[,]): confidences of each class for the given antecedent and dataset
-            reject_threshold (float): Threshold for the rule weight value under which the rule is considered rejected
+            confidence (double[,]): confidences of each class for the given antecedent and dataset
+            reject_threshold (double): Threshold for the rule weight value under which the rule is considered rejected
 
         Returns:
             RuleWeightMulti: Rule weight
@@ -132,7 +135,7 @@ cdef class LearningMulti(AbstractLearning):
         elif class_label is None:
             raise TypeError("class_label can't be None")
 
-        cdef float[:] rule_weight_values = np.full((confidence.shape[0]), fill_value=-1.0, dtype=np.float32)
+        cdef double[:] rule_weight_values = np.full((confidence.shape[0]), fill_value=-1.0, dtype=np.float64)
 
         if not class_label.is_rejected():
             # TODO: use Numpy instead if possible

@@ -21,7 +21,7 @@ def test_deep_copy():
     knowledge = HomoTriangleKnowledgeFactory_2_3_4_5(3).create()
     antecedent = Antecedent(np.array([0, 2, 1]), knowledge)
     consequent = ConsequentMulti(
-        ClassLabelMulti(np.array([1, 0], int)), RuleWeightMulti(np.array([1.0, 1.0], np.float32))
+        ClassLabelMulti(np.array([1, 0], int)), RuleWeightMulti(np.array([1.0, 1.0], np.float64))
     )
 
     obj = RuleMulti(antecedent, consequent)

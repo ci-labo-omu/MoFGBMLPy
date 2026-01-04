@@ -14,6 +14,9 @@ from mofgbmlpy.fuzzy.rule.consequent.ruleWeight.abstract_rule_weight cimport Abs
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 cimport numpy as cnp
 
+from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
+
+from mofgbmlpy.fuzzy.rule.rule_builder_basic cimport RuleBuilderBasic
 
 cdef class MichiganSolution(AbstractSolution):
     """Michigan solution
@@ -105,14 +108,14 @@ cdef class MichiganSolution(AbstractSolution):
             antecedent_object.set_antecedent_indices(self._vars)
             self._rule.set_consequent(self._rule_builder.create_consequent(antecedent_object, dataset))
 
-    cpdef float get_fitness_value(self, float[:] in_vector):
+    cpdef double get_fitness_value(self, double[:] in_vector):
         """Get the fitness value for the given attribute vector
         
         Args:
-            in_vector (float[]): Vector for which the fitness value is returned
+            in_vector (double[]): Vector for which the fitness value is returned
 
         Returns:
-            float: Fitness value
+            double: Fitness value
         """
         return self._rule.get_fitness_value(in_vector)
 
@@ -180,22 +183,22 @@ cdef class MichiganSolution(AbstractSolution):
         """
         return self._rule.get_antecedent()
 
-    cdef float[:] get_membership_values(self, float[:] attribute_vector):
+    cdef double[:] get_membership_values(self, double[:] attribute_vector):
         """Get the membership values for the given vector
 
         Returns:
-            float[]: Membership values
+            double[]: Membership values
         """
         return self._rule.get_membership_values(attribute_vector)
 
-    cdef float get_compatible_grade_value(self, float[:] attribute_vector):
+    cdef double get_compatible_grade_value(self, double[:] attribute_vector):
         """Get the compatible grade value for the given vector
         
         Args:
-            attribute_vector (float[]): Attribute vector 
+            attribute_vector (double[]): Attribute vector 
 
         Returns:
-            float: Compatible grade value
+            double: Compatible grade value
         """
         return self._rule.get_compatible_grade_value(attribute_vector)
 
@@ -256,7 +259,8 @@ cdef class MichiganSolution(AbstractSolution):
 
         txt = f"{txt}], Attributes: {{Number of classifier patterns: {self.__fitness}, Number of wins: {self.__num_wins}, "
         for key, val in self._attributes.items():
-            txt = f"{txt}{key}: {val}, "
+            if key != "Number of classifier patterns" and key != "Number of wins":
+                txt = f"{txt}{key}: {val}, "
         txt = f"{txt}}}"
         return txt
 
@@ -278,7 +282,7 @@ cdef class MichiganSolution(AbstractSolution):
                                         deep_copy_knowledge=self._deep_copy_knowledge)
 
         cdef int[:] vars_copy = np.empty(self.get_num_vars(), dtype=int)
-        cdef float[:] objectives_copy = np.empty(self.get_num_objectives(), np.float32)
+        cdef double[:] objectives_copy = np.empty(self.get_num_objectives(), np.float64)
 
 
         for i in range(vars_copy.shape[0]):
@@ -403,7 +407,14 @@ cdef class MichiganSolution(AbstractSolution):
             (xml.etree.ElementTree) XML element representing this object
         """
         root = xml_tree.Element("michiganSolution")
-        root.append(self._rule.to_xml())
+        rule_xml = self._rule.to_xml()
+        fuzzy_set_list_xml = rule_xml.find("antecedent").find("fuzzySetList")
+        rule_xml.remove(rule_xml.find("antecedent"))
+        rule_xml.append(xml_tree.Element("antecedent"))
+
+        root.append(rule_xml)
+        root.append(fuzzy_set_list_xml)
+
         attributes = xml_tree.SubElement(root, "attributes")
         for key, value in self.get_attributes().items():
             attribute = xml_tree.SubElement(attributes, "attribute")
@@ -429,6 +440,41 @@ cdef class MichiganSolution(AbstractSolution):
         csv_str += f"attributes={{,NumberOfClassifierPatterns,{self.__fitness},NumberOfWinner,{self.__num_wins},}}"
         return csv_str
 
+    @staticmethod
+    def from_xml(xml_element, random_gen, num_objectives, num_constraints, rule_builder, knowledge):
+        """Create a MichiganSolution object from its XML representation
+
+        Args:
+            xml_element (xml.etree.ElementTree): XML element of the soluton
+            random_gen (numpy.random.Generator): Random generator
+            num_objectives (int): Number of objectives
+            num_constraints (int): Number of constraints
+            rule_builder (RuleBuilderCore): Rule builder
+            knowledge (Knowledge): Knowledge base
+
+        Returns:
+            MichiganSolution: Created object
+        """
+
+        rule_xml = xml_element.find("rule")
+        antecedent_xml = rule_xml.find("antecedent")
+        antecedent_xml.append(xml_element.find("fuzzySetList"))
+
+        rule = AbstractRule.from_xml(rule_xml, knowledge)
+        new_sol = MichiganSolution.from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder)
+
+        attributes_xml = xml_element.find("attributes")
+        if attributes_xml is not None:
+            for attributes_xml in attributes_xml.findall("attribute"):
+                attr_id = attributes_xml.get("attributeID")
+                if attr_id == "NumberOfClassifierPatterns":
+                    attr_id = "Number of classifier patterns"
+                if attr_id == "NumberOfWinner":
+                    attr_id = "Number of wins"
+                attr_value = attributes_xml.text
+                new_sol.set_attribute(attr_id, attr_value)
+        return new_sol
+
     cpdef void set_knowledge(self, Knowledge new_knowledge):
         """Set the antecedent and rule builder knowledge base
         
@@ -445,3 +491,27 @@ cdef class MichiganSolution(AbstractSolution):
         antecedent = rule.get_antecedent()
 
         return learner.calc_confidence_py(antecedent)
+
+    @staticmethod
+    def from_rule(rule, random_gen, num_objectives, num_constraints, rule_builder):
+        """Create a MichiganSolution object from a rule
+
+        Args:
+            rule (AbstractRule): Rule
+            random_gen (numpy.random.Generator): Random generator
+            num_objectives (int): Number of objectives
+            rule_builder (RuleBuilderCore): Rule builder
+
+        Returns:
+            MichiganSolution: Created object
+        """
+        cdef MichiganSolution solution = MichiganSolution(random_gen,
+                                                          num_objectives,
+                                                          num_constraints,
+                                                          rule_builder,
+                                                          do_init_vars=False)
+
+        solution.set_vars(rule.get_antecedent().get_antecedent_indices())
+        solution.learning()
+
+        return solution

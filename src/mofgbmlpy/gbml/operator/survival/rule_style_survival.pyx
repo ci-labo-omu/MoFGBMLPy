@@ -20,16 +20,17 @@ cdef class RuleStyleSurvival:
         """
         arr = sorted(arr, key=lambda x: x.get_fitness(), reverse=True)
 
-        return np.array(arr, dtype=object)
+        return np.array(arr)
 
     @staticmethod
-    def replace(pop, offspring, max_num_rules):
+    def replace(pop, offspring, max_num_rules, replace_worst=False):
         """Replace a population of Michigan solutions by an offspring population in such a way that all offsprings are added and to avoid going above the max number of rules we remove the worst solutions in the initial population (based on fitness)
 
         Args:
-            pop ():
-            offspring ():
-            max_num_rules ():
+            pop (MichiganSolution[]): Population of Michigan solutions
+            offspring (MichiganSolution[]): Offspring population of Michigan solutions
+            max_num_rules (int): Maximum number of rules that the population can contain
+            replace_worst (bool): If True, the worst individuals in the population will be replaced by the offsprings, otherwise replacement is done without considering fitness
 
         Returns:
             (Population): New population with the offsprings and the best individuals of the initial population
@@ -46,7 +47,8 @@ cdef class RuleStyleSurvival:
         new_pop = np.empty(new_shape, dtype=object)
 
         # Sort by fitness if we need to replace the worst individuals (if not we just have to append to the current pop)
-        if num_replacements > 0:
+        if replace_worst and num_replacements > 0:
+            # TODO: in the Java version, it's sorted on objective 0, which is always 0, it needs to be checked again
             pop = RuleStyleSurvival.sort_by_fitness(pop)
 
         # Copy individuals that won't be replaced
@@ -55,7 +57,7 @@ cdef class RuleStyleSurvival:
 
         # Replace the worst individuals in the current population with the offspring and add rules if there is still space
         k = 0
-        for i in range(len(pop)-num_replacements, len(new_pop)):
+        for i in range(len(new_pop)-1, len(pop)-num_replacements-1, -1):
             new_pop[i] = offspring[k]
             k += 1
 

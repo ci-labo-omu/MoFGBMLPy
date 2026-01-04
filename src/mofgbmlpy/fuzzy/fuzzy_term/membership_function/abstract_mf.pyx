@@ -51,13 +51,11 @@ cdef class AbstractMF:
         Returns:
             (xml.etree.ElementTree) XML element representing this object
         """
-        root = xml_tree.Element("membershipFunction")
+        root = xml_tree.Element("parameterSet")
 
         if len(self._params) != 0:
-            params_set = xml_tree.SubElement(root, "parameterSet")
-
             for i in range(len(self._params)):
-                param = xml_tree.SubElement(params_set, "parameterSet")
+                param = xml_tree.SubElement(root, "parameter")
                 param.text = str(self._params[i])
                 param.set("id", str(i))
 

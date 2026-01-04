@@ -1,0 +1,4963 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<results_XML.xml>
+	<consts>
+		<POPULATION_SIZE>60</POPULATION_SIZE>
+		<OFFSPRING_POPULATION_SIZE>60</OFFSPRING_POPULATION_SIZE>
+		<TERMINATE_GENERATION>1000</TERMINATE_GENERATION>
+		<TERMINATE_EVALUATION>10000</TERMINATE_EVALUATION>
+		<OUTPUT_FREQUENCY>3000</OUTPUT_FREQUENCY>
+		<RAND_SEED>2020</RAND_SEED>
+		<WINDOWS>0</WINDOWS>
+		<UNIX>1</UNIX>
+		<IS_PROBABILITY_DONT_CARE>false</IS_PROBABILITY_DONT_CARE>
+		<ANTECEDENT_NUMBER_DO_NOT_DONT_CARE>5</ANTECEDENT_NUMBER_DO_NOT_DONT_CARE>
+		<DONT_CARE_RT>0.8</DONT_CARE_RT>
+		<INITIATION_RULE_NUM>30</INITIATION_RULE_NUM>
+		<MAX_RULE_NUM>60</MAX_RULE_NUM>
+		<MIN_RULE_NUM>1</MIN_RULE_NUM>
+		<MICHIGAN_OPE_RT>0.5</MICHIGAN_OPE_RT>
+		<RULE_CHANGE_RT>0.2</RULE_CHANGE_RT>
+		<MICHIGAN_CROSS_RT>0.9</MICHIGAN_CROSS_RT>
+		<PITTSBURGH_CROSS_RT>0.9</PITTSBURGH_CROSS_RT>
+		<FUZZY_GRADE>1.0</FUZZY_GRADE>
+		<ROOTFOLDER>results</ROOTFOLDER>
+		<ALGORITHM_ID_DIR>results\0</ALGORITHM_ID_DIR>
+		<EXPERIMENT_ID_DIR>results\0\iris\0</EXPERIMENT_ID_DIR>
+		<TRAIN>0</TRAIN>
+		<TEST>1</TEST>
+		<XML_FILE_NAME>results_XML</XML_FILE_NAME>
+		<DATA_SIZE>0</DATA_SIZE>
+		<ATTRIBUTE_NUMBER>0</ATTRIBUTE_NUMBER>
+		<CLASS_LABEL_NUMBER>0</CLASS_LABEL_NUMBER>
+	</consts>
+	<generations evaluation="9000">
+		<knowledgeBase>
+			<fuzzySets dimension="0">
+				<fuzzyTerm>
+					<fuzzyTermID>0</fuzzyTermID>
+					<fuzzyTermName>rectangularShape_equalDivision_99</fuzzyTermName>
+					<ShapeTypeID>9</ShapeTypeID>
+					<ShapeTypeName>rectangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>0</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>1</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_01</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>2</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_02</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>3</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_03</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>4</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_04</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>5</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_05</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>6</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_06</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.33333334</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>7</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_07</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.33333334</parameter>
+						<parameter id="2">0.6666667</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>8</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_08</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.33333334</parameter>
+						<parameter id="1">0.6666666</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>9</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_09</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.6666666</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>10</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_10</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.25</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>11</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_11</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.25</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>12</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_12</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.25</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">0.75</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>13</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_13</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">0.75</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>14</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_14</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>4</partition_i>
+					<parameterSet>
+						<parameter id="0">0.75</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+			</fuzzySets>
+			<fuzzySets dimension="1">
+				<fuzzyTerm>
+					<fuzzyTermID>0</fuzzyTermID>
+					<fuzzyTermName>rectangularShape_equalDivision_99</fuzzyTermName>
+					<ShapeTypeID>9</ShapeTypeID>
+					<ShapeTypeName>rectangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>0</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>1</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_01</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>2</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_02</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>3</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_03</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>4</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_04</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>5</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_05</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>6</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_06</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.33333334</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>7</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_07</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.33333334</parameter>
+						<parameter id="2">0.6666667</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>8</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_08</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.33333334</parameter>
+						<parameter id="1">0.6666666</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>9</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_09</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.6666666</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>10</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_10</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.25</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>11</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_11</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.25</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>12</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_12</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.25</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">0.75</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>13</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_13</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">0.75</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>14</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_14</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>4</partition_i>
+					<parameterSet>
+						<parameter id="0">0.75</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+			</fuzzySets>
+			<fuzzySets dimension="2">
+				<fuzzyTerm>
+					<fuzzyTermID>0</fuzzyTermID>
+					<fuzzyTermName>rectangularShape_equalDivision_99</fuzzyTermName>
+					<ShapeTypeID>9</ShapeTypeID>
+					<ShapeTypeName>rectangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>0</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>1</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_01</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>2</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_02</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>3</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_03</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>4</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_04</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>5</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_05</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>6</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_06</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.33333334</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>7</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_07</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.33333334</parameter>
+						<parameter id="2">0.6666667</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>8</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_08</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.33333334</parameter>
+						<parameter id="1">0.6666666</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>9</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_09</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.6666666</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>10</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_10</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.25</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>11</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_11</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.25</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>12</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_12</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.25</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">0.75</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>13</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_13</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">0.75</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>14</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_14</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>4</partition_i>
+					<parameterSet>
+						<parameter id="0">0.75</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+			</fuzzySets>
+			<fuzzySets dimension="3">
+				<fuzzyTerm>
+					<fuzzyTermID>0</fuzzyTermID>
+					<fuzzyTermName>rectangularShape_equalDivision_99</fuzzyTermName>
+					<ShapeTypeID>9</ShapeTypeID>
+					<ShapeTypeName>rectangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>0</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>1</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_01</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>2</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_02</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>2</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>3</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_03</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>4</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_04</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>5</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_05</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>3</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>6</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_06</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.33333334</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>7</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_07</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.33333334</parameter>
+						<parameter id="2">0.6666667</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>8</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_08</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.33333334</parameter>
+						<parameter id="1">0.6666666</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>9</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_09</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>4</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.6666666</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>10</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_10</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>0</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.0</parameter>
+						<parameter id="2">0.25</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>11</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_11</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>1</partition_i>
+					<parameterSet>
+						<parameter id="0">0.0</parameter>
+						<parameter id="1">0.25</parameter>
+						<parameter id="2">0.5</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>12</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_12</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>2</partition_i>
+					<parameterSet>
+						<parameter id="0">0.25</parameter>
+						<parameter id="1">0.5</parameter>
+						<parameter id="2">0.75</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>13</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_13</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>3</partition_i>
+					<parameterSet>
+						<parameter id="0">0.5</parameter>
+						<parameter id="1">0.75</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+				<fuzzyTerm>
+					<fuzzyTermID>14</fuzzyTermID>
+					<fuzzyTermName>triangularShape_equalDivision_14</fuzzyTermName>
+					<ShapeTypeID>3</ShapeTypeID>
+					<ShapeTypeName>triangularShape</ShapeTypeName>
+					<divisionType>equalDivision</divisionType>
+					<partitionNum>5</partitionNum>
+					<partition_i>4</partition_i>
+					<parameterSet>
+						<parameter id="0">0.75</parameter>
+						<parameter id="1">1.0</parameter>
+						<parameter id="2">1.0</parameter>
+					</parameterSet>
+				</fuzzyTerm>
+			</fuzzySets>
+		</knowledgeBase>
+		<population>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">14</fuzzySetID>
+						<fuzzySetID dimension="1">11</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">5</attribute>
+						<attribute attributeID="NumberOfWinner">15</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">Infinity</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">1</attribute>
+						<attribute attributeID="NumberOfWinner">1</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">5</attribute>
+						<attribute attributeID="NumberOfWinner">5</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">5</attribute>
+						<attribute attributeID="NumberOfWinner">6</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfWinner">1</attribute>
+						<attribute attributeID="NumberOfClassifierPatterns">1</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">2</attribute>
+						<attribute attributeID="NumberOfWinner">2</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">Infinity</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">Infinity</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">2</fuzzySetID>
+						<fuzzySetID dimension="2">10</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">Infinity</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">65</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.7613636363636364</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">65</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.7159090909090909</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.7159090909090909</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.26136363636363635</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">3</attribute>
+						<attribute attributeID="NumberOfWinner">3</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">5</attribute>
+						<attribute attributeID="NumberOfWinner">6</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">5</attribute>
+						<attribute attributeID="NumberOfWinner">5</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">1</attribute>
+						<attribute attributeID="NumberOfWinner">1</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.26136363636363635</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.26136363636363635</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.6891891991731849</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">10</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">11</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">65</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">1</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.8338735873715057</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">4</fuzzySetID>
+						<fuzzySetID dimension="3">7</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.9582664544385331</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">2</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">58</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">75</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">13</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">44</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">32</attribute>
+						<attribute attributeID="NumberOfWinner">33</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.0</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">13</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">90</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.7410548172507991</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">1</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">5</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">90</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">32</attribute>
+						<attribute attributeID="NumberOfWinner">33</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">13</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">44</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.0</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.6406618979543919</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">10</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">58</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">75</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.8338735873715057</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">4</fuzzySetID>
+						<fuzzySetID dimension="3">7</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">14</fuzzySetID>
+						<fuzzySetID dimension="1">11</fuzzySetID>
+						<fuzzySetID dimension="2">9</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">90</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8407229552848099</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">7</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">1</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">90</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">1</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.8338735873715057</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">4</fuzzySetID>
+						<fuzzySetID dimension="3">7</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">32</attribute>
+						<attribute attributeID="NumberOfWinner">33</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">44</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">13</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.0</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">1</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.1225661822263634</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">1</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">90</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">14</fuzzySetID>
+						<fuzzySetID dimension="1">11</fuzzySetID>
+						<fuzzySetID dimension="2">8</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">65</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">27</attribute>
+						<attribute attributeID="NumberOfWinner">28</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">16</attribute>
+						<attribute attributeID="NumberOfWinner">16</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">46</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.24110670636908516</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">8</attribute>
+						<attribute attributeID="NumberOfWinner">8</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">12</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">44</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="4">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">24</attribute>
+						<attribute attributeID="NumberOfWinner">25</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.014814814814814815</objective>
+					<objective id="1" objectiveName="NumberOfRule">5.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.333333348855376</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">11</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">135</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.6666666666666666</objective>
+					<objective id="1" objectiveName="NumberOfRule">1.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.6666666666666666</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.17702702506133083</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">2</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">80</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">55</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.3333333333333333</objective>
+					<objective id="1" objectiveName="NumberOfRule">2.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.3333333333333333</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>0.8740157507365987</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">3</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.02962962962962963</objective>
+					<objective id="1" objectiveName="NumberOfRule">3.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.06666666666666667</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+			<pittsburghSolution>
+				<michiganSolution id="0">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>1</classLabel>
+							<ruleWeight>0.844900645999807</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">12</fuzzySetID>
+						<fuzzySetID dimension="3">4</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">43</attribute>
+						<attribute attributeID="NumberOfWinner">44</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="1">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6305948874795599</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">5</fuzzySetID>
+						<fuzzySetID dimension="3">0</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">32</attribute>
+						<attribute attributeID="NumberOfWinner">33</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="2">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>0</classLabel>
+							<ruleWeight>1.0</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">0</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">6</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">45</attribute>
+						<attribute attributeID="NumberOfWinner">45</attribute>
+					</attributes>
+				</michiganSolution>
+				<michiganSolution id="3">
+					<rule>
+						<antecedent/>
+						<consequent>
+							<classLabel>2</classLabel>
+							<ruleWeight>0.6149162777449089</ruleWeight>
+						</consequent>
+					</rule>
+					<fuzzySetList>
+						<fuzzySetID dimension="0">8</fuzzySetID>
+						<fuzzySetID dimension="1">0</fuzzySetID>
+						<fuzzySetID dimension="2">0</fuzzySetID>
+						<fuzzySetID dimension="3">13</fuzzySetID>
+					</fuzzySetList>
+					<attributes>
+						<attribute attributeID="NumberOfClassifierPatterns">12</attribute>
+						<attribute attributeID="NumberOfWinner">13</attribute>
+					</attributes>
+				</michiganSolution>
+				<objectives>
+					<objective id="0" objectiveName="ErrorRateDtra">0.022222222222222223</objective>
+					<objective id="1" objectiveName="NumberOfRule">4.0</objective>
+					<objective id="2" objectiveName="ErrorRateDtst">0.0</objective>
+				</objectives>
+				<attributes>
+					<attribute attributeID="FastNonDominatedSortRanking">0</attribute>
+					<attribute attributeID="CrowdingDistanceDensityEstimator">0.0</attribute>
+				</attributes>
+			</pittsburghSolution>
+		</population>
+	</generations>
+</results_XML.xml>

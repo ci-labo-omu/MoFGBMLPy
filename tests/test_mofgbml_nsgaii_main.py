@@ -1,4 +1,10 @@
+import xml.etree.cElementTree as xml_tree
+import os
 import time
+from pathlib import Path
+
+import pandas as pd
+from tqdm import tqdm
 
 from mofgbmlpy.data.output import Output
 from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
@@ -6,6 +12,7 @@ from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 i
 )
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
+from util import distribution_test_helper_plot_assert
 
 
 def test_main_iris():
@@ -116,6 +123,8 @@ def test_deepcopy_generations():
         "nsga2",
         "--population-size",
         "10",
+        "--offspring-population-size",
+        "10",
     ]
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
@@ -146,3 +155,177 @@ def test_deepcopy_generations():
                                 pop2[l][0].get_vars()[n].get_vars().base
                             ), f"Generation {i} and {j} share a Michigan solution object"
     assert True
+
+# def test_java_distribution_iris():
+#     num_evals = 11
+#     num_iters = 100
+#     pop_size = 10
+#
+#     tests_root = Path(__file__).parent
+#     data_path = os.path.join(tests_root.parent, "dataset")
+#
+#     args = [
+#         "--data-name",
+#         "iris",
+#         "--algorithm-id",
+#         "1",
+#         "--experiment-id",
+#         "2",
+#         "--train-file",
+#         f"{data_path}/iris/a0_0_iris-10tra.dat",
+#         "--test-file",
+#         f"{data_path}/iris/a0_0_iris-10tst.dat",
+#         "--terminate-evaluation",
+#         f"{num_evals}",
+#         "--objectives",
+#         "error-rate",
+#         "num-rules",
+#         "--population-size",
+#         f"{pop_size}",
+#         f"--offspring-population-size",
+#         f"{pop_size}",
+#         "--algorithm",
+#         "nsga2",
+#     ]
+#
+#     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+#     runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+#
+#     tests_data_root = os.path.join(tests_root, "test_data", "main", "nsgaii")
+#     data_name_config_path = os.path.join(tests_data_root, "iris")
+#
+#     file_path = os.path.join(data_name_config_path, "pop.csv")
+#     df = pd.read_csv(file_path, header=0)
+#
+#     file_path = os.path.join(data_name_config_path, "pop_rules.csv")
+#     df_rules = pd.read_csv(file_path, header=0)
+#
+#     error_rate = []
+#     num_rules = []
+#
+#     rule_length = []
+#     num_wins = []
+#     num_classified_patterns = []
+#     rule_weight = []
+#
+#     old_seed = 2020
+#
+#     for i in range(num_iters):
+#         new_seed = old_seed + i * 7
+#
+#         new_args = args.copy()
+#         new_args.extend(["--rand-seed", f"{new_seed}"])
+#         res = runner.run(new_args)
+#         sols = res.opt.get("X")[:, 0]
+#
+#         for p_sol in sols:
+#             error_rate.append(p_sol.get_error_rate())
+#             num_rules.append(p_sol.get_num_vars())
+#
+#             assert p_sol.get_error_rate() == p_sol.get_objective(0)
+#             assert p_sol.get_num_vars() == p_sol.get_objective(1)
+#
+#             for m_sol in p_sol.get_vars():
+#                 rule_length.append(m_sol.get_rule().get_length())
+#                 num_wins.append(m_sol.get_num_wins())
+#                 num_classified_patterns.append(m_sol.get_fitness())
+#                 rule_weight.append(m_sol.get_rule_weight_py().get_value())
+#
+#     distribution_test_helper_plot_assert(
+#         error_rate,
+#         num_rules,
+#         rule_weight,
+#         rule_length,
+#         num_wins,
+#         num_classified_patterns,
+#         df,
+#         df_rules,
+#         f"Comparison on Iris Using NSGAII with a population size of {pop_size} with {num_evals} evals on {num_iters} iterations",
+#     )
+
+
+def test_from_xml():
+    num_evals = 8
+    pop_size = 5
+
+    tests_root = Path(__file__).parent
+    data_path = os.path.join(tests_root.parent, "dataset")
+
+    args = [
+        "--data-name",
+        "iris",
+        "--algorithm-id",
+        "xml_test",
+        "--experiment-id",
+        "1",
+        "--train-file",
+        f"{data_path}/iris/a0_0_iris-10tra.dat",
+        "--test-file",
+        f"{data_path}/iris/a0_0_iris-10tst.dat",
+        "--terminate-evaluation",
+        f"{num_evals}",
+        "--objectives",
+        "error-rate",
+        "num-rules",
+        "--population-size",
+        f"{pop_size}",
+        f"--offspring-population-size",
+        f"{pop_size}",
+        "--algorithm",
+        "nsga2",
+        "--pretty-xml"
+    ]
+
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+
+    res = runner.run(args)
+    # args = runner.get_args()
+    saved_population = res.opt.get("X")[:, 0]
+
+    results_path = f"{tests_root}{os.sep}results{os.sep}xml_test{os.sep}iris{os.sep}1{os.sep}results.xml"
+    imported_population, knowledge, _ = PittsburghMain.import_xml_classifiers(results_path)
+    imported_population = imported_population.get("X")[:, 0]
+
+    # knowledge.plot_fuzzy_variables()
+
+    assert len(saved_population) == len(imported_population)
+    for i in range(len(saved_population)):
+        saved_sol = saved_population[i]
+        imported_sol = imported_population[i]
+
+        assert saved_sol.get_error_rate() == imported_sol.get_error_rate()
+        assert saved_sol.get_num_vars() == imported_sol.get_num_vars()
+
+        saved_obj = saved_sol.get_objectives()
+        imported_obj = imported_sol.get_objectives()
+
+        assert len(saved_obj) == len(imported_obj)
+        for k in range(len(saved_obj)):
+            assert saved_obj[k] == imported_obj[k]
+
+        for j in range(saved_sol.get_num_vars()):
+            saved_michigan = saved_sol.get_vars()[j]
+            imported_michigan = imported_sol.get_vars()[j]
+
+            assert saved_michigan.get_rule().get_length() == imported_michigan.get_rule().get_length()
+            assert saved_michigan.get_num_wins() == imported_michigan.get_num_wins()
+            assert saved_michigan.get_fitness() == imported_michigan.get_fitness()
+            assert saved_michigan.get_rule_weight_py().get_value() == imported_michigan.get_rule_weight_py().get_value()
+
+
+def test_from_java_xml():
+    tests_root = Path(__file__).parent
+    data_path = os.path.join(tests_root.parent, "dataset")
+    train_path = f"{data_path}{os.sep}iris{os.sep}a0_0_iris-10tra.dat"
+    test_path = f"{data_path}{os.sep}iris{os.sep}a0_0_iris-10tst.dat"
+
+    results_path = f"{tests_root}{os.sep}test_data{os.sep}java_results.xml"
+    imported_population, imported_knowledge, _ = PittsburghMain.import_xml_classifiers(results_path, train_path, test_path, objectives=["error-rate", "num-rules"])
+    imported_population = imported_population.get("X")[:, 0]
+
+    xml_tree.dump(imported_knowledge.to_xml())
+    # imported_knowledge.plot_fuzzy_variables()
+
+    print(imported_population)
+

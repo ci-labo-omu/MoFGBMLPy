@@ -14,7 +14,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
 
         Args:
             random_gen (numpy.random.Generator): Random generator
-            prob (float): Crossover probability
+            prob (double): Crossover probability
             **kwargs (dict): Other Pymoo arguments
         """
         super().__init__(n_parents=2, n_offsprings=1, random_gen=random_gen, prob=prob, **kwargs)
@@ -28,7 +28,7 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
             **kwargs (dict): Other arguments taken by Pymoo crossover object
 
         Returns:
-            float[,,]: Crossover offspring. Shape: (1, n_matings, n_vars)
+            double[,,]: Crossover offspring. Shape: (1, n_matings, n_vars)
         """
         n_parents, n_matings, _ = X.shape
 
@@ -60,7 +60,8 @@ class UniformCrossoverSingleOffspringMichigan(PymooDeepcopyCrossover):
             else:
                 offspring[0, i, 0] = child_2
 
-            offspring[0, i, 0].reset_fitness()
-            offspring[0, i, 0].reset_num_wins()
+            # TODO: not done in the Java version?
+            # offspring[0, i, 0].reset_fitness()
+            # offspring[0, i, 0].reset_num_wins()
 
         return offspring

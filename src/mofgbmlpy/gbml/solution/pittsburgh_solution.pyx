@@ -19,8 +19,15 @@ from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.gbml.solution.abstract_solution cimport AbstractSolution
 from mofgbmlpy.gbml.solution.michigan_solution cimport MichiganSolution
 from mofgbmlpy.gbml.solution.michigan_solution_builder cimport MichiganSolutionBuilder
-
 from mofgbmlpy.fuzzy.rule.antecedent.antecedent cimport Antecedent
+
+from mofgbmlpy.fuzzy.classification.single_winner_rule_selection import SingleWinnerRuleSelection
+
+from mofgbmlpy.fuzzy.rule.rule_builder_basic import RuleBuilderBasic
+
+from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
+
+from mofgbmlpy.fuzzy.rule.antecedent.factory.heuristic_antecedent_factory import HeuristicAntecedentFactory
 from mofgbmlpy.gbml.solution.pittsburgh_scikit_classifier import PittsburghScikitClassifier
 
 cdef class PittsburghSolution(AbstractSolution):
@@ -72,13 +79,13 @@ cdef class PittsburghSolution(AbstractSolution):
         for var in self._vars:
             var.learning(dataset)
 
-    cpdef float get_average_rule_weight(self):
+    cpdef double get_average_rule_weight(self):
         """Get the average rule weight
         
         Returns:
-            float: Average rule weight
+            double: Average rule weight
         """
-        cdef float total_rule_weight = 0
+        cdef double total_rule_weight = 0
         cdef int i
         cdef MichiganSolution var
 
@@ -109,7 +116,7 @@ cdef class PittsburghSolution(AbstractSolution):
                                           do_init_vars=False)
 
         cdef MichiganSolution[:] vars_copy = np.empty(self.get_num_vars(), dtype=object)
-        cdef float[:] objectives_copy = np.empty(self.get_num_objectives(), dtype=np.float32)
+        cdef double[:] objectives_copy = np.empty(self.get_num_objectives(), dtype=np.float64)
         cdef int i
         cdef MichiganSolution var
 
@@ -156,13 +163,13 @@ cdef class PittsburghSolution(AbstractSolution):
             hash_val += hash_val * 17 + hash(self._vars[i]) * 17
         return hash_val
 
-    cpdef void remove_var(self, int index):
+    cpdef void remove_vars(self, int[:] indices):
         """Remove the variable at the given index
-        
+
         Args:
-            index (int): Index of the variable removed 
+            indices (int[]): Indices of the variables removed 
         """
-        self._vars = np.delete(self._vars, index)
+        self._vars = np.delete(self._vars, indices)
 
     cpdef void clear_vars(self):
         """Clear the variables"""
@@ -263,8 +270,10 @@ cdef class PittsburghSolution(AbstractSolution):
             (xml.etree.ElementTree) XML element representing this object
         """
         root = xml_tree.Element("pittsburghSolution")
-        for sol in self._vars:
-            root.append(sol.to_xml())
+        for i in range(len(self._vars)):
+            sol_xml = self._vars[i].to_xml()
+            sol_xml.set("id", str(i))
+            root.append(sol_xml)
 
         objectives = xml_tree.SubElement(root, "objectives")
         for i in range(self.get_num_objectives()):
@@ -294,6 +303,29 @@ cdef class PittsburghSolution(AbstractSolution):
             csv_str += f"{key},{value},"
         csv_str += "}"
         return csv_str
+
+    @staticmethod
+    def from_xml(xml_element, random_gen, knowledge, num_objectives, num_constraints, rule_builder, classification, michigan_solution_builder):
+        imported_rules = xml_element.findall("michiganSolution")
+        cdef MichiganSolution[:] new_vars = np.empty(len(imported_rules), dtype=object)
+        cdef MichiganSolution var
+
+        for i in range(len(imported_rules)):
+            var = MichiganSolution.from_xml(imported_rules[i], random_gen, 2, 0, rule_builder, knowledge)
+            idx = int(imported_rules[i].get("id"))
+            new_vars[idx] = var
+
+        num_vars = len(new_vars)
+        new_sol = PittsburghSolution(num_vars, num_objectives, num_constraints, classification, michigan_solution_builder)
+        new_sol.set_vars(new_vars)
+
+        attributes_xml = xml_element.find("attributes")
+        if attributes_xml is not None:
+            for attributes_xml in attributes_xml.findall("attribute"):
+                attr_id = attributes_xml.get("attributeID")
+                attr_value = attributes_xml.text
+                new_sol.set_attribute(attr_id, attr_value)
+        return new_sol
 
     cpdef bint are_rules_valid(self):
         """Check if the rules are valid (at least one rule inside this solution and no rejected rule)
@@ -409,14 +441,14 @@ cdef class PittsburghSolution(AbstractSolution):
 
         self._error_rate = num_errors / dataset_size
 
-    cpdef float calc_error_rate(self, Dataset dataset):
+    cpdef double calc_error_rate(self, Dataset dataset):
         """Calculate the error rate of this classifier using the given dataset
 
         Args:
             dataset (Dataset): Dataset used to calculate the error rate
 
         Returns:
-            float: Error rate
+            double: Error rate
         """
         if self._vars is None or dataset is None:
            raise TypeError("Michigan solutions list and dataset can't be None")
@@ -432,7 +464,7 @@ cdef class PittsburghSolution(AbstractSolution):
         #    sol.reset_num_wins()
         #    sol.reset_fitness()
 
-        for i in range(dataset_size):
+        for i in range(dataset.get_size()):
            p = patterns[i]
            winner_solution = self.classify(p)
            if winner_solution is None or p.get_target_class() != winner_solution.get_class_label():
@@ -440,11 +472,11 @@ cdef class PittsburghSolution(AbstractSolution):
 
         return num_errors / dataset_size
 
-    cpdef float get_error_rate(self):
+    cpdef double get_error_rate(self):
         """Get the error rate of the last update.
     
         Returns:
-            float: Error rate
+            double: Error rate
         """
         if self._error_rate == -1:
             raise Exception("Error rate was not initialized. Please call update_winners_and_errors first")
@@ -455,7 +487,7 @@ cdef class PittsburghSolution(AbstractSolution):
         """Get the patterns that can't be classified by this classifier in the last update
  
         Returns:
-            float: Errored patterns
+            double: Errored patterns
         """
 
         return self._errored_patterns

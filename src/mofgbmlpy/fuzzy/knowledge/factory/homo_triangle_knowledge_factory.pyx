@@ -121,6 +121,7 @@ cdef class HomoTriangleKnowledgeFactory(AbstractKnowledgeFactory):
         cdef int set_id = 0
         cdef int dim_i
         cdef int j
+        cdef float[:,:] params
 
         knowledge = Knowledge()
         fuzzy_sets = np.empty(len(self.__num_divisions), dtype=object)
