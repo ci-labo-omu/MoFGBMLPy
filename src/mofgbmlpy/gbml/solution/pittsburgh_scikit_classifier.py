@@ -108,12 +108,12 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
                 class_label = ClassLabelMulti(y[i])
             else:
                 class_label = ClassLabelBasic(y[i])
-            patterns[i] = Pattern(i, X[i].astype(np.float32), class_label)
+            patterns[i] = Pattern(i, X[i].astype(np.float64), class_label)
 
         return Dataset(size, n_dim, c_num, patterns)
 
-    def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100, var_names=None, class_labels=None):
-        X = X.astype(np.float32)
+    def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100, var_names=None, class_labels=None, dpi=300):
+        X = X.astype(np.float64)
         if X.shape[1] > 2 and (fixed_vals is None or len(fixed_vals) != X.shape[1]):
             raise NotImplementedError("Decision boundary plot is only implemented for 2D datasets. For higher dimensions, please provide fixed_vals with fixed values for all but two dimensions.")
 
@@ -134,9 +134,9 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         if fixed_vals is not None and fixed_vals.count(None) != 2:
             raise ValueError("fixed_vals must contain exactly two None values.")
 
-        grid = np.vstack([feature_1.ravel(), feature_2.ravel()], dtype=np.float32).T
+        grid = np.vstack([feature_1.ravel(), feature_2.ravel()], dtype=np.float64).T
 
-        grid_full = np.zeros((grid.shape[0], X.shape[1]), dtype=np.float32)
+        grid_full = np.zeros((grid.shape[0], X.shape[1]), dtype=np.float64)
         grid_i = 0
 
         if fixed_vals is None:
@@ -164,7 +164,7 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         predictions, cmap = self._get_db_plot_values(predictions, class_colors)
 
         display = DecisionBoundaryDisplay(xx0=feature_1, xx1=feature_2, response=predictions)
-        fig, ax = plt.subplots(figsize=(8, 5))
+        fig, ax = plt.subplots(figsize=(8, 5), dpi=dpi)
 
         display.plot(ax=ax, cmap=cmap, alpha=0.1)
 
@@ -207,7 +207,7 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         plt.show()
 
     def plot_conf_matrix(self, X, y, title="Confusion Matrix", ignore_unclassified=True, class_labels=None):
-        X = X.astype(np.float32)
+        X = X.astype(np.float64)
         y_pred = self.predict(X)
         num_unclassified = np.count_nonzero(y_pred == -1)
         title += f" (Unclassified: {num_unclassified})"

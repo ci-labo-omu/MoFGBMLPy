@@ -329,3 +329,80 @@ def test_from_java_xml():
 
     print(imported_population)
 
+def test_temp():
+    data_name = "iris"
+    args = [
+        "--data-name",
+        "appendicitis",
+        "--algorithm-id",
+        "1",
+        "--experiment-id",
+        "2",
+        "--rand-seed",
+        "2020",
+        "--train-file",
+        f"../dataset/{data_name}/a0_0_{data_name}-10tra.dat",
+        "--test-file",
+        f"../dataset/{data_name}/a0_0_{data_name}-10tst.dat",
+        "--terminate-evaluation",
+        "30000",
+        "--objectives",
+        "total-rule-length",
+        "error-rate",
+        "--gen-plot",
+        "--algorithm",
+        "nsga2",
+        "--population-size",
+        "100",
+        "--offspring-population-size",
+        "100",
+    ]
+
+    algo_name = AbstractMain.get_algo_name_from_raw_args(args)
+    runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)
+    res = runner.run(args)
+    non_dominated_solutions = res.opt.get("X")
+    objectives = res.opt.get("F")
+
+    import matplotlib.pyplot as plt
+    plt.figure(dpi=300)
+    plt.title("Pareto Front")
+    plt.xlabel("Total Rule Length")
+    plt.ylabel("Error Rate")
+    plt.scatter(objectives[:,0], objectives[:,1], c="blue", label="Non-dominated Solutions")
+    plt.ylim((0,1))
+    plt.legend()
+    plt.show()
+
+
+
+    #
+    # initial_classifier = non_dominated_solutions[9][0]
+    #
+    # print(initial_classifier)
+    #
+    # train_dataset = runner.get_train_set()
+    #
+    # decision_boundaries_fixed_vals = [0.5, 0.5, None, None]
+    #
+    # var_names = ["Sepal Length", "Sepal Width", "Petal Length", "Petal Width"]
+    # class_labels = ["Setosa", "Versicolor", "Virginica"]
+    #
+    # # get sklearn obj
+    # X, y = train_dataset.get_scikit_xy()
+    #
+    # # Compare the two classifiers
+    # initial_classifier_sk = initial_classifier.create_scikit_classifier()
+    #
+    # initial_classifier_sk.fit(X, y)
+    #
+    # # Decision boundary plot
+    # initial_classifier_sk.plot_decision_boundaries(
+    #     X, y, title="Initial Classifier Decision Boundaries", fixed_vals=decision_boundaries_fixed_vals,
+    #     var_names=var_names, class_labels=class_labels, dpi=300
+    # )
+    #
+    # # Confusion matrix plot
+    # initial_classifier_sk.plot_conf_matrix(X, y, title="Initial Classifier Confusion Matrix", class_labels=class_labels)
+
+

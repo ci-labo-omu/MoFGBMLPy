@@ -243,3 +243,6 @@ class CounterfactualProblem(Problem):
 
     def get_train_set(self):
         return self._train_set
+
+    def get_learner(self):
+        return self._learner

@@ -33,7 +33,7 @@ def get_config(data_name, min_num_rules=None, num_evals=5000):
     ]
 
     if min_num_rules is not None:
-        args.extend(["--min-num-rules", str(min_num_rules)])
+        args.extend(["--min-rule-num", str(min_num_rules)])
 
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
     runner = PittsburghMain(HomoTriangleKnowledgeFactory_2_3_4_5, algo_name)

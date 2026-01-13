@@ -164,4 +164,4 @@ cdef class AbstractSolution:
         Args:
             new_size (int): New size of the objectives array
         """
-        self._objectives = np.empty(new_size, dtype=np.float32)
+        self._objectives = np.empty(new_size, dtype=np.float64)

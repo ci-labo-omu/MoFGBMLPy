@@ -293,7 +293,7 @@ cdef class Antecedent:
             matplotlib.axes.Axes: The axes object where we drew
         """
         cdef FuzzySet fuzzy_set
-        cdef cnp.ndarray[double, ndim=2] points
+        cdef cnp.ndarray[float, ndim=2] points
 
         fuzzy_set = self.__knowledge.get_fuzzy_set(dim, self.__antecedent_indices[dim])
 
