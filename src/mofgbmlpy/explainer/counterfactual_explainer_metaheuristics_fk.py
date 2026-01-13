@@ -39,6 +39,8 @@ from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 
 from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import \
     UniformCrossoverSingleOffspringMichigan
+
+from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
 from mofgbmlpy.main.abstract_main import AbstractMain
 from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 import pandas as pd
@@ -54,7 +56,6 @@ class CounterFactualExplainerMetaheuristicsFK(CounterFactualExplainerMetaheurist
         test_set,
         mutation_prob=0.7,
         crossover_prob=0.7,
-        sampling_change_prob=0.2,
         use_search_space_crowding=False,
         objectives=["confidence_loss", "change_loss"],
         n_gen=60,
@@ -62,8 +63,16 @@ class CounterFactualExplainerMetaheuristicsFK(CounterFactualExplainerMetaheurist
     ):
         knowledge = classifier.get_var(0).get_rule().get_knowledge()
         random_gen = np.random.Generator(np.random.MT19937(seed=2022))
+        rule_builder = classifier.get_var(0).get_rule_builder()
 
-        sampling = FuzzySetsSamplingFK(knowledge, sampling_change_prob)
+        michigan_solution_builder = MichiganSolutionBuilder(
+            random_gen,
+            len(objectives),
+            0,
+            rule_builder
+        )
+
+        sampling = FuzzySetsSamplingFK(michigan_solution_builder)
         mutation = MichiganMutation(knowledge, mutation_prob, random_gen)
         crossover = UniformCrossoverSingleOffspringMichigan(random_gen, crossover_prob)
 

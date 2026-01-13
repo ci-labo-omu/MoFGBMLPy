@@ -40,7 +40,7 @@ if __name__ == "__main__":
     class_labels = ["Tested negative", "Tested positive"]
     cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristicsFK, non_dominated_solutions, plot=False, var_names=var_names,
                                   class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0,
-                                  c_target=1, sol_idx=0, sampling_change_prob=0.2, mutation_prob=0.7, crossover_prob=0.7,
+                                  c_target=1, sol_idx=3, mutation_prob=0.7, crossover_prob=0.7,
                                   objectives=["confidence_loss", "change_loss"],
                                   decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
 
@@ -51,17 +51,15 @@ if __name__ == "__main__":
 
     cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristicsFK, non_dominated_solutions, plot=False, var_names=var_names,
                                   class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0,
-                                  sol_idx=0, sampling_change_prob=0.2, mutation_prob=0.7, crossover_prob=0.7,
+                                  sol_idx=1, mutation_prob=0.7, crossover_prob=0.7,
                                   objectives=["confidence_loss", "change_loss"],
                                   decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
     new_cl = append_rule_classifier(new_cl, cf_rule_2, train_set=train_dataset)
 
     rules_names = ["Factual Rule 1", "Factual Rule 2", "CF Rule 1", "CF Rule 2"]
 
-    new_cl.set_vars(new_cl.get_vars()[2:])
-
     new_cl.update_winners_and_errors(train_dataset)
-    new_cl.plot_rules(var_names, rules_names, dims=[1, 3, 5])
+    new_cl.plot_rules(var_names, rules_names, dims=[0, 1, 5])
 
     print(f"Initial classifier error rate: {initial_classifier.get_error_rate()}")
     print(f"New classifier error rate: {new_cl.get_error_rate()}")
