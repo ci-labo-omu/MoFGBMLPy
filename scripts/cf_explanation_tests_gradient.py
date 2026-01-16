@@ -56,8 +56,8 @@ def get_config(data_name, min_num_rules=None, num_evals=5000):
     return num_classes, train_set, test_set, non_dominated_solutions
 
 if __name__ == "__main__":
-    _, _, test_dataset, non_dominated_solutions = get_config("pima")
-    CFEBenchmark.main_plot_single(CFEGradient, non_dominated_solutions, sol_index=2, test_dataset=test_dataset)
+    # _, _, test_dataset, non_dominated_solutions = get_config("pima")
+    # CFEBenchmark.main_plot_single(CFEGradient, non_dominated_solutions, sol_index=2, test_dataset=test_dataset)
 
     #
     # for data_name in ["contraceptive", "appendicitis", "bal", "bupa", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
@@ -80,8 +80,9 @@ if __name__ == "__main__":
     #         result_path = f"..\\cf_results\\cf_gradient\\param_search\\min_num_rules_{min_num_rules}\\max_num_epochs\\{data_name}"
     #         CFEBenchmark.param_search(CFEGradient, num_classes, non_dominated_solutions, result_path, "max_num_epochs", test_dataset=test_dataset, data_name=data_name, min_val=10, max_val=100, num_experiments=10, is_int=True)
 
-    # for data_name in ["magic", "movement_libras"]: # ["contraceptive", "appendicitis", "bal", "bupa", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar"]:
-    #     num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
-    #
-    #     result_path = f"..\\cf_results\\cf_gradient\\classic\\{data_name}"
-    #     CFEBenchmark.main_benchmark(CFEGradient, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name="classic")
+    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
+    for data_name in ["bupa", "iris", "pima"]:
+        num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
+
+        result_path = f"..\\cf_results\\cf_gradient\\classic\\{data_name}"
+        CFEBenchmark.main_benchmark(CFEGradient, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name="classic")

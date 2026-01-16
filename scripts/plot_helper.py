@@ -502,4 +502,5 @@ if __name__ == "__main__":
 
     # main(filter_params=["train_error_rate_append_initial_variation"], filter_test_names=["classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=False, plot_general=True, do_plot_metrics=True, do_plot_success_rates=False, aggregate_datasets=True)
 
-    main( filter_test_names=["X_crowding", "classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    # main( filter_test_names=["X_crowding", "classic"], plot_gradient=False, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=False)
+    main(filter_test_names=["classic"], plot_gradient=True, plot_metaheuristics=True, plot_params=True, plot_general=True, do_plot_metrics=True, do_plot_success_rates=True, aggregate_datasets=True)

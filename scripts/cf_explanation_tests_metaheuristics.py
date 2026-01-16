@@ -109,8 +109,39 @@ if __name__ == "__main__":
     #     result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
     #     CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name=test_name)
 
+    test_configs = {
+        "num_features_no_change_loss": {"objectives": ["confidence_loss", "num_changed_features"]},
+        "num_features_no_change_loss_less_edits": {"objectives": ["confidence_loss", "num_changed_features"], "mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
+        "less_edits": {"mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
+        "num_features": {"objectives": ["confidence_loss", "change_loss", "num_changed_features"]},
+        "classic": {},
+        "X_crowding": {"use_search_space_crowding": True},
+        "error_rate": {"objectives": ["confidence_loss", "change_loss", "train_error_rate"]},
+        "no_fs_type_change": {"mutation_fs_type_prob": 0.0, "sampling_fs_type_prob": 0.0}
+    }
+    test_names = list(test_configs.keys())
+
+    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
+    for data_name in ["bupa", "iris", "pima"]:
+        all_tests_already_exist = True
+        for test_name in test_names:
+            test_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
+            if not os.path.exists(test_path):
+                all_tests_already_exist = False
+                break
+        if all_tests_already_exist:
+            print(f"All tests on {data_name} have already been run, skipping...")
+            continue
+
+        num_classes, _, test_dataset, non_dominated_solutions, _ = get_config(data_name)
+
+        for test_name, config in test_configs.items():
+            result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
+            CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name=test_name, **config)
+
+
     #
-    # for min_num_rules in [1, 2]:
+    # for min_num_rules in [1]: #[1, 2]:
     #     for data_name in ["bupa", "iris", "pima"]:
     #         num_classes, train_dataset, test_dataset, non_dominated_solutions, _ = get_config(data_name, min_num_rules=min_num_rules)
 
@@ -126,36 +157,6 @@ if __name__ == "__main__":
             # for param_name in ["n_gen", "pop_size"]:
             #     result_path = f"..\\cf_results\\cf_metaheuristics\\param_search\\min_num_rules_{min_num_rules}\\{param_name}\\{data_name}"
             #     CFEBenchmark.param_search(CFEMetaheuristics, num_classes, non_dominated_solutions, result_path, param_name, test_dataset=test_dataset, data_name=data_name, vals=[10, 25, 50, 100], is_int=True)
-
-    test_configs = {
-        # "num_features_no_change_loss": {"objectives": ["confidence_loss", "num_changed_features"]},
-        # "num_features_no_change_loss_less_edits": {"objectives": ["confidence_loss", "num_changed_features"], "mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
-        # "less_edits": {"mutation_revert_to_initial_prob": 0.3, "sampling_change_fs_params_prob": 0.3},
-        # "num_features": {"objectives": ["confidence_loss", "change_loss", "num_changed_features"]},
-        # "classic": {},
-        # "X_crowding": {"use_search_space_crowding": True},
-        # "error_rate": {"objectives": ["confidence_loss", "change_loss", "train_error_rate"]},
-        # "no_fs_type_change": {"mutation_fs_type_prob": 0.0, "sampling_fs_type_prob": 0.0}
-    }
-    test_names = list(test_configs.keys())
-
-    # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
-    # for data_name in ["iris"]:
-    #     all_tests_already_exist = True
-    #     for test_name in test_names:
-    #         test_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
-    #         if not os.path.exists(test_path):
-    #             all_tests_already_exist = False
-    #             break
-    #     if all_tests_already_exist:
-    #         print(f"All tests on {data_name} have already been run, skipping...")
-    #         continue
-    #
-    #     num_classes, _, test_dataset, non_dominated_solutions, _ = get_config(data_name)
-    #
-    #     for test_name, config in test_configs.items():
-    #         result_path = f"..\\cf_results\\cf_metaheuristics\\{test_name}\\{data_name}"
-    #         CFEBenchmark.main_benchmark(CFEMetaheuristics, num_classes, non_dominated_solutions, out_path=result_path, test_dataset=test_dataset, data_name=data_name, test_name=test_name, **config)
 
 
     # Example run on a simple dataset
@@ -198,7 +199,7 @@ if __name__ == "__main__":
     # cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=3, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"], decision_boundaries_fixed_vals=[0.5, None, None, 0.5])[0]
 
     # Example on Pima
-    _, train_dataset, test_dataset, non_dominated_solutions, _ = get_config("pima", min_num_rules=2, verbose=True, interpretability_obj="total-rule-length")
+    # _, train_dataset, test_dataset, non_dominated_solutions, _ = get_config("pima", min_num_rules=2, verbose=True, interpretability_obj="total-rule-length")
 
     # for i in range(len(non_dominated_solutions)):
     #     cl = non_dominated_solutions[i][0]
@@ -209,9 +210,9 @@ if __name__ == "__main__":
     #             print(var.get_rule())
     #         print("====================")
 
-    cl_idx = 5
-    initial_classifier = non_dominated_solutions[cl_idx][0]
-    decision_boundaries_fixed_vals = [0.18, None, 0.59, 0.23, 0.03, 0.48, 0.13, None]
+    # cl_idx = 5
+    # initial_classifier = non_dominated_solutions[cl_idx][0]
+    # decision_boundaries_fixed_vals = [0.18, None, 0.59, 0.23, 0.03, 0.48, 0.13, None]
 
     # for i in range(train_dataset.get_num_dim()):
     #     feature_values = [p.get_attribute_value(i) for p in train_dataset.get_patterns()]
@@ -221,24 +222,24 @@ if __name__ == "__main__":
     # for var in initial_classifier.get_vars():
     #     print(var.get_rule())
 
-    var_names = ["Preg", "Plas", "Pres", "Skin", "Insu", "Mass", "Pedi", "Age"]
-    class_labels = ["Tested negative", "Tested positive"]
-    cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=15, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
-
-    new_cl = append_rule_classifier(initial_classifier, cf_rule_1, train_set=train_dataset)
-    non_dominated_solutions = np.array([[new_cl]])
-
-    cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=39, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
-    new_cl = append_rule_classifier(new_cl, cf_rule_2, train_set=train_dataset)
-
-    rules_names = ["Factual Rule 1", "Factual Rule 2", "CF Rule 1", "CF Rule 2"]
-
-    new_cl.update_winners_and_errors(train_dataset)
-    new_cl.plot_rules(var_names, rules_names, dims=[1, 7])
-    print(f"Initial classifier error rate: {initial_classifier.get_error_rate()}")
-    print(f"New classifier error rate: {new_cl.get_error_rate()}")
-    for var in new_cl.get_vars():
-        print(var.get_rule())
+    # var_names = ["Preg", "Plas", "Pres", "Skin", "Insu", "Mass", "Pedi", "Age"]
+    # class_labels = ["Tested negative", "Tested positive"]
+    # cf_rule_1 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=cl_idx, r_idx=0, c_target=1, sol_idx=15, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
+    #
+    # new_cl = append_rule_classifier(initial_classifier, cf_rule_1, train_set=train_dataset)
+    # non_dominated_solutions = np.array([[new_cl]])
+    #
+    # cf_rule_2 = CFEBenchmark.main_plot_single(CFEMetaheuristics, non_dominated_solutions, plot=False, var_names=var_names, class_labels=class_labels, test_dataset=test_dataset, cl_idx=0, r_idx=1, c_target=0, sol_idx=39, sampling_fs_type_prob=0.0, mutation_fs_type_prob=0.0, objectives=["confidence_loss", "change_loss"],decision_boundaries_fixed_vals=decision_boundaries_fixed_vals)[0]
+    # new_cl = append_rule_classifier(new_cl, cf_rule_2, train_set=train_dataset)
+    #
+    # rules_names = ["Factual Rule 1", "Factual Rule 2", "CF Rule 1", "CF Rule 2"]
+    #
+    # new_cl.update_winners_and_errors(train_dataset)
+    # new_cl.plot_rules(var_names, rules_names, dims=[1, 7])
+    # print(f"Initial classifier error rate: {initial_classifier.get_error_rate()}")
+    # print(f"New classifier error rate: {new_cl.get_error_rate()}")
+    # for var in new_cl.get_vars():
+    #     print(var.get_rule())
 
 
 

@@ -397,6 +397,7 @@ class CounterFactualExplainerGradient:
 
     def _create_solution_object(self, new_cf_rule, new_knowledge):
         michigan_sol = copy.deepcopy(self._classifier_copy.get_var(self._problem.get_changed_rule_index()))
+        michigan_sol.resize_objectives(self._problem.n_obj)
         michigan_sol.set_vars(new_cf_rule.get_antecedent().get_antecedent_indices())
         michigan_sol.set_knowledge(new_knowledge)
 
