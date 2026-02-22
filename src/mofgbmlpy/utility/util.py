@@ -1,5 +1,5 @@
 def dash_case_to_class_name(txt):
-    """Convert a text in dash case format to a class name format. e.g. an-example becomes AnExample
+    """Convert a text in dash case format to a class name format. e.g. an-example becomes AnExample.
 
     Args:
         txt (str): text to be converted
@@ -13,7 +13,7 @@ def dash_case_to_class_name(txt):
 
 
 def dash_case_to_snake_case(txt):
-    """Convert a text in dash case format to snake case. e.g. an-example becomes an_example
+    """Convert a text in dash case format to snake case. e.g. an-example becomes an_example.
 
     Args:
         txt (str): text to be converted

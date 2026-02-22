@@ -121,6 +121,18 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         class_labels=None,
         dpi=300,
     ):
+        """Plot the decision boundaries of the classifier on a 2D dataset (or 2 dimensions of a higher dim dataset)
+
+        Args:
+            X (list): Array of arrays of attributes values
+            y (list): Array of labels
+            title (str): Title of the plot
+            fixed_vals (list): List of fixed values for dimensions that are not plotted.
+            num_points_per_dim (int): Number of points to use per dimension for plotting the decision boundaries
+            var_names (list): List of variable names for the axes labels. If None, generic names will be used.
+            class_labels (list): List of class labels for the legend. If None, generic labels will be used.
+            dpi (int): DPI for the plot
+        """
         X = X.astype(np.float64)
         if X.shape[1] > 2 and (fixed_vals is None or len(fixed_vals) != X.shape[1]):
             raise NotImplementedError(
@@ -218,6 +230,15 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         plt.show()
 
     def plot_conf_matrix(self, X, y, title="Confusion Matrix", ignore_unclassified=True, class_labels=None):
+        """Plot the confusion matrix of the classifier on a dataset
+
+        Args:
+            X (list): Array of arrays of attributes values
+            y (list): Array of labels
+            title (str): Title of the plot
+            ignore_unclassified (bool): Whether to ignore unclassified instances in the confusion matrix
+            class_labels (list): List of class labels for the axes. If None, generic labels will be used.
+        """
         X = X.astype(np.float64)
         y_pred = self.predict(X)
         num_unclassified = np.count_nonzero(y_pred == -1)
@@ -244,6 +265,15 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
 
     @staticmethod
     def _get_db_plot_values(y_values, class_colors):
+        """Map the class labels in y_values to a range of integers starting from 0 and create a corresponding colormap.
+
+        Args:
+            y_values (array-like): Array of class labels to be mapped
+            class_colors (list): List of colors corresponding to the original class labels
+
+        Returns:
+            array: Array of mapped class labels as integers
+        """
         init_shape = y_values.shape
         if y_values.ndim == 2:
             y_values = y_values.ravel()

@@ -31,16 +31,20 @@ import sys
 
 
 class PittsburghMain(AbstractMain):
+    """MoFGBML runner for Pittsburgh-style individuals"""
+
     def __init__(self, knowledge_factory_class, algo_name):
-        """Constructor
+        """Constructs the Pittsburgh runner class
 
         Args:
             knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory class
+            algo_name (str): Name of the algorithm (e.g. nsga2)
         """
         args = PittsburghStyleArguments(algo_name)
         super().__init__(args, knowledge_factory_class)
 
     def _load_additional_args(self):
+        """Load Pittsburgh approach arguments"""
         self._callback = Callback()
         self._repair = PittsburghRepair()
         self._mutation = PittsburghMutation(self._knowledge, self._random_gen)
@@ -100,7 +104,7 @@ class PittsburghMain(AbstractMain):
     def plot_line_interpretability_error_rate_tradeoff(
         solutions, file_path=None, title=None, xlim=None, grid=True, x_key="total_rule_length"
     ):
-        """Plot an interpretability error rate tradeoff of the solutions
+        """Plot an interpretability error rate tradeoff of the solutions.
 
         Args:
             solutions (PittsburghSolution[]): solutions
@@ -146,7 +150,7 @@ class PittsburghMain(AbstractMain):
         xlim=None,
         grid=True,
     ):
-        """Plot an interpretability error rate tradeoff from coordinates
+        """Plot an interpretability error rate tradeoff from coordinates.
 
         Args:
             err_train (list): List of tuples (x_value, err_train_value_at_x)
@@ -195,7 +199,7 @@ class PittsburghMain(AbstractMain):
 
     @staticmethod
     def update_results_data(solutions, knowledge, train, test, id_start=0):
-        """Update the solutions data (attributes)
+        """Update the solutions data (attributes).
 
         Args:
             solutions (PittsburghSolution[]): solutions
@@ -234,7 +238,7 @@ class PittsburghMain(AbstractMain):
     def import_xml_classifiers(
         file_path, train_file_path=None, test_file_path=None, is_multi_label=False, objectives=None
     ):
-        """Import classifiers from an XML file
+        """Import classifiers from an XML file.
 
         Args:
             file_path (str): Path of the XML file

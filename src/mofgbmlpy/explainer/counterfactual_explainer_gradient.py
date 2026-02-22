@@ -9,6 +9,24 @@ from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import Counterfactu
 
 
 class CounterFactualExplainerGradient:
+    """Counterfactual explainer using gradient-based optimization
+
+    Attributes:
+        _problem (CounterfactualProblem): The counterfactual problem to solve, containing the classifier, the changed rule index, the target class and the test set
+        _classifier_copy (Classifier): A copy of the classifier to use for creating the solution object at the end of the training
+        _factual_rule (Rule): The factual rule to explain, used to get the initial fuzzy sets and the initial class
+        _initial_class (int): The initial class of the factual rule, used to calculate the confidence loss objective
+        _target_class (int): The target class for the counterfactual explanation, used to calculate the confidence loss objective
+        _learner (RuleBuilder): The learner to use for learning the consequent of the counterfactual rule during training
+        _train_set (DataSet): The training set to use for learning the consequent of the counterfactual rule during training
+        _initial_knowledge (Knowledge): The initial knowledge of the factual rule, used to get the initial fuzzy sets and to apply the changes during training
+        _confidence_loss_weight (float): The weight of the confidence loss in the total loss function, used to balance the importance of the confidence loss and the change loss during training
+        _area_computation_num_samples (int): The number of samples to use for computing the area of the fuzzy sets during training, used to calculate the change loss objective
+        _learning_rate (float): The learning rate for the gradient-based optimization, used to control the step size of the parameter updates during training
+        _max_num_epochs (int): The maximum number of epochs for the training, used to stop the training after a certain number of iterations to prevent overfitting or long training times
+        _initial_mf_values (np.ndarray): The initial membership function values of the fuzzy sets for the factual rule, used to calculate the change loss objective during training
+    """
+
     def __init__(
         self,
         classifier,
@@ -20,6 +38,18 @@ class CounterFactualExplainerGradient:
         learning_rate=4.0,
         max_num_epochs=100,
     ):
+        """Constructor
+
+        Args:
+            classifier (Classifier): The classifier for which to find counterfactual explanations, used to get the knowledge for the mutation operator
+            changed_rule_index (int): The index of the rule to change in the counterfactual explanation, used to get the initial rule for the sampling and to apply the changes in the mutation and crossover operators
+            target_class (int): The target class for the counterfactual explanation, used to calculate the confidence loss objective
+            test_set (DataSet): The test set to evaluate the solutions on, used to calculate the confidence loss objective
+            confidence_loss_weight (float, optional): The weight of the confidence loss in the total loss function, used to balance the importance of the confidence loss and the change loss during training. Defaults to 0.9.
+            area_computation_num_samples (int, optional): The number of samples to use for computing the area of the fuzzy sets during training, used to calculate the change loss objective. Defaults to 100.
+            learning_rate (float, optional): The learning rate for the gradient-based optimization, used to control the step size of the parameter updates during training. Defaults to 4.0.
+            max_num_epochs (int, optional): The maximum number of epochs for the training, used to stop the training after a certain number of iterations to prevent overfitting or long training times. Defaults to 100.
+        """
         self._problem = CounterfactualProblem(classifier, changed_rule_index, target_class, test_set=test_set)
 
         self._classifier_copy = copy.deepcopy(classifier)
@@ -45,9 +75,22 @@ class CounterFactualExplainerGradient:
         self._initial_mf_values = self.compute_membership_values(fuzzy_sets, 0, 1)
 
     def get_problem(self):
+        """Get the counterfactual problem to solve
+
+        Returns:
+            CounterfactualProblem: The counterfactual problem to solve, containing the classifier, the changed rule index, the target class and the test set
+        """
         return self._problem
 
     def compute_membership_values(self, fuzzy_sets, min_val=0, max_val=1):
+        """Compute the membership function values of the fuzzy sets for a range of input values, used to calculate the change loss objective during training
+
+        Args:
+            fuzzy_sets (np.ndarray): An array of fuzzy sets for which to compute the membership function values, used to calculate the change loss objective during training
+
+        Returns:
+            np.ndarray: An array of shape (num_fuzzy_sets, num_samples) containing the membership function values of the fuzzy sets for a range of input values, used to calculate the change loss objective during training
+        """
         mfs = [fs.get_function() for fs in fuzzy_sets]
 
         x_samples = np.linspace(min_val, max_val, self._area_computation_num_samples)
@@ -59,6 +102,19 @@ class CounterFactualExplainerGradient:
 
     @staticmethod
     def compute_membership_area_data(mf_1_y, mf_2_y, step):
+        """Compute the union and intersection area of two sets of membership function values, used to calculate the change loss objective during training
+
+        Args:
+            mf_1_y (np.ndarray): An array of shape (num_fuzzy_sets, num_samples) containing the membership function values of the first set of fuzzy sets for a range of input values, used to calculate the change loss objective during training
+            mf_2_y (np.ndarray): An array of shape (num_fuzzy_sets, num_samples) containing the membership function values of the second set of fuzzy sets for a range of input values, used to calculate the change loss objective during training
+            step (float): The step size between the input values for which the membership function values are computed, used to calculate the area of the fuzzy sets during training
+
+        Returns:
+            float: The intersection area of the two sets of membership function values, used to calculate the change loss objective during training
+            float: The union area of the two sets of membership function values, used to calculate the change loss objective during training
+            float: The length of the part of the second set of fuzzy sets that is smaller than the first set of fuzzy sets, used to calculate the change loss objective during training
+            float: The length of the part of the second set of fuzzy sets that is higher than the first set of fuzzy sets, used to calculate the change loss objective during training
+        """
         union_value = np.zeros(mf_1_y.shape[0])
         intersection_value = np.zeros(mf_1_y.shape[0])
         mf_2_smallest_length = np.zeros(mf_1_y.shape[0])
@@ -85,6 +141,17 @@ class CounterFactualExplainerGradient:
         return intersection_value, union_value, mf_2_smallest_length, mf_2_highest_length
 
     def loss_functions(self, intersection_values, union_values, cf_rule):
+        """Calculate the confidence loss and the change loss for a given counterfactual rule, used to calculate the total loss during training
+
+        Args:
+            intersection_values (np.ndarray): An array of shape (num_fuzzy_sets,) containing the intersection area of the fuzzy sets for the factual rule and the counterfactual rule, used to calculate the change loss objective during training
+            union_values (np.ndarray): An array of shape (num_fuzzy_sets,) containing the union area of the fuzzy sets for the factual rule and the counterfactual rule, used to calculate the change loss objective during training
+            cf_rule (Rule): The counterfactual rule for which to calculate the confidence loss and the change loss, used to calculate the confidence loss objective during training
+
+        Returns:
+            float: The confidence loss of the counterfactual rule
+            float: The change loss of the counterfactual rule
+        """
         # Confidence loss
         # TODO: to be optimized, because for now all confidence are computed
         confidences = self._learner.calc_confidence_py(cf_rule.get_antecedent(), self._train_set)
@@ -106,6 +173,17 @@ class CounterFactualExplainerGradient:
 
     @staticmethod
     def _filter_data_class(dataset, searched_class1, searched_class2):
+        """Filter the indices of the patterns in the dataset that belong to the two given classes, used to calculate the confidence loss objective during training
+
+        Args:
+            dataset (DataSet): The dataset containing the patterns to filter, used to calculate the confidence loss objective during training
+            searched_class1 (int): The first class to filter, used to calculate the confidence loss objective during training
+            searched_class2 (int): The second class to filter, used to calculate the confidence loss objective during training
+
+        Returns:
+            list: A list of indices of the patterns in the dataset that belong to the first class, used to calculate the confidence loss objective during training
+            list: A list of indices of the patterns in the dataset that belong to the second class, used to calculate the confidence loss objective during training
+        """
         patterns = dataset.get_patterns()
 
         filtered_data1_idx = []
@@ -120,6 +198,16 @@ class CounterFactualExplainerGradient:
 
     @staticmethod
     def get_param_derivative(param_index, mf_params, x):
+        """Calculate the derivative of the membership function value with respect to a given parameter of the triangular membership function, used to calculate the gradient during training
+
+        Args:
+            param_index (int): The index of the parameter for which to calculate the derivative, used to calculate the gradient during training
+            mf_params (list): A list of the parameters of the triangular membership function, used to calculate the derivative during training
+            x (float): The input value for which to calculate the membership function value, used to calculate the derivative during training
+
+        Returns:
+            float: The derivative of the membership function value with respect to the given parameter of the triangular membership function, used to calculate the gradient during training
+        """
         if param_index == 0:
             # dµ/da
             return (
@@ -153,6 +241,20 @@ class CounterFactualExplainerGradient:
         mf_current_smallest_length,
         mf_current_highest_length,
     ):
+        """Calculate the gradient of the total loss function with respect to the parameters of the fuzzy sets for the antecedent of the counterfactual rule, used to update the parameters during training
+
+        Args:
+            antecedent_mf_value (np.ndarray): An array of shape (num_patterns,) containing the membership function values of the fuzzy sets for the antecedent of the counterfactual rule for each pattern in the training set, used to calculate the confidence loss objective during training
+            fs_mf_values (np.ndarray): An array of shape (num_patterns, num_fuzzy_sets) containing the membership function values of the fuzzy sets for the antecedent of the counterfactual rule for each pattern in the training set, used to calculate the confidence loss objective during training
+            mf_params (list): A list of the parameters of the fuzzy sets for the antecedent of the counterfactual rule, used to calculate the derivative of the membership function values with respect to the parameters during training
+            intersection_value (np.ndarray): An array of shape (num_fuzzy_sets,) containing the intersection area of the fuzzy sets for the factual rule and the counterfactual rule, used to calculate the change loss objective during training
+            union_value (np.ndarray): An array of shape (num_fuzzy_sets,) containing the union area of the fuzzy sets for the factual rule and the counterfactual rule, used to calculate the change loss objective during training
+            mf_current_smallest_length (np.ndarray): An array of shape (num_fuzzy_sets,) containing the length of the part of the fuzzy sets for the counterfactual rule that is smaller than the fuzzy sets for the factual rule, used to calculate the change loss objective during training
+            mf_current_highest_length (np.ndarray): An array of shape (num_fuzzy_sets,) containing the length of the part of the fuzzy sets for the counterfactual rule that is higher than the fuzzy sets for the factual rule, used to calculate the change loss objective during training
+
+        Returns:
+            np.ndarray: An array of shape (num_fuzzy_sets, num_params) containing the gradient of the total loss function with respect to the parameters of the fuzzy sets for the antecedent of the counterfactual rule, used to update the parameters during training
+        """
         gradient = np.zeros((fs_mf_values.shape[1], 3), dtype=object)  # shape (num_fs, num_params)
 
         # dL_conf/d_membership_aq
@@ -227,6 +329,14 @@ class CounterFactualExplainerGradient:
         return gradient
 
     def train(self, verbose=True):
+        """Generate a CF rule using gradient-based optimization
+
+        Args:
+            verbose (bool, optional): Whether to print the training progress and the loss values during training. Defaults to True.
+
+        Returns:
+            Population: A population containing the generated counterfactual rule as a solution, with the fuzzy sets for the antecedent optimized using gradient-based optimization to minimize the confidence loss and the change loss, and with the consequent learned using the learner for each updated antecedent during training.
+        """
         # TODO: decouple fuzzy sets between vars (copy them in knowledge base and antecedent)
 
         new_cf_rule = copy.deepcopy(self._factual_rule)
@@ -384,6 +494,15 @@ class CounterFactualExplainerGradient:
         return new_pop
 
     def _create_solution_object(self, new_cf_rule, new_knowledge):
+        """Create a solution object for the generated counterfactual rule, used to return the final counterfactual explanation after training
+
+        Args:
+            new_cf_rule (Rule): The generated counterfactual rule for which to create the solution object, used to return the final counterfactual explanation after training
+            new_knowledge (Knowledge): The knowledge of the generated counterfactual rule, used to return the final counterfactual explanation after training
+
+        Returns:
+            Solution: A Michigan solution object containing the generated CF rule
+        """
         michigan_sol = copy.deepcopy(self._classifier_copy.get_var(self._problem.get_changed_rule_index()))
         michigan_sol.resize_objectives(self._problem.n_obj)
         michigan_sol.set_vars(new_cf_rule.get_antecedent().get_antecedent_indices())

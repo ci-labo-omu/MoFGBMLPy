@@ -3,11 +3,23 @@ from pymoo.operators.survival.rank_and_crowding import RankAndCrowding
 
 
 class RankAndCrowdingDeterministic(RankAndCrowding):
+    """Deterministic alternative of the RankAndCrowding survival operator."""
+
     def __init__(self):
+        """Constructor"""
         super().__init__()
 
     def _do(self, problem, pop, *args, n_survive=None, **kwargs):
+        """Select best individual using rank sort and crowding distance.
 
+        Args:
+            problem (Problem): The optimization problem being solved.
+            pop (Population): The population of solutions to select from.
+            n_survive (int): The number of individuals to survive.
+
+        Returns:
+            Population: The selected population of survivors.
+        """
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
 

@@ -1,7 +1,4 @@
-"""
-The code in this file is mainly copied from the Pymoo library,
-since the function _do of the RankAndCrowding class is protected
-"""
+"""The code in this file is mainly copied from the Pymoo library, since the function _do of the RankAndCrowding class is protected"""
 
 import numpy as np
 from pymoo.util.randomized_argsort import randomized_argsort
@@ -13,7 +10,23 @@ from mofgbmlpy.explainer.gbml.crowding_function_x import CrowdingFunctionX
 
 
 class FuzzySetsSurvival(Survival):
+    """Survival operator that performs non-dominated sorting and crowding distance selection
+
+    Attributes:
+        eliminate_duplicates: Optional function to eliminate duplicates from the survivors
+        nds: Non-dominated sorting method to use
+        use_search_space_crowding (bool): Whether to use crowding in the search space (X) in addition to the objective space (F)
+        crowding_func_x (CrowdingFunctionX): Crowding function for the search space, used if use_search_space_crowding is True
+    """
+
     def __init__(self, eliminate_duplicates=None, nds=None, use_search_space_crowding=False):
+        """Constructor
+
+        Args:
+            eliminate_duplicates: Optional function to eliminate duplicates from the survivors
+            nds: Non-dominated sorting method to use (default is NonDominatedSorting)
+            use_search_space_crowding (bool): Whether to use crowding in the search space (X) in addition to the objective space (F)
+        """
         super().__init__(filter_infeasible=True)
 
         self._eliminate_duplicates = eliminate_duplicates
@@ -24,6 +37,16 @@ class FuzzySetsSurvival(Survival):
             self.crowding_func_x = CrowdingFunctionX()
 
     def _do(self, problem, pop, *args, n_survive=None, **kwargs):
+        """Select best individual using non-dominated sorting and crowding distance.
+
+        Args:
+            problem: The optimization problem being solved.
+            pop: The population of solutions to select from.
+            n_survive: The number of individuals to survive.
+
+        Returns:
+            Population: The selected population of survivors.
+        """
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
         if self.use_search_space_crowding:

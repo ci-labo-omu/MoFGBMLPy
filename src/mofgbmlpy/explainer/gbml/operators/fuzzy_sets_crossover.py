@@ -11,11 +11,32 @@ from mofgbmlpy.gbml.operator.crossover.pymoo_deepcopy_crossover import PymooDeep
 
 
 class FuzzySetsCrossover(PymooDeepcopyCrossover):
+    """Crossover operator that performs crossover on the fuzzy sets of the rules in the solutions.
+
+    Attributes:
+        p1_prob_off_1 (float): Probability of taking the fuzzy set from parent 1 for each dimension in the offspring
+    """
+
     def __init__(self, prob=0.5, p1_prob_off_1=0.5):
+        """Constructor
+
+        Args:
+            prob (float): Overall probability of applying the crossover to a pair of solutions
+            p1_prob_off_1 (float): Probability of taking the fuzzy set from parent 1 for each dimension in the offspring
+        """
         super().__init__(n_parents=2, n_offsprings=1, prob=prob)
         self._p1_prob_off_1 = p1_prob_off_1
 
     def _do(self, problem, X, **kwargs):
+        """Apply the crossover to the fuzzy sets of the rules in the solutions.
+
+        Args:
+            problem (Problem): The optimization problem being solved, used to get the initial fuzzy sets if needed
+            X (Population): The population of solutions to crossover, where each solution is expected to have a rule with fuzzy sets
+
+        Returns:
+            np.array: The offspring population resulting from the crossover
+        """
         _, n_matings, num_vars = X.shape
         offsprings = np.zeros((1, n_matings, num_vars), dtype=object)
 

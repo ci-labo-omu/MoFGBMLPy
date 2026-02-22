@@ -141,7 +141,6 @@ class AbstractMain(ABC):
         Returns:
             pymoo.core.result.Result: Result of the run
         """
-
         # Save params
         if not self._mofgbml_args.get("NO_OUTPUT_FILES"):
             Output.mkdirs(self._mofgbml_args.get("EXPERIMENT_ID_DIR"))
@@ -161,7 +160,7 @@ class AbstractMain(ABC):
         return res
 
     def run(self, args, train=None, test=None):
-        """Main function of the runner
+        """Run the optimization and return the result object. This is the main function of the runner
 
         Args:
             args (list): List of dash-case arguments
@@ -278,6 +277,11 @@ class AbstractMain(ABC):
             return RuleBuilderBasic(antecedent_factory, self._learner, self._knowledge)
 
     def get_pymoo_algo(self):
+        """Get the Pymoo algorithm object to use, with the parameters initialized in this class
+
+        Returns:
+            Algorithm: Pymoo algorithm object
+        """
         algo_name = self._mofgbml_args.get("ALGORITHM")
 
         algo_args = {
@@ -444,6 +448,14 @@ class AbstractMain(ABC):
         return xml_tree.ElementTree(root)
 
     def get_results_csv(self, pop):
+        """Get the results as a CSV string
+
+        Args:
+            pop (Population): Population of solutions
+
+        Returns:
+            str: CSV string
+        """
         csv_data = ""
 
         for ind in pop:

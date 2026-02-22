@@ -15,8 +15,18 @@ from mofgbmlpy.explainer.util import append_rule_classifier
 
 
 class CounterFactualExplainerBenchmark:
+    """Helper class to run experiments on counterfactual explainers"""
+
     @staticmethod
     def compute_diversity(pop):
+        """Compute the diversity of a population using the crowding distance in the decision space (X) as a measure of diversity.
+
+        Args:
+            pop (Population): The population of solutions to compute the diversity for.
+
+        Returns:
+            float: Diversity of the population
+        """
         if pop is None or len(pop) <= 1:
             return 0.0
 
@@ -25,6 +35,17 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def __append_metric(results, metric_name, value, extend=False):
+        """Helper method to append a metric value to the results dictionary.
+
+        Args:
+            results (dict): The dictionary to append the metric value to.
+            metric_name (str): The name of the metric to append.
+            value (float or list): The metric value to append.
+            extend (bool, optional): Whether to extend the list of metric values with the given value (if it is a list) or to append the value as a single element. Defaults to False.
+
+        Returns:
+            dict: The updated results dictionary with the appended metric value.
+        """
         if metric_name not in results:
             results[metric_name] = []
         if extend:
@@ -35,6 +56,15 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def all_metrics_eval(explainer, solutions):
+        """Evaluate all the metrics for a given set of solutions and return the results in a dictionary.
+
+        Args:
+            explainer (CounterFactualExplainerMetaheuristics): The counterfactual explainer used to get the problem and evaluate the metrics.
+            solutions (list): The list of solutions to evaluate the metrics for.
+
+        Returns:
+            dict: A dictionary containing the metric names as keys and the corresponding metric values as values.
+        """
         results = {}
         problem = explainer.get_problem()
         initial_train_error_rate = problem.error_rate(use_test_set=False, initial_classifier=True)
@@ -100,6 +130,14 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def get_stats(metric_vals):
+        """Compute the statistics of a list of metric values and return them in a dictionary.
+
+        Args:
+            metric_vals (list): The list of metric values to compute the statistics for.
+
+        Returns:
+            dict: A dictionary containing the statistics of the metric values, including the minimum, maximum, mean, standard deviation, median, first quartile (q1), and third quartile (q3).
+        """
         return {
             "min": np.min(metric_vals),
             "max": np.max(metric_vals),
@@ -122,6 +160,18 @@ class CounterFactualExplainerBenchmark:
         test_name="",
         **kwargs,
     ):
+        """Run the benchmark for a given counterfactual explainer and a set of classifiers, and save the results in a csv file and a summary text file in the specified output path.
+
+        Args:
+            explainer_class (CounterFactualExplainerMetaheuristics): The class of the counterfactual explainer to benchmark.
+            num_classes (int): The number of classes in the classification problem, used to determine how many target classes to test for each rule.
+            classifiers (list): A list of classifiers to test the counterfactual explainer on, where each classifier is represented as a tuple containing the Pittsburgh solution and the corresponding training dataset.
+            out_path (str): The path to the folder where the results of the benchmark will be saved, including a csv file with the metrics values for each run and a summary text file with the overall statistics of the results.
+            seed (int, optional): The random seed to use for the benchmark. Defaults to 2017.
+            test_dataset (DataSet, optional): The test dataset to use for evaluating the solutions. Defaults to None.
+            data_name (str, optional): The name of the dataset, used for the description of the benchmark. Defaults to "".
+            test_name (str, optional): The name of the test, used for the description of the benchmark. Defaults to "".
+        """
         if os.path.exists(out_path):
             print(f"Output path {out_path} already exists (skipped).")
             return
@@ -258,6 +308,24 @@ class CounterFactualExplainerBenchmark:
         decision_boundaries_fixed_vals=None,
         **kwargs,
     ):
+        """Run the benchmark for a given counterfactual explainer and a single classifier, and plot the results.
+
+        Args:
+            explainer_class (CounterFactualExplainerMetaheuristics): The class of the counterfactual explainer to benchmark.
+            classifiers (list): A list of classifiers to test the counterfactual explainer on, where each classifier is represented as a tuple containing the Pittsburgh solution and the corresponding training dataset.
+            cl_idx (int, optional): The index of the classifier to test the counterfactual explainer on. Defaults to 0.
+            r_idx (int, optional): The index of the rule to change in the counterfactual explanation. Defaults to 0.
+            c_target (int, optional): The target class for the counterfactual explanation. Defaults to 0.
+            sol_idx (int, optional): The index of the solution to plot among the non-dominated solutions found by the explainer. If None, all non-dominated solutions will be plotted. Defaults to None.
+            plot (bool, optional): Whether to plot the results. Defaults to True.
+            test_dataset (DataSet, optional): The test dataset to use for evaluating the solutions. Defaults to None.
+            var_names (list of str, optional): The list of variable names to use in the plots. Defaults to None.
+            class_labels (list of ClassLabelBasic, optional): The list of class labels to use in the plots. Defaults to None.
+            decision_boundaries_fixed_vals (list, optional): The list of fixed values for the decision boundaries plot. Defaults to None.
+
+        Returns:
+            np.array: An array containing the rules of the non-dominated solutions found by the explainer, where each rule is represented as an array of variable values.
+        """
         classifier = classifiers[cl_idx][0]
 
         target_class = ClassLabelBasic(c_target)
@@ -339,6 +407,16 @@ class CounterFactualExplainerBenchmark:
     def compare_classifiers(
         initial_classifier, cf_rules, train_set, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None
     ):
+        """Compare the initial classifier with the new classifiers obtained by appending the counterfactual rules to the initial classifier, by plotting their decision boundaries and confusion matrices.
+
+        Args:
+            initial_classifier (Classifier): The initial classifier to compare.
+            cf_rules (list): A list of counterfactual rules to append to the initial classifier and compare with it.
+            train_set (DataSet): The training dataset to use for plotting the decision boundaries and confusion matrices.
+            var_names (list of str, optional): The list of variable names to use in the plots. Defaults to None.
+            class_labels (list of ClassLabelBasic, optional): The list of class labels to use in the plots. Defaults to None.
+            decision_boundaries_fixed_vals (list, optional): The list of fixed values for the decision boundaries plot. Defaults to None.
+        """
         X, y = train_set.get_scikit_xy()
 
         # Compare the two classifiers
@@ -395,6 +473,22 @@ class CounterFactualExplainerBenchmark:
         vals=None,
         **kwargs,
     ):
+        """Run a parameter search for a given counterfactual explainer and a set of classifiers, by varying the specified parameter in the given range and running the benchmark for each value of the parameter, saving the results in different folders for each parameter value.
+
+        Args:
+            explainer_class (CounterFactualExplainerMetaheuristics): The class of the counterfactual explainer to benchmark.
+            num_classes (int): The number of classes in the classification problem, used to determine how many target classes to test for each rule.
+            classifiers (list): A list of classifiers to test the counterfactual explainer on, where each classifier is represented as a tuple containing the Pittsburgh solution and the corresponding training dataset.
+            out_path (str): The path to the folder where the results of the benchmark will be saved, including a csv file with the metrics values for each run and a summary text file with the overall statistics of the results.
+            param_name (str): The name of the parameter to vary in the search, used for the description of the benchmark and for naming the folders where the results will be saved.
+            num_experiments (int, optional): The number of different values of the parameter to test in the search. Defaults to 11.
+            min_val (float, optional): The minimum value of the parameter to test in the search. Defaults to 0.0.
+            max_val (float, optional): The maximum value of the parameter to test in the search. Defaults to 1.0.
+            test_dataset (DataSet, optional): The test dataset to use for evaluating the solutions. Defaults to None.
+            data_name (str, optional): The name of the dataset, used for the description of the benchmark. Defaults to "".
+            is_int (bool, optional): Whether the parameter values should be integers. Defaults to False.
+            vals (list, optional): A list of specific values to test for the parameter. If provided, these values will be used instead of generating values in the range [min_val, max_val]. Defaults to None.
+        """
         if vals is not None:
             param_vals = np.array(vals, dtype=int if is_int else float)
         else:
@@ -435,6 +529,15 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def get_num_iters(classifiers, num_classes):
+        """Compute the number of iterations that the benchmark will run for a given set of classifiers and number of classes, by calculating how many rules will be changed and how many target classes will be tested for each rule.
+
+        Args:
+            classifiers (list): A list of classifiers to test the counterfactual explainer on, where each classifier is represented as a tuple containing the Pittsburgh solution and the corresponding training dataset.
+            num_classes (int): The number of classes in the classification problem, used to determine how many target classes to test for each rule.
+
+        Returns:
+            int: The total number of iterations that the benchmark will run for the given classifiers and number of classes.
+        """
         num_rules = 0
         num_classes_checks = num_classes - 1
 

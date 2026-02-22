@@ -7,11 +7,11 @@ import csv
 
 
 class Input:
-    """Class of static methods used to read files and load datasets"""
+    """Class of static methods used to read files and load datasets."""
 
     @staticmethod
     def input_data_set(file_name, is_multi_label):
-        """Load a dataset from a file name
+        """Load a dataset from a file name.
 
         Args:
             file_name (str): Name of the file containing the dataset
@@ -27,7 +27,7 @@ class Input:
 
     @staticmethod
     def input_data_set_multi(file_name):
-        """Load a multi label dataset from a file name
+        """Load a multi label dataset from a file name.
 
         Args:
             file_name (str): Name of the file containing the dataset
@@ -67,7 +67,7 @@ class Input:
 
     @staticmethod
     def input_data_set_basic(file_name):
-        """Load a (mono label) dataset from a file name
+        """Load a (mono label) dataset from a file name.
 
         Args:
             file_name (str): Name of the file containing the dataset
@@ -103,7 +103,7 @@ class Input:
 
     @staticmethod
     def get_train_test_files(arguments):
-        """Load the train and test datasets from filenames specified in an Arguments object
+        """Load the train and test datasets from filenames specified in an Arguments object.
 
         Args:
             arguments (Arguments): Object containing the TRAIN_FILE, TEST_FILE and IS_MULTI_LABEL keys

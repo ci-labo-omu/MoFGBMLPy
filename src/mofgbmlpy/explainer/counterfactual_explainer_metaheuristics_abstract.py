@@ -14,6 +14,19 @@ from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEl
 
 
 class CounterFactualExplainerMetaheuristicsAbstract:
+    """Counterfactual explainer using metaheuristics to find CF rules.
+
+    Attributes:
+        _problem (CounterfactualProblem): The optimization problem to solve, containing the classifier, the changed rule index, the target class, the test set and the objectives to optimize
+        _sampling (Sampling): The sampling method to create new solutions with fuzzy sets for the rules
+        _mutation (Mutation): The mutation operator to apply to the solutions, should consider bounds and conditions of membership functions params
+        _crossover (Crossover): The crossover operator to apply to the solutions, should consider bounds and conditions of membership functions params
+        _survival (Survival): The survival selection method to select the solutions for the next generation, should consider crowding in the search space of fuzzy sets to eliminate duplicates
+        _eliminate_duplicates (FuzzySetsEliminateDuplicates): The method to eliminate duplicate solutions based on their fuzzy sets, used after the optimization to filter the non-dominated solutions and keep only one solution for each unique fuzzy sets configuration
+        _n_gen (int): The number of generations for the optimization
+        _pop_size (int): The population size for the optimization
+    """
+
     def __init__(
         self,
         classifier,
@@ -28,6 +41,21 @@ class CounterFactualExplainerMetaheuristicsAbstract:
         n_gen=60,
         pop_size=60,
     ):
+        """Constructor
+
+        Args:
+            classifier (Classifier): The classifier for which to find counterfactual explanations, used to get the knowledge for the mutation operator
+            changed_rule_index (int): The index of the rule to change in the counterfactual explanation, used to get the initial rule for the sampling and to apply the changes in the mutation and crossover operators
+            target_class (int): The target class for the counterfactual explanation, used to calculate the confidence loss objective
+            test_set (DataSet): The test set to evaluate the solutions on, used to calculate the confidence loss objective
+            sampling (Sampling): The sampling method to create new solutions with fuzzy sets for the rules
+            mutation (Mutation): The mutation operator to apply to the solutions, should consider bounds and conditions of membership functions params
+            crossover (Crossover): The crossover operator to apply to the solutions, should consider bounds and conditions of membership functions params
+            use_search_space_crowding (bool, optional): Whether to use search space crowding instead of objective space crowding. Defaults to False.
+            objectives (list of str, optional): The list of objectives to optimize. Defaults to ["confidence_loss", "change_loss"].
+            n_gen (int, optional): The number of generations for the optimization. Defaults to 60.
+            pop_size (int, optional): The population size for the optimization. Defaults to 60.
+        """
         self._problem = CounterfactualProblem(
             classifier, changed_rule_index, target_class, test_set=test_set, objectives=objectives
         )
@@ -41,6 +69,11 @@ class CounterFactualExplainerMetaheuristicsAbstract:
         self._pop_size = pop_size
 
     def get_target_class(self):
+        """Get the target class for the counterfactual explanation.
+
+        Returns:
+            ClassLabelBasic: The target class for the counterfactual explanation, used to calculate the confidence loss objective
+        """
         return self._problem.get_target_class()
 
     @staticmethod
@@ -103,6 +136,14 @@ class CounterFactualExplainerMetaheuristicsAbstract:
         return Population.new(X=filtered_solutions_X, F=filtered_solutions_F)
 
     def train(self, verbose=True):
+        """Train the counterfactual explainer by optimizing the objectives using the specified metaheuristic algorithm.
+
+        Args:
+            verbose (bool, optional): Whether to print the optimization progress. Defaults to True.
+
+        Returns:
+            Population: The non-dominated solutions found by the optimization, filtered to keep only one solution for each unique fuzzy sets configuration and only solutions that belong to the target class.
+        """
         # self._problem.get_fuzzy_rule().plot_antecedent()
 
         termination = get_termination("n_gen", self._n_gen)
@@ -136,4 +177,9 @@ class CounterFactualExplainerMetaheuristicsAbstract:
         return non_dominated_solutions
 
     def get_problem(self):
+        """Get the optimization problem being solved by the counterfactual explainer.
+
+        Returns:
+            CounterfactualProblem: The optimization problem being solved by the counterfactual explainer, containing the classifier, the changed rule index, the target class, the test set and the objectives to optimize
+        """
         return self._problem

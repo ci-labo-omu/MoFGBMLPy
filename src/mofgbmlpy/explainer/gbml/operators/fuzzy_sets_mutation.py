@@ -11,13 +11,38 @@ from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import Counterfactu
 
 
 class FuzzySetsMutation(Mutation):
+    """Mutation operator that mutates the fuzzy sets of the rules in the solutions.
+
+    Attributes:
+        prob_mutated_param (float): Probability of mutating a parameter of a triangular fuzzy set
+        prob_change_type (float): Probability of changing the type of a fuzzy set (e.g. triangular to don't care)
+        prob_revert_to_initial (float): Probability of reverting a fuzzy set to its initial state
+    """
+
     def __init__(self, prob=1.0, prob_mutated_param=0.2, prob_change_type=0.1, prob_revert_to_initial=0.0):
+        """Constructor
+
+        Args:
+            prob (float): Overall probability of applying the mutation to a solution
+            prob_mutated_param (float): Probability of mutating a parameter of a triangular fuzzy set
+            prob_change_type (float): Probability of changing the type of a fuzzy set (e.g. triangular to don't care)
+            prob_revert_to_initial (float): Probability of reverting a fuzzy set to its initial state
+        """
         super().__init__(prob=prob)
         self._prob_mutated_param = prob_mutated_param
         self._prob_change_type = prob_change_type
         self._prob_revert_to_initial = prob_revert_to_initial
 
     def _do(self, problem, X, **kwargs):
+        """Apply the mutation to the fuzzy sets of the rules in the solutions.
+
+        Args:
+            problem (Problem): The optimization problem being solved, used to get the initial fuzzy sets if needed
+            X (Population): The population of solutions to mutate, where each solution is expected to have a rule with fuzzy sets
+
+        Returns:
+            np.array: The mutated population of solutions
+        """
         new_x = copy.deepcopy(X)
 
         if self._prob_revert_to_initial > 0:

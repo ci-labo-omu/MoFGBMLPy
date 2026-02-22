@@ -2,8 +2,10 @@ from mofgbmlpy.main.abstract_main import AbstractMain
 
 
 class MichiganMain(AbstractMain):
+    """MoFGBML runner for Michigan-style individuals."""
+
     def load_args(self, args, train=None, test=None):
-        """Load the arguments
+        """Load the arguments.
 
         Args:
             args (list): List of dash-case arguments

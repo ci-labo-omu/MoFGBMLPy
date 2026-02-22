@@ -23,7 +23,7 @@ def process_runs_results(
     keep_empty_x_key_values=False,
     remove_rare_solutions=True,
 ):
-    """Process the runs results
+    """Process the runs results.
 
     Args:
         runs_results (list): List of results as a dictionary
@@ -38,7 +38,6 @@ def process_runs_results(
     Returns:
         dict: The processed results
     """
-
     if x_key != "total_rule_length" and x_key != "num_rules":
         raise ValueError("only total_rule_length and num_rules are accepted for the x_key")
 
@@ -89,7 +88,7 @@ def process_runs_results(
 def show_results_median_line_plot(
     runs_results, x_key, remove_rare_solutions=True, xlim=None, title=None, file_path=None
 ):
-    """Show the results in a median line plot after aggregating them
+    """Show the results in a median line plot after aggregating them.
 
     Args:
         runs_results (list): List of results as a dictionary
@@ -120,7 +119,7 @@ def show_results_median_line_plot(
 
 
 def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title=None, xlim=None):
-    """Show the results using box plots after aggregating them
+    """Show the results using box plots after aggregating them.
 
     Args:
         runs_results (list): List of results as a dictionary
@@ -152,13 +151,12 @@ def show_results_box_plot(runs_results, x_key, remove_rare_solutions=True, title
 
 
 def task(args, knowledge_factory_class):
-    """Task for the parallel cross validation test: runs MoFGBMLPy on given args
+    """Task for the parallel cross validation test: runs MoFGBMLPy on given args.
 
     Args:
         args (Arguments): Arguments object used by the runner
         knowledge_factory_class (AbstractKnowledgeFactory): Knowledge factory
     """
-
     algo_name = AbstractMain.get_algo_name_from_raw_args(args)
     runner = PittsburghMain(knowledge_factory_class, algo_name)
     runner.run(args)
@@ -182,7 +180,7 @@ def load_result_csv(path):
 
 
 def load_results_csv(paths):
-    """Load all the CSV files in the paths given and add the loaded data to a list
+    """Load all the CSV files in the paths given and add the loaded data to a list.
 
     Args:
         paths (str[]): List of CSV file paths
@@ -199,7 +197,7 @@ def load_results_csv(paths):
 def run_cross_validation(
     args, dataset_root, knowledge_factory_class=HomoTriangleKnowledgeFactory_2_3_4_5, max_workers=None
 ):
-    """Run a cross validation test on a dataset using pre-split dataset files and save the results in files
+    """Run a cross validation test on a dataset using pre-split dataset files and save the results in files.
 
     Args:
         args (Arguments): Arguments object
@@ -251,7 +249,7 @@ def run_cross_validation(
 
 
 def get_results(root_folder, algorithm_id, data_name):
-    """Get all the results from a root results folder (CSV files)
+    """Get all the results from a root results folder (CSV files).
 
     Args:
         root_folder (str): Root results folder
@@ -268,7 +266,7 @@ def get_results(root_folder, algorithm_id, data_name):
 
 
 def load_results_data(paths):
-    """Load all the CSV files in the paths given and add the loaded data to a list
+    """Load all the CSV files in the paths given and add the loaded data to a list.
 
     Args:
         paths (str[]): List of CSV file paths

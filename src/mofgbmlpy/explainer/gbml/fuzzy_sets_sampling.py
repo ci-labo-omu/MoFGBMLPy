@@ -8,13 +8,38 @@ from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuz
 
 
 class FuzzySetsSampling(Sampling):
+    """Sampling method to create new solutions with fuzzy sets for the rules, by adding noise to the initial fuzzy sets and randomly changing their type.
+
+    Attributes:
+        _noise_str (float): The standard deviation of the noise added to the fuzzy sets parameters
+        _change_fs_type_prob (float): The probability of changing the type of a fuzzy set to DontCareFuzzySet
+        _change_fs_params_prob (float): The probability of changing the parameters of a fuzzy set by adding noise
+
+    """
+
     def __init__(self, noise_str=0.1, change_fs_type_prob=0.0, change_fs_params_prob=1.0):
+        """Constructor
+
+        Args:
+            noise_str (float, optional): The standard deviation of the noise added to the fuzzy sets parameters. Defaults to 0.1.
+            change_fs_type_prob (float, optional): The probability of changing the type of a fuzzy set to DontCareFuzzySet. Defaults to 0.0.
+            change_fs_params_prob (float, optional): The probability of changing the parameters of a fuzzy set by adding noise. Defaults to 1.0.
+        """
         self._noise_str = noise_str
         self._change_fs_type_prob = change_fs_type_prob
         self._change_fs_params_prob = change_fs_params_prob
         super().__init__()
 
     def _do(self, problem, n_samples, **kwargs):
+        """Apply the sampling to create new solutions with fuzzy sets for the rules, by adding noise to the initial fuzzy sets and randomly changing their type.
+
+        Args:
+            problem (Problem): The optimization problem being solved, used to get the initial fuzzy sets if needed
+            n_samples (int): The number of solutions to sample
+
+        Returns:
+            np.ndarray: An array of shape (n_samples, 1) containing the sampled solutions with fuzzy sets for the rules
+        """
         initial_population = np.zeros((n_samples, 1), dtype=object)
         initial_rule = copy.deepcopy(problem.get_factual_rule())
         initial_rule.set_deep_copy_knowledge(True)  # since knowledge is not shared between individuals here
