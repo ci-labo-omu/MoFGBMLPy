@@ -366,8 +366,8 @@ def test_plot_fuzzy_variables_1_var_4_sets():
         fuzzy_sets=np.array(
             [
                 DontCareFuzzySet(0),
-                TriangularFuzzySet(0, 0.5, 1, 1, "medium"),
                 TriangularFuzzySet(0, 0, 0.5, 0, "small"),
+                TriangularFuzzySet(0, 0.5, 1, 1, "medium"),
                 TriangularFuzzySet(0.5, 1, 1, 2, "large"),
             ],
             object,
@@ -376,4 +376,4 @@ def test_plot_fuzzy_variables_1_var_4_sets():
     )
 
     knowledge = Knowledge(np.array([var1], object))
-    knowledge.plot_fuzzy_variables()
+    knowledge.plot_fuzzy_variables(line_width=4)

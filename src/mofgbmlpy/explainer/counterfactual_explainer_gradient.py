@@ -1,24 +1,11 @@
-import os
-import time
 import matplotlib.pyplot as plt
 import copy
 import numpy as np
-import pandas as pd
-from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
-    HomoTriangleKnowledgeFactory_2_3_4_5,
-)
 from mofgbmlpy.fuzzy.fuzzy_term.membership_function.triangular_mf import TriangularMF
 from pymoo.core.population import Population
 from tqdm import tqdm
 
-from mofgbmlpy.data.input import Input
 from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
-from mofgbmlpy.explainer.util import remove_duplicates
-from mofgbmlpy.gbml.solution.michigan_solution import MichiganSolution
-from mofgbmlpy.main.abstract_main import AbstractMain
-from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 
 
 class CounterFactualExplainerGradient:
@@ -384,7 +371,8 @@ class CounterFactualExplainerGradient:
         if new_cf_rule.get_class_label().is_rejected() or new_cf_rule.get_class_label() != self._target_class:
             if verbose:
                 print(
-                    f"Failure: Counterfactual rule class {new_cf_rule.get_class_label()} does not match target class {self._target_class} or is rejected."
+                    f"Failure: Counterfactual rule class {new_cf_rule.get_class_label()} "
+                    f"does not match target class {self._target_class} or is rejected."
                 )
             return Population.new(X=np.array([], dtype=object), F=np.array([], dtype=float))
 

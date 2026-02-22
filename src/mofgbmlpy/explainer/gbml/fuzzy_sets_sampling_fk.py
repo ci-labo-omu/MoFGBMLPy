@@ -1,13 +1,5 @@
-from pymoo.core.population import Population
 from pymoo.core.sampling import Sampling
 import numpy as np
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.triangular_fuzzy_set import TriangularFuzzySet
-import copy
-
-from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
-from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
-
-from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 
 
 class FuzzySetsSamplingFK(Sampling):

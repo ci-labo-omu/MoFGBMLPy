@@ -6,11 +6,10 @@ import numpy as np
 from pymoo.core.problem import Problem
 from mofgbmlpy.fuzzy.knowledge.knowledge import Knowledge
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_variable import FuzzyVariable
-from mofgbmlpy.fuzzy.rule.antecedent.antecedent import Antecedent
-from mofgbmlpy.fuzzy.rule.rule_basic import RuleBasic
 from mofgbmlpy.fuzzy.fuzzy_term.fuzzy_set.dont_care_fuzzy_set import DontCareFuzzySet
 
 from mofgbmlpy.explainer.util import append_rule_classifier
+
 
 class CounterfactualProblem(Problem):
     def __init__(

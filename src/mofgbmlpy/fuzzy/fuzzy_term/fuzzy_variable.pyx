@@ -154,11 +154,12 @@ cdef class FuzzyVariable:
         """
         return self.__domain
 
-    def get_plot(self, ax):
+    def get_plot(self, ax, line_width=2):
         """Draw the fuzzy variable fuzzy sets on the given matplotlib Axes object
 
         Args:
             ax (matplotlib.axes.Axes): Axes object
+            line_width (int): Line width used to draw the fuzzy sets
 
         Returns:
             matplotlib.axes.Axes: The axes object where we drew
@@ -171,10 +172,11 @@ cdef class FuzzyVariable:
         for i in range(self.get_length()):
             fuzzy_set = self.get_fuzzy_set(i)
             points = fuzzy_set.get_function().get_plot_points(self.__domain[0], self.__domain[1])
-            ax.plot(points[:,0], points[:,1], label=fuzzy_set.get_term())
+            ax.plot(points[:,0], points[:,1], label=fuzzy_set.get_term(), linewidth=line_width)
 
         ax.legend(loc="upper right")
         ax.set_xlim(self.get_domain())
+        ax.set_ylim([0, 1.1])
 
         return ax
 

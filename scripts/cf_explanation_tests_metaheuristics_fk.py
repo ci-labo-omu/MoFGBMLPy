@@ -126,7 +126,8 @@ if __name__ == "__main__":
     test_names = list(test_configs.keys())
 
     # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
-    for data_name in ["bupa", "iris", "pima"]:
+    # for data_name in ["bupa", "iris", "pima"]:
+    for data_name in ["movement_libras"]:
         all_tests_already_exist = True
         for test_name in test_names:
             test_path = f"..\\cf_results\\cf_metaheuristics_fk\\{test_name}\\{data_name}"

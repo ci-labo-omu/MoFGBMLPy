@@ -1,40 +1,14 @@
-import copy
 import random
 import time
-from abc import ABC, abstractmethod
-from sklearn.decomposition import PCA
-from matplotlib.colors import ListedColormap
-from sklearn.inspection import DecisionBoundaryDisplay
-import matplotlib.pyplot as plt
-
-from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.core.population import Population
-from pymoo.optimize import minimize
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-from sklearn.preprocessing import minmax_scale
 from tqdm import tqdm
 
 from mofgbmlpy.explainer.counterfactual_explainer_gradient import CounterFactualExplainerGradient
 from mofgbmlpy.explainer.gbml.crowding_function_x import CrowdingFunctionX
-from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
-from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling import FuzzySetsSampling
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_mutation import FuzzySetsMutation
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_crossover import FuzzySetsCrossover
-from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
-    HomoTriangleKnowledgeFactory_2_3_4_5,
-)
 from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from pymoo.termination import get_termination
 from pymoo.visualization.scatter import Scatter
-from pyrecorder.recorder import Recorder
-from pyrecorder.writers.video import Video
 import os
 import numpy as np
-from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEliminateDuplicates
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
-from mofgbmlpy.main.abstract_main import AbstractMain
-from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
 import pandas as pd
 
 from mofgbmlpy.explainer.util import append_rule_classifier
@@ -168,6 +142,7 @@ class CounterFactualExplainerBenchmark:
         if data_name != "":
             desc += f" on {data_name}"
 
+        # num_runs = CounterFactualExplainerBenchmark.get_num_iters(classifiers, 2)
         num_runs = CounterFactualExplainerBenchmark.get_num_iters(classifiers, num_classes)
 
         # best_train_error_rate_val = float("inf")
@@ -179,6 +154,14 @@ class CounterFactualExplainerBenchmark:
                 num_rules = p_sol[0].get_num_vars()
                 for i_var in range(num_rules):
                     class_label = p_sol[0].get_var(i_var).get_class_label()
+
+                    # if class_label == 0:
+                    #     tested_classes = np.array(class_labels[1], dtype=object)
+                    # else:
+                    #     tested_classes = np.array([class_labels[0]], dtype=object)
+                    #
+                    # for target_class in tested_classes:
+
                     for target_class in class_labels:
                         if target_class == class_label:
                             continue
@@ -231,7 +214,8 @@ class CounterFactualExplainerBenchmark:
                                     metrics_stats[name][stat_name] = []
                                 metrics_stats[name][stat_name].append(val)
 
-        # print(f"Best train error rate variation found: {best_train_error_rate_val:.3f} for solution: {best_train_error_rate_sol_data}")
+        # print(f"Best train error rate variation found: {best_train_error_rate_val:.3f}"
+        #       f"for solution: {best_train_error_rate_sol_data}")
 
         dataframe_data = {
             "time": metrics_values["time_in_seconds"],
@@ -261,7 +245,18 @@ class CounterFactualExplainerBenchmark:
 
     @staticmethod
     def main_plot_single(
-        explainer_class, classifiers, cl_idx=0, r_idx=0, c_target=0, sol_idx=None, plot=True, test_dataset=None, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None, **kwargs
+        explainer_class,
+        classifiers,
+        cl_idx=0,
+        r_idx=0,
+        c_target=0,
+        sol_idx=None,
+        plot=True,
+        test_dataset=None,
+        var_names=None,
+        class_labels=None,
+        decision_boundaries_fixed_vals=None,
+        **kwargs,
     ):
         classifier = classifiers[cl_idx][0]
 
@@ -274,7 +269,6 @@ class CounterFactualExplainerBenchmark:
 
         explainer = explainer_class(classifier, r_idx, target_class, test_set=test_dataset, **kwargs)
         non_dominated_solutions = explainer.train(verbose=True)
-
 
         if non_dominated_solutions is None or len(non_dominated_solutions) == 0:
             print("No solutions found")
@@ -335,12 +329,16 @@ class CounterFactualExplainerBenchmark:
 
         if plot and len(rules) < 3:
             train_set = explainer.get_problem().get_train_set()
-            CounterFactualExplainerBenchmark.compare_classifiers(classifier, rules, train_set, var_names, class_labels, decision_boundaries_fixed_vals)
+            CounterFactualExplainerBenchmark.compare_classifiers(
+                classifier, rules, train_set, var_names, class_labels, decision_boundaries_fixed_vals
+            )
 
         return rules
 
     @staticmethod
-    def compare_classifiers(initial_classifier, cf_rules, train_set, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None):
+    def compare_classifiers(
+        initial_classifier, cf_rules, train_set, var_names=None, class_labels=None, decision_boundaries_fixed_vals=None
+    ):
         X, y = train_set.get_scikit_xy()
 
         # Compare the two classifiers
@@ -350,11 +348,18 @@ class CounterFactualExplainerBenchmark:
 
         # Decision boundary plot
         initial_classifier_sk.plot_decision_boundaries(
-            X, y, title="Initial Classifier Decision Boundaries", fixed_vals=decision_boundaries_fixed_vals, var_names=var_names, class_labels=class_labels
+            X,
+            y,
+            title="Initial Classifier Decision Boundaries",
+            fixed_vals=decision_boundaries_fixed_vals,
+            var_names=var_names,
+            class_labels=class_labels,
         )
 
         # Confusion matrix plot
-        initial_classifier_sk.plot_conf_matrix(X, y, title="Initial Classifier Confusion Matrix", class_labels=class_labels)
+        initial_classifier_sk.plot_conf_matrix(
+            X, y, title="Initial Classifier Confusion Matrix", class_labels=class_labels
+        )
 
         for cf_rule in cf_rules:
             new_cl = append_rule_classifier(initial_classifier, cf_rule, train_set=train_set)
@@ -363,7 +368,12 @@ class CounterFactualExplainerBenchmark:
 
             # Decision boundary plot
             new_cl.plot_decision_boundaries(
-                X, y, title="New Classifier Decision Boundaries", fixed_vals=decision_boundaries_fixed_vals, var_names=var_names, class_labels=class_labels
+                X,
+                y,
+                title="New Classifier Decision Boundaries",
+                fixed_vals=decision_boundaries_fixed_vals,
+                var_names=var_names,
+                class_labels=class_labels,
             )
 
             # Confusion matrix plot

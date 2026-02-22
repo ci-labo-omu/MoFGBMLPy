@@ -1,6 +1,5 @@
 import copy
 
-from pymoo.core.crossover import Crossover
 import numpy as np
 
 from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem

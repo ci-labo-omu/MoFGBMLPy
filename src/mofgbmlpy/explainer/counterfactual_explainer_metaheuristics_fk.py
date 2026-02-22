@@ -1,49 +1,15 @@
-import random
-import time
-from pymoo.algorithms.moo.nsga2 import NSGA2
-from pymoo.core.population import Population
-from pymoo.optimize import minimize
-from tqdm import tqdm
-
-from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics_abstract import CounterFactualExplainerMetaheuristicsAbstract
-from mofgbmlpy.explainer.gbml.crowding_function_x import CrowdingFunctionX
-from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling_fk import FuzzySetsSamplingFK
-from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
-from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling import FuzzySetsSampling
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_mutation import FuzzySetsMutation
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_crossover import FuzzySetsCrossover
-from mofgbmlpy.fuzzy.rule.consequent.learning.learning_basic import LearningBasic
-from mofgbmlpy.fuzzy.knowledge.factory.homo_triangle_knowledge_factory_2_3_4_5 import (
-    HomoTriangleKnowledgeFactory_2_3_4_5,
+from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics_abstract import (
+    CounterFactualExplainerMetaheuristicsAbstract,
 )
-from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from pymoo.termination import get_termination
-from pymoo.visualization.scatter import Scatter
-from pyrecorder.recorder import Recorder
-from pyrecorder.writers.video import Video
-import os
+from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling_fk import FuzzySetsSamplingFK
 import numpy as np
-from mofgbmlpy.explainer.gbml.fuzzy_sets_eliminate_duplicates import FuzzySetsEliminateDuplicates
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
-from mofgbmlpy.gbml.operator.crossover.hybrid_gbml_crossover import HybridGBMLCrossover
-
-from mofgbmlpy.gbml.operator.mutation.pittsburgh_mutation import PittsburghMutation
-
-from mofgbmlpy.gbml.sampling.hybrid_GBML_sampling import HybridGBMLSampling
-
-from mofgbmlpy.gbml.operator.crossover.michigan_crossover import MichiganCrossover
-
-from mofgbmlpy.gbml.operator.crossover.pittsburgh_crossover import PittsburghCrossover
-
 from mofgbmlpy.gbml.operator.mutation.michigan_mutation import MichiganMutation
 
-from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import \
-    UniformCrossoverSingleOffspringMichigan
+from mofgbmlpy.gbml.operator.crossover.uniform_crossover_single_offspring_michigan import (
+    UniformCrossoverSingleOffspringMichigan,
+)
 
 from mofgbmlpy.gbml.solution.michigan_solution_builder import MichiganSolutionBuilder
-from mofgbmlpy.main.abstract_main import AbstractMain
-from mofgbmlpy.main.pittsburgh.pittsburgh_main import PittsburghMain
-import pandas as pd
 
 
 class CounterFactualExplainerMetaheuristicsFK(CounterFactualExplainerMetaheuristicsAbstract):
@@ -65,12 +31,7 @@ class CounterFactualExplainerMetaheuristicsFK(CounterFactualExplainerMetaheurist
         random_gen = np.random.Generator(np.random.MT19937(seed=2022))
         rule_builder = classifier.get_var(0).get_rule_builder()
 
-        michigan_solution_builder = MichiganSolutionBuilder(
-            random_gen,
-            len(objectives),
-            0,
-            rule_builder
-        )
+        michigan_solution_builder = MichiganSolutionBuilder(random_gen, len(objectives), 0, rule_builder)
 
         sampling = FuzzySetsSamplingFK(michigan_solution_builder)
         mutation = MichiganMutation(knowledge, mutation_prob, random_gen)
@@ -90,5 +51,5 @@ class CounterFactualExplainerMetaheuristicsFK(CounterFactualExplainerMetaheurist
             use_search_space_crowding,
             objectives,
             n_gen,
-            pop_size
+            pop_size,
         )

@@ -231,7 +231,9 @@ class PittsburghMain(AbstractMain):
             sol_id += 1
 
     @staticmethod
-    def import_xml_classifiers(file_path, train_file_path=None, test_file_path=None, is_multi_label=False, objectives=None):
+    def import_xml_classifiers(
+        file_path, train_file_path=None, test_file_path=None, is_multi_label=False, objectives=None
+    ):
         """Import classifiers from an XML file
 
         Args:
@@ -288,23 +290,33 @@ class PittsburghMain(AbstractMain):
         population_xml = generation_xml.find("population")
 
         random_gen = np.random.Generator(np.random.MT19937(seed=2022))
-        antecedent_factory = HeuristicAntecedentFactory(training_data_set, knowledge, is_dc_probability, dc_rate,
-                                                        antecedent_number_do_not_dont_care, random_gen)
+        antecedent_factory = HeuristicAntecedentFactory(
+            training_data_set, knowledge, is_dc_probability, dc_rate, antecedent_number_do_not_dont_care, random_gen
+        )
         consequent_factory = LearningBasic(training_data_set)
 
         objectives = PittsburghMain._get_objectives_static(args, training_data_set, True)
         classification = SingleWinnerRuleSelection()
 
         rule_builder = RuleBuilderBasic(antecedent_factory, consequent_factory, knowledge)
-        michigan_solution_builder = MichiganSolutionBuilder(
-            random_gen, 2, 0, rule_builder
-        )
+        michigan_solution_builder = MichiganSolutionBuilder(random_gen, 2, 0, rule_builder)
 
-        problem = PittsburghProblem(num_vars, objectives, num_constraints, training_data_set, michigan_solution_builder, classification)
+        problem = PittsburghProblem(
+            num_vars, objectives, num_constraints, training_data_set, michigan_solution_builder, classification
+        )
 
         if population_xml is not None:
             for classifier_xml in population_xml.findall("pittsburghSolution"):
-                classifier = PittsburghSolution.from_xml(classifier_xml, random_gen, knowledge, num_objectives, num_constraints, rule_builder, classification, michigan_solution_builder)
+                classifier = PittsburghSolution.from_xml(
+                    classifier_xml,
+                    random_gen,
+                    knowledge,
+                    num_objectives,
+                    num_constraints,
+                    rule_builder,
+                    classification,
+                    michigan_solution_builder,
+                )
 
                 classifiers.append([classifier])
 

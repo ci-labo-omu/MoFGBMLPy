@@ -176,7 +176,6 @@ Profile.pstats
 !src/mofgbmlpy/utility/lru_cache.cpp
 old_cf_results
 cf_results
-cf_results_fk
 
 scripts/latex_helper.py
 scripts/latex_helper_params_tests.py
@@ -185,3 +184,6 @@ scripts/dataset_gen.py
 # DOCS
 docs/_build
 docs/source
+scripts/table_results.txt
+scripts/param_search
+scripts/custom_plots.py

@@ -1,20 +1,9 @@
-from pymoo.algorithms.moo.nsga2 import NSGA2
-from pymoo.core.population import Population
-from pymoo.optimize import minimize
-
-from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics_abstract import \
-    CounterFactualExplainerMetaheuristicsAbstract
+from mofgbmlpy.explainer.counterfactual_explainer_metaheuristics_abstract import (
+    CounterFactualExplainerMetaheuristicsAbstract,
+)
 from mofgbmlpy.explainer.gbml.fuzzy_sets_sampling import FuzzySetsSampling
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_mutation import FuzzySetsMutation
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_crossover import FuzzySetsCrossover
-from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
-from pymoo.termination import get_termination
-from pymoo.visualization.scatter import Scatter
-from pyrecorder.recorder import Recorder
-from pyrecorder.writers.video import Video
-import os
-import numpy as np
-from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
 
 
 class CounterFactualExplainerMetaheuristics(CounterFactualExplainerMetaheuristicsAbstract):
@@ -55,5 +44,5 @@ class CounterFactualExplainerMetaheuristics(CounterFactualExplainerMetaheuristic
             use_search_space_crowding,
             objectives,
             n_gen,
-            pop_size
+            pop_size,
         )

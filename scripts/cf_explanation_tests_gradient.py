@@ -82,6 +82,7 @@ if __name__ == "__main__":
 
     # for data_name in ["appendicitis", "bal", "bupa", "contraceptive", "haberman", "heart", "iris", "mammographic", "newthyroid", "page-blocks", "phoneme", "pima", "spectfheart", "tae", "wisconsin", "sonar", "magic", "movement_libras"]:
     for data_name in ["bupa", "iris", "pima"]:
+    # for data_name in ["movement_libras"]:
         num_classes, _, test_dataset, non_dominated_solutions = get_config(data_name)
 
         result_path = f"..\\cf_results\\cf_gradient\\classic\\{data_name}"

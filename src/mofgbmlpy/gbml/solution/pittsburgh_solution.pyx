@@ -312,8 +312,8 @@ cdef class PittsburghSolution(AbstractSolution):
 
         for i in range(len(imported_rules)):
             var = MichiganSolution.from_xml(imported_rules[i], random_gen, 2, 0, rule_builder, knowledge)
-            idx = int(imported_rules[i].get("id"))
-            new_vars[idx] = var
+            # idx = int(imported_rules[i].get("id"))
+            new_vars[i] = var
 
         num_vars = len(new_vars)
         new_sol = PittsburghSolution(num_vars, num_objectives, num_constraints, classification, michigan_solution_builder)

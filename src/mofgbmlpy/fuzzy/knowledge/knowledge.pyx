@@ -219,9 +219,14 @@ cdef class Knowledge:
         cdef Knowledge new_knowledge = Knowledge(fuzzy_vars)
         return new_knowledge
 
-    def plot_fuzzy_variables(self):
-        """Plot all the fuzzy variables of this knowledge base (one plot per variable)"""
+    def plot_fuzzy_variables(self, line_width=2):
+        """Plot all the fuzzy variables of this knowledge base (one plot per variable)
+
+        Args:
+            line_width (int): Line width of the plotted membership functions
+        """
         for i in range(self.get_num_dim()):
+            plt.figure(dpi=300)
             ax = plt.axes()
-            ax = self.get_fuzzy_variable(i).get_plot(ax)
+            ax = self.get_fuzzy_variable(i).get_plot(ax, line_width)
             plt.show()

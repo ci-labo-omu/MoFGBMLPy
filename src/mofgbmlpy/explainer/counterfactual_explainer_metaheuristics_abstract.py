@@ -4,7 +4,6 @@ from pymoo.optimize import minimize
 
 from mofgbmlpy.explainer.gbml.operators.fuzzy_sets_survival import FuzzySetsSurvival
 from mofgbmlpy.explainer.gbml.problem.counterfactual_problem import CounterfactualProblem
-from mofgbmlpy.data.class_label.class_label_basic import ClassLabelBasic
 from pymoo.termination import get_termination
 from pymoo.visualization.scatter import Scatter
 from pyrecorder.recorder import Recorder

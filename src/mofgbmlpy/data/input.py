@@ -120,7 +120,7 @@ class Input:
         ):
             if arguments is None:
                 raise ValueError("Arguments is None")
-            msg ="Invalid arguments, missing: "
+            msg = "Invalid arguments, missing: "
             for key in ["TRAIN_FILE", "TEST_FILE", "IS_MULTI_LABEL"]:
                 if not arguments.has_key(key):
                     msg += key + " "

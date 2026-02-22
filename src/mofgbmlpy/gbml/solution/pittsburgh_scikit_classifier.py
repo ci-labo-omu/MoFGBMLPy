@@ -1,11 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.colors import ListedColormap
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.decomposition import PCA
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-from sklearn.preprocessing import minmax_scale
 from sklearn.utils import check_X_y
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_array
@@ -112,10 +110,23 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
 
         return Dataset(size, n_dim, c_num, patterns)
 
-    def plot_decision_boundaries(self, X, y, title="Decision Boundaries", fixed_vals=None, num_points_per_dim=100, var_names=None, class_labels=None, dpi=300):
+    def plot_decision_boundaries(
+        self,
+        X,
+        y,
+        title="Decision Boundaries",
+        fixed_vals=None,
+        num_points_per_dim=100,
+        var_names=None,
+        class_labels=None,
+        dpi=300,
+    ):
         X = X.astype(np.float64)
         if X.shape[1] > 2 and (fixed_vals is None or len(fixed_vals) != X.shape[1]):
-            raise NotImplementedError("Decision boundary plot is only implemented for 2D datasets. For higher dimensions, please provide fixed_vals with fixed values for all but two dimensions.")
+            raise NotImplementedError(
+                "Decision boundary plot is only implemented for 2D datasets. "
+                "For higher dimensions, please provide fixed_vals with fixed values for all but two dimensions."
+            )
 
         num_classes = len(np.unique(y))
 
@@ -227,7 +238,7 @@ class PittsburghScikitClassifier(BaseEstimator, ClassifierMixin):
         cm = confusion_matrix(y, y_pred, labels=labels)
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_labels)
         disp.plot(cmap=plt.cm.viridis)
-        plt.setp(plt.gca().get_yticklabels(), rotation=90, ha='center', va='center')
+        plt.setp(plt.gca().get_yticklabels(), rotation=90, ha="center", va="center")
         plt.title(title)
         plt.show()
 
